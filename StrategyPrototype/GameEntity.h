@@ -14,6 +14,14 @@ typedef std::array<std::array<MapTile*, 20>, 20> MapTileArray;
 class GameEntity{
 public:
 
+	GameEntity() {
+		m_IDCmp = new CMPIdentifier();
+		m_TransformCmp = new CMPTransform();
+		m_PhysicsCmp = new CMPPhysics();
+		m_GraphicsCmp = new CMPGraphics();
+		m_AICmp = new CMPArtificialIntelligence();
+		m_FSM = new FiniteStateMachine();
+	}
 
 
 	// Basic components for an Entity.
@@ -41,6 +49,9 @@ public:
 
 class MapTile : public GameEntity {
 public:
+	MapTile() {
+		m_MapTileEntities = new std::vector<GameEntity*>();
+	}
 
 
 	std::vector<GameEntity*>* m_MapTileEntities = nullptr;
@@ -49,6 +60,7 @@ public:
 
 
 struct EntitiesStorage {
+
 
 	std::vector< GameEntity* >* GetStorage() { return m_GameEntitiesVec; }
 
@@ -78,11 +90,12 @@ struct EntitiesStorage {
 		DeleteGameEntitie(e);
 	}
 
-
+	// The only accessible constructor for this class.
 	static  EntitiesStorage* Get() {
 
 		if (!m_EntitiesStorage) {
 			m_EntitiesStorage = new EntitiesStorage();
+			m_EntitiesStorage->_initGameEntitiesVector();
 			return m_EntitiesStorage;
 		}
 		else {
@@ -99,6 +112,17 @@ private:
 	static EntitiesStorage* m_EntitiesStorage;
 
 	std::vector< GameEntity* >* m_GameEntitiesVec; // Holds all entities ingame.
+
+
+private:
+	EntitiesStorage() = default;
+	EntitiesStorage(const EntitiesStorage&) = default;
+	~EntitiesStorage() = default;
+
+
+	void _initGameEntitiesVector() {
+		m_GameEntitiesVec = new std::vector< GameEntity*>();
+	}
 };
 
 

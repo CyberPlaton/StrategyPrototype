@@ -13,6 +13,7 @@
 #include<stdarg.h> // for custom printf function.
 #include<array>
 #include<random>
+#include<omp.h>
 
 
 

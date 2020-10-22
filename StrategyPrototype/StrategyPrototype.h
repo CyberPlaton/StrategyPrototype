@@ -9,7 +9,7 @@ class Game;
 
 class Renderer {
 public:
-
+	Renderer(Game* g) { m_Game = g; }
 
 	void Render(std::string layer);
 
@@ -24,32 +24,26 @@ public:
 		sAppName = "StrategyPrototype";
 	}
 
-	bool OnUserCreate() override {
-
-		m_Renderer = new Renderer();
-
+	bool OnUserCreate() override;
+	bool OnUserUpdate(float fElapsedTime) override;
 
 
-		return true;
-	}
 
-	bool OnUserUpdate(float fElapsedTime) override {
-
-		// Layered rendering.
-		m_Renderer->Render("layer1");
-		m_Renderer->Render("layer2");
-		m_Renderer->Render("layer3");
-		m_Renderer->Render("layer4");
-
-
-		return true;
-	}
 
 
 	Renderer* m_Renderer;
-	std::map<std::string, olc::Sprite*> m_SpriteResourceMap;
+	WorldMap* m_WorldMap;
+
+	// Holds sprite instances of specified names for them.
+	//std::map<std::string, olc::Sprite*> m_SpriteResourceMap; 
+	std::map<std::string, olc::Decal*> m_SpriteResourceMap;
+	std::vector<olc::Sprite*> m_SpriteStorage;
 
 private:
 
+	void _initialize();
+	void _initializeMap();
 	void _loadSpriteResources();
+
+	void _drawDebugGrid();
 };

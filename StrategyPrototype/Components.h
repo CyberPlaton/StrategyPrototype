@@ -22,7 +22,6 @@ struct CMPGraphics{
 	std::string m_DrawingLayer;
 
 	std::string m_SpriteName;
-	std::string m_SpritePath;
 };
 
 

@@ -17,7 +17,7 @@ void WorldMapDrawingOptions::_createMap() {
 
 	m_MapDefinitions = new MapTileArray();
 
-	EntitiesStorage* storage = new EntitiesStorage();
+	EntitiesStorage* storage = EntitiesStorage::Get();
 
 
 	// MapTileArray initialization
@@ -27,15 +27,18 @@ void WorldMapDrawingOptions::_createMap() {
 		for (int j = 0; j <= m_MapHeight; j++) {
 
 			// "Zeroed" out MapTileArray
+			m_MapDefinitions->at(i).at(j) = new MapTile();
+
 			m_MapDefinitions->at(i).at(j)->m_GraphicsCmp->m_SpriteName = "null";
-			m_MapDefinitions->at(i).at(j)->m_GraphicsCmp->m_SpritePath = "null";
 			m_MapDefinitions->at(i).at(j)->m_GraphicsCmp->m_DrawingLayer = "layer1"; // Draw ground tiles first.
 
 			storage->AddGameEntitie(m_MapDefinitions->at(i).at(j)); // Add Maptile to EntitiesStorage.
 		}
 	}
 
-	int r = rand() % 3;
+	int r;
+	Forest* f = nullptr;
+
 
 	// Map definition.
 	for (int i = 0; i <= m_MapWidth; i++) {
@@ -45,22 +48,32 @@ void WorldMapDrawingOptions::_createMap() {
 
 			// Define map as purely temperate ground
 			m_MapDefinitions->at(i).at(j)->m_GraphicsCmp->m_SpriteName = "temperate";
-			m_MapDefinitions->at(i).at(j)->m_GraphicsCmp->m_SpritePath = "assets/map/temperate.png";
-
 
 
 			// Add forest entities.
+			/*
+			r = rand() % 3;
 			switch (r) {
 			case 0:
-				m_MapDefinitions->at(i).at(j)->m_MapTileEntities->push_back(new Forest("forest_scarce"));
+				f = new Forest("forest_scarce");
+				f->m_GraphicsCmp->m_DrawingLayer = "layer2";
+
+				m_MapDefinitions->at(i).at(j)->m_MapTileEntities->push_back(f);
 				break;
 			case 1:
-				m_MapDefinitions->at(i).at(j)->m_MapTileEntities->push_back(new Forest("forest_norm"));
+				f = new Forest("forest_norm");
+				f->m_GraphicsCmp->m_DrawingLayer = "layer2";
+
+				m_MapDefinitions->at(i).at(j)->m_MapTileEntities->push_back(f);
 				break;
 			case 2:
-				m_MapDefinitions->at(i).at(j)->m_MapTileEntities->push_back(new Forest("forest_deep"));
+				f = new Forest("forest_deep");
+				f->m_GraphicsCmp->m_DrawingLayer = "layer2";
+
+				m_MapDefinitions->at(i).at(j)->m_MapTileEntities->push_back(f);
 				break;
 			}
+			*/
 		}
 	}
 }
