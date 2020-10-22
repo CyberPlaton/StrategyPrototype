@@ -9,12 +9,15 @@ void Renderer::Render(std::string layer) {
 	EntitiesStorage* storage = EntitiesStorage::Get();
 	std::vector< GameEntity* >* vec = storage->GetStorage();
 
-	if (COMPARE_STRINGS(layer, "layer1") == 0) {
+
+	if (COMPARE_STRINGS(layer, "layer4") == 0) { // the outmost background
+
+		m_Game->SetDrawTarget(m_Layer4);
+		m_Game->Clear(olc::VERY_DARK_BLUE);
 
 
-#pragma omp parallel num_threads(1)
 		for (auto const& it : *vec) {
-			if (COMPARE_STRINGS(it->m_GraphicsCmp->m_DrawingLayer, "layer1") == 0) {
+			if (COMPARE_STRINGS(it->m_GraphicsCmp->m_DrawingLayer, "layer4") == 0) {
 
 				// Draw appropriate loaded sprite on position specified.
 				m_Game->DrawDecal(vi2d(it->m_TransformCmp->m_PosX, it->m_TransformCmp->m_PosY),
@@ -23,16 +26,41 @@ void Renderer::Render(std::string layer) {
 		}
 
 
-	}
-	else if (COMPARE_STRINGS(layer, "layer2") == 0) {
-
+		m_Game->EnableLayer(m_Layer4, true);
 	}
 	else if (COMPARE_STRINGS(layer, "layer3") == 0) {
 
-	}
-	else if (COMPARE_STRINGS(layer, "layer4") == 0) {
+		m_Game->SetDrawTarget(m_Layer3);
+		m_Game->Clear(olc::BLANK);
+
+
+		m_Game->EnableLayer(m_Layer3, true);
 
 	}
+	else if (COMPARE_STRINGS(layer, "layer2") == 0) {
+
+		m_Game->SetDrawTarget(m_Layer2);
+		m_Game->Clear(olc::BLANK);
+
+
+		m_Game->EnableLayer(m_Layer2, true);
+
+	}
+	else if (COMPARE_STRINGS(layer, "layer1") == 0) {
+		
+		m_Game->SetDrawTarget(m_Layer1);
+		m_Game->Clear(olc::BLANK);
+
+#ifdef _DEBUG
+		m_Game->DrawGrid();
+#endif // _DEBUG
+
+		m_Game->EnableLayer(m_Layer1, true);
+
+	}
+
+
+	m_Game->SetDrawTarget(nullptr);
 }
 
 
@@ -137,6 +165,7 @@ void Game::_initialize() {
 
 	_loadSpriteResources();
 	_initializeMap();
+
 }
 
 
@@ -146,6 +175,10 @@ bool Game::OnUserCreate() {
 	_initialize();
 
 	m_Renderer = new Renderer(this);
+	m_Renderer->m_Layer1 = CreateLayer();
+	m_Renderer->m_Layer2 = CreateLayer();
+	m_Renderer->m_Layer3 = CreateLayer();
+	m_Renderer->m_Layer4 = CreateLayer();
 
 
 	return true;
@@ -160,11 +193,9 @@ bool Game::OnUserUpdate(float fElapsedTime) {
 	m_Renderer->Render("layer3");
 	m_Renderer->Render("layer4");
 
-#ifdef _DEBUG
-	_drawDebugGrid();
-#endif // _DEBUG
 
-
+	// At the end specfy the drawing the 0-th layer, the uppermost one.
+	Clear(olc::BLANK);
 
 	return true;
 }

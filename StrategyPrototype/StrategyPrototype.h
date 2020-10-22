@@ -14,6 +14,16 @@ public:
 	void Render(std::string layer);
 
 	Game* m_Game = nullptr;
+
+
+	// Rendering Layers.
+	// Layer 0 is always the last that is rendered and cant be changed,
+	// it is the most top surface.
+	// Last layer is drawn first. We start from 1 to 4.
+	int m_Layer4;
+	int m_Layer3;
+	int m_Layer2;
+	int m_Layer1;
 };
 
 
@@ -28,7 +38,7 @@ public:
 	bool OnUserUpdate(float fElapsedTime) override;
 
 
-
+	void DrawGrid() { _drawDebugGrid(); }
 
 
 	Renderer* m_Renderer;

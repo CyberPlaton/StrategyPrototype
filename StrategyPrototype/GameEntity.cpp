@@ -30,7 +30,7 @@ void WorldMapDrawingOptions::_createMap() {
 			m_MapDefinitions->at(i).at(j) = new MapTile();
 
 			m_MapDefinitions->at(i).at(j)->m_GraphicsCmp->m_SpriteName = "null";
-			m_MapDefinitions->at(i).at(j)->m_GraphicsCmp->m_DrawingLayer = "layer1"; // Draw ground tiles first.
+			m_MapDefinitions->at(i).at(j)->m_GraphicsCmp->m_DrawingLayer = "layer4"; // Draw ground tiles first.
 
 			storage->AddGameEntitie(m_MapDefinitions->at(i).at(j)); // Add Maptile to EntitiesStorage.
 		}
