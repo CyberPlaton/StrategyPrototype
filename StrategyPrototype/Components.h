@@ -11,17 +11,31 @@ struct CMPIdentifier {
 
 	}
 
-	std::string m_ID = NULL;
+	std::string m_ID;
 };
 
 
 struct CMPGraphics{
 
+
+
+	std::string m_DrawingLayer;
+
+	std::string m_SpriteName;
+	std::string m_SpritePath;
 };
 
 
 struct CMPTransform {
 
+
+
+	int m_PosX;
+	int m_PosY;
+
+
+	int m_Width;
+	int m_Height;
 };
 
 

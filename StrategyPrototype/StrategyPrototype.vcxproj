@@ -151,7 +151,6 @@
     <ClCompile Include="Platform.cpp" />
     <ClCompile Include="Resources.cpp" />
     <ClCompile Include="StrategyPrototype.cpp" />
-    <ClCompile Include="WorldMap.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ColorConsole.h" />
@@ -162,7 +161,7 @@
     <ClInclude Include="olcPixelGameEngine.h" />
     <ClInclude Include="Platform.h" />
     <ClInclude Include="Resources.h" />
-    <ClInclude Include="WorldMap.h" />
+    <ClInclude Include="StrategyPrototype.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
