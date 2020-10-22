@@ -11,6 +11,7 @@
 #include<random>
 #include<stdexcept>
 #include<stdarg.h> // for custom printf function.
+#include<array>
 
 
 
