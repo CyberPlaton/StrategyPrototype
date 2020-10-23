@@ -11,6 +11,33 @@ void CMPCameraInput::HandleKeyboard(Camera* cam) {
 		context->m_DebugDraw = (context->m_DebugDraw == true) ? false : true;
 	}
 
+	if (context->GetKey(olc::Key::W).bHeld) {
+
+		g_vi2dCameraPosition.y -= 0.1f;
+	}
+
+	if (context->GetKey(olc::Key::A).bHeld) {
+
+		g_vi2dCameraPosition.x -= 0.1f;
+
+	}
+
+	if (context->GetKey(olc::Key::S).bHeld) {
+
+		g_vi2dCameraPosition.y += 0.1f;
+
+	}
+
+	if (context->GetKey(olc::Key::D).bHeld) {
+
+		g_vi2dCameraPosition.x += 0.1f;
+	}
+
+
+	if (context->GetKey(olc::Key::ESCAPE).bReleased) {
+
+		exit(0);
+	}
 }
 
 
@@ -181,6 +208,9 @@ void Game::DebugDrawStats() {
 			DrawString(olc::vi2d(it->m_TransformCmp->m_PosX, it->m_TransformCmp->m_PosY), s3, olc::RED, 1.0f);
 		}
 	}
+
+
+
 }
 
 
