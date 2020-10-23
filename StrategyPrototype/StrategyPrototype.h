@@ -149,4 +149,5 @@ private:
 
 
 	void _updateEntitiesMapCellCoords();
+	void _initializeMapTileCellCoords();
 };

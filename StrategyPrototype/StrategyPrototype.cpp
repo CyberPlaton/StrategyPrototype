@@ -19,7 +19,7 @@ void CMPCameraInput::HandleKeyboard(Camera* cam) {
 
 	if (context->GetKey(olc::Key::W).bHeld) {
 
-		//g_vi2dCameraPosition.y -= 0.1f;
+		g_vi2dCameraPosition.y -= 1;
 
 		for (auto it : *EntitiesStorage::Get()->GetStorage()) {
 
@@ -40,7 +40,7 @@ void CMPCameraInput::HandleKeyboard(Camera* cam) {
 
 	if (context->GetKey(olc::Key::A).bHeld) {
 
-		//g_vi2dCameraPosition.x -= 0.1f;
+		g_vi2dCameraPosition.x -= 1;
 
 		for (auto it : *EntitiesStorage::Get()->GetStorage()) {
 
@@ -62,7 +62,7 @@ void CMPCameraInput::HandleKeyboard(Camera* cam) {
 
 	if (context->GetKey(olc::Key::S).bHeld) {
 
-		//g_vi2dCameraPosition.y += 0.1f;
+		g_vi2dCameraPosition.y += 1;
 
 		for (auto it : *EntitiesStorage::Get()->GetStorage()) {
 
@@ -84,7 +84,7 @@ void CMPCameraInput::HandleKeyboard(Camera* cam) {
 
 	if (context->GetKey(olc::Key::D).bHeld) {
 
-		//g_vi2dCameraPosition.x += 0.1f;
+		g_vi2dCameraPosition.x += 1;
 
 		for (auto it : *EntitiesStorage::Get()->GetStorage()) {
 
@@ -225,6 +225,8 @@ void Game::_initialize() {
 bool Game::OnUserCreate() {
 
 	_initialize();
+	_initializeMapTileCellCoords();
+
 
 	Camera* cam = new Camera(this, 0, 0);
 	m_Renderer = new Renderer(this, cam);
@@ -249,11 +251,11 @@ bool Game::OnUserUpdate(float fElapsedTime) {
 	m_Renderer->m_MainCam->m_CamInput->HandleMouse(m_Renderer->m_MainCam);
 
 	// Layered rendering.
-	m_Renderer->RenderLayer1();
-	m_Renderer->RenderLayer2();
-	m_Renderer->RenderLayer3();
-	m_Renderer->RenderLayer4();
-	m_Renderer->RenderLayer0();
+	m_Renderer->RenderLayer1(); // units layer.
+	m_Renderer->RenderLayer2(); // buildings, cities...
+	m_Renderer->RenderLayer3(); // terrain, hills ...
+	m_Renderer->RenderLayer4(); // ground maptiles
+	m_Renderer->RenderLayer0(); // effects, general things...
 
 	if (m_DebugDraw) DebugDrawStats();
 
@@ -269,13 +271,19 @@ void Game::DebugDrawStats() {
 
 	// Draw each maptiles mapcell
 	
-	std::string s3;
+	std::string s3, s4;
 	for (auto it : *EntitiesStorage::Get()->GetStorage()) {
 
 		if (static_cast<MapTile*>(it)->m_MapTileEntities != nullptr ) { // Means this is a MapTile.
 
+			// Camera dependent Cell 
 			s3 = std::to_string(it->m_TransformCmp->m_Cell[0]) + " : " + std::to_string(it->m_TransformCmp->m_Cell[1]);
 			DrawString(olc::vi2d(it->m_TransformCmp->m_PosX, it->m_TransformCmp->m_PosY), s3, olc::RED, 1.0f);
+
+			// Gameworld Cell
+			s4 = std::to_string(it->m_TransformCmp->m_GameWorldSpaceCell[0]) + " : " + std::to_string(it->m_TransformCmp->m_GameWorldSpaceCell[1]);
+			DrawString(olc::vi2d(it->m_TransformCmp->m_PosX, it->m_TransformCmp->m_PosY+20), s4, olc::DARK_RED, 1.0f);
+
 		}
 	}
 
@@ -455,12 +463,6 @@ void Renderer::RenderLayer0() {
 
 void Game::_updateEntitiesMapCellCoords() {
 
-	/*
-	// Define appropriate MapCell
-	m_MapDefinitions->at(i).at(j)->m_TransformCmp->m_Cell[0] = (int)m_MapDefinitions->at(i).at(j)->m_TransformCmp->m_PosX / 256;
-	m_MapDefinitions->at(i).at(j)->m_TransformCmp->m_Cell[1] = (int)m_MapDefinitions->at(i).at(j)->m_TransformCmp->m_PosY / 256;
-	*/
-
 	EntitiesStorage* storage = EntitiesStorage::Get();
 	std::vector< GameEntity* >* vec = storage->GetStorage();
 
@@ -481,6 +483,35 @@ void Game::_updateEntitiesMapCellCoords() {
 
 					iter->m_TransformCmp->m_Cell[0] = it->m_TransformCmp->m_Cell[0];
 					iter->m_TransformCmp->m_Cell[1] = it->m_TransformCmp->m_Cell[1];
+				}
+			}
+		}
+	}
+}
+
+
+void Game::_initializeMapTileCellCoords() {
+
+	EntitiesStorage* storage = EntitiesStorage::Get();
+	std::vector< GameEntity* >* vec = storage->GetStorage();
+
+	for (auto& it : *vec) { // Iterate through all entities.
+
+		it->m_TransformCmp->m_GameWorldSpaceCell[0] = (int)it->m_TransformCmp->m_PosX / 256;
+		it->m_TransformCmp->m_GameWorldSpaceCell[1] = (int)it->m_TransformCmp->m_PosY / 256;
+
+
+		MapTile* itMapTile = static_cast<MapTile*>(it);
+		if (itMapTile->m_MapTileEntities != nullptr) { // This object IS a maptile.
+
+
+			if (itMapTile->m_MapTileEntities->size() > 0) { // ... and its vector is not empty.
+
+
+				for (auto iter : *itMapTile->m_MapTileEntities) { // Do the same for each entity on this maptile.
+
+					iter->m_TransformCmp->m_GameWorldSpaceCell[0] = it->m_TransformCmp->m_GameWorldSpaceCell[0];
+					iter->m_TransformCmp->m_GameWorldSpaceCell[1] = it->m_TransformCmp->m_GameWorldSpaceCell[1];
 				}
 			}
 		}

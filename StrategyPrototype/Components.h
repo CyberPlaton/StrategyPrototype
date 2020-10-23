@@ -36,7 +36,11 @@ struct CMPTransform {
 	int m_Width;
 	int m_Height;
 
-	int m_Cell[2];
+	int m_Cell[2]; // The Cell is dependent on the camera position.
+				   // Means, in the left upper windwow corner is always the cell 0,0
+
+	int m_GameWorldSpaceCell[2]; // This Cell on the other hand is global defined and does
+								 // not change despite cameras movement.
 };
 
 
