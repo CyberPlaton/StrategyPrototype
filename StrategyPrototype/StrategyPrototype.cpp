@@ -153,7 +153,6 @@ void Game::_initialize() {
 
 bool Game::OnUserCreate() {
 
-
 	_initialize();
 
 	Camera* cam = new Camera(this, 0, 0);
