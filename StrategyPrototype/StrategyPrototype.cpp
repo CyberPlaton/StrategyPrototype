@@ -7,30 +7,101 @@ void CMPCameraInput::HandleKeyboard(Camera* cam) {
 
 	Game* context = cam->m_Game;
 
+	int speed = 1;
+
+	if (context->GetKey(olc::Key::SHIFT).bHeld) {
+		speed = 5;
+	}
+
 	if (context->GetKey(olc::Key::TAB).bPressed) {
 		context->m_DebugDraw = (context->m_DebugDraw == true) ? false : true;
 	}
 
 	if (context->GetKey(olc::Key::W).bHeld) {
 
-		g_vi2dCameraPosition.y -= 0.1f;
+		//g_vi2dCameraPosition.y -= 0.1f;
+
+		for (auto it : *EntitiesStorage::Get()->GetStorage()) {
+
+			it->m_TransformCmp->m_PosY += 1* speed;
+
+			if (static_cast<MapTile*>(it)->m_MapTileEntities != nullptr) {
+				if (static_cast<MapTile*>(it)->m_MapTileEntities->size() > 0) {
+
+
+					for (auto iter : *static_cast<MapTile*>(it)->m_MapTileEntities) {
+						
+						iter->m_TransformCmp->m_PosY += 1 * speed;
+					}
+				}
+			}
+		}
 	}
 
 	if (context->GetKey(olc::Key::A).bHeld) {
 
-		g_vi2dCameraPosition.x -= 0.1f;
+		//g_vi2dCameraPosition.x -= 0.1f;
 
+		for (auto it : *EntitiesStorage::Get()->GetStorage()) {
+
+			it->m_TransformCmp->m_PosX += 1 * speed;
+
+
+			if (static_cast<MapTile*>(it)->m_MapTileEntities != nullptr) {
+				if (static_cast<MapTile*>(it)->m_MapTileEntities->size() > 0) {
+
+
+					for (auto iter : *static_cast<MapTile*>(it)->m_MapTileEntities) {
+
+						iter->m_TransformCmp->m_PosX += 1 * speed;
+					}
+				}
+			}
+		}
 	}
 
 	if (context->GetKey(olc::Key::S).bHeld) {
 
-		g_vi2dCameraPosition.y += 0.1f;
+		//g_vi2dCameraPosition.y += 0.1f;
 
+		for (auto it : *EntitiesStorage::Get()->GetStorage()) {
+
+			it->m_TransformCmp->m_PosY -= 1 * speed;
+
+
+			if (static_cast<MapTile*>(it)->m_MapTileEntities != nullptr) {
+				if (static_cast<MapTile*>(it)->m_MapTileEntities->size() > 0) {
+
+
+					for (auto iter : *static_cast<MapTile*>(it)->m_MapTileEntities) {
+
+						iter->m_TransformCmp->m_PosY -= 1 * speed;
+					}
+				}
+			}
+		}
 	}
 
 	if (context->GetKey(olc::Key::D).bHeld) {
 
-		g_vi2dCameraPosition.x += 0.1f;
+		//g_vi2dCameraPosition.x += 0.1f;
+
+		for (auto it : *EntitiesStorage::Get()->GetStorage()) {
+
+			it->m_TransformCmp->m_PosX -= 1 * speed;
+
+
+			if (static_cast<MapTile*>(it)->m_MapTileEntities != nullptr) {
+				if (static_cast<MapTile*>(it)->m_MapTileEntities->size() > 0) {
+
+
+					for (auto iter : *static_cast<MapTile*>(it)->m_MapTileEntities) {
+
+						iter->m_TransformCmp->m_PosX -= 1 * speed;
+					}
+				}
+			}
+		}
 	}
 
 
