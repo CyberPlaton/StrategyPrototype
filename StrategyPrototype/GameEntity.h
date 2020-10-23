@@ -37,24 +37,32 @@ public:
 
 class Forest : public GameEntity {
 public:
-	Forest(std::string name) {
-		m_ForestName = name;
+	Forest(std::string name, std::string layer, int xpos, int ypos) {
+		m_TransformCmp->m_PosX = xpos;
+		m_TransformCmp->m_PosY = ypos;
+		m_GraphicsCmp->m_DrawingLayer = layer;
+		m_GraphicsCmp->m_SpriteName = name;
 	}
 
-
-	std::string m_ForestName;
 };
 
 
 
 class MapTile : public GameEntity {
 public:
-	MapTile() {
+	MapTile(std::string name, std::string layer, int xpos, int ypos) {
 		m_MapTileEntities = new std::vector<GameEntity*>();
+
+		m_MapTileName = name;
+		m_TransformCmp->m_PosX = xpos;
+		m_TransformCmp->m_PosY = ypos;
+		m_GraphicsCmp->m_DrawingLayer = layer;
+
 	}
 
 
 	std::vector<GameEntity*>* m_MapTileEntities = nullptr;
+	std::string m_MapTileName;
 };
 
 

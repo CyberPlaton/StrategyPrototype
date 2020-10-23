@@ -46,3 +46,11 @@ struct CMPPhysics {
 struct CMPArtificialIntelligence {
 
 };
+
+
+struct CMPInput {
+
+
+	virtual void HandleKeyboard();
+	virtual void HandleMouse();
+};

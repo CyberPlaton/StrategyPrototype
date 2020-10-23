@@ -1,66 +1,39 @@
 #include"StrategyPrototype.h"
 
-#define MAX_THREAD_NUMBER 20
-
-void Renderer::Render(std::string layer) {
-
-	using namespace olc;
-
-	EntitiesStorage* storage = EntitiesStorage::Get();
-	std::vector< GameEntity* >* vec = storage->GetStorage();
+static olc::vf2d g_vi2dDecalScale = olc::vf2d(1.0f, 1.0f);
+static olc::vf2d g_vi2dCameraPosition = olc::vf2d(0.0f, 0.0f);
 
 
-	if (COMPARE_STRINGS(layer, "layer4") == 0) { // the outmost background
 
-		m_Game->SetDrawTarget(m_Layer4);
-		m_Game->Clear(olc::VERY_DARK_BLUE);
+void CMPCameraInput::HandleKeyboard(Camera* cam) {
 
+	Game* context = cam->m_Game;
 
-		for (auto const& it : *vec) {
-			if (COMPARE_STRINGS(it->m_GraphicsCmp->m_DrawingLayer, "layer4") == 0) {
-
-				// Draw appropriate loaded sprite on position specified.
-				m_Game->DrawDecal(vi2d(it->m_TransformCmp->m_PosX, it->m_TransformCmp->m_PosY),
-										m_Game->m_SpriteResourceMap.at(it->m_GraphicsCmp->m_SpriteName));
-			}
-		}
-
-
-		m_Game->EnableLayer(m_Layer4, true);
+	if (context->GetKey(olc::Key::TAB).bPressed) {
+		context->m_DebugDraw = (context->m_DebugDraw == true) ? false : true;
 	}
-	else if (COMPARE_STRINGS(layer, "layer3") == 0) {
 
-		m_Game->SetDrawTarget(m_Layer3);
-		m_Game->Clear(olc::BLANK);
+	if (context->GetKey(olc::Key::Q).bHeld) {
 
-
-		m_Game->EnableLayer(m_Layer3, true);
-
+		g_vi2dDecalScale.x += 0.02f;
+		g_vi2dDecalScale.y += 0.02f;
 	}
-	else if (COMPARE_STRINGS(layer, "layer2") == 0) {
 
-		m_Game->SetDrawTarget(m_Layer2);
-		m_Game->Clear(olc::BLANK);
+	if (context->GetKey(olc::Key::E).bHeld) {
 
-
-		m_Game->EnableLayer(m_Layer2, true);
-
-	}
-	else if (COMPARE_STRINGS(layer, "layer1") == 0) {
-		
-		m_Game->SetDrawTarget(m_Layer1);
-		m_Game->Clear(olc::BLANK);
-
-#ifdef _DEBUG
-		m_Game->DrawGrid();
-#endif // _DEBUG
-
-		m_Game->EnableLayer(m_Layer1, true);
+		g_vi2dDecalScale.x -= 0.02f;
+		g_vi2dDecalScale.y -= 0.02f;
 
 	}
 
 
-	m_Game->SetDrawTarget(nullptr);
+
+
+}
+
+
+void CMPCameraInput::HandleMouse(Camera* cam) {
+
 }
 
 
@@ -174,7 +147,9 @@ bool Game::OnUserCreate() {
 
 	_initialize();
 
-	m_Renderer = new Renderer(this);
+	Camera* cam = new Camera(this, 0, 0);
+	m_Renderer = new Renderer(this, cam);
+
 	m_Renderer->m_Layer1 = CreateLayer();
 	m_Renderer->m_Layer2 = CreateLayer();
 	m_Renderer->m_Layer3 = CreateLayer();
@@ -187,19 +162,33 @@ bool Game::OnUserCreate() {
 
 bool Game::OnUserUpdate(float fElapsedTime) {
 
+	// Input handling.
+	m_Renderer->m_MainCam->m_CamInput->HandleKeyboard(m_Renderer->m_MainCam);
+	m_Renderer->m_MainCam->m_CamInput->HandleMouse(m_Renderer->m_MainCam);
+
 	// Layered rendering.
-	m_Renderer->Render("layer1");
-	m_Renderer->Render("layer2");
-	m_Renderer->Render("layer3");
-	m_Renderer->Render("layer4");
+	m_Renderer->RenderLayer1();
+	m_Renderer->RenderLayer2();
+	m_Renderer->RenderLayer3();
+	m_Renderer->RenderLayer4();
+	m_Renderer->RenderLayer0();
 
-
-	// At the end specfy the drawing the 0-th layer, the uppermost one.
-	Clear(olc::BLANK);
+	if (m_DebugDraw) DebugDrawStats();
 
 	return true;
 }
 
+
+void Game::DebugDrawStats() {
+
+	std::string s = "Scale " + std::to_string(g_vi2dDecalScale.x) + " : " + std::to_string(g_vi2dDecalScale.y);
+	DrawString(olc::vi2d(2, 2), s, olc::RED, 2.0f);
+
+
+	std::string s2 = "Camera Position " + std::to_string(g_vi2dCameraPosition.x) + " : " + std::to_string(g_vi2dCameraPosition.y);
+	DrawString(olc::vi2d(2, 40), s2, olc::RED, 2.0f);
+
+}
 
 
 void Game::_drawDebugGrid() {
@@ -208,16 +197,14 @@ void Game::_drawDebugGrid() {
 
 	int w = ScreenWidth();
 	int h = ScreenHeight();
-	int offsetx = w / 47;
-	int offsety = h / 35;
 
 
-	for (int i = 0; i < w; i += offsetx) {
+	for (int i = 0; i < w; i += 250) {
 
 		DrawLine(vi2d(i, 0), vi2d(i, h), olc::WHITE);
 	}
 
-	for (int j = 0; j < h; j += offsety) {
+	for (int j = 0; j < h; j += 250) {
 
 		DrawLine(vi2d(0, j), vi2d(w, j), olc::WHITE);
 	}
@@ -229,9 +216,150 @@ int main()
 {
 	Game demo;
 
-	if (demo.Construct(968, 720, 2, 2, false, true, false))
+	if (demo.Construct(968, 720, 1, 1, false, true, false))
 		demo.Start();
 
 
 	return 0;
+}
+
+
+void Renderer::RenderLayer4() {
+
+	using namespace olc;
+
+	EntitiesStorage* storage = EntitiesStorage::Get();
+	std::vector< GameEntity* >* vec = storage->GetStorage();
+
+
+	float scale = g_vi2dDecalScale.x; // for x and y same.
+
+
+	m_Game->SetDrawTarget(m_Layer4);
+	m_Game->Clear(olc::VERY_DARK_BLUE);
+
+
+	for (auto const& it : *vec) {
+		if (COMPARE_STRINGS(it->m_GraphicsCmp->m_DrawingLayer, "layer4") == 0) {
+
+			// Draw appropriate loaded sprite on position specified.
+			m_Game->DrawDecal(vi2d(it->m_TransformCmp->m_PosX* scale, it->m_TransformCmp->m_PosY* scale),
+				m_Game->m_SpriteResourceMap.at(it->m_GraphicsCmp->m_SpriteName), g_vi2dDecalScale);
+		}
+	}
+
+
+	m_Game->EnableLayer(m_Layer4, true);
+	m_Game->SetDrawTarget(nullptr);
+
+}
+
+
+
+void Renderer::RenderLayer3() {
+
+
+	using namespace olc;
+
+
+	EntitiesStorage* storage = EntitiesStorage::Get();
+	std::vector< GameEntity* >* vec = storage->GetStorage();
+
+
+	float scale = g_vi2dDecalScale.x; // for x and y same.
+
+
+	m_Game->SetDrawTarget(m_Layer3);
+	m_Game->Clear(olc::BLANK);
+
+
+	for (auto const& it : *vec) {
+		if (static_cast<MapTile*>(it)->m_MapTileEntities->size() > 0) { // Forest entity.
+
+			for (auto iter : *static_cast<MapTile*>(it)->m_MapTileEntities) {
+
+
+				// Draw appropriate loaded sprite on position specified.
+				m_Game->DrawDecal(vi2d(iter->m_TransformCmp->m_PosX* scale, iter->m_TransformCmp->m_PosY* scale),
+					m_Game->m_SpriteResourceMap.at(iter->m_GraphicsCmp->m_SpriteName), g_vi2dDecalScale);
+				
+			}
+		}
+	}
+
+
+	m_Game->EnableLayer(m_Layer3, true);
+	m_Game->SetDrawTarget(nullptr);
+
+}
+
+
+void Renderer::RenderLayer2() {
+
+	using namespace olc;
+
+	EntitiesStorage* storage = EntitiesStorage::Get();
+	std::vector< GameEntity* >* vec = storage->GetStorage();
+
+
+	m_Game->SetDrawTarget(m_Layer2);
+	m_Game->Clear(olc::BLANK);
+
+
+	for (auto const& it : *vec) {
+		if (COMPARE_STRINGS(it->m_GraphicsCmp->m_DrawingLayer, "layer2") == 0) {
+
+			// Draw appropriate loaded sprite on position specified.
+			m_Game->DrawDecal(vi2d(it->m_TransformCmp->m_PosX, it->m_TransformCmp->m_PosY),
+				m_Game->m_SpriteResourceMap.at(it->m_GraphicsCmp->m_SpriteName), g_vi2dDecalScale);
+		}
+	}
+
+
+	m_Game->EnableLayer(m_Layer2, true);
+	m_Game->SetDrawTarget(nullptr);
+
+}
+
+
+void Renderer::RenderLayer1() {
+
+	using namespace olc;
+
+	EntitiesStorage* storage = EntitiesStorage::Get();
+	std::vector< GameEntity* >* vec = storage->GetStorage();
+
+
+	m_Game->SetDrawTarget(m_Layer1);
+	m_Game->Clear(olc::BLANK);
+
+
+	for (auto const& it : *vec) {
+		if (COMPARE_STRINGS(it->m_GraphicsCmp->m_DrawingLayer, "layer1") == 0) {
+
+			// Draw appropriate loaded sprite on position specified.
+			m_Game->DrawDecal(vi2d(it->m_TransformCmp->m_PosX, it->m_TransformCmp->m_PosY),
+				m_Game->m_SpriteResourceMap.at(it->m_GraphicsCmp->m_SpriteName), g_vi2dDecalScale);
+		}
+	}
+
+	/*
+#ifdef _DEBUG
+	m_Game->DrawGrid();
+#endif // _DEBUG
+	*/
+
+	m_Game->EnableLayer(m_Layer1, true);
+	m_Game->SetDrawTarget(nullptr);
+
+
+}
+
+
+void Renderer::RenderLayer0() {
+
+	using namespace olc;
+
+	m_Game->Clear(olc::BLANK);
+
 }

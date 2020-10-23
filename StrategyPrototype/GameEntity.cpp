@@ -23,57 +23,28 @@ void WorldMapDrawingOptions::_createMap() {
 	// MapTileArray initialization
 	for (int i = 0; i <= m_MapWidth; i++) {
 
-
 		for (int j = 0; j <= m_MapHeight; j++) {
 
 			// "Zeroed" out MapTileArray
-			m_MapDefinitions->at(i).at(j) = new MapTile();
+			m_MapDefinitions->at(i).at(j) = new MapTile("MapTile", "layer4", i*256, j*256);
 
 			m_MapDefinitions->at(i).at(j)->m_GraphicsCmp->m_SpriteName = "null";
-			m_MapDefinitions->at(i).at(j)->m_GraphicsCmp->m_DrawingLayer = "layer4"; // Draw ground tiles first.
-
 			storage->AddGameEntitie(m_MapDefinitions->at(i).at(j)); // Add Maptile to EntitiesStorage.
+
 		}
 	}
-
-	int r;
-	Forest* f = nullptr;
 
 
 	// Map definition.
 	for (int i = 0; i <= m_MapWidth; i++) {
 
-
 		for (int j = 0; j <= m_MapHeight; j++) {
 
 			// Define map as purely temperate ground
 			m_MapDefinitions->at(i).at(j)->m_GraphicsCmp->m_SpriteName = "temperate";
+			
+			m_MapDefinitions->at(i).at(j)->m_MapTileEntities->push_back(new Forest("forest_scarce", "layer3", i * 256, j * 256));
 
-
-			// Add forest entities.
-			/*
-			r = rand() % 3;
-			switch (r) {
-			case 0:
-				f = new Forest("forest_scarce");
-				f->m_GraphicsCmp->m_DrawingLayer = "layer2";
-
-				m_MapDefinitions->at(i).at(j)->m_MapTileEntities->push_back(f);
-				break;
-			case 1:
-				f = new Forest("forest_norm");
-				f->m_GraphicsCmp->m_DrawingLayer = "layer2";
-
-				m_MapDefinitions->at(i).at(j)->m_MapTileEntities->push_back(f);
-				break;
-			case 2:
-				f = new Forest("forest_deep");
-				f->m_GraphicsCmp->m_DrawingLayer = "layer2";
-
-				m_MapDefinitions->at(i).at(j)->m_MapTileEntities->push_back(f);
-				break;
-			}
-			*/
 		}
 	}
 }
