@@ -35,6 +35,8 @@ struct CMPTransform {
 
 	int m_Width;
 	int m_Height;
+
+	int m_Cell[2];
 };
 
 

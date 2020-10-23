@@ -51,6 +51,7 @@ public:
 class MapTile : public GameEntity {
 public:
 	MapTile(std::string name, std::string layer, int xpos, int ypos) {
+		
 		m_MapTileEntities = new std::vector<GameEntity*>();
 
 		m_MapTileName = name;

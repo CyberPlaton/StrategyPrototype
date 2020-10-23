@@ -146,4 +146,7 @@ private:
 	void _loadSpriteResources();
 
 	void _drawDebugGrid();
+
+
+	void _updateEntitiesMapCellCoords();
 };

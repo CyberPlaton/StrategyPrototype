@@ -1,8 +1,6 @@
 #include"StrategyPrototype.h"
 
-static olc::vf2d g_vi2dDecalScale = olc::vf2d(1.0f, 1.0f);
 static olc::vf2d g_vi2dCameraPosition = olc::vf2d(0.0f, 0.0f);
-
 
 
 void CMPCameraInput::HandleKeyboard(Camera* cam) {
@@ -12,22 +10,6 @@ void CMPCameraInput::HandleKeyboard(Camera* cam) {
 	if (context->GetKey(olc::Key::TAB).bPressed) {
 		context->m_DebugDraw = (context->m_DebugDraw == true) ? false : true;
 	}
-
-	if (context->GetKey(olc::Key::Q).bHeld) {
-
-		g_vi2dDecalScale.x += 0.02f;
-		g_vi2dDecalScale.y += 0.02f;
-	}
-
-	if (context->GetKey(olc::Key::E).bHeld) {
-
-		g_vi2dDecalScale.x -= 0.02f;
-		g_vi2dDecalScale.y -= 0.02f;
-
-	}
-
-
-
 
 }
 
@@ -162,6 +144,9 @@ bool Game::OnUserCreate() {
 
 bool Game::OnUserUpdate(float fElapsedTime) {
 
+	// Update Entities MapCell
+	_updateEntitiesMapCellCoords();
+
 	// Input handling.
 	m_Renderer->m_MainCam->m_CamInput->HandleKeyboard(m_Renderer->m_MainCam);
 	m_Renderer->m_MainCam->m_CamInput->HandleMouse(m_Renderer->m_MainCam);
@@ -181,13 +166,21 @@ bool Game::OnUserUpdate(float fElapsedTime) {
 
 void Game::DebugDrawStats() {
 
-	std::string s = "Scale " + std::to_string(g_vi2dDecalScale.x) + " : " + std::to_string(g_vi2dDecalScale.y);
-	DrawString(olc::vi2d(2, 2), s, olc::RED, 2.0f);
-
-
 	std::string s2 = "Camera Position " + std::to_string(g_vi2dCameraPosition.x) + " : " + std::to_string(g_vi2dCameraPosition.y);
 	DrawString(olc::vi2d(2, 40), s2, olc::RED, 2.0f);
 
+
+	// Draw each maptiles mapcell
+	
+	std::string s3;
+	for (auto it : *EntitiesStorage::Get()->GetStorage()) {
+
+		if (static_cast<MapTile*>(it)->m_MapTileEntities != nullptr ) { // Means this is a MapTile.
+
+			s3 = std::to_string(it->m_TransformCmp->m_Cell[0]) + " : " + std::to_string(it->m_TransformCmp->m_Cell[1]);
+			DrawString(olc::vi2d(it->m_TransformCmp->m_PosX, it->m_TransformCmp->m_PosY), s3, olc::RED, 1.0f);
+		}
+	}
 }
 
 
@@ -232,9 +225,6 @@ void Renderer::RenderLayer4() {
 	std::vector< GameEntity* >* vec = storage->GetStorage();
 
 
-	float scale = g_vi2dDecalScale.x; // for x and y same.
-
-
 	m_Game->SetDrawTarget(m_Layer4);
 	m_Game->Clear(olc::VERY_DARK_BLUE);
 
@@ -243,8 +233,8 @@ void Renderer::RenderLayer4() {
 		if (COMPARE_STRINGS(it->m_GraphicsCmp->m_DrawingLayer, "layer4") == 0) {
 
 			// Draw appropriate loaded sprite on position specified.
-			m_Game->DrawDecal(vi2d(it->m_TransformCmp->m_PosX* scale, it->m_TransformCmp->m_PosY* scale),
-				m_Game->m_SpriteResourceMap.at(it->m_GraphicsCmp->m_SpriteName), g_vi2dDecalScale);
+			m_Game->DrawDecal(vi2d(it->m_TransformCmp->m_PosX, it->m_TransformCmp->m_PosY),
+				m_Game->m_SpriteResourceMap.at(it->m_GraphicsCmp->m_SpriteName));
 		}
 	}
 
@@ -266,8 +256,6 @@ void Renderer::RenderLayer3() {
 	std::vector< GameEntity* >* vec = storage->GetStorage();
 
 
-	float scale = g_vi2dDecalScale.x; // for x and y same.
-
 
 	m_Game->SetDrawTarget(m_Layer3);
 	m_Game->Clear(olc::BLANK);
@@ -280,8 +268,8 @@ void Renderer::RenderLayer3() {
 
 
 				// Draw appropriate loaded sprite on position specified.
-				m_Game->DrawDecal(vi2d(iter->m_TransformCmp->m_PosX* scale, iter->m_TransformCmp->m_PosY* scale),
-					m_Game->m_SpriteResourceMap.at(iter->m_GraphicsCmp->m_SpriteName), g_vi2dDecalScale);
+				m_Game->DrawDecal(vi2d(iter->m_TransformCmp->m_PosX, iter->m_TransformCmp->m_PosY),
+					m_Game->m_SpriteResourceMap.at(iter->m_GraphicsCmp->m_SpriteName));
 				
 			}
 		}
@@ -311,7 +299,7 @@ void Renderer::RenderLayer2() {
 
 			// Draw appropriate loaded sprite on position specified.
 			m_Game->DrawDecal(vi2d(it->m_TransformCmp->m_PosX, it->m_TransformCmp->m_PosY),
-				m_Game->m_SpriteResourceMap.at(it->m_GraphicsCmp->m_SpriteName), g_vi2dDecalScale);
+				m_Game->m_SpriteResourceMap.at(it->m_GraphicsCmp->m_SpriteName));
 		}
 	}
 
@@ -339,7 +327,7 @@ void Renderer::RenderLayer1() {
 
 			// Draw appropriate loaded sprite on position specified.
 			m_Game->DrawDecal(vi2d(it->m_TransformCmp->m_PosX, it->m_TransformCmp->m_PosY),
-				m_Game->m_SpriteResourceMap.at(it->m_GraphicsCmp->m_SpriteName), g_vi2dDecalScale);
+				m_Game->m_SpriteResourceMap.at(it->m_GraphicsCmp->m_SpriteName));
 		}
 	}
 
@@ -362,4 +350,39 @@ void Renderer::RenderLayer0() {
 
 	m_Game->Clear(olc::BLANK);
 
+}
+
+
+void Game::_updateEntitiesMapCellCoords() {
+
+	/*
+	// Define appropriate MapCell
+	m_MapDefinitions->at(i).at(j)->m_TransformCmp->m_Cell[0] = (int)m_MapDefinitions->at(i).at(j)->m_TransformCmp->m_PosX / 256;
+	m_MapDefinitions->at(i).at(j)->m_TransformCmp->m_Cell[1] = (int)m_MapDefinitions->at(i).at(j)->m_TransformCmp->m_PosY / 256;
+	*/
+
+	EntitiesStorage* storage = EntitiesStorage::Get();
+	std::vector< GameEntity* >* vec = storage->GetStorage();
+
+	for (auto& it : *vec) { // Iterate through all entities.
+
+		it->m_TransformCmp->m_Cell[0] = (int)it->m_TransformCmp->m_PosX / 256;
+		it->m_TransformCmp->m_Cell[1] = (int)it->m_TransformCmp->m_PosY / 256;
+
+
+		MapTile* itMapTile = static_cast<MapTile*>(it);
+		if (itMapTile->m_MapTileEntities != nullptr) { // This object IS a maptile.
+
+
+			if (itMapTile->m_MapTileEntities->size() > 0) { // ... and its vector is not empty.
+
+				
+				for (auto iter : *itMapTile->m_MapTileEntities) { // Do the same for each entity on this maptile.
+
+					iter->m_TransformCmp->m_Cell[0] = it->m_TransformCmp->m_Cell[0];
+					iter->m_TransformCmp->m_Cell[1] = it->m_TransformCmp->m_Cell[1];
+				}
+			}
+		}
+	}
 }
