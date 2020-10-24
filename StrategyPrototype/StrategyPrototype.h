@@ -129,6 +129,7 @@ public:
 
 	void DebugDrawStats();
 
+	void AdvanceOneTurn();
 
 	Renderer* m_Renderer;
 	WorldMap* m_WorldMap;
@@ -140,6 +141,7 @@ public:
 
 	bool m_DebugDraw = false;
 
+	int m_TurnCount = 1;
 
 private:
 
@@ -150,6 +152,8 @@ private:
 	void _drawDebugGrid();
 
 	void _initializeMapTileCellCoords();
+	void _updateLocalMapTileCellCoords();
+	void _updateEntitiesMapTileCoords();
 
 
 	void _mapAIStateLogicFunctions();

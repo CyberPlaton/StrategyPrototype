@@ -28,6 +28,15 @@ public:
 	}
 
 
+	void UpdateMapCellCoords() {
+
+		if (m_TransformCmp) {
+			m_TransformCmp->m_GameWorldSpaceCell[0] = (int)m_TransformCmp->m_PosX / SPRITES_WIDTH_AND_HEIGHT;
+			m_TransformCmp->m_GameWorldSpaceCell[1] = (int)m_TransformCmp->m_PosY / SPRITES_WIDTH_AND_HEIGHT;
+		}
+	}
+
+
 	// Basic components for an Entity.
 	CMPIdentifier* m_IDCmp = nullptr;
 	CMPTransform* m_TransformCmp = nullptr;
@@ -84,33 +93,10 @@ public:
 
 
 	// Update is not meant to be done on each tick, only on occured changes.
-	void Update() {
+	void Update();
 
 
-		// Change graphics accordingly to own type.
-		switch (m_ForestType) {
-		case ForestType::FOREST_SCARCE:
-			m_GraphicsCmp->m_SpriteName = "forest_scarce";
-
-			break;
-		case ForestType::FOREST_NORMAL:
-			m_GraphicsCmp->m_SpriteName = "forest_normal";
-
-			break;
-		case ForestType::FOREST_DEEP:
-			m_GraphicsCmp->m_SpriteName = "forest_deep";
-
-			break;
-		case ForestType::FOREST_DYING:
-			m_GraphicsCmp->m_SpriteName = "forest_scarce"; // As we have no dying forest sprite now, change to scarce.
-
-			break;
-		default:
-			break;
-		}
-	}
-
-
+	int m_ForestLifeTimeNow = 0;
 	int m_ForestLifetime = 0;
 	ForestType m_ForestType = ForestType::FOREST_INVALID;
 
@@ -161,11 +147,14 @@ struct EntitiesStorage {
 
 	void DeleteGameEntitie(GameEntity* e) {
 
+
 		std::vector< GameEntity* >::iterator iterator = std::find(m_GameEntitiesVec->begin(), m_GameEntitiesVec->end(), e);
 
 		if (iterator != m_GameEntitiesVec->end()) {
 			m_GameEntitiesVec->erase(iterator);
 		}
+
+
 
 		if (e->m_AICmp) { // Delete entitie from AIEntities vector.
 
@@ -173,8 +162,34 @@ struct EntitiesStorage {
 
 			if (it != m_GameEntitiesWithAIVec->end()) {
 				m_GameEntitiesWithAIVec->erase(it);
+
+
+				// We need to find the maptiles on which this entities are and delete them from there too.
+
+				MapTile* our_maptile = nullptr;
+
+				// Find maptile on which this entity is.
+				for (auto maptile : *m_MapTileGameEntitiesVec) {
+
+					if (maptile->m_TransformCmp->m_GameWorldSpaceCell[0] == e->m_TransformCmp->m_GameWorldSpaceCell[0] &&
+						maptile->m_TransformCmp->m_GameWorldSpaceCell[1] == e->m_TransformCmp->m_GameWorldSpaceCell[1]) {
+
+						our_maptile = reinterpret_cast<MapTile*>(maptile);
+
+						std::vector< GameEntity*>::iterator entity = std::find(our_maptile->m_MapTileEntities->begin(),
+																				our_maptile->m_MapTileEntities->end(),
+																			e);
+						if (entity != our_maptile->m_MapTileEntities->end()) {
+
+							our_maptile->m_MapTileEntities->erase(entity);
+						}
+					}
+				}
+
 			}
 		}
+
+
 
 		if (_isMaptile(e)) {
 

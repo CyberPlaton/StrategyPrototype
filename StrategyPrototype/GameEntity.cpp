@@ -26,7 +26,7 @@ void WorldMapDrawingOptions::_createMap() {
 		for (int j = 0; j <= m_MapHeight; j++) {
 
 			
-			m_MapDefinitions->at(i).at(j) = new MapTile("MapTile", "layer4", i*256, j*256);
+			m_MapDefinitions->at(i).at(j) = new MapTile("MapTile", "layer4", i*SPRITES_WIDTH_AND_HEIGHT, j* SPRITES_WIDTH_AND_HEIGHT);
 
 			// Define map as purely temperate ground
 			m_MapDefinitions->at(i).at(j)->m_GraphicsCmp->m_SpriteName = "temperate";
@@ -45,7 +45,7 @@ void WorldMapDrawingOptions::_createMap() {
 			
 			if ((i + j) % 3 == 0) {
 
-				Forest* f = new Forest("forest_scarce", "layer3", i * 256, j * 256);
+				Forest* f = new Forest("forest_scarce", "layer3", i * SPRITES_WIDTH_AND_HEIGHT, j * SPRITES_WIDTH_AND_HEIGHT);
 
 				m_MapDefinitions->at(i).at(j)->m_MapTileEntities->push_back(f);
 				storage->AddGameEntitie(f);
@@ -71,4 +71,35 @@ WorldMap* WorldMap::Get() {
 void WorldMap::Del() {
 
 	if (m_WorldMapInstance) delete m_WorldMapInstance;
+}
+
+
+void Forest::Update() {
+
+
+	// Change graphics accordingly to own type.
+	switch (m_ForestType) {
+	case ForestType::FOREST_SCARCE:
+		m_GraphicsCmp->m_SpriteName = "forest_scarce";
+
+		break;
+	case ForestType::FOREST_NORMAL:
+		m_GraphicsCmp->m_SpriteName = "forest_normal";
+
+		break;
+	case ForestType::FOREST_DEEP:
+		m_GraphicsCmp->m_SpriteName = "forest_deep";
+
+		break;
+	case ForestType::FOREST_DYING:
+		m_GraphicsCmp->m_SpriteName = "forest_dying";
+
+		break;
+	case ForestType::FOREST_INVALID: // Forests lifetime ended or other error occured. So delete this instance from game.
+
+		EntitiesStorage::Get()->DeleteGameEntitie(this);
+		break;
+	default:
+		break;
+	}
 }

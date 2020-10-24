@@ -15,4 +15,4 @@
 #include<random>
 
 
-
+#define SPRITES_WIDTH_AND_HEIGHT 128

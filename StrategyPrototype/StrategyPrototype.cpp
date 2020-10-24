@@ -10,6 +10,10 @@ void CMPCameraInput::HandleKeyboard(Camera* cam) {
 
 	int speed = 4;
 
+	if (context->GetKey(olc::Key::SPACE).bReleased) {
+		context->AdvanceOneTurn();
+	}
+
 	if (context->GetKey(olc::Key::SHIFT).bHeld) {
 		speed = 9;
 	}
@@ -142,6 +146,8 @@ void Game::_loadSpriteResources() {
 	Sprite* s16 = new Sprite("assets/map/tundra.png");
 	Sprite* s17 = new Sprite("assets/map/water_deep.png");
 	Sprite* s18 = new Sprite("assets/map/water_shallow.png");
+	Sprite* s19 = new Sprite("assets/map/forest_dying.png");
+
 
 	m_SpriteStorage.push_back(s1);
 	m_SpriteStorage.push_back(s2);
@@ -161,6 +167,8 @@ void Game::_loadSpriteResources() {
 	m_SpriteStorage.push_back(s16);
 	m_SpriteStorage.push_back(s17);
 	m_SpriteStorage.push_back(s18);
+	m_SpriteStorage.push_back(s19);
+
 
 
 	Decal* d1 = new Decal(s1);
@@ -181,6 +189,8 @@ void Game::_loadSpriteResources() {
 	Decal* d16 = new Decal(s16);
 	Decal* d17 = new Decal(s17);
 	Decal* d18 = new Decal(s18);
+	Decal* d19 = new Decal(s19);
+
 
 
 	// Create Decals from sprites.
@@ -202,6 +212,8 @@ void Game::_loadSpriteResources() {
 	m_SpriteResourceMap.insert(std::make_pair("tundra", d16));
 	m_SpriteResourceMap.insert(std::make_pair("water_deep", d17));
 	m_SpriteResourceMap.insert(std::make_pair("water_shallow", d18));
+	m_SpriteResourceMap.insert(std::make_pair("forest_dying", d19));
+
 
 }
 
@@ -248,7 +260,8 @@ bool Game::OnUserUpdate(float fElapsedTime) {
 
 
 	// Update Entities MapCell
-	//_updateEntitiesMapCellCoords();
+	_updateLocalMapTileCellCoords();
+	_updateEntitiesMapTileCoords(); // This will be very inefficient for looping every turn.
 
 	// Input handling.
 	m_Renderer->m_MainCam->m_CamInput->HandleKeyboard(m_Renderer->m_MainCam);
@@ -263,8 +276,6 @@ bool Game::OnUserUpdate(float fElapsedTime) {
 
 	if (m_DebugDraw) DebugDrawStats();
 
-	//_updateAI2();
-
 	return true;
 }
 
@@ -273,7 +284,10 @@ bool Game::OnUserUpdate(float fElapsedTime) {
 void Game::DebugDrawStats() {
 
 	std::string s2 = "Camera Position " + std::to_string(g_vi2dCameraPosition.x) + " : " + std::to_string(g_vi2dCameraPosition.y);
-	DrawString(olc::vi2d(2, 40), s2, olc::RED, 2.0f);
+	DrawString(olc::vi2d(2, 10), s2, olc::RED, 2.0f);
+
+	std::string turncount = "Turn " + std::to_string(m_TurnCount);
+	DrawString(olc::vi2d(2, 30), turncount, olc::RED, 2.0f);
 
 
 	// Draw each maptiles mapcell
@@ -306,14 +320,14 @@ void Game::_drawDebugGrid() {
 	int h = ScreenHeight();
 
 
-	for (int i = 0; i < w; i += 250) {
+	for (int i = 0; i < w; i += 128) {
 
-		DrawLine(vi2d(i, 0), vi2d(i, h), olc::WHITE);
+		DrawLine(vi2d(i, 0), vi2d(i, h), olc::BLACK);
 	}
 
-	for (int j = 0; j < h; j += 250) {
+	for (int j = 0; j < h; j += 128) {
 
-		DrawLine(vi2d(0, j), vi2d(w, j), olc::WHITE);
+		DrawLine(vi2d(0, j), vi2d(w, j), olc::BLACK);
 	}
 }
 
@@ -381,11 +395,11 @@ void Renderer::RenderLayer1() {
 		}
 	}
 
-	/*
+	
 #ifdef _DEBUG
 	m_Game->DrawGrid();
 #endif // _DEBUG
-	*/
+	
 
 	m_Game->EnableLayer(m_Layer1, true);
 	m_Game->SetDrawTarget(nullptr);
@@ -583,10 +597,59 @@ void Game::_initializeMapTileCellCoords() {
 
 	for (auto& it : *vec) { // Iterate through all entities.
 
-		it->m_TransformCmp->m_GameWorldSpaceCell[0] = (int)it->m_TransformCmp->m_PosX / 256;
-		it->m_TransformCmp->m_GameWorldSpaceCell[1] = (int)it->m_TransformCmp->m_PosY / 256;
+		it->m_TransformCmp->m_GameWorldSpaceCell[0] = (int)it->m_TransformCmp->m_PosX / SPRITES_WIDTH_AND_HEIGHT;
+		it->m_TransformCmp->m_GameWorldSpaceCell[1] = (int)it->m_TransformCmp->m_PosY / SPRITES_WIDTH_AND_HEIGHT;
+
 	}
 }
+
+
+
+void Game::_updateEntitiesMapTileCoords() {
+
+	EntitiesStorage* storage = EntitiesStorage::Get();
+	std::vector< GameEntity* >* vec = storage->GetMapTilesStorage();
+
+	for (auto it : *vec) {
+
+		if (reinterpret_cast<MapTile*>(it)->m_MapTileEntities->size() > 0) {
+
+
+			for (auto iter : *reinterpret_cast<MapTile*>(it)->m_MapTileEntities) {
+
+
+				iter->m_TransformCmp->m_GameWorldSpaceCell[0] = it->m_TransformCmp->m_GameWorldSpaceCell[0];
+				iter->m_TransformCmp->m_GameWorldSpaceCell[1] = it->m_TransformCmp->m_GameWorldSpaceCell[1];
+			}
+		}
+	}
+
+}
+
+
+
+void Game::_updateLocalMapTileCellCoords() {
+
+	EntitiesStorage* storage = EntitiesStorage::Get();
+	std::vector< GameEntity* >* vec = storage->GetMapTilesStorage();
+
+	
+	for (auto& it : *vec) { // Iterate through all maptiles.
+
+
+		if (it->m_TransformCmp->m_PosX < g_vi2dCameraPosition.x &&
+			it->m_TransformCmp->m_PosY > g_vi2dCameraPosition.y) { // Out of view rect.
+			continue;
+
+		}
+		else { // In view rect, update local cell position.
+
+			it->m_TransformCmp->m_Cell[0] = ((int)it->m_TransformCmp->m_PosX + 110) / SPRITES_WIDTH_AND_HEIGHT;
+			it->m_TransformCmp->m_Cell[1] = ((int)it->m_TransformCmp->m_PosY + 110) / SPRITES_WIDTH_AND_HEIGHT;
+		}
+	}
+}
+
 
 
 void Game::_mapAIStateLogicFunctions() {
@@ -602,7 +665,7 @@ void Game::_mapAIStateLogicFunctions() {
 		if (it->m_GraphicsCmp->m_SpriteName.find(substring) != std::string::npos) {
 
 			// Give the forest entity the ForestSearch AI Logic.
-			it->m_AICmp->MapState("state_search", new  ForestSearch(*it->m_AICmp));
+			it->m_AICmp->MapState("state_search", new ForestSearch(*it->m_AICmp));
 		}
 	}
 }
@@ -612,15 +675,23 @@ void Game::_mapAIStateLogicFunctions() {
 
 void ForestSearch::executeStateLogic() {
 
-	// increase lifetime on update.
-	m_ManagedForest->m_ForestLifetime++;
+	// increase lifetime on update. Counted in gameturns.
+	m_ManagedForest->m_ForestLifeTimeNow++;
 
+	// Forest too old, means dies of old age.
+	if (m_ManagedForest->m_ForestLifeTimeNow > m_ManagedForest->m_ForestLifetime) {
+
+		m_ManagedForest->m_ForestType = Forest::ForestType::FOREST_INVALID;
+
+		m_ManagedForest->Update();
+		return;
+	}
 
 	// check for transitions of young and old forests
 	if (m_ManagedForest->m_ForestType == Forest::ForestType::FOREST_SCARCE) {
 
 
-		if (m_ManagedForest->m_ForestLifetime > 32) { // scarce --> normal
+		if (m_ManagedForest->m_ForestLifeTimeNow > 32) { // scarce --> normal
 			
 			m_ManagedForest->m_ForestType = Forest::ForestType::FOREST_NORMAL;
 
@@ -629,11 +700,11 @@ void ForestSearch::executeStateLogic() {
 		}
 	}
 	else {
-		if (m_ManagedForest->m_ForestType == Forest::ForestType::FOREST_NORMAL && m_ManagedForest->m_ForestLifetime > 66 || // normal --> dying
-			m_ManagedForest->m_ForestType == Forest::ForestType::FOREST_DEEP && m_ManagedForest->m_ForestLifetime > 66*2) { // deep --> dying. This transition takes 2 times longer to fullfill, so the deep forest lives longer.
+		if (m_ManagedForest->m_ForestType == Forest::ForestType::FOREST_NORMAL && m_ManagedForest->m_ForestLifeTimeNow > 66 || // normal --> dying
+			m_ManagedForest->m_ForestType == Forest::ForestType::FOREST_DEEP && m_ManagedForest->m_ForestLifeTimeNow > 66*2) { // deep --> dying. This transition takes 2 times longer to fullfill, so the deep forest lives longer.
 
 
-			if (m_ManagedForest->m_ForestType == Forest::ForestType::FOREST_DEEP) m_ManagedForest->m_ForestLifetime = 67; // Needed reset to normal value for deep forest to ensure common dying time.
+			if (m_ManagedForest->m_ForestType == Forest::ForestType::FOREST_DEEP) m_ManagedForest->m_ForestLifeTimeNow = 67; // Needed reset to normal value for deep forest to ensure common dying time.
 
 
 			m_ManagedForest->m_ForestType = Forest::ForestType::FOREST_DYING;
@@ -642,4 +713,14 @@ void ForestSearch::executeStateLogic() {
 			m_ManagedForest->Update();
 		}
 	}
+}
+
+
+void Game::AdvanceOneTurn() {
+
+	_updateAI2();
+
+
+
+	m_TurnCount++;
 }
