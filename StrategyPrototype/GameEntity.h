@@ -15,12 +15,16 @@ class GameEntity{
 public:
 
 	GameEntity() {
+
 		m_IDCmp = new CMPIdentifier();
 		m_TransformCmp = new CMPTransform();
+		
+		/*
 		m_PhysicsCmp = new CMPPhysics();
 		m_GraphicsCmp = new CMPGraphics();
-		m_AICmp = new CMPArtificialIntelligence();
-		m_FSM = new FiniteStateMachine();
+		m_AICmp = new CMPArtificialIntelligence(this);
+		m_FSM = new FiniteStateMachine(States::STATE_INVALID);
+		*/
 	}
 
 
@@ -34,15 +38,83 @@ public:
 };
 
 
-
 class Forest : public GameEntity {
 public:
+
+	enum class ForestType {
+		FOREST_INVALID = -1,
+		FOREST_DYING = 0,
+		FOREST_SCARCE = 1,
+		FOREST_NORMAL = 2,
+		FOREST_DEEP = 3
+	};
+
+
 	Forest(std::string name, std::string layer, int xpos, int ypos) {
+
+		// Forests have transform, graphics, AI, FSM and id.
+
 		m_TransformCmp->m_PosX = xpos;
 		m_TransformCmp->m_PosY = ypos;
+
+		m_GraphicsCmp = new CMPGraphics();
 		m_GraphicsCmp->m_DrawingLayer = layer;
 		m_GraphicsCmp->m_SpriteName = name;
+
+
+		m_AICmp = new CMPArtificialIntelligence(this);
+		m_FSM = new FiniteStateMachine(States::STATE_INVALID);
+
+
+
+		// Define props
+		m_ForestLifetime = 100;
+		
+		if (COMPARE_STRINGS(name, "forest_scarce") == 0) {
+			m_ForestType = ForestType::FOREST_SCARCE;
+		}
+		else if(COMPARE_STRINGS(name, "forest_normal") == 0) {
+			m_ForestType = ForestType::FOREST_NORMAL;
+		}
+		else if (COMPARE_STRINGS(name, "forest_deep") == 0) {
+			m_ForestType = ForestType::FOREST_DEEP;
+		}
+		
 	}
+
+
+	// Update is not meant to be done on each tick, only on occured changes.
+	void Update() {
+
+
+		// Change graphics accordingly to own type.
+		switch (m_ForestType) {
+		case ForestType::FOREST_SCARCE:
+			m_GraphicsCmp->m_SpriteName = "forest_scarce";
+
+			break;
+		case ForestType::FOREST_NORMAL:
+			m_GraphicsCmp->m_SpriteName = "forest_normal";
+
+			break;
+		case ForestType::FOREST_DEEP:
+			m_GraphicsCmp->m_SpriteName = "forest_deep";
+
+			break;
+		case ForestType::FOREST_DYING:
+			m_GraphicsCmp->m_SpriteName = "forest_scarce"; // As we have no dying forest sprite now, change to scarce.
+
+			break;
+		default:
+			break;
+		}
+	}
+
+
+	int m_ForestLifetime = 0;
+	ForestType m_ForestType = ForestType::FOREST_INVALID;
+
+private:
 
 };
 
@@ -54,16 +126,19 @@ public:
 		
 		m_MapTileEntities = new std::vector<GameEntity*>();
 
+		// Maptiles have transform, graphics, id.
 		m_MapTileName = name;
 		m_TransformCmp->m_PosX = xpos;
 		m_TransformCmp->m_PosY = ypos;
+		
+		m_GraphicsCmp = new CMPGraphics();
 		m_GraphicsCmp->m_DrawingLayer = layer;
 
 	}
 
 
-	std::vector<GameEntity*>* m_MapTileEntities = nullptr;
-	std::string m_MapTileName;
+	std::vector<GameEntity*>* m_MapTileEntities;
+	std::string m_MapTileName = "NULL";
 };
 
 
@@ -71,12 +146,18 @@ public:
 struct EntitiesStorage {
 
 
+	std::vector< GameEntity* >* GetAIEntitiesStorage() { return m_GameEntitiesWithAIVec; }
 	std::vector< GameEntity* >* GetStorage() { return m_GameEntitiesVec; }
+	std::vector< GameEntity* >* GetMapTilesStorage() { return m_MapTileGameEntitiesVec; }
 
 
 	void AddGameEntitie(GameEntity* e) {
 		m_GameEntitiesVec->push_back(e);
+
+		if (e->m_AICmp) _addEntitieWithAI(e);
+		if (_isMaptile(e)) _addMaptileEntity(e);
 	}
+
 
 	void DeleteGameEntitie(GameEntity* e) {
 
@@ -85,6 +166,25 @@ struct EntitiesStorage {
 		if (iterator != m_GameEntitiesVec->end()) {
 			m_GameEntitiesVec->erase(iterator);
 		}
+
+		if (e->m_AICmp) { // Delete entitie from AIEntities vector.
+
+			std::vector< GameEntity* >::iterator it = std::find(m_GameEntitiesWithAIVec->begin(), m_GameEntitiesWithAIVec->end(), e);
+
+			if (it != m_GameEntitiesWithAIVec->end()) {
+				m_GameEntitiesWithAIVec->erase(it);
+			}
+		}
+
+		if (_isMaptile(e)) {
+
+			std::vector< GameEntity* >::iterator it = std::find(m_MapTileGameEntitiesVec->begin(), m_MapTileGameEntitiesVec->end(), e);
+
+			if (it != m_MapTileGameEntitiesVec->end()) {
+				m_MapTileGameEntitiesVec->erase(it);
+			}
+		}
+		
 	}
 
 	void DeleteGameEntitie(CMPIdentifier* id) {
@@ -120,8 +220,10 @@ struct EntitiesStorage {
 private:
 	static EntitiesStorage* m_EntitiesStorage;
 
-	std::vector< GameEntity* >* m_GameEntitiesVec; // Holds all entities ingame.
 
+	std::vector< GameEntity*>* m_MapTileGameEntitiesVec; // Vector that explicitly hold Maptiles. 
+	std::vector< GameEntity* >* m_GameEntitiesVec; // Holds all entities ingame.
+	std::vector<GameEntity*>* m_GameEntitiesWithAIVec; // Holds entities in game with AI.
 
 private:
 	EntitiesStorage() = default;
@@ -131,6 +233,48 @@ private:
 
 	void _initGameEntitiesVector() {
 		m_GameEntitiesVec = new std::vector< GameEntity*>();
+		m_GameEntitiesWithAIVec = new std::vector<GameEntity*>();
+		m_MapTileGameEntitiesVec = new std::vector<GameEntity*>();
+	}
+
+
+	void _addEntitieWithAI(GameEntity* e) {
+		m_GameEntitiesWithAIVec->push_back(e);
+	}
+
+
+	void _addMaptileEntity(GameEntity* e) {
+		m_MapTileGameEntitiesVec->push_back(e);
+	}
+
+
+	bool _isMaptile(GameEntity* e) {
+
+		// Stringify 
+		/*
+		std::stringstream ss;
+		std::string name;
+		ss << static_cast<MapTile*>(e)->m_MapTileName;
+		name = ss.str();
+		*/
+		std::string name;
+		name = e->m_GraphicsCmp->m_SpriteName;
+
+		if (COMPARE_STRINGS(name, "temperate") == 0 ||
+			COMPARE_STRINGS(name, "ice") == 0 ||
+			COMPARE_STRINGS(name, "sand") == 0 ||
+			COMPARE_STRINGS(name, "savannah") == 0 ||
+			COMPARE_STRINGS(name, "snow") == 0 ||
+			COMPARE_STRINGS(name, "tundra") == 0 ||
+			COMPARE_STRINGS(name, "water_deep") == 0 ||
+			COMPARE_STRINGS(name, "water_shallow") == 0
+			) {
+			return true;
+		}
+		else {
+			return false;
+		}
+
 	}
 };
 

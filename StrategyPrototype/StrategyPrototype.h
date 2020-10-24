@@ -81,16 +81,18 @@ public:
 	*/
 
 	// Layer for drawing ground maptiles.
-	void RenderLayer4();
+	void Render2Layer4(); // With implemented view tesing. Draw only what player sees.
 
 	// Layer for drawing terrain adds like hills, forests, mountains.
-	void RenderLayer3();
+	void Render2Layer3();
 
 	// Layer for drawing buildings, cities, caves and improvements.
 	void RenderLayer2();
+	void Render2Layer2();
 
 	// Layer for drawing units.
 	void RenderLayer1();
+	void Render2Layer1();
 
 	// Layer for drawin effects or general things.
 	void RenderLayer0();
@@ -147,7 +149,41 @@ private:
 
 	void _drawDebugGrid();
 
-
-	void _updateEntitiesMapCellCoords();
 	void _initializeMapTileCellCoords();
+
+
+	void _mapAIStateLogicFunctions();
+	void _updateAI();
+	void _updateAI2();
+};
+
+
+
+
+
+// FOREST AI LOGIC DEF
+// If we let it be like this, then 
+// we have for every forest instance an own forestsearch logic object and thus
+// higher memory consumption... but thus we can run them parallel to each other and
+// purely independent. Too, we can make adjustments for different types of forest or even make 
+// individual forests with unique AI...
+//
+// For now, we do not change it.
+class ForestSearch : public IStateLogic {
+public:
+	ForestSearch(CMPArtificialIntelligence& ai) {
+		m_AICmp = &ai;
+		m_ManagedForest = static_cast<Forest*>(m_AICmp->m_ManagedObject);
+
+
+		// As forest have only one state, predefine it accotrdingly.
+		m_AICmp->ChangeState(States::STATE_SEARCH);
+	}
+
+
+	void executeStateLogic() override;
+
+
+	CMPArtificialIntelligence* m_AICmp = nullptr;
+	Forest* m_ManagedForest = nullptr;
 };

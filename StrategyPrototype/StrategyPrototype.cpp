@@ -3,14 +3,15 @@
 static olc::vf2d g_vi2dCameraPosition = olc::vf2d(0.0f, 0.0f);
 
 
+
 void CMPCameraInput::HandleKeyboard(Camera* cam) {
 
 	Game* context = cam->m_Game;
 
-	int speed = 1;
+	int speed = 4;
 
 	if (context->GetKey(olc::Key::SHIFT).bHeld) {
-		speed = 5;
+		speed = 9;
 	}
 
 	if (context->GetKey(olc::Key::TAB).bPressed) {
@@ -21,7 +22,7 @@ void CMPCameraInput::HandleKeyboard(Camera* cam) {
 
 		g_vi2dCameraPosition.y -= 1;
 
-		for (auto it : *EntitiesStorage::Get()->GetStorage()) {
+		for (auto it : *EntitiesStorage::Get()->GetMapTilesStorage()) {
 
 			it->m_TransformCmp->m_PosY += 1* speed;
 
@@ -42,7 +43,7 @@ void CMPCameraInput::HandleKeyboard(Camera* cam) {
 
 		g_vi2dCameraPosition.x -= 1;
 
-		for (auto it : *EntitiesStorage::Get()->GetStorage()) {
+		for (auto it : *EntitiesStorage::Get()->GetMapTilesStorage()) {
 
 			it->m_TransformCmp->m_PosX += 1 * speed;
 
@@ -64,7 +65,7 @@ void CMPCameraInput::HandleKeyboard(Camera* cam) {
 
 		g_vi2dCameraPosition.y += 1;
 
-		for (auto it : *EntitiesStorage::Get()->GetStorage()) {
+		for (auto it : *EntitiesStorage::Get()->GetMapTilesStorage()) {
 
 			it->m_TransformCmp->m_PosY -= 1 * speed;
 
@@ -86,7 +87,7 @@ void CMPCameraInput::HandleKeyboard(Camera* cam) {
 
 		g_vi2dCameraPosition.x += 1;
 
-		for (auto it : *EntitiesStorage::Get()->GetStorage()) {
+		for (auto it : *EntitiesStorage::Get()->GetMapTilesStorage() ) {
 
 			it->m_TransformCmp->m_PosX -= 1 * speed;
 
@@ -123,7 +124,7 @@ void Game::_loadSpriteResources() {
 	using namespace olc;
 	
 	// Loading sprites and decals.
-	Sprite* s1 = new Sprite("assets/map/forest_norm.png");
+	Sprite* s1 = new Sprite("assets/map/forest_normal.png");
 	Sprite* s2 = new Sprite("assets/map/forest_deep.png");
 	Sprite* s3 = new Sprite("assets/map/forest_scarce.png");
 	Sprite* s4 = new Sprite("assets/map/forest_savannah.png");
@@ -183,7 +184,7 @@ void Game::_loadSpriteResources() {
 
 
 	// Create Decals from sprites.
-	m_SpriteResourceMap.insert(std::make_pair("forest_norm", d1));
+	m_SpriteResourceMap.insert(std::make_pair("forest_normal", d1));
 	m_SpriteResourceMap.insert(std::make_pair("forest_deep", d2));
 	m_SpriteResourceMap.insert(std::make_pair("forest_scarce", d3));
 	m_SpriteResourceMap.insert(std::make_pair("forest_savannah", d4));
@@ -226,6 +227,8 @@ bool Game::OnUserCreate() {
 
 	_initialize();
 	_initializeMapTileCellCoords();
+	_mapAIStateLogicFunctions();
+
 
 
 	Camera* cam = new Camera(this, 0, 0);
@@ -243,24 +246,28 @@ bool Game::OnUserCreate() {
 
 bool Game::OnUserUpdate(float fElapsedTime) {
 
+
 	// Update Entities MapCell
-	_updateEntitiesMapCellCoords();
+	//_updateEntitiesMapCellCoords();
 
 	// Input handling.
 	m_Renderer->m_MainCam->m_CamInput->HandleKeyboard(m_Renderer->m_MainCam);
 	m_Renderer->m_MainCam->m_CamInput->HandleMouse(m_Renderer->m_MainCam);
 
 	// Layered rendering.
-	m_Renderer->RenderLayer1(); // units layer.
-	m_Renderer->RenderLayer2(); // buildings, cities...
-	m_Renderer->RenderLayer3(); // terrain, hills ...
-	m_Renderer->RenderLayer4(); // ground maptiles
-	m_Renderer->RenderLayer0(); // effects, general things...
+	m_Renderer->RenderLayer1();  // units layer.
+	m_Renderer->RenderLayer2();  // buildings, cities...
+	m_Renderer->Render2Layer3();  // terrain, hills ...
+	m_Renderer->Render2Layer4();  // ground maptiles
+	m_Renderer->RenderLayer0();  // effects, general things...
 
 	if (m_DebugDraw) DebugDrawStats();
 
+	//_updateAI2();
+
 	return true;
 }
+
 
 
 void Game::DebugDrawStats() {
@@ -272,19 +279,18 @@ void Game::DebugDrawStats() {
 	// Draw each maptiles mapcell
 	
 	std::string s3, s4;
-	for (auto it : *EntitiesStorage::Get()->GetStorage()) {
+	for (auto it : *EntitiesStorage::Get()->GetMapTilesStorage()) {
 
-		if (static_cast<MapTile*>(it)->m_MapTileEntities != nullptr ) { // Means this is a MapTile.
 
-			// Camera dependent Cell 
-			s3 = std::to_string(it->m_TransformCmp->m_Cell[0]) + " : " + std::to_string(it->m_TransformCmp->m_Cell[1]);
-			DrawString(olc::vi2d(it->m_TransformCmp->m_PosX, it->m_TransformCmp->m_PosY), s3, olc::RED, 1.0f);
+		// Camera dependent Cell 
+		s3 = std::to_string(it->m_TransformCmp->m_Cell[0]) + " : " + std::to_string(it->m_TransformCmp->m_Cell[1]);
+		DrawString(olc::vi2d(it->m_TransformCmp->m_PosX, it->m_TransformCmp->m_PosY), s3, olc::RED, 1.0f);
 
-			// Gameworld Cell
-			s4 = std::to_string(it->m_TransformCmp->m_GameWorldSpaceCell[0]) + " : " + std::to_string(it->m_TransformCmp->m_GameWorldSpaceCell[1]);
-			DrawString(olc::vi2d(it->m_TransformCmp->m_PosX, it->m_TransformCmp->m_PosY+20), s4, olc::DARK_RED, 1.0f);
+		// Gameworld Cell
+		s4 = std::to_string(it->m_TransformCmp->m_GameWorldSpaceCell[0]) + " : " + std::to_string(it->m_TransformCmp->m_GameWorldSpaceCell[1]);
+		DrawString(olc::vi2d(it->m_TransformCmp->m_PosX, it->m_TransformCmp->m_PosY+20), s4, olc::DARK_RED, 1.0f);
 
-		}
+	
 	}
 
 
@@ -324,70 +330,6 @@ int main()
 	return 0;
 }
 
-
-void Renderer::RenderLayer4() {
-
-	using namespace olc;
-
-	EntitiesStorage* storage = EntitiesStorage::Get();
-	std::vector< GameEntity* >* vec = storage->GetStorage();
-
-
-	m_Game->SetDrawTarget(m_Layer4);
-	m_Game->Clear(olc::VERY_DARK_BLUE);
-
-
-	for (auto const& it : *vec) {
-		if (COMPARE_STRINGS(it->m_GraphicsCmp->m_DrawingLayer, "layer4") == 0) {
-
-			// Draw appropriate loaded sprite on position specified.
-			m_Game->DrawDecal(vi2d(it->m_TransformCmp->m_PosX, it->m_TransformCmp->m_PosY),
-				m_Game->m_SpriteResourceMap.at(it->m_GraphicsCmp->m_SpriteName));
-		}
-	}
-
-
-	m_Game->EnableLayer(m_Layer4, true);
-	m_Game->SetDrawTarget(nullptr);
-
-}
-
-
-
-void Renderer::RenderLayer3() {
-
-
-	using namespace olc;
-
-
-	EntitiesStorage* storage = EntitiesStorage::Get();
-	std::vector< GameEntity* >* vec = storage->GetStorage();
-
-
-
-	m_Game->SetDrawTarget(m_Layer3);
-	m_Game->Clear(olc::BLANK);
-
-
-	for (auto const& it : *vec) {
-		if (static_cast<MapTile*>(it)->m_MapTileEntities->size() > 0) { // Forest entity.
-
-			for (auto iter : *static_cast<MapTile*>(it)->m_MapTileEntities) {
-
-
-				// Draw appropriate loaded sprite on position specified.
-				m_Game->DrawDecal(vi2d(iter->m_TransformCmp->m_PosX, iter->m_TransformCmp->m_PosY),
-					m_Game->m_SpriteResourceMap.at(iter->m_GraphicsCmp->m_SpriteName));
-				
-			}
-		}
-	}
-
-
-	m_Game->EnableLayer(m_Layer3, true);
-	m_Game->SetDrawTarget(nullptr);
-
-}
 
 
 void Renderer::RenderLayer2() {
@@ -452,6 +394,88 @@ void Renderer::RenderLayer1() {
 }
 
 
+void Renderer::Render2Layer1() {
+
+}
+
+void Renderer::Render2Layer2() {
+
+}
+
+void Renderer::Render2Layer3() {
+
+	using namespace olc;
+
+	EntitiesStorage* storage = EntitiesStorage::Get();
+	std::vector< GameEntity* >* vec = storage->GetMapTilesStorage();
+
+	MapTile* maptile = nullptr;
+
+
+
+	m_Game->SetDrawTarget(m_Layer3);
+	m_Game->Clear(olc::BLANK);
+
+
+
+	for (auto it: *vec) {
+
+		// Do not draw tiles we do not see.
+		if (it->m_TransformCmp->m_Cell[0] > 4 ||
+			it->m_TransformCmp->m_Cell[1] > 4) continue;
+
+
+		maptile = reinterpret_cast<MapTile*>(it);
+
+		if (maptile->m_MapTileEntities->size() > 0) {
+
+			for (auto iter : *maptile->m_MapTileEntities) {
+
+
+				// Draw appropriate loaded sprite on position specified.
+				m_Game->DrawDecal(vi2d(iter->m_TransformCmp->m_PosX, iter->m_TransformCmp->m_PosY),
+					m_Game->m_SpriteResourceMap.at(iter->m_GraphicsCmp->m_SpriteName));
+			}
+		}
+	}
+
+
+
+	m_Game->EnableLayer(m_Layer3, true);
+	m_Game->SetDrawTarget(nullptr);
+}
+
+void Renderer::Render2Layer4() {
+
+	using namespace olc;
+
+	EntitiesStorage* storage = EntitiesStorage::Get();
+	std::vector< GameEntity* >* vec = storage->GetMapTilesStorage();
+
+	m_Game->SetDrawTarget(m_Layer4);
+	m_Game->Clear(olc::BLANK);
+
+
+	for (auto it : *vec) {
+
+		// Do not draw tiles we do not see.
+		if (it->m_TransformCmp->m_Cell[0] > 4 ||
+			it->m_TransformCmp->m_Cell[1] > 4) continue;
+
+
+			// Draw appropriate loaded sprite on position specified.
+			m_Game->DrawDecal(vi2d(it->m_TransformCmp->m_PosX, it->m_TransformCmp->m_PosY),
+				m_Game->m_SpriteResourceMap.at(it->m_GraphicsCmp->m_SpriteName));
+	}
+
+
+	m_Game->EnableLayer(m_Layer4, true);
+	m_Game->SetDrawTarget(nullptr);
+
+}
+
+
+
 void Renderer::RenderLayer0() {
 
 	using namespace olc;
@@ -461,59 +485,161 @@ void Renderer::RenderLayer0() {
 }
 
 
-void Game::_updateEntitiesMapCellCoords() {
+
+
+// Find better solution for this functionality.
+// It uses way too much CPU.
+void Game::_updateAI() {
+
 
 	EntitiesStorage* storage = EntitiesStorage::Get();
 	std::vector< GameEntity* >* vec = storage->GetStorage();
 
 	for (auto& it : *vec) { // Iterate through all entities.
 
-		it->m_TransformCmp->m_Cell[0] = (int)it->m_TransformCmp->m_PosX / 256;
-		it->m_TransformCmp->m_Cell[1] = (int)it->m_TransformCmp->m_PosY / 256;
-
-
+		// The Maptile iteslf has no AI logic, thus skip it and see
+		// whether there are entities on it present.
 		MapTile* itMapTile = static_cast<MapTile*>(it);
+
 		if (itMapTile->m_MapTileEntities != nullptr) { // This object IS a maptile.
 
 
 			if (itMapTile->m_MapTileEntities->size() > 0) { // ... and its vector is not empty.
 
-				
 				for (auto iter : *itMapTile->m_MapTileEntities) { // Do the same for each entity on this maptile.
 
-					iter->m_TransformCmp->m_Cell[0] = it->m_TransformCmp->m_Cell[0];
-					iter->m_TransformCmp->m_Cell[1] = it->m_TransformCmp->m_Cell[1];
+					using namespace std;
+										
+
+					if (!iter->m_AICmp->TryExecuteStateLogic()) {
+
+						cout << APP_ERROR_COLOR;
+						cout << "Executing state logic for " << iter->m_IDCmp->m_ID
+							<< iter->m_TransformCmp->m_GameWorldSpaceCell[0] << " : " << iter->m_TransformCmp->m_GameWorldSpaceCell[1]
+							<< " was unsuccessfull." << white << endl;
+					
+					}
+					else {
+
+						cout << APP_SUCCESS_COLOR;
+						cout << "Executing state logic for " << iter->m_IDCmp->m_ID << " at position "
+							<< iter->m_TransformCmp->m_GameWorldSpaceCell[0] << " : " << iter->m_TransformCmp->m_GameWorldSpaceCell[1]
+							<< " was successfull." << white << endl;
+					}
+					
 				}
 			}
 		}
 	}
+
 }
+
+
+
+void Game::_updateAI2() {
+
+	EntitiesStorage* storage = EntitiesStorage::Get();
+
+	// Get all entities with AI Component.
+	std::vector< GameEntity* >* vec = storage->GetAIEntitiesStorage();
+
+	for (auto it : *vec) {
+
+
+		try {
+			using namespace std;
+
+
+			if (!it->m_AICmp->TryExecuteStateLogic()) {
+
+				cout << APP_ERROR_COLOR;
+				cout << "Executing state logic for " << it->m_IDCmp->m_ID << " at position "
+					<< it->m_TransformCmp->m_GameWorldSpaceCell[0] << " : " << it->m_TransformCmp->m_GameWorldSpaceCell[1]
+					<< " was unsuccessfull." << white << endl;
+
+			}
+			else {
+
+				cout << APP_SUCCESS_COLOR;
+				cout << "Executing state logic for " << it->m_IDCmp->m_ID << " at position "
+					<< it->m_TransformCmp->m_GameWorldSpaceCell[0] << " : " << it->m_TransformCmp->m_GameWorldSpaceCell[1]
+					<< " was successfull." << white << endl;
+			}
+		}
+		catch (char* err) {
+			continue;
+		}
+
+	}
+}
+
+
 
 
 void Game::_initializeMapTileCellCoords() {
 
 	EntitiesStorage* storage = EntitiesStorage::Get();
-	std::vector< GameEntity* >* vec = storage->GetStorage();
+	std::vector< GameEntity* >* vec = storage->GetMapTilesStorage();
 
 	for (auto& it : *vec) { // Iterate through all entities.
 
 		it->m_TransformCmp->m_GameWorldSpaceCell[0] = (int)it->m_TransformCmp->m_PosX / 256;
 		it->m_TransformCmp->m_GameWorldSpaceCell[1] = (int)it->m_TransformCmp->m_PosY / 256;
+	}
+}
 
 
-		MapTile* itMapTile = static_cast<MapTile*>(it);
-		if (itMapTile->m_MapTileEntities != nullptr) { // This object IS a maptile.
+void Game::_mapAIStateLogicFunctions() {
+	
+	// Test
+	EntitiesStorage* storage = EntitiesStorage::Get();
+	std::vector< GameEntity* >* vec = storage->GetAIEntitiesStorage();
+
+	std::string substring = "forest";
+
+	for (auto it : *vec) {
+
+		if (it->m_GraphicsCmp->m_SpriteName.find(substring) != std::string::npos) {
+
+			// Give the forest entity the ForestSearch AI Logic.
+			it->m_AICmp->MapState("state_search", new  ForestSearch(*it->m_AICmp));
+		}
+	}
+}
 
 
-			if (itMapTile->m_MapTileEntities->size() > 0) { // ... and its vector is not empty.
 
 
-				for (auto iter : *itMapTile->m_MapTileEntities) { // Do the same for each entity on this maptile.
+void ForestSearch::executeStateLogic() {
 
-					iter->m_TransformCmp->m_GameWorldSpaceCell[0] = it->m_TransformCmp->m_GameWorldSpaceCell[0];
-					iter->m_TransformCmp->m_GameWorldSpaceCell[1] = it->m_TransformCmp->m_GameWorldSpaceCell[1];
-				}
-			}
+	// increase lifetime on update.
+	m_ManagedForest->m_ForestLifetime++;
+
+
+	// check for transitions of young and old forests
+	if (m_ManagedForest->m_ForestType == Forest::ForestType::FOREST_SCARCE) {
+
+
+		if (m_ManagedForest->m_ForestLifetime > 32) { // scarce --> normal
+			
+			m_ManagedForest->m_ForestType = Forest::ForestType::FOREST_NORMAL;
+
+			// Update on change.
+			m_ManagedForest->Update();
+		}
+	}
+	else {
+		if (m_ManagedForest->m_ForestType == Forest::ForestType::FOREST_NORMAL && m_ManagedForest->m_ForestLifetime > 66 || // normal --> dying
+			m_ManagedForest->m_ForestType == Forest::ForestType::FOREST_DEEP && m_ManagedForest->m_ForestLifetime > 66*2) { // deep --> dying. This transition takes 2 times longer to fullfill, so the deep forest lives longer.
+
+
+			if (m_ManagedForest->m_ForestType == Forest::ForestType::FOREST_DEEP) m_ManagedForest->m_ForestLifetime = 67; // Needed reset to normal value for deep forest to ensure common dying time.
+
+
+			m_ManagedForest->m_ForestType = Forest::ForestType::FOREST_DYING;
+
+			// Update on change.
+			m_ManagedForest->Update();
 		}
 	}
 }

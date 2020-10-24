@@ -25,10 +25,12 @@ void WorldMapDrawingOptions::_createMap() {
 
 		for (int j = 0; j <= m_MapHeight; j++) {
 
-			// "Zeroed" out MapTileArray
+			
 			m_MapDefinitions->at(i).at(j) = new MapTile("MapTile", "layer4", i*256, j*256);
 
-			m_MapDefinitions->at(i).at(j)->m_GraphicsCmp->m_SpriteName = "null";
+			// Define map as purely temperate ground
+			m_MapDefinitions->at(i).at(j)->m_GraphicsCmp->m_SpriteName = "temperate";
+
 			storage->AddGameEntitie(m_MapDefinitions->at(i).at(j)); // Add Maptile to EntitiesStorage.
 
 		}
@@ -40,11 +42,15 @@ void WorldMapDrawingOptions::_createMap() {
 
 		for (int j = 0; j <= m_MapHeight; j++) {
 
-			// Define map as purely temperate ground
-			m_MapDefinitions->at(i).at(j)->m_GraphicsCmp->m_SpriteName = "temperate";
 			
-			m_MapDefinitions->at(i).at(j)->m_MapTileEntities->push_back(new Forest("forest_scarce", "layer3", i * 256, j * 256));
+			if ((i + j) % 3 == 0) {
 
+				Forest* f = new Forest("forest_scarce", "layer3", i * 256, j * 256);
+
+				m_MapDefinitions->at(i).at(j)->m_MapTileEntities->push_back(f);
+				storage->AddGameEntitie(f);
+
+			}
 		}
 	}
 }
