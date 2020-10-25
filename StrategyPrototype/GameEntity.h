@@ -5,6 +5,9 @@
 class MapTile;
 typedef std::array<std::array<MapTile*, 20>, 20> MapTileArray;
 
+#define MAP_SIZE 20
+
+
 #define COMPARE_STRINGS(x, y) strcmp(x.c_str(), y) // Utility.
 #define COMPARE_STRINGS_2(x, y) strcmp(x.c_str(), y.c_str()) // Utility.
 
@@ -14,6 +17,7 @@ typedef std::array<std::array<MapTile*, 20>, 20> MapTileArray;
 MapTile* GetMapTileAtWorldPosition(int x, int y);
 GameEntity* IsGameEntityTypeOnMapTile(MapTile* maptile, std::string dynamicTypeName);
 std::vector<GameEntity*> GetForestEntities();
+bool IsIndexOutOfBound(int x, int y);
 int GetTotalForestsCount();
 
 
