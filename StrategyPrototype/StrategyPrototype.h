@@ -199,4 +199,5 @@ private:
 
 	bool _surroundedByForestNormal(Forest* forest);
 	void _checkForNewForestCreation(Forest* forest);
+	void _spawnRandomForestAroundDeepOne(Forest* deepForest);
 };

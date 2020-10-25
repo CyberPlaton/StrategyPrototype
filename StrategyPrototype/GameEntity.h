@@ -13,6 +13,7 @@ typedef std::array<std::array<MapTile*, 20>, 20> MapTileArray;
 // Helpers.
 MapTile* GetMapTileAtWorldPosition(int x, int y);
 GameEntity* IsGameEntityTypeOnMapTile(MapTile* maptile, std::string dynamicTypeName);
+std::vector<GameEntity*> GetForestEntities();
 int GetTotalForestsCount();
 
 
@@ -104,7 +105,6 @@ public:
 
 	// Update is not meant to be done on each tick, only on occured changes.
 	void Update();
-
 
 	int m_ForestLifeTimeNow = 0;
 	int m_ForestLifetime = 0;

@@ -2,6 +2,8 @@
 
 static olc::vf2d g_vi2dCameraPosition = olc::vf2d(0.0f, 0.0f);
 
+#define MAP_SIZE 20
+
 
 int GetTotalForestsCount() {
 
@@ -65,6 +67,34 @@ GameEntity* IsGameEntityTypeOnMapTile(MapTile* maptile, std::string dynamicTypeN
 	// Entity not present.
 	return nullptr;
 }
+
+
+std::vector<GameEntity*> GetForestEntities() {
+
+	std::vector<GameEntity*> return_vector;
+
+	EntitiesStorage* storage = EntitiesStorage::Get();
+	std::vector< GameEntity* > vec = *storage->GetMapTilesStorage();
+	
+	MapTile* maptile = nullptr;
+	GameEntity* entity = nullptr;
+
+	for (auto it = vec.begin(); it != vec.end(); ++it) {
+
+		maptile = reinterpret_cast<MapTile*>(*it);
+
+		entity = IsGameEntityTypeOnMapTile(maptile, "Forest");
+
+		if (entity) {
+
+			return_vector.push_back(entity);
+		}
+	}
+
+	return return_vector;
+
+}
+
 
 
 
@@ -144,6 +174,9 @@ void CMPCameraInput::HandleKeyboard(Camera* cam) {
 
 	if (context->GetKey(olc::Key::S).bHeld) {
 
+		if (g_vi2dCameraPosition.y + context->ScreenHeight() >= MAP_SIZE * SPRITES_WIDTH_AND_HEIGHT) {
+			g_vi2dCameraPosition.y = MAP_SIZE * SPRITES_WIDTH_AND_HEIGHT - context->ScreenHeight(); return;
+		}
 
 
 		g_vi2dCameraPosition.y += 1 * speed;
@@ -168,7 +201,9 @@ void CMPCameraInput::HandleKeyboard(Camera* cam) {
 
 	if (context->GetKey(olc::Key::D).bHeld) {
 
-
+		if (g_vi2dCameraPosition.x + context->ScreenWidth() >= MAP_SIZE * SPRITES_WIDTH_AND_HEIGHT) {
+			g_vi2dCameraPosition.x = MAP_SIZE * SPRITES_WIDTH_AND_HEIGHT - context->ScreenWidth(); return;
+		}
 
 		g_vi2dCameraPosition.x += 1 * speed;
 
@@ -334,10 +369,14 @@ bool Game::OnUserCreate() {
 
 
 	// Create some forests for testing.
-	int f_cell[2], f2_cell[2], f3_cell[2];
-	f_cell[0] = 0; f_cell[1] = 0;
-	f2_cell[0] = 1; f2_cell[1] = 0;
-	f3_cell[0] = 0; f3_cell[1] = 1;
+	int f_cell[2], f2_cell[2], f3_cell[2] , f4_cell[2], f5_cell[2];
+	f_cell[0] = 1; f_cell[1] = 1;
+	f2_cell[0] = 0; f2_cell[1] = 1;
+	f3_cell[0] = 1; f3_cell[1] = 2;
+	f4_cell[0] = 1; f4_cell[1] = 0;
+	f5_cell[0] = 2; f5_cell[1] = 1;
+
+
 
 	Forest* f = new Forest("forest_scarce", "layer3", (f_cell[0]) * SPRITES_WIDTH_AND_HEIGHT,
 													  (f_cell[1]) * SPRITES_WIDTH_AND_HEIGHT);
@@ -365,12 +404,30 @@ bool Game::OnUserCreate() {
 
 
 
+	Forest* f4 = new Forest("forest_scarce", "layer3", (f4_cell[0]) * SPRITES_WIDTH_AND_HEIGHT,
+		(f4_cell[1]) * SPRITES_WIDTH_AND_HEIGHT);
+	f4->m_TransformCmp->m_GameWorldSpaceCell[0] = f4_cell[0];
+	f4->m_TransformCmp->m_GameWorldSpaceCell[1] = f4_cell[1];
+	f4->m_AICmp->ChangeState(States::STATE_SEARCH);
+	f4->m_AICmp->MapState("state_search", new ForestSearch(*f4->m_AICmp));
+
+
+	Forest* f5 = new Forest("forest_scarce", "layer3", (f5_cell[0]) * SPRITES_WIDTH_AND_HEIGHT,
+		(f5_cell[1]) * SPRITES_WIDTH_AND_HEIGHT);
+	f5->m_TransformCmp->m_GameWorldSpaceCell[0] = f5_cell[0];
+	f5->m_TransformCmp->m_GameWorldSpaceCell[1] = f5_cell[1];
+	f5->m_AICmp->ChangeState(States::STATE_SEARCH);
+	f5->m_AICmp->MapState("state_search", new ForestSearch(*f5->m_AICmp));
 
 
 	EntitiesStorage* storage = EntitiesStorage::Get();
 	storage->AddGameEntitie(f);
 	storage->AddGameEntitie(f2);
 	storage->AddGameEntitie(f3);
+	storage->AddGameEntitie(f4);
+	storage->AddGameEntitie(f5);
+
+
 
 
 
@@ -420,7 +477,6 @@ void Game::DebugDrawStats() {
 
 
 	// Draw each maptiles mapcell
-	
 	std::string s3, s4;
 	for (auto it : *EntitiesStorage::Get()->GetMapTilesStorage()) {
 
@@ -437,6 +493,41 @@ void Game::DebugDrawStats() {
 	}
 
 
+
+	// DrawForests and its Lifetime
+	std::string s5, s6, s7, foresttype;
+	std::vector< GameEntity* > vec = GetForestEntities();
+	Forest* f = nullptr;
+	for (auto it = vec.begin(); it != vec.end(); ++it) {
+
+		f = reinterpret_cast<Forest*>(*it);
+
+		switch (f->m_ForestType) {
+		case Forest::ForestType::FOREST_NORMAL:
+			foresttype = "NORMAL";
+			break;
+		case Forest::ForestType::FOREST_DYING:
+			foresttype = "DYING";
+			break;
+		case Forest::ForestType::FOREST_SCARCE:
+			foresttype = "SCARCE";
+			break;
+		case Forest::ForestType::FOREST_DEEP:
+			foresttype = "DEEP";
+			break;
+		default:
+			break;
+		}
+
+
+		s5 = "LifeT.: " + std::to_string(f->m_ForestLifeTimeNow);
+		s6 = " MaxLifeT.: " + std::to_string(f->m_ForestLifetime);
+		s7 = " Type: " + foresttype;
+		DrawString(olc::vi2d(f->m_TransformCmp->m_PosX, f->m_TransformCmp->m_PosY + 30), s5, olc::CYAN, 1);
+		DrawString(olc::vi2d(f->m_TransformCmp->m_PosX, f->m_TransformCmp->m_PosY + 40), s6, olc::CYAN, 1);
+		DrawString(olc::vi2d(f->m_TransformCmp->m_PosX, f->m_TransformCmp->m_PosY + 50), s7, olc::CYAN, 1);
+
+	}
 
 }
 
@@ -771,7 +862,7 @@ void ForestSearch::executeStateLogic() {
 
 
 			if (m_ManagedForest->m_ForestType == Forest::ForestType::FOREST_DEEP) m_ManagedForest->m_ForestLifeTimeNow = 67; // Needed reset to normal value for deep forest to ensure common dying time.
-
+			m_ManagedForest->m_ForestLifetime = 100;
 
 			m_ManagedForest->m_ForestType = Forest::ForestType::FOREST_DYING;
 
@@ -791,7 +882,7 @@ void ForestSearch::executeStateLogic() {
 
 		if (_surroundedByForestNormal(m_ManagedForest)) {
 			m_ManagedForest->m_ForestType = Forest::ForestType::FOREST_DEEP;
-
+			m_ManagedForest->m_ForestLifetime = 200;
 
 			cout << color(colors::BLUE);
 			cout << "_surroundedByForestNormal() for " << m_ManagedForest->m_IDCmp->m_ID << " executed." << white << endl;
@@ -800,6 +891,12 @@ void ForestSearch::executeStateLogic() {
 			// Update on change.
 			m_ManagedForest->Update();
 		}
+	}
+
+
+	// Spawning random forest around deep forest logic.
+	if (m_ManagedForest->m_ForestType == Forest::ForestType::FOREST_DEEP) {
+		_spawnRandomForestAroundDeepOne(m_ManagedForest);
 	}
 }
 
@@ -1013,4 +1110,186 @@ void ForestSearch::_checkForNewForestCreation(Forest* forest) {
 
 		}
 	}
+}
+
+
+void ForestSearch::_spawnRandomForestAroundDeepOne(Forest* deepForest) {
+
+	using namespace std;
+	EntitiesStorage* storage = EntitiesStorage::Get();
+
+	int deepForestCell[2];
+	deepForestCell[0] = deepForest->m_TransformCmp->m_GameWorldSpaceCell[0];
+	deepForestCell[1] = deepForest->m_TransformCmp->m_GameWorldSpaceCell[1];
+
+	Forest* new_forest = nullptr;
+
+	int r = rand() % 10;
+
+	switch (r) {
+	case 0:
+
+		// Some cell around Deep forest
+		if (!IsGameEntityTypeOnMapTile(GetMapTileAtWorldPosition(deepForestCell[0] - 1, deepForestCell[1] - 1), "Forest")) {
+
+
+			// Empty tile --> create forest.
+			new_forest = new Forest("forest_scarce", "layer3", (deepForestCell[0] - 1) * SPRITES_WIDTH_AND_HEIGHT,
+															  (deepForestCell[1] - 1) * SPRITES_WIDTH_AND_HEIGHT);
+
+			new_forest->m_TransformCmp->m_GameWorldSpaceCell[0] = deepForestCell[0] - 1;
+			new_forest->m_TransformCmp->m_GameWorldSpaceCell[1] = deepForestCell[1] - 1;
+			new_forest->m_AICmp->ChangeState(States::STATE_SEARCH);
+			new_forest->m_AICmp->MapState("state_search", new ForestSearch(*new_forest->m_AICmp));
+
+			storage->AddGameEntitie(new_forest);
+
+			cout << color(colors::CYAN);
+			cout << "New Forest created: CELL ( " << new_forest->m_TransformCmp->m_GameWorldSpaceCell[0] << " : " << new_forest->m_TransformCmp->m_GameWorldSpaceCell[1] << " )" << " ---- ID: " << new_forest->m_IDCmp->m_ID << white << endl;
+		}
+
+		break;
+	case 1:
+		if (!IsGameEntityTypeOnMapTile(GetMapTileAtWorldPosition(deepForestCell[0], deepForestCell[1] - 1), "Forest")) {
+
+
+			// Empty tile --> create forest.
+			new_forest = new Forest("forest_scarce", "layer3", (deepForestCell[0]) * SPRITES_WIDTH_AND_HEIGHT,
+															   (deepForestCell[1] - 1) * SPRITES_WIDTH_AND_HEIGHT);
+
+			new_forest->m_TransformCmp->m_GameWorldSpaceCell[0] = deepForestCell[0];
+			new_forest->m_TransformCmp->m_GameWorldSpaceCell[1] = deepForestCell[1] - 1;
+			new_forest->m_AICmp->ChangeState(States::STATE_SEARCH);
+			new_forest->m_AICmp->MapState("state_search", new ForestSearch(*new_forest->m_AICmp));
+
+			storage->AddGameEntitie(new_forest);
+
+			cout << color(colors::CYAN);
+			cout << "New Forest created: CELL ( " << new_forest->m_TransformCmp->m_GameWorldSpaceCell[0] << " : " << new_forest->m_TransformCmp->m_GameWorldSpaceCell[1] << " )" << " ---- ID: " << new_forest->m_IDCmp->m_ID << white << endl;
+		}
+
+
+		break;
+	case 2:
+		if (!IsGameEntityTypeOnMapTile(GetMapTileAtWorldPosition(deepForestCell[0] + 1, deepForestCell[1] - 1), "Forest")) {
+
+
+			// Empty tile --> create forest.
+			new_forest = new Forest("forest_scarce", "layer3", (deepForestCell[0] + 1) * SPRITES_WIDTH_AND_HEIGHT,
+																(deepForestCell[1] - 1) * SPRITES_WIDTH_AND_HEIGHT);
+
+			new_forest->m_TransformCmp->m_GameWorldSpaceCell[0] = deepForestCell[0] + 1;
+			new_forest->m_TransformCmp->m_GameWorldSpaceCell[1] = deepForestCell[1] - 1;
+			new_forest->m_AICmp->ChangeState(States::STATE_SEARCH);
+			new_forest->m_AICmp->MapState("state_search", new ForestSearch(*new_forest->m_AICmp));
+
+			storage->AddGameEntitie(new_forest);
+
+			cout << color(colors::CYAN);
+			cout << "New Forest created: CELL ( " << new_forest->m_TransformCmp->m_GameWorldSpaceCell[0] << " : " << new_forest->m_TransformCmp->m_GameWorldSpaceCell[1] << " )" << " ---- ID: " << new_forest->m_IDCmp->m_ID << white << endl;
+		}
+
+		break;
+	case 3:
+		if (!IsGameEntityTypeOnMapTile(GetMapTileAtWorldPosition(deepForestCell[0] - 1, deepForestCell[1]), "Forest")) {
+
+
+			// Empty tile --> create forest.
+			new_forest = new Forest("forest_scarce", "layer3", (deepForestCell[0] - 1) * SPRITES_WIDTH_AND_HEIGHT,
+															   (deepForestCell[1]) * SPRITES_WIDTH_AND_HEIGHT);
+
+			new_forest->m_TransformCmp->m_GameWorldSpaceCell[0] = deepForestCell[0] - 1;
+			new_forest->m_TransformCmp->m_GameWorldSpaceCell[1] = deepForestCell[1];
+			new_forest->m_AICmp->ChangeState(States::STATE_SEARCH);
+			new_forest->m_AICmp->MapState("state_search", new ForestSearch(*new_forest->m_AICmp));
+
+			storage->AddGameEntitie(new_forest);
+
+			cout << color(colors::CYAN);
+			cout << "New Forest created: CELL ( " << new_forest->m_TransformCmp->m_GameWorldSpaceCell[0] << " : " << new_forest->m_TransformCmp->m_GameWorldSpaceCell[1] << " )" << " ---- ID: " << new_forest->m_IDCmp->m_ID << white << endl;
+		}
+
+
+		break;
+	case 4:
+		if (!IsGameEntityTypeOnMapTile(GetMapTileAtWorldPosition(deepForestCell[0] + 1, deepForestCell[1]), "Forest")) {
+
+
+			// Empty tile --> create forest.
+			new_forest = new Forest("forest_scarce", "layer3", (deepForestCell[0] + 1) * SPRITES_WIDTH_AND_HEIGHT,
+																(deepForestCell[1]) * SPRITES_WIDTH_AND_HEIGHT);
+
+			new_forest->m_TransformCmp->m_GameWorldSpaceCell[0] = deepForestCell[0] + 1;
+			new_forest->m_TransformCmp->m_GameWorldSpaceCell[1] = deepForestCell[1];
+			new_forest->m_AICmp->ChangeState(States::STATE_SEARCH);
+			new_forest->m_AICmp->MapState("state_search", new ForestSearch(*new_forest->m_AICmp));
+
+			storage->AddGameEntitie(new_forest);
+
+			cout << color(colors::CYAN);
+			cout << "New Forest created: CELL ( " << new_forest->m_TransformCmp->m_GameWorldSpaceCell[0] << " : " << new_forest->m_TransformCmp->m_GameWorldSpaceCell[1] << " )" << " ---- ID: " << new_forest->m_IDCmp->m_ID << white << endl;
+		}
+		break;
+	case 5:
+		if (!IsGameEntityTypeOnMapTile(GetMapTileAtWorldPosition(deepForestCell[0] - 1, deepForestCell[1] + 1), "Forest")) {
+
+
+			// Empty tile --> create forest.
+			new_forest = new Forest("forest_scarce", "layer3", (deepForestCell[0] - 1) * SPRITES_WIDTH_AND_HEIGHT,
+																(deepForestCell[1] + 1) * SPRITES_WIDTH_AND_HEIGHT);
+
+			new_forest->m_TransformCmp->m_GameWorldSpaceCell[0] = deepForestCell[0] - 1;
+			new_forest->m_TransformCmp->m_GameWorldSpaceCell[1] = deepForestCell[1] + 1;
+			new_forest->m_AICmp->ChangeState(States::STATE_SEARCH);
+			new_forest->m_AICmp->MapState("state_search", new ForestSearch(*new_forest->m_AICmp));
+
+			storage->AddGameEntitie(new_forest);
+
+			cout << color(colors::CYAN);
+			cout << "New Forest created: CELL ( " << new_forest->m_TransformCmp->m_GameWorldSpaceCell[0] << " : " << new_forest->m_TransformCmp->m_GameWorldSpaceCell[1] << " )" << " ---- ID: " << new_forest->m_IDCmp->m_ID << white << endl;
+		}
+		break;
+	case 6:
+		if (!IsGameEntityTypeOnMapTile(GetMapTileAtWorldPosition(deepForestCell[0], deepForestCell[1] + 1), "Forest")) {
+
+
+			// Empty tile --> create forest.
+			new_forest = new Forest("forest_scarce", "layer3", (deepForestCell[0]) * SPRITES_WIDTH_AND_HEIGHT,
+																(deepForestCell[1] - 1) * SPRITES_WIDTH_AND_HEIGHT);
+
+			new_forest->m_TransformCmp->m_GameWorldSpaceCell[0] = deepForestCell[0];
+			new_forest->m_TransformCmp->m_GameWorldSpaceCell[1] = deepForestCell[1] + 1;
+			new_forest->m_AICmp->ChangeState(States::STATE_SEARCH);
+			new_forest->m_AICmp->MapState("state_search", new ForestSearch(*new_forest->m_AICmp));
+
+			storage->AddGameEntitie(new_forest);
+
+			cout << color(colors::CYAN);
+			cout << "New Forest created: CELL ( " << new_forest->m_TransformCmp->m_GameWorldSpaceCell[0] << " : " << new_forest->m_TransformCmp->m_GameWorldSpaceCell[1] << " )" << " ---- ID: " << new_forest->m_IDCmp->m_ID << white << endl;
+		}
+
+		break;
+	case 7:
+		if (!IsGameEntityTypeOnMapTile(GetMapTileAtWorldPosition(deepForestCell[0] + 1, deepForestCell[1] + 1), "Forest")) {
+
+
+			// Empty tile --> create forest.
+			new_forest = new Forest("forest_scarce", "layer3", (deepForestCell[0] + 1) * SPRITES_WIDTH_AND_HEIGHT,
+																(deepForestCell[1] + 1) * SPRITES_WIDTH_AND_HEIGHT);
+
+			new_forest->m_TransformCmp->m_GameWorldSpaceCell[0] = deepForestCell[0] + 1;
+			new_forest->m_TransformCmp->m_GameWorldSpaceCell[1] = deepForestCell[1] + 1;
+			new_forest->m_AICmp->ChangeState(States::STATE_SEARCH);
+			new_forest->m_AICmp->MapState("state_search", new ForestSearch(*new_forest->m_AICmp));
+
+			storage->AddGameEntitie(new_forest);
+
+			cout << color(colors::CYAN);
+			cout << "New Forest created: CELL ( " << new_forest->m_TransformCmp->m_GameWorldSpaceCell[0] << " : " << new_forest->m_TransformCmp->m_GameWorldSpaceCell[1] << " )" << " ---- ID: " << new_forest->m_IDCmp->m_ID << white << endl;
+		}
+		break;
+	default:
+		return;
+	}
+
 }
