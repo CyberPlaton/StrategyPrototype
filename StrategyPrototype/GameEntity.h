@@ -10,6 +10,13 @@ typedef std::array<std::array<MapTile*, 20>, 20> MapTileArray;
 
 
 
+// Helpers.
+MapTile* GetMapTileAtWorldPosition(int x, int y);
+GameEntity* IsGameEntityTypeOnMapTile(MapTile* maptile, std::string dynamicTypeName);
+int GetTotalForestsCount();
+
+
+
 
 class GameEntity{
 public:
@@ -17,6 +24,8 @@ public:
 	GameEntity() {
 
 		m_IDCmp = new CMPIdentifier();
+		m_IDCmp->m_DynamicTypeName = "GameEntity";
+
 		m_TransformCmp = new CMPTransform();
 		
 		/*
@@ -62,6 +71,7 @@ public:
 	Forest(std::string name, std::string layer, int xpos, int ypos) {
 
 		// Forests have transform, graphics, AI, FSM and id.
+		m_IDCmp->m_DynamicTypeName = "Forest";
 
 		m_TransformCmp->m_PosX = xpos;
 		m_TransformCmp->m_PosY = ypos;
@@ -110,6 +120,8 @@ class MapTile : public GameEntity {
 public:
 	MapTile(std::string name, std::string layer, int xpos, int ypos) {
 		
+		m_IDCmp->m_DynamicTypeName = "MapTile";
+
 		m_MapTileEntities = new std::vector<GameEntity*>();
 
 		// Maptiles have transform, graphics, id.
@@ -138,10 +150,17 @@ struct EntitiesStorage {
 
 
 	void AddGameEntitie(GameEntity* e) {
+
 		m_GameEntitiesVec->push_back(e);
 
 		if (e->m_AICmp) _addEntitieWithAI(e);
-		if (_isMaptile(e)) _addMaptileEntity(e);
+		if (_isMaptile(e)) {
+			_addMaptileEntity(e);
+		}
+		else {
+			_addEntityToMapTileVector(e);
+		}
+			
 	}
 
 
@@ -197,6 +216,8 @@ struct EntitiesStorage {
 
 			if (it != m_MapTileGameEntitiesVec->end()) {
 				m_MapTileGameEntitiesVec->erase(it);
+			
+
 			}
 		}
 		
@@ -262,6 +283,13 @@ private:
 		m_MapTileGameEntitiesVec->push_back(e);
 	}
 
+
+	void _addEntityToMapTileVector(GameEntity* e) {
+
+		int entity_cell[2]; entity_cell[0] = e->m_TransformCmp->m_GameWorldSpaceCell[0]; entity_cell[1] = e->m_TransformCmp->m_GameWorldSpaceCell[1];
+
+		GetMapTileAtWorldPosition(entity_cell[0], entity_cell[1])->m_MapTileEntities->push_back(e);
+	}
 
 	bool _isMaptile(GameEntity* e) {
 

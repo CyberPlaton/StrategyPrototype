@@ -14,6 +14,7 @@ struct CMPIdentifier {
 	}
 
 	std::string m_ID;
+	std::string m_DynamicTypeName;
 };
 
 

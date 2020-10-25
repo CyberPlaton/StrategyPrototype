@@ -6,6 +6,8 @@
 #include"Resources.h"
 
 
+
+
 class Game;
 class Camera;
 struct CMPCameraInput{
@@ -156,8 +158,6 @@ private:
 	void _updateEntitiesMapTileCoords();
 
 
-	void _mapAIStateLogicFunctions();
-	void _updateAI();
 	void _updateAI2();
 };
 
@@ -190,4 +190,13 @@ public:
 
 	CMPArtificialIntelligence* m_AICmp = nullptr;
 	Forest* m_ManagedForest = nullptr;
+
+
+private:
+
+
+private:
+
+	bool _surroundedByForestNormal(Forest* forest);
+	void _checkForNewForestCreation(Forest* forest);
 };

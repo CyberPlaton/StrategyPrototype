@@ -3,6 +3,73 @@
 static olc::vf2d g_vi2dCameraPosition = olc::vf2d(0.0f, 0.0f);
 
 
+int GetTotalForestsCount() {
+
+	EntitiesStorage* storage = EntitiesStorage::Get();
+	std::vector< GameEntity* > vec = *storage->GetStorage();
+	GameEntity* entt = nullptr;
+
+
+	int forest_count = 0;
+	for (auto it = vec.begin(); it != vec.end(); ++it) {
+
+		entt = *it;
+
+		if (COMPARE_STRINGS(entt->m_IDCmp->m_DynamicTypeName, "Forest") == 0) forest_count++;
+	}
+
+	return forest_count;
+}
+
+
+MapTile* GetMapTileAtWorldPosition(int x, int y) {
+
+	if (x < 0 || y < 0) return nullptr;
+
+
+	EntitiesStorage* storage = EntitiesStorage::Get();
+	std::vector< GameEntity* > vec = *storage->GetMapTilesStorage();
+	GameEntity* entity = nullptr;
+
+	for (auto it = vec.begin(); it != vec.end(); ++it) {
+
+		entity = *it;
+
+		if (entity->m_TransformCmp->m_GameWorldSpaceCell[0] == x && entity->m_TransformCmp->m_GameWorldSpaceCell[1] == y) {
+			return static_cast<MapTile*>(entity);
+		}
+	}
+
+	// Nothing found. Means not valid index for maptile or some other weird error.
+	return nullptr;
+}
+
+
+// The DynamicType of an Entity is basically its Class Name.
+GameEntity* IsGameEntityTypeOnMapTile(MapTile* maptile, std::string dynamicTypeName) {
+
+	if (maptile == nullptr) return nullptr;
+
+
+	std::vector< GameEntity* > vec = *maptile->m_MapTileEntities;
+	GameEntity* entt = nullptr;
+
+
+	for (auto it = vec.begin(); it != vec.end(); ++it) {
+
+		entt = *it;
+
+		if (COMPARE_STRINGS_2(entt->m_IDCmp->m_DynamicTypeName, dynamicTypeName) == 0) return entt;
+	}
+
+	// Entity not present.
+	return nullptr;
+}
+
+
+
+
+
 
 void CMPCameraInput::HandleKeyboard(Camera* cam) {
 
@@ -24,7 +91,12 @@ void CMPCameraInput::HandleKeyboard(Camera* cam) {
 
 	if (context->GetKey(olc::Key::W).bHeld) {
 
-		g_vi2dCameraPosition.y -= 1;
+		if (g_vi2dCameraPosition.y <= 0) {
+			g_vi2dCameraPosition.y = 0; return;
+		}
+
+
+		g_vi2dCameraPosition.y -= 1 * speed;
 
 		for (auto it : *EntitiesStorage::Get()->GetMapTilesStorage()) {
 
@@ -45,7 +117,12 @@ void CMPCameraInput::HandleKeyboard(Camera* cam) {
 
 	if (context->GetKey(olc::Key::A).bHeld) {
 
-		g_vi2dCameraPosition.x -= 1;
+		if (g_vi2dCameraPosition.x <= 0) {
+			g_vi2dCameraPosition.x = 0; return;
+		}
+
+
+		g_vi2dCameraPosition.x -= 1 * speed;
 
 		for (auto it : *EntitiesStorage::Get()->GetMapTilesStorage()) {
 
@@ -67,7 +144,9 @@ void CMPCameraInput::HandleKeyboard(Camera* cam) {
 
 	if (context->GetKey(olc::Key::S).bHeld) {
 
-		g_vi2dCameraPosition.y += 1;
+
+
+		g_vi2dCameraPosition.y += 1 * speed;
 
 		for (auto it : *EntitiesStorage::Get()->GetMapTilesStorage()) {
 
@@ -89,7 +168,9 @@ void CMPCameraInput::HandleKeyboard(Camera* cam) {
 
 	if (context->GetKey(olc::Key::D).bHeld) {
 
-		g_vi2dCameraPosition.x += 1;
+
+
+		g_vi2dCameraPosition.x += 1 * speed;
 
 		for (auto it : *EntitiesStorage::Get()->GetMapTilesStorage() ) {
 
@@ -239,8 +320,6 @@ bool Game::OnUserCreate() {
 
 	_initialize();
 	_initializeMapTileCellCoords();
-	_mapAIStateLogicFunctions();
-
 
 
 	Camera* cam = new Camera(this, 0, 0);
@@ -250,6 +329,52 @@ bool Game::OnUserCreate() {
 	m_Renderer->m_Layer2 = CreateLayer();
 	m_Renderer->m_Layer3 = CreateLayer();
 	m_Renderer->m_Layer4 = CreateLayer();
+
+
+
+
+	// Create some forests for testing.
+	int f_cell[2], f2_cell[2], f3_cell[2];
+	f_cell[0] = 0; f_cell[1] = 0;
+	f2_cell[0] = 1; f2_cell[1] = 0;
+	f3_cell[0] = 0; f3_cell[1] = 1;
+
+	Forest* f = new Forest("forest_scarce", "layer3", (f_cell[0]) * SPRITES_WIDTH_AND_HEIGHT,
+													  (f_cell[1]) * SPRITES_WIDTH_AND_HEIGHT);
+	f->m_TransformCmp->m_GameWorldSpaceCell[0] = f_cell[0];
+	f->m_TransformCmp->m_GameWorldSpaceCell[1] = f_cell[1];
+	f->m_AICmp->ChangeState(States::STATE_SEARCH);
+	f->m_AICmp->MapState("state_search", new ForestSearch(*f->m_AICmp));
+	
+
+	Forest* f2 = new Forest("forest_scarce", "layer3", (f2_cell[0]) * SPRITES_WIDTH_AND_HEIGHT,
+													   (f2_cell[1]) * SPRITES_WIDTH_AND_HEIGHT);
+	f2->m_TransformCmp->m_GameWorldSpaceCell[0] = f2_cell[0];
+	f2->m_TransformCmp->m_GameWorldSpaceCell[1] = f2_cell[1];
+	f2->m_AICmp->ChangeState(States::STATE_SEARCH);
+	f2->m_AICmp->MapState("state_search", new ForestSearch(*f2->m_AICmp));
+
+	
+
+	Forest* f3 = new Forest("forest_scarce", "layer3", (f3_cell[0]) * SPRITES_WIDTH_AND_HEIGHT,
+													   (f3_cell[1]) * SPRITES_WIDTH_AND_HEIGHT);
+	f3->m_TransformCmp->m_GameWorldSpaceCell[0] = f3_cell[0];
+	f3->m_TransformCmp->m_GameWorldSpaceCell[1] = f3_cell[1];
+	f3->m_AICmp->ChangeState(States::STATE_SEARCH);
+	f3->m_AICmp->MapState("state_search", new ForestSearch(*f3->m_AICmp));
+
+
+
+
+
+	EntitiesStorage* storage = EntitiesStorage::Get();
+	storage->AddGameEntitie(f);
+	storage->AddGameEntitie(f2);
+	storage->AddGameEntitie(f3);
+
+
+
+
 
 
 	return true;
@@ -288,6 +413,10 @@ void Game::DebugDrawStats() {
 
 	std::string turncount = "Turn " + std::to_string(m_TurnCount);
 	DrawString(olc::vi2d(2, 30), turncount, olc::RED, 2.0f);
+
+	std::string forestcount = "Forests " + std::to_string(GetTotalForestsCount());
+	DrawString(olc::vi2d(2, 60), forestcount, olc::RED, 2.0f);
+
 
 
 	// Draw each maptiles mapcell
@@ -421,38 +550,40 @@ void Renderer::Render2Layer3() {
 	using namespace olc;
 
 	EntitiesStorage* storage = EntitiesStorage::Get();
-	std::vector< GameEntity* >* vec = storage->GetMapTilesStorage();
+	std::vector< GameEntity* > vec = *storage->GetMapTilesStorage();
 
 	MapTile* maptile = nullptr;
-
+	GameEntity* entity = nullptr;
 
 
 	m_Game->SetDrawTarget(m_Layer3);
 	m_Game->Clear(olc::BLANK);
 
+	// Render Forests, Hills, etc.
+	for (auto it = vec.begin(); it != vec.end(); ++it) {
 
-
-	for (auto it: *vec) {
+		maptile = reinterpret_cast<MapTile*>(*it);
 
 		// Do not draw tiles we do not see.
-		if (it->m_TransformCmp->m_Cell[0] > 4 ||
-			it->m_TransformCmp->m_Cell[1] > 4) continue;
+		if (maptile->m_TransformCmp->m_Cell[0] > 4 ||
+			maptile->m_TransformCmp->m_Cell[1] > 4) continue;
 
-
-		maptile = reinterpret_cast<MapTile*>(it);
 
 		if (maptile->m_MapTileEntities->size() > 0) {
 
-			for (auto iter : *maptile->m_MapTileEntities) {
 
+			for (auto iter = maptile->m_MapTileEntities->begin(); iter != maptile->m_MapTileEntities->end(); ++iter) {
+						
+				entity = *iter;
 
 				// Draw appropriate loaded sprite on position specified.
-				m_Game->DrawDecal(vi2d(iter->m_TransformCmp->m_PosX, iter->m_TransformCmp->m_PosY),
-					m_Game->m_SpriteResourceMap.at(iter->m_GraphicsCmp->m_SpriteName));
+				m_Game->DrawDecal(vi2d(entity->m_TransformCmp->m_PosX, entity->m_TransformCmp->m_PosY),
+										m_Game->m_SpriteResourceMap.at(entity->m_GraphicsCmp->m_SpriteName));
+
 			}
+
 		}
 	}
-
 
 
 	m_Game->EnableLayer(m_Layer3, true);
@@ -464,28 +595,30 @@ void Renderer::Render2Layer4() {
 	using namespace olc;
 
 	EntitiesStorage* storage = EntitiesStorage::Get();
-	std::vector< GameEntity* >* vec = storage->GetMapTilesStorage();
+	std::vector< GameEntity* > vec = *storage->GetMapTilesStorage();
+	MapTile* maptile = nullptr;
 
 	m_Game->SetDrawTarget(m_Layer4);
 	m_Game->Clear(olc::BLANK);
 
 
-	for (auto it : *vec) {
+	for (auto it = vec.begin(); it != vec.end(); ++it) {
+
+		maptile = reinterpret_cast<MapTile*>(*it);
 
 		// Do not draw tiles we do not see.
-		if (it->m_TransformCmp->m_Cell[0] > 4 ||
-			it->m_TransformCmp->m_Cell[1] > 4) continue;
+		if (maptile->m_TransformCmp->m_Cell[0] > 4 ||
+			maptile->m_TransformCmp->m_Cell[1] > 4) continue;
 
 
-			// Draw appropriate loaded sprite on position specified.
-			m_Game->DrawDecal(vi2d(it->m_TransformCmp->m_PosX, it->m_TransformCmp->m_PosY),
-				m_Game->m_SpriteResourceMap.at(it->m_GraphicsCmp->m_SpriteName));
+		// Draw appropriate loaded sprite on position specified.
+		m_Game->DrawDecal(vi2d(maptile->m_TransformCmp->m_PosX, maptile->m_TransformCmp->m_PosY),
+						  m_Game->m_SpriteResourceMap.at(maptile->m_GraphicsCmp->m_SpriteName));
 	}
 
 
 	m_Game->EnableLayer(m_Layer4, true);
 	m_Game->SetDrawTarget(nullptr);
-
 }
 
 
@@ -500,83 +633,35 @@ void Renderer::RenderLayer0() {
 
 
 
-
-// Find better solution for this functionality.
-// It uses way too much CPU.
-void Game::_updateAI() {
-
-
-	EntitiesStorage* storage = EntitiesStorage::Get();
-	std::vector< GameEntity* >* vec = storage->GetStorage();
-
-	for (auto& it : *vec) { // Iterate through all entities.
-
-		// The Maptile iteslf has no AI logic, thus skip it and see
-		// whether there are entities on it present.
-		MapTile* itMapTile = static_cast<MapTile*>(it);
-
-		if (itMapTile->m_MapTileEntities != nullptr) { // This object IS a maptile.
-
-
-			if (itMapTile->m_MapTileEntities->size() > 0) { // ... and its vector is not empty.
-
-				for (auto iter : *itMapTile->m_MapTileEntities) { // Do the same for each entity on this maptile.
-
-					using namespace std;
-										
-
-					if (!iter->m_AICmp->TryExecuteStateLogic()) {
-
-						cout << APP_ERROR_COLOR;
-						cout << "Executing state logic for " << iter->m_IDCmp->m_ID
-							<< iter->m_TransformCmp->m_GameWorldSpaceCell[0] << " : " << iter->m_TransformCmp->m_GameWorldSpaceCell[1]
-							<< " was unsuccessfull." << white << endl;
-					
-					}
-					else {
-
-						cout << APP_SUCCESS_COLOR;
-						cout << "Executing state logic for " << iter->m_IDCmp->m_ID << " at position "
-							<< iter->m_TransformCmp->m_GameWorldSpaceCell[0] << " : " << iter->m_TransformCmp->m_GameWorldSpaceCell[1]
-							<< " was successfull." << white << endl;
-					}
-					
-				}
-			}
-		}
-	}
-
-}
-
-
-
 void Game::_updateAI2() {
 
 	EntitiesStorage* storage = EntitiesStorage::Get();
 
 	// Get all entities with AI Component.
-	std::vector< GameEntity* >* vec = storage->GetAIEntitiesStorage();
-
-	for (auto it : *vec) {
+	std::vector< GameEntity* > vec = *storage->GetAIEntitiesStorage();
+	GameEntity* entity = nullptr;
+	
+	for (auto it = vec.begin(); it != vec.end(); ++it) {
 
 
 		try {
 			using namespace std;
 
+			entity = *it;
 
-			if (!it->m_AICmp->TryExecuteStateLogic()) {
+			if (!entity->m_AICmp->TryExecuteStateLogic()) {
 
 				cout << APP_ERROR_COLOR;
-				cout << "Executing state logic for " << it->m_IDCmp->m_ID << " at position "
-					<< it->m_TransformCmp->m_GameWorldSpaceCell[0] << " : " << it->m_TransformCmp->m_GameWorldSpaceCell[1]
+				cout << "Executing state logic for " << entity->m_IDCmp->m_ID << " at position "
+					<< entity->m_TransformCmp->m_GameWorldSpaceCell[0] << " : " << entity->m_TransformCmp->m_GameWorldSpaceCell[1]
 					<< " was unsuccessfull." << white << endl;
 
 			}
 			else {
 
 				cout << APP_SUCCESS_COLOR;
-				cout << "Executing state logic for " << it->m_IDCmp->m_ID << " at position "
-					<< it->m_TransformCmp->m_GameWorldSpaceCell[0] << " : " << it->m_TransformCmp->m_GameWorldSpaceCell[1]
+				cout << "Executing state logic for " << entity->m_IDCmp->m_ID << " at position "
+					<< entity->m_TransformCmp->m_GameWorldSpaceCell[0] << " : " << entity->m_TransformCmp->m_GameWorldSpaceCell[1]
 					<< " was successfull." << white << endl;
 			}
 		}
@@ -631,42 +716,18 @@ void Game::_updateEntitiesMapTileCoords() {
 void Game::_updateLocalMapTileCellCoords() {
 
 	EntitiesStorage* storage = EntitiesStorage::Get();
-	std::vector< GameEntity* >* vec = storage->GetMapTilesStorage();
+	std::vector< GameEntity* > vec = *storage->GetMapTilesStorage();
 
-	
-	for (auto& it : *vec) { // Iterate through all maptiles.
-
-
-		if (it->m_TransformCmp->m_PosX < g_vi2dCameraPosition.x &&
-			it->m_TransformCmp->m_PosY > g_vi2dCameraPosition.y) { // Out of view rect.
-			continue;
-
-		}
-		else { // In view rect, update local cell position.
-
-			it->m_TransformCmp->m_Cell[0] = ((int)it->m_TransformCmp->m_PosX + 110) / SPRITES_WIDTH_AND_HEIGHT;
-			it->m_TransformCmp->m_Cell[1] = ((int)it->m_TransformCmp->m_PosY + 110) / SPRITES_WIDTH_AND_HEIGHT;
-		}
-	}
-}
+	MapTile* maptile = nullptr;
 
 
+	for (auto it = vec.begin(); it != vec.end(); ++it) {
 
-void Game::_mapAIStateLogicFunctions() {
-	
-	// Test
-	EntitiesStorage* storage = EntitiesStorage::Get();
-	std::vector< GameEntity* >* vec = storage->GetAIEntitiesStorage();
+		maptile = reinterpret_cast<MapTile*>(*it);
 
-	std::string substring = "forest";
-
-	for (auto it : *vec) {
-
-		if (it->m_GraphicsCmp->m_SpriteName.find(substring) != std::string::npos) {
-
-			// Give the forest entity the ForestSearch AI Logic.
-			it->m_AICmp->MapState("state_search", new ForestSearch(*it->m_AICmp));
-		}
+		
+		maptile->m_TransformCmp->m_Cell[0] = ((int)maptile->m_TransformCmp->m_PosX + 110) / SPRITES_WIDTH_AND_HEIGHT;
+		maptile->m_TransformCmp->m_Cell[1] = ((int)maptile->m_TransformCmp->m_PosY + 110) / SPRITES_WIDTH_AND_HEIGHT;
 	}
 }
 
@@ -674,6 +735,8 @@ void Game::_mapAIStateLogicFunctions() {
 
 
 void ForestSearch::executeStateLogic() {
+
+	using namespace std;
 
 	// increase lifetime on update. Counted in gameturns.
 	m_ManagedForest->m_ForestLifeTimeNow++;
@@ -687,7 +750,10 @@ void ForestSearch::executeStateLogic() {
 		return;
 	}
 
-	// check for transitions of young and old forests
+
+
+
+	// check for transitions of young and older forests
 	if (m_ManagedForest->m_ForestType == Forest::ForestType::FOREST_SCARCE) {
 
 
@@ -713,6 +779,28 @@ void ForestSearch::executeStateLogic() {
 			m_ManagedForest->Update();
 		}
 	}
+
+
+	// Make changes dependent on forests position.
+	// This logic acts only on normaltype forests.
+	if (m_ManagedForest->m_ForestType == Forest::ForestType::FOREST_NORMAL) {
+		_checkForNewForestCreation(m_ManagedForest);
+
+		cout << color(colors::BLUE);
+		cout << "_checkForNewForestCreation() for " << m_ManagedForest->m_IDCmp->m_ID << " executed." << white << endl;
+
+		if (_surroundedByForestNormal(m_ManagedForest)) {
+			m_ManagedForest->m_ForestType = Forest::ForestType::FOREST_DEEP;
+
+
+			cout << color(colors::BLUE);
+			cout << "_surroundedByForestNormal() for " << m_ManagedForest->m_IDCmp->m_ID << " executed." << white << endl;
+
+		
+			// Update on change.
+			m_ManagedForest->Update();
+		}
+	}
 }
 
 
@@ -723,4 +811,206 @@ void Game::AdvanceOneTurn() {
 
 
 	m_TurnCount++;
+}
+
+
+
+// This function can and must be improved.
+bool ForestSearch::_surroundedByForestNormal(Forest* forest) {
+
+	int forest_cell[2];
+	forest_cell[0] = forest->m_TransformCmp->m_GameWorldSpaceCell[0];
+	forest_cell[1] = forest->m_TransformCmp->m_GameWorldSpaceCell[1];
+
+	bool got_forest_up = false, got_forest_down = false, got_forest_left = false, got_forest_right = false;
+
+
+	EntitiesStorage* storage = EntitiesStorage::Get();
+	std::vector< GameEntity* > vec = *storage->GetAIEntitiesStorage();
+
+	// Get Entities that are explicitly forest type and surround given forest.
+	std::string substring = "normal"; // "forest_normal" etc.
+	Forest* other_forest = nullptr;
+
+	for (auto it = vec.begin(); it != vec.end(); ++it) {
+
+		if (forest == *it) continue;
+
+		other_forest = reinterpret_cast<Forest*>(*it);
+
+		if (other_forest->m_TransformCmp->m_GameWorldSpaceCell[0] == forest_cell[0] &&
+			other_forest->m_TransformCmp->m_GameWorldSpaceCell[1] == forest_cell[1] - 1) { // one tile above our forest.
+
+			if (other_forest->m_GraphicsCmp->m_SpriteName.find(substring) != std::string::npos) {
+
+				got_forest_up = true;
+			}
+		}
+
+
+		if (other_forest->m_TransformCmp->m_GameWorldSpaceCell[0] == forest_cell[0] - 1 &&
+			other_forest->m_TransformCmp->m_GameWorldSpaceCell[1] == forest_cell[1]) { // one tile left to our forest.
+
+			if (other_forest->m_GraphicsCmp->m_SpriteName.find(substring) != std::string::npos) {
+
+				got_forest_left = true;
+			}
+		}
+
+
+		if (other_forest->m_TransformCmp->m_GameWorldSpaceCell[0] == forest_cell[0] + 1 &&
+			other_forest->m_TransformCmp->m_GameWorldSpaceCell[1] == forest_cell[1]) { // one tile right to our forest.
+
+			if (other_forest->m_GraphicsCmp->m_SpriteName.find(substring) != std::string::npos) {
+
+				got_forest_right = true;
+			}
+		}
+
+
+
+		if (other_forest->m_TransformCmp->m_GameWorldSpaceCell[0] == forest_cell[0] &&
+			other_forest->m_TransformCmp->m_GameWorldSpaceCell[1] == forest_cell[1] + 1) { // one tile down to our forest.
+
+			if (other_forest->m_GraphicsCmp->m_SpriteName.find(substring) != std::string::npos) {
+
+				got_forest_down = true;
+			}
+		}
+
+	}
+
+	// Forest is surrounded only if all four are true.
+	return(got_forest_down && got_forest_left && got_forest_right && got_forest_up);
+}
+
+
+
+
+void ForestSearch::_checkForNewForestCreation(Forest* forest) {
+
+	using namespace std;
+
+	EntitiesStorage* storage = EntitiesStorage::Get();
+
+	int forest_worldcell[2];
+	forest_worldcell[0] = forest->m_TransformCmp->m_GameWorldSpaceCell[0];
+	forest_worldcell[1] = forest->m_TransformCmp->m_GameWorldSpaceCell[1];
+
+	Forest* other_forest = nullptr;
+
+	/*
+	We nee to check exactly 4 maptiles. the upper left, upper right...
+	*/
+
+	other_forest = reinterpret_cast<Forest*>(IsGameEntityTypeOnMapTile(GetMapTileAtWorldPosition(forest_worldcell[0] - 1, forest_worldcell[1] - 1), "Forest"));
+	if (other_forest) { // is there forest on upper left..
+
+		// check for needed type of forest --> forest_normal.
+		// We may change this logic later.
+		if (other_forest->m_GraphicsCmp->m_SpriteName.find("normal") != std::string::npos) { // Match! Found forest_normal on needed position --> create new forest accordingly.
+
+			// Further, we need to be sure the new forest will not be a duplicate...
+			if (!IsGameEntityTypeOnMapTile(GetMapTileAtWorldPosition(forest_worldcell[0], forest_worldcell[1] - 1), "Forest")) { // As forest is upper left, we check the maptile above for creation.
+
+
+				// Empty tile --> create forest.
+				Forest* f = new Forest("forest_scarce", "layer3", (forest_worldcell[0]) * SPRITES_WIDTH_AND_HEIGHT,
+																  (forest_worldcell[1] - 1) * SPRITES_WIDTH_AND_HEIGHT);
+
+				f->m_TransformCmp->m_GameWorldSpaceCell[0] = forest_worldcell[0];
+				f->m_TransformCmp->m_GameWorldSpaceCell[1] = forest_worldcell[1] - 1;
+				f->m_AICmp->ChangeState(States::STATE_SEARCH);
+				f->m_AICmp->MapState("state_search", new ForestSearch(*f->m_AICmp));
+
+				storage->AddGameEntitie(f);
+
+				cout << color(colors::CYAN);
+				cout << "New Forest created: CELL ( " << f->m_TransformCmp->m_GameWorldSpaceCell[0] << " : " << f->m_TransformCmp->m_GameWorldSpaceCell[1] << " )" << " ---- ID: " << f->m_IDCmp->m_ID << white << endl;
+			}
+		}
+	}
+
+
+
+	other_forest = reinterpret_cast<Forest*>(IsGameEntityTypeOnMapTile(GetMapTileAtWorldPosition(forest_worldcell[0] + 1, forest_worldcell[1] - 1), "Forest"));
+	if (other_forest) { // is there forest on upper right..
+
+		if (other_forest->m_GraphicsCmp->m_SpriteName.find("normal") != std::string::npos) {
+
+			
+			if (!IsGameEntityTypeOnMapTile(GetMapTileAtWorldPosition(forest_worldcell[0]+1, forest_worldcell[1]), "Forest")) {
+
+
+				// Empty tile --> create forest.
+				Forest* f = new Forest("forest_scarce", "layer3", (forest_worldcell[0] + 1) * SPRITES_WIDTH_AND_HEIGHT,
+																  (forest_worldcell[1]) * SPRITES_WIDTH_AND_HEIGHT);
+
+				f->m_TransformCmp->m_GameWorldSpaceCell[0] = forest_worldcell[0] + 1;
+				f->m_TransformCmp->m_GameWorldSpaceCell[1] = forest_worldcell[1];
+				f->m_AICmp->ChangeState(States::STATE_SEARCH);
+				f->m_AICmp->MapState("state_search", new ForestSearch(*f->m_AICmp));
+
+				storage->AddGameEntitie(f);
+
+				cout << color(colors::CYAN);
+				cout << "New Forest created: CELL ( " << f->m_TransformCmp->m_GameWorldSpaceCell[0] << " : " << f->m_TransformCmp->m_GameWorldSpaceCell[1] << " )" << " ---- ID: " << f->m_IDCmp->m_ID << white << endl;
+			}
+
+		}
+	}
+
+
+	other_forest = reinterpret_cast<Forest*>(IsGameEntityTypeOnMapTile(GetMapTileAtWorldPosition(forest_worldcell[0] - 1, forest_worldcell[1] + 1), "Forest"));
+	if (other_forest) { // is there forest on down left..
+
+		if (other_forest->m_GraphicsCmp->m_SpriteName.find("normal") != std::string::npos) {
+
+			if (!IsGameEntityTypeOnMapTile(GetMapTileAtWorldPosition(forest_worldcell[0] - 1, forest_worldcell[1]), "Forest")) {
+
+
+				// Empty tile --> create forest.
+				Forest* f = new Forest("forest_scarce", "layer3", (forest_worldcell[0] - 1) * SPRITES_WIDTH_AND_HEIGHT,
+																  (forest_worldcell[1]) * SPRITES_WIDTH_AND_HEIGHT);
+
+				f->m_TransformCmp->m_GameWorldSpaceCell[0] = forest_worldcell[0] - 1;
+				f->m_TransformCmp->m_GameWorldSpaceCell[1] = forest_worldcell[1];
+				f->m_AICmp->ChangeState(States::STATE_SEARCH);
+				f->m_AICmp->MapState("state_search", new ForestSearch(*f->m_AICmp));
+
+				storage->AddGameEntitie(f);
+
+				cout << color(colors::CYAN);
+				cout << "New Forest created: CELL ( " << f->m_TransformCmp->m_GameWorldSpaceCell[0] << " : " << f->m_TransformCmp->m_GameWorldSpaceCell[1] << " )" << " ---- ID: " << f->m_IDCmp->m_ID << white << endl;
+			}
+
+		}
+	}
+
+
+	other_forest = reinterpret_cast<Forest*>(IsGameEntityTypeOnMapTile(GetMapTileAtWorldPosition(forest_worldcell[0] + 1, forest_worldcell[1] + 1), "Forest"));
+	if (other_forest) { // is there forest on down right..
+
+		if (other_forest->m_GraphicsCmp->m_SpriteName.find("normal") != std::string::npos) {
+
+			if (!IsGameEntityTypeOnMapTile(GetMapTileAtWorldPosition(forest_worldcell[0], forest_worldcell[1] + 1), "Forest")) {
+
+
+				// Empty tile --> create forest.
+				Forest* f = new Forest("forest_scarce", "layer3", (forest_worldcell[0]) * SPRITES_WIDTH_AND_HEIGHT,
+																  (forest_worldcell[1] + 1) * SPRITES_WIDTH_AND_HEIGHT);
+
+				f->m_TransformCmp->m_GameWorldSpaceCell[0] = forest_worldcell[0];
+				f->m_TransformCmp->m_GameWorldSpaceCell[1] = forest_worldcell[1] + 1;
+				f->m_AICmp->ChangeState(States::STATE_SEARCH);
+				f->m_AICmp->MapState("state_search", new ForestSearch(*f->m_AICmp));
+
+				storage->AddGameEntitie(f);
+
+				cout << color(colors::CYAN);
+				cout << "New Forest created: CELL ( " << f->m_TransformCmp->m_GameWorldSpaceCell[0] << " : " << f->m_TransformCmp->m_GameWorldSpaceCell[1] << " )" << " ---- ID: " << f->m_IDCmp->m_ID << white << endl;
+			}
+
+		}
+	}
 }

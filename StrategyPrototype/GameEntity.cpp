@@ -35,24 +35,6 @@ void WorldMapDrawingOptions::_createMap() {
 
 		}
 	}
-
-
-	// Map definition.
-	for (int i = 0; i <= m_MapWidth; i++) {
-
-		for (int j = 0; j <= m_MapHeight; j++) {
-
-			
-			if ((i + j) % 3 == 0) {
-
-				Forest* f = new Forest("forest_scarce", "layer3", i * SPRITES_WIDTH_AND_HEIGHT, j * SPRITES_WIDTH_AND_HEIGHT);
-
-				m_MapDefinitions->at(i).at(j)->m_MapTileEntities->push_back(f);
-				storage->AddGameEntitie(f);
-
-			}
-		}
-	}
 }
 
 
