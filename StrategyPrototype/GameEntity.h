@@ -102,6 +102,7 @@ public:
 		}
 		else if (COMPARE_STRINGS(name, "forest_deep") == 0) {
 			m_ForestType = ForestType::FOREST_DEEP;
+			m_ForestLifetime = 200;
 		}
 		
 	}

@@ -429,7 +429,7 @@ bool Game::OnUserCreate() {
 
 
 
-	Forest* f4 = new Forest("forest_scarce", "layer3", (f4_cell[0]) * SPRITES_WIDTH_AND_HEIGHT,
+	Forest* f4 = new Forest("forest_deep", "layer3", (f4_cell[0]) * SPRITES_WIDTH_AND_HEIGHT,
 		(f4_cell[1]) * SPRITES_WIDTH_AND_HEIGHT);
 	f4->m_TransformCmp->m_GameWorldSpaceCell[0] = f4_cell[0];
 	f4->m_TransformCmp->m_GameWorldSpaceCell[1] = f4_cell[1];
@@ -437,7 +437,7 @@ bool Game::OnUserCreate() {
 	f4->m_AICmp->MapState("state_search", new ForestSearch(*f4->m_AICmp));
 
 
-	Forest* f5 = new Forest("forest_scarce", "layer3", (f5_cell[0]) * SPRITES_WIDTH_AND_HEIGHT,
+	Forest* f5 = new Forest("forest_deep", "layer3", (f5_cell[0]) * SPRITES_WIDTH_AND_HEIGHT,
 		(f5_cell[1]) * SPRITES_WIDTH_AND_HEIGHT);
 	f5->m_TransformCmp->m_GameWorldSpaceCell[0] = f5_cell[0];
 	f5->m_TransformCmp->m_GameWorldSpaceCell[1] = f5_cell[1];
@@ -765,20 +765,20 @@ void Game::_updateAI2() {
 
 			entity = *it;
 
+			cout << APP_COLOR;
+			cout << "Executing state logic for " << entity->m_IDCmp->m_ID << " at position "
+				<< entity->m_TransformCmp->m_GameWorldSpaceCell[0] << " : " << entity->m_TransformCmp->m_GameWorldSpaceCell[1] << white << endl;
+
 			if (!entity->m_AICmp->TryExecuteStateLogic()) {
 
-				cout << APP_ERROR_COLOR;
-				cout << "Executing state logic for " << entity->m_IDCmp->m_ID << " at position "
-					<< entity->m_TransformCmp->m_GameWorldSpaceCell[0] << " : " << entity->m_TransformCmp->m_GameWorldSpaceCell[1]
-					<< " was unsuccessfull." << white << endl << endl;
+					cout << APP_ERROR_COLOR
+					 << " was unsuccessfull." << white << endl << endl;
 
 			}
 			else {
 
-				cout << APP_SUCCESS_COLOR;
-				cout << "Executing state logic for " << entity->m_IDCmp->m_ID << " at position "
-					<< entity->m_TransformCmp->m_GameWorldSpaceCell[0] << " : " << entity->m_TransformCmp->m_GameWorldSpaceCell[1]
-					<< " was successfull." << white << endl << endl;
+				cout << APP_SUCCESS_COLOR
+					 << " was successfull." << white << endl << endl;
 			}
 		}
 		catch (char* err) {
@@ -900,27 +900,32 @@ void ForestSearch::executeStateLogic() {
 	// Make changes dependent on forests position.
 	// This logic acts only on normaltype forests.
 	if (m_ManagedForest->m_ForestType == Forest::ForestType::FOREST_NORMAL) {
-		_checkForNewForestCreation(m_ManagedForest);
 
 		cout << color(colors::BLUE);
-		cout << "_checkForNewForestCreation() for " << m_ManagedForest->m_IDCmp->m_ID << " executed." << white << endl;
+		cout << "_checkForNewForestCreation() for " << m_ManagedForest->m_IDCmp->m_ID << " executing." << white << endl;
+		_checkForNewForestCreation(m_ManagedForest);
+
 
 		if (_surroundedByForestNormal(m_ManagedForest)) {
 			m_ManagedForest->m_ForestType = Forest::ForestType::FOREST_DEEP;
 			m_ManagedForest->m_ForestLifetime = 200;
 
-			cout << color(colors::BLUE);
-			cout << "_surroundedByForestNormal() for " << m_ManagedForest->m_IDCmp->m_ID << " executed." << white << endl;
-
 		
 			// Update on change.
 			m_ManagedForest->Update();
+
+
+			cout << color(colors::BLUE);
+			cout << "_surroundedByForestNormal() successfully executed for " << m_ManagedForest->m_IDCmp->m_ID << "." << white << endl;
 		}
 	}
 
 
 	// Spawning random forest around deep forest logic.
 	if (m_ManagedForest->m_ForestType == Forest::ForestType::FOREST_DEEP) {
+
+		cout << color(colors::BLUE);
+		cout << "_spawnRandomForestAroundDeepOne() for " << m_ManagedForest->m_IDCmp->m_ID << " executed." << white << endl;
 		_spawnRandomForestAroundDeepOne(m_ManagedForest);
 	}
 }
@@ -1023,9 +1028,14 @@ void ForestSearch::_checkForNewForestCreation(Forest* forest) {
 
 	/*
 	We nee to check exactly 4 maptiles. the upper left, upper right...
+	
+	1. upper left corner --> -1, -1
+	2. upper right corner --> +1, -1
+	3. lower left corner --> -1. +1
+	4. lower right corner --> +1, +1
 	*/
 
-	other_forest = reinterpret_cast<Forest*>(IsGameEntityTypeOnMapTile(GetMapTileAtWorldPosition(forest_worldcell[0], forest_worldcell[1] - 1), "Forest"));
+	other_forest = reinterpret_cast<Forest*>(IsGameEntityTypeOnMapTile(GetMapTileAtWorldPosition(forest_worldcell[0] - 1, forest_worldcell[1] - 1), "Forest"));
 	if (other_forest) { // is there forest on upper left..
 
 		// check for needed type of forest --> forest_normal.
@@ -1059,7 +1069,7 @@ void ForestSearch::_checkForNewForestCreation(Forest* forest) {
 
 
 
-	other_forest = reinterpret_cast<Forest*>(IsGameEntityTypeOnMapTile(GetMapTileAtWorldPosition(forest_worldcell[0] + 1, forest_worldcell[1]), "Forest"));
+	other_forest = reinterpret_cast<Forest*>(IsGameEntityTypeOnMapTile(GetMapTileAtWorldPosition(forest_worldcell[0] + 1, forest_worldcell[1] - 1), "Forest"));
 	if (other_forest) { // is there forest on upper right..
 
 		if (other_forest->m_GraphicsCmp->m_SpriteName.find("normal") != std::string::npos) {
@@ -1089,7 +1099,7 @@ void ForestSearch::_checkForNewForestCreation(Forest* forest) {
 	}
 
 
-	other_forest = reinterpret_cast<Forest*>(IsGameEntityTypeOnMapTile(GetMapTileAtWorldPosition(forest_worldcell[0] - 1, forest_worldcell[1]), "Forest"));
+	other_forest = reinterpret_cast<Forest*>(IsGameEntityTypeOnMapTile(GetMapTileAtWorldPosition(forest_worldcell[0] - 1, forest_worldcell[1] + 1), "Forest"));
 	if (other_forest) { // is there forest on down left..
 
 		if (other_forest->m_GraphicsCmp->m_SpriteName.find("normal") != std::string::npos) {
@@ -1120,7 +1130,7 @@ void ForestSearch::_checkForNewForestCreation(Forest* forest) {
 	}
 
 
-	other_forest = reinterpret_cast<Forest*>(IsGameEntityTypeOnMapTile(GetMapTileAtWorldPosition(forest_worldcell[0], forest_worldcell[1] + 1), "Forest"));
+	other_forest = reinterpret_cast<Forest*>(IsGameEntityTypeOnMapTile(GetMapTileAtWorldPosition(forest_worldcell[0] + 1, forest_worldcell[1] + 1), "Forest"));
 	if (other_forest) { // is there forest on down right..
 
 		if (other_forest->m_GraphicsCmp->m_SpriteName.find("normal") != std::string::npos) {
