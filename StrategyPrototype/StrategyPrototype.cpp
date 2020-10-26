@@ -2,6 +2,7 @@
 
 static olc::vf2d g_vi2dCameraPosition = olc::vf2d(0.0f, 0.0f);
 
+
 bool IsIndexOutOfBound(int x, int y) {
 
 	if (x < 0 || y < 0) return true;
@@ -520,7 +521,7 @@ void Game::DebugDrawStats() {
 
 
 	// DrawForests and its Lifetime
-	std::string s5, s6, s7, foresttype;
+	std::string s5, s6, s7, foresttype, cell, pos;
 	std::vector< GameEntity* > vec = GetForestEntities();
 	Forest* f = nullptr;
 	for (auto it = vec.begin(); it != vec.end(); ++it) {
@@ -551,6 +552,13 @@ void Game::DebugDrawStats() {
 		DrawString(olc::vi2d(f->m_TransformCmp->m_PosX, f->m_TransformCmp->m_PosY + 30), s5, olc::CYAN, 1);
 		DrawString(olc::vi2d(f->m_TransformCmp->m_PosX, f->m_TransformCmp->m_PosY + 40), s6, olc::CYAN, 1);
 		DrawString(olc::vi2d(f->m_TransformCmp->m_PosX, f->m_TransformCmp->m_PosY + 50), s7, olc::CYAN, 1);
+
+		pos = "X: " + std::to_string(f->m_TransformCmp->m_PosX) + " Y: " + std::to_string(f->m_TransformCmp->m_PosY);
+		cell = "(" + std::to_string(f->m_TransformCmp->m_GameWorldSpaceCell[0]) + " : " + std::to_string(f->m_TransformCmp->m_GameWorldSpaceCell[1]) + ")";
+		DrawString(olc::vi2d(f->m_TransformCmp->m_PosX, f->m_TransformCmp->m_PosY + 60), cell, olc::CYAN, 1);
+		DrawString(olc::vi2d(f->m_TransformCmp->m_PosX, f->m_TransformCmp->m_PosY + 70), pos, olc::CYAN, 1);
+
+
 
 	}
 
