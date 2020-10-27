@@ -105,16 +105,13 @@ public:
 		
 		if (IsSubstringInString("_scarce", name)) { // means "_scarce" is in name.
 			m_ForestType = ForestType::FOREST_SCARCE;
-			m_ForestLifeTimeNow = 0;
 		}
 		else if (IsSubstringInString("_normal", name)) {
 			m_ForestType = ForestType::FOREST_NORMAL;
-			m_ForestLifeTimeNow = 33;
 
 		}
 		else if (IsSubstringInString("_deep", name)) {
 			m_ForestType = ForestType::FOREST_DEEP;
-			m_ForestLifeTimeNow = 66;
 			m_ForestLifetime = 200;
 		}
 
@@ -131,19 +128,6 @@ public:
 		else if (IsSubstringInString("savannah", name)) {
 			m_ForestClass = ForestClass::FOREST_CLASS_SAVANNAH;
 		}
-
-		/*
-		if (COMPARE_STRINGS(name, "forest_scarce") == 0) {
-			m_ForestType = ForestType::FOREST_SCARCE;
-		}
-		else if(COMPARE_STRINGS(name, "forest_normal") == 0) {
-			m_ForestType = ForestType::FOREST_NORMAL;
-		}
-		else if (COMPARE_STRINGS(name, "forest_deep") == 0) {
-			m_ForestType = ForestType::FOREST_DEEP;
-			m_ForestLifetime = 200;
-		}
-		*/
 		
 	}
 

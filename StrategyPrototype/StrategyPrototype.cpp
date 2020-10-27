@@ -506,16 +506,19 @@ bool Game::OnUserCreate() {
 	NOTE:
 	If we create a forest, it is meant he is scarce from beginning.
 	*/
-	int f_cell[2], f2_cell[2], f3_cell[2] , f4_cell[2], f5_cell[2];
-	f_cell[0] = 2; f_cell[1] = 2;
-	f2_cell[0] = 2; f2_cell[1] = 1;
-	f3_cell[0] = 1; f3_cell[1] = 2;
-	f4_cell[0] = 3; f4_cell[1] = 2;
-	f5_cell[0] = 2; f5_cell[1] = 3;
+	int f_cell[2], f2_cell[2], f3_cell[2] , f4_cell[2], f5_cell[2], f6_cell[2], f7_cell[2];
+	f_cell[0] = 0; f_cell[1] = 0;
+	f2_cell[0] = 1; f2_cell[1] = 1;
+	f3_cell[0] = 0; f3_cell[1] = 4;
+	f4_cell[0] = 1; f4_cell[1] = 5;
+	f5_cell[0] = 7; f5_cell[1] = 7;
+	f6_cell[0] = 4; f6_cell[1] = 0;
+	f7_cell[0] = 5; f7_cell[1] = 1;
+
 
 
 	
-	Forest* f = new Forest("forest_savannah_normal", "layer3", (f_cell[0]) * SPRITES_WIDTH_AND_HEIGHT,
+	Forest* f = new Forest("forest_savannah_deep", "layer3", (f_cell[0]) * SPRITES_WIDTH_AND_HEIGHT,
 													  (f_cell[1]) * SPRITES_WIDTH_AND_HEIGHT);
 	f->m_TransformCmp->m_GameWorldSpaceCell[0] = f_cell[0];
 	f->m_TransformCmp->m_GameWorldSpaceCell[1] = f_cell[1];
@@ -523,7 +526,7 @@ bool Game::OnUserCreate() {
 	f->m_AICmp->MapState("state_search", new ForestSearch(*f->m_AICmp));
 	
 	
-	Forest* f2 = new Forest("forest_savannah_normal", "layer3", (f2_cell[0]) * SPRITES_WIDTH_AND_HEIGHT,
+	Forest* f2 = new Forest("forest_savannah_deep", "layer3", (f2_cell[0]) * SPRITES_WIDTH_AND_HEIGHT,
 													   (f2_cell[1]) * SPRITES_WIDTH_AND_HEIGHT);
 	f2->m_TransformCmp->m_GameWorldSpaceCell[0] = f2_cell[0];
 	f2->m_TransformCmp->m_GameWorldSpaceCell[1] = f2_cell[1];
@@ -532,7 +535,7 @@ bool Game::OnUserCreate() {
 
 	
 
-	Forest* f3 = new Forest("forest_savannah_normal", "layer3", (f3_cell[0]) * SPRITES_WIDTH_AND_HEIGHT,
+	Forest* f3 = new Forest("forest_jungle_deep", "layer3", (f3_cell[0]) * SPRITES_WIDTH_AND_HEIGHT,
 													   (f3_cell[1]) * SPRITES_WIDTH_AND_HEIGHT);
 	f3->m_TransformCmp->m_GameWorldSpaceCell[0] = f3_cell[0];
 	f3->m_TransformCmp->m_GameWorldSpaceCell[1] = f3_cell[1];
@@ -541,7 +544,7 @@ bool Game::OnUserCreate() {
 
 
 
-	Forest* f4 = new Forest("forest_savannah_normal", "layer3", (f4_cell[0]) * SPRITES_WIDTH_AND_HEIGHT,
+	Forest* f4 = new Forest("forest_jungle_deep", "layer3", (f4_cell[0]) * SPRITES_WIDTH_AND_HEIGHT,
 		(f4_cell[1]) * SPRITES_WIDTH_AND_HEIGHT);
 	f4->m_TransformCmp->m_GameWorldSpaceCell[0] = f4_cell[0];
 	f4->m_TransformCmp->m_GameWorldSpaceCell[1] = f4_cell[1];
@@ -549,7 +552,7 @@ bool Game::OnUserCreate() {
 	f4->m_AICmp->MapState("state_search", new ForestSearch(*f4->m_AICmp));
 	
 
-	Forest* f5 = new Forest("forest_savannah_normal", "layer3", (f5_cell[0]) * SPRITES_WIDTH_AND_HEIGHT,
+	Forest* f5 = new Forest("forest_temperate_deep", "layer3", (f5_cell[0]) * SPRITES_WIDTH_AND_HEIGHT,
 		(f5_cell[1]) * SPRITES_WIDTH_AND_HEIGHT);
 	f5->m_TransformCmp->m_GameWorldSpaceCell[0] = f5_cell[0];
 	f5->m_TransformCmp->m_GameWorldSpaceCell[1] = f5_cell[1];
@@ -557,12 +560,29 @@ bool Game::OnUserCreate() {
 	f5->m_AICmp->MapState("state_search", new ForestSearch(*f5->m_AICmp));
 	
 
+	Forest* f6 = new Forest("forest_tundra_deep", "layer3", (f6_cell[0]) * SPRITES_WIDTH_AND_HEIGHT,
+		(f6_cell[1]) * SPRITES_WIDTH_AND_HEIGHT);
+	f6->m_TransformCmp->m_GameWorldSpaceCell[0] = f6_cell[0];
+	f6->m_TransformCmp->m_GameWorldSpaceCell[1] = f6_cell[1];
+	f6->m_AICmp->ChangeState(States::STATE_SEARCH);
+	f6->m_AICmp->MapState("state_search", new ForestSearch(*f6->m_AICmp));
+
+
+	Forest* f7 = new Forest("forest_tundra_deep", "layer3", (f7_cell[0]) * SPRITES_WIDTH_AND_HEIGHT,
+		(f7_cell[1]) * SPRITES_WIDTH_AND_HEIGHT);
+	f7->m_TransformCmp->m_GameWorldSpaceCell[0] = f7_cell[0];
+	f7->m_TransformCmp->m_GameWorldSpaceCell[1] = f7_cell[1];
+	f7->m_AICmp->ChangeState(States::STATE_SEARCH);
+	f7->m_AICmp->MapState("state_search", new ForestSearch(*f7->m_AICmp));
+
 	EntitiesStorage* storage = EntitiesStorage::Get();
 	storage->AddGameEntitie(f);
 	storage->AddGameEntitie(f2);
 	storage->AddGameEntitie(f3);
 	storage->AddGameEntitie(f4);
 	storage->AddGameEntitie(f5);
+	storage->AddGameEntitie(f6);
+	storage->AddGameEntitie(f7);
 
 
 
@@ -844,7 +864,7 @@ void Renderer::Render2Layer3() {
 
 		// Do not draw tiles we do not see.
 		if (maptile->m_TransformCmp->m_Cell[0] > 6 ||
-			maptile->m_TransformCmp->m_Cell[1] > 6) continue;
+			maptile->m_TransformCmp->m_Cell[1] > 5) continue;
 
 
 		if (maptile->m_MapTileEntities->size() > 0) {
@@ -887,7 +907,7 @@ void Renderer::Render2Layer4() {
 
 		// Do not draw tiles we do not see.
 		if (maptile->m_TransformCmp->m_Cell[0] > 6 ||
-			maptile->m_TransformCmp->m_Cell[1] > 6) continue;
+			maptile->m_TransformCmp->m_Cell[1] > 5) continue;
 
 
 		// Draw appropriate loaded sprite on position specified.
