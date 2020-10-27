@@ -12,6 +12,15 @@ int GetYPositionOfMapTile(MapTile* tile) {
 }
 
 
+bool IsSubstringInString(std::string substring, std::string string) {
+
+	if (string.find(substring) != std::string::npos) {
+		return true;
+	}
+	return false;
+}
+
+
 bool IsIndexOutOfBound(int x, int y) {
 
 	if (x < 0 || y < 0) return true;
@@ -287,7 +296,7 @@ void Game::_loadSpriteResources() {
 	Sprite* s2 = new Sprite("assets/map/forest_deep.png");
 	Sprite* s3 = new Sprite("assets/map/forest_scarce.png");
 	Sprite* s4 = new Sprite("assets/map/forest_savannah.png");
-	Sprite* s5 = new Sprite("assets/map/forest_tundra_norm.png");
+	Sprite* s5 = new Sprite("assets/map/forest_tundra_normal.png");
 	Sprite* s6 = new Sprite("assets/map/forest_tundra_deep.png");
 	Sprite* s7 = new Sprite("assets/map/forest_tundra_scarce.png");
 	Sprite* s8 = new Sprite("assets/map/highmountain.png");
@@ -385,7 +394,7 @@ void Game::_loadSpriteResources() {
 	m_SpriteResourceMap.insert(std::make_pair("forest_deep", d2));
 	m_SpriteResourceMap.insert(std::make_pair("forest_scarce", d3));
 	m_SpriteResourceMap.insert(std::make_pair("forest_savannah", d4));
-	m_SpriteResourceMap.insert(std::make_pair("forest_tundra_norm", d5));
+	m_SpriteResourceMap.insert(std::make_pair("forest_tundra_normal", d5));
 	m_SpriteResourceMap.insert(std::make_pair("forest_tundra_deep", d6));
 	m_SpriteResourceMap.insert(std::make_pair("forest_tundra_scarce", d7));
 	m_SpriteResourceMap.insert(std::make_pair("highmountain", d8));
@@ -464,7 +473,7 @@ bool Game::OnUserCreate() {
 
 
 
-	Forest* f = new Forest("forest_normal", "layer3", (f_cell[0]) * SPRITES_WIDTH_AND_HEIGHT,
+	Forest* f = new Forest("forest_tundra_normal", "layer3", (f_cell[0]) * SPRITES_WIDTH_AND_HEIGHT,
 													  (f_cell[1]) * SPRITES_WIDTH_AND_HEIGHT);
 	f->m_TransformCmp->m_GameWorldSpaceCell[0] = f_cell[0];
 	f->m_TransformCmp->m_GameWorldSpaceCell[1] = f_cell[1];
@@ -772,8 +781,8 @@ void Renderer::Render2Layer3() {
 		maptile = reinterpret_cast<MapTile*>(*it);
 
 		// Do not draw tiles we do not see.
-		if (maptile->m_TransformCmp->m_Cell[0] > 4 ||
-			maptile->m_TransformCmp->m_Cell[1] > 4) continue;
+		if (maptile->m_TransformCmp->m_Cell[0] > 6 ||
+			maptile->m_TransformCmp->m_Cell[1] > 6) continue;
 
 
 		if (maptile->m_MapTileEntities->size() > 0) {
@@ -814,8 +823,8 @@ void Renderer::Render2Layer4() {
 		maptile = reinterpret_cast<MapTile*>(*it);
 
 		// Do not draw tiles we do not see.
-		if (maptile->m_TransformCmp->m_Cell[0] > 4 ||
-			maptile->m_TransformCmp->m_Cell[1] > 4) continue;
+		if (maptile->m_TransformCmp->m_Cell[0] > 6 ||
+			maptile->m_TransformCmp->m_Cell[1] > 6) continue;
 
 
 		// Draw appropriate loaded sprite on position specified.

@@ -19,6 +19,7 @@ GameEntity* IsGameEntityTypeOnMapTile(MapTile* maptile, std::string dynamicTypeN
 std::vector<GameEntity*> GetForestEntities();
 bool IsIndexOutOfBound(int x, int y);
 int GetTotalForestsCount();
+bool IsSubstringInString(std::string substring, std::string string);
 
 
 
@@ -94,6 +95,18 @@ public:
 		// Define props
 		m_ForestLifetime = 100;
 		
+		if (IsSubstringInString("_scarce", name)) { // means forest_tundra_scarce is name.
+			m_ForestType = ForestType::FOREST_SCARCE;
+		}
+		if (IsSubstringInString("_normal", name)) { // means forest_tundra_scarce is name.
+			m_ForestType = ForestType::FOREST_NORMAL;
+		}
+		if (IsSubstringInString("_deep", name)) { // means forest_tundra_scarce is name.
+			m_ForestType = ForestType::FOREST_DEEP;
+			m_ForestLifetime = 200;
+		}
+
+		/*
 		if (COMPARE_STRINGS(name, "forest_scarce") == 0) {
 			m_ForestType = ForestType::FOREST_SCARCE;
 		}
@@ -104,6 +117,7 @@ public:
 			m_ForestType = ForestType::FOREST_DEEP;
 			m_ForestLifetime = 200;
 		}
+		*/
 		
 	}
 
