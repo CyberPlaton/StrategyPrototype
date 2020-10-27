@@ -143,7 +143,7 @@ void CMPCameraInput::HandleKeyboard(Camera* cam) {
 	}
 
 	if (context->GetKey(olc::Key::SHIFT).bHeld) {
-		speed = 9;
+		speed = 4;
 	}
 
 	if (context->GetKey(olc::Key::TAB).bPressed) {
@@ -205,8 +205,8 @@ void CMPCameraInput::HandleKeyboard(Camera* cam) {
 
 	if (context->GetKey(olc::Key::S).bHeld) {
 
-		if (g_vi2dCameraPosition.y + context->ScreenHeight() >= MAP_SIZE * SPRITES_WIDTH_AND_HEIGHT) {
-			g_vi2dCameraPosition.y = MAP_SIZE * SPRITES_WIDTH_AND_HEIGHT - context->ScreenHeight(); return;
+		if (g_vi2dCameraPosition.y >= MAP_SIZE * SPRITES_WIDTH_AND_HEIGHT) {
+			g_vi2dCameraPosition.y = MAP_SIZE * SPRITES_WIDTH_AND_HEIGHT; return;
 		}
 
 
@@ -232,8 +232,8 @@ void CMPCameraInput::HandleKeyboard(Camera* cam) {
 
 	if (context->GetKey(olc::Key::D).bHeld) {
 
-		if (g_vi2dCameraPosition.x + context->ScreenWidth() >= MAP_SIZE * SPRITES_WIDTH_AND_HEIGHT) {
-			g_vi2dCameraPosition.x = MAP_SIZE * SPRITES_WIDTH_AND_HEIGHT - context->ScreenWidth(); return;
+		if (g_vi2dCameraPosition.x  >= MAP_SIZE * SPRITES_WIDTH_AND_HEIGHT) {
+			g_vi2dCameraPosition.x = MAP_SIZE * SPRITES_WIDTH_AND_HEIGHT; return;
 		}
 
 		g_vi2dCameraPosition.x += 1 * speed;
@@ -511,8 +511,8 @@ void Game::DebugDrawStats() {
 
 
 
-	// Draw each maptiles mapcell
-	std::string s3, s4;
+	// Draw each maptiles mapcell with position
+	std::string s3, s4, tilepos;
 	for (auto it : *EntitiesStorage::Get()->GetMapTilesStorage()) {
 
 
@@ -524,7 +524,10 @@ void Game::DebugDrawStats() {
 		s4 = std::to_string(it->m_TransformCmp->m_GameWorldSpaceCell[0]) + " : " + std::to_string(it->m_TransformCmp->m_GameWorldSpaceCell[1]);
 		DrawString(olc::vi2d(it->m_TransformCmp->m_PosX, it->m_TransformCmp->m_PosY+20), s4, olc::DARK_RED, 1.0f);
 
-	
+
+		tilepos = "X: " + std::to_string(it->m_TransformCmp->m_PosX) + " : " + " Y: " + std::to_string(it->m_TransformCmp->m_PosY);
+		DrawString(olc::vi2d(it->m_TransformCmp->m_PosX, it->m_TransformCmp->m_PosY + 40), tilepos, olc::DARK_RED, 1.0f);
+
 	}
 
 
