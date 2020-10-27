@@ -62,20 +62,80 @@ void Forest::Update() {
 	// Change graphics accordingly to own type.
 	switch (m_ForestType) {
 	case ForestType::FOREST_SCARCE:
-		m_GraphicsCmp->m_SpriteName = "forest_scarce";
+
+		switch (m_ForestClass) {
+		case ForestClass::FOREST_CLASS_TEMPERATE:
+			m_GraphicsCmp->m_SpriteName = "forest_temperate_scarce";
+			break;
+		case ForestClass::FOREST_CLASS_JUNGLE:
+			m_GraphicsCmp->m_SpriteName = "forest_jungle_scarce";
+			break;
+		case ForestClass::FOREST_CLASS_TUNDRA:
+			m_GraphicsCmp->m_SpriteName = "forest_tundra_scarce";
+			break;
+		case ForestClass::FOREST_CLASS_SAVANNAH:
+			m_GraphicsCmp->m_SpriteName = "forest_savannah_scarce";
+			break;
+		default:
+			break;
+		}
 
 		break;
 	case ForestType::FOREST_NORMAL:
-		m_GraphicsCmp->m_SpriteName = "forest_normal";
+
+		switch (m_ForestClass) {
+		case ForestClass::FOREST_CLASS_TEMPERATE:
+			m_GraphicsCmp->m_SpriteName = "forest_temperate_normal";
+			break;
+		case ForestClass::FOREST_CLASS_JUNGLE:
+			m_GraphicsCmp->m_SpriteName = "forest_jungle_normal";
+			break;
+		case ForestClass::FOREST_CLASS_TUNDRA:
+			m_GraphicsCmp->m_SpriteName = "forest_tundra_normal";
+			break;
+		case ForestClass::FOREST_CLASS_SAVANNAH:
+			m_GraphicsCmp->m_SpriteName = "forest_savannah_normal";
+			break;
+		default:
+			break;
+		}
 
 		break;
 	case ForestType::FOREST_DEEP:
-		m_GraphicsCmp->m_SpriteName = "forest_deep";
-
+		switch (m_ForestClass) {
+		case ForestClass::FOREST_CLASS_TEMPERATE:
+			m_GraphicsCmp->m_SpriteName = "forest_temperate_deep";
+			break;
+		case ForestClass::FOREST_CLASS_JUNGLE:
+			m_GraphicsCmp->m_SpriteName = "forest_jungle_deep";
+			break;
+		case ForestClass::FOREST_CLASS_TUNDRA:
+			m_GraphicsCmp->m_SpriteName = "forest_tundra_deep";
+			break;
+		case ForestClass::FOREST_CLASS_SAVANNAH:
+			m_GraphicsCmp->m_SpriteName = "forest_savannah_deep";
+			break;
+		default:
+			break;
+		}
 		break;
 	case ForestType::FOREST_DYING:
-		m_GraphicsCmp->m_SpriteName = "forest_dying";
-
+		switch (m_ForestClass) {
+		case ForestClass::FOREST_CLASS_TEMPERATE:
+			m_GraphicsCmp->m_SpriteName = "forest_temperate_dying";
+			break;
+		case ForestClass::FOREST_CLASS_JUNGLE:
+			m_GraphicsCmp->m_SpriteName = "forest_jungle_dying";
+			break;
+		case ForestClass::FOREST_CLASS_TUNDRA:
+			m_GraphicsCmp->m_SpriteName = "forest_tundra_dying";
+			break;
+		case ForestClass::FOREST_CLASS_SAVANNAH:
+			m_GraphicsCmp->m_SpriteName = "forest_savannah_dying";
+			break;
+		default:
+			break;
+		}
 		break;
 	case ForestType::FOREST_INVALID: // Forests lifetime ended or other error occured. So delete this instance from game.
 

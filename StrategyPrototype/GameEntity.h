@@ -65,6 +65,14 @@ public:
 class Forest : public GameEntity {
 public:
 
+	enum class ForestClass {
+		FOREST_CLASS_INVALID = -1,
+		FOREST_CLASS_TEMPERATE = 0,
+		FOREST_CLASS_TUNDRA = 1,
+		FOREST_CLASS_JUNGLE = 2,
+		FOREST_CLASS_SAVANNAH = 3
+	};
+
 	enum class ForestType {
 		FOREST_INVALID = -1,
 		FOREST_DYING = 0,
@@ -95,15 +103,33 @@ public:
 		// Define props
 		m_ForestLifetime = 100;
 		
-		if (IsSubstringInString("_scarce", name)) { // means forest_tundra_scarce is name.
+		if (IsSubstringInString("_scarce", name)) { // means "_scarce" is in name.
 			m_ForestType = ForestType::FOREST_SCARCE;
+			m_ForestLifeTimeNow = 0;
 		}
-		if (IsSubstringInString("_normal", name)) { // means forest_tundra_scarce is name.
+		else if (IsSubstringInString("_normal", name)) {
 			m_ForestType = ForestType::FOREST_NORMAL;
+			m_ForestLifeTimeNow = 33;
+
 		}
-		if (IsSubstringInString("_deep", name)) { // means forest_tundra_scarce is name.
+		else if (IsSubstringInString("_deep", name)) {
 			m_ForestType = ForestType::FOREST_DEEP;
+			m_ForestLifeTimeNow = 66;
 			m_ForestLifetime = 200;
+		}
+
+
+		if (IsSubstringInString("tundra", name)) {
+			m_ForestClass = ForestClass::FOREST_CLASS_TUNDRA;
+		}
+		else if (IsSubstringInString("temperate", name)) {
+			m_ForestClass = ForestClass::FOREST_CLASS_TEMPERATE;
+		}
+		else if (IsSubstringInString("jungle", name)) {
+			m_ForestClass = ForestClass::FOREST_CLASS_JUNGLE;
+		}
+		else if (IsSubstringInString("savannah", name)) {
+			m_ForestClass = ForestClass::FOREST_CLASS_SAVANNAH;
 		}
 
 		/*
@@ -128,6 +154,7 @@ public:
 	int m_ForestLifeTimeNow = 0;
 	int m_ForestLifetime = 0;
 	ForestType m_ForestType = ForestType::FOREST_INVALID;
+	ForestClass m_ForestClass = ForestClass::FOREST_CLASS_INVALID;
 
 private:
 

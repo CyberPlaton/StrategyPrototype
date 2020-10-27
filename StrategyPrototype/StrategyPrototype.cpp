@@ -292,17 +292,15 @@ void Game::_loadSpriteResources() {
 	using namespace olc;
 	
 	// Loading sprites and decals.
-	Sprite* s1 = new Sprite("assets/map/forest_normal.png");
-	Sprite* s2 = new Sprite("assets/map/forest_deep.png");
-	Sprite* s3 = new Sprite("assets/map/forest_scarce.png");
-	Sprite* s4 = new Sprite("assets/map/forest_savannah.png");
+	Sprite* s1 = new Sprite("assets/map/forest_temperate_normal.png");
+	Sprite* s2 = new Sprite("assets/map/forest_temperate_deep.png");
+	Sprite* s3 = new Sprite("assets/map/forest_temperate_scarce.png");
 	Sprite* s5 = new Sprite("assets/map/forest_tundra_normal.png");
 	Sprite* s6 = new Sprite("assets/map/forest_tundra_deep.png");
 	Sprite* s7 = new Sprite("assets/map/forest_tundra_scarce.png");
 	Sprite* s8 = new Sprite("assets/map/highmountain.png");
 	Sprite* s9 = new Sprite("assets/map/hills.png");
 	Sprite* s10 = new Sprite("assets/map/ice.png");
-	Sprite* s11 = new Sprite("assets/map/jungle.png");
 	Sprite* s12 = new Sprite("assets/map/sand.png");
 	Sprite* s13 = new Sprite("assets/map/savannah.png");
 	Sprite* s14 = new Sprite("assets/map/snow.png");
@@ -310,7 +308,23 @@ void Game::_loadSpriteResources() {
 	Sprite* s16 = new Sprite("assets/map/tundra.png");
 	Sprite* s17 = new Sprite("assets/map/water_deep.png");
 	Sprite* s18 = new Sprite("assets/map/water_shallow.png");
-	Sprite* s19 = new Sprite("assets/map/forest_dying.png");
+	
+	Sprite* s19 = new Sprite("assets/map/forest_temperate_dying.png");
+	Sprite* s20 = new Sprite("assets/map/forest_tundra_dying.png");
+
+
+	Sprite* s21 = new Sprite("assets/map/forest_savannah_scarce.png");
+	Sprite* s4 = new Sprite("assets/map/forest_savannah_normal.png");
+	Sprite* s22 = new Sprite("assets/map/forest_savannah_deep.png");
+	Sprite* s23 = new Sprite("assets/map/forest_savannah_dying.png");
+
+
+	Sprite* s24 = new Sprite("assets/map/forest_jungle_scarce.png");
+	Sprite* s11 = new Sprite("assets/map/forest_jungle_normal.png");
+	Sprite* s25 = new Sprite("assets/map/forest_jungle_deep.png");
+	Sprite* s26 = new Sprite("assets/map/forest_jungle_dying.png");
+
+
 
 
 	// Load colored cells
@@ -364,6 +378,14 @@ void Game::_loadSpriteResources() {
 	m_SpriteStorage.push_back(s17);
 	m_SpriteStorage.push_back(s18);
 	m_SpriteStorage.push_back(s19);
+	m_SpriteStorage.push_back(s20);
+	m_SpriteStorage.push_back(s21);
+	m_SpriteStorage.push_back(s22);
+	m_SpriteStorage.push_back(s23);
+	m_SpriteStorage.push_back(s24);
+	m_SpriteStorage.push_back(s25);
+	m_SpriteStorage.push_back(s26);
+
 
 
 
@@ -386,21 +408,30 @@ void Game::_loadSpriteResources() {
 	Decal* d17 = new Decal(s17);
 	Decal* d18 = new Decal(s18);
 	Decal* d19 = new Decal(s19);
+	Decal* d20 = new Decal(s20);
+	Decal* d21 = new Decal(s21);
+	Decal* d22 = new Decal(s22);
+	Decal* d23 = new Decal(s23);
+	Decal* d24 = new Decal(s24);
+	Decal* d25 = new Decal(s25);
+	Decal* d26 = new Decal(s26);
+
+
 
 
 
 	// Create Decals from sprites.
-	m_SpriteResourceMap.insert(std::make_pair("forest_normal", d1));
-	m_SpriteResourceMap.insert(std::make_pair("forest_deep", d2));
-	m_SpriteResourceMap.insert(std::make_pair("forest_scarce", d3));
-	m_SpriteResourceMap.insert(std::make_pair("forest_savannah", d4));
+	m_SpriteResourceMap.insert(std::make_pair("forest_temperate_normal", d1));
+	m_SpriteResourceMap.insert(std::make_pair("forest_temperate_deep", d2));
+	m_SpriteResourceMap.insert(std::make_pair("forest_temperate_scarce", d3));
+	m_SpriteResourceMap.insert(std::make_pair("forest_savannah_normal", d4));
 	m_SpriteResourceMap.insert(std::make_pair("forest_tundra_normal", d5));
 	m_SpriteResourceMap.insert(std::make_pair("forest_tundra_deep", d6));
 	m_SpriteResourceMap.insert(std::make_pair("forest_tundra_scarce", d7));
 	m_SpriteResourceMap.insert(std::make_pair("highmountain", d8));
 	m_SpriteResourceMap.insert(std::make_pair("hills", d9));
 	m_SpriteResourceMap.insert(std::make_pair("ice", d10));
-	m_SpriteResourceMap.insert(std::make_pair("jungle", d11));
+	m_SpriteResourceMap.insert(std::make_pair("forest_jungle_normal", d11));
 	m_SpriteResourceMap.insert(std::make_pair("sand", d12));
 	m_SpriteResourceMap.insert(std::make_pair("savannah", d13));
 	m_SpriteResourceMap.insert(std::make_pair("snow", d14));
@@ -408,7 +439,18 @@ void Game::_loadSpriteResources() {
 	m_SpriteResourceMap.insert(std::make_pair("tundra", d16));
 	m_SpriteResourceMap.insert(std::make_pair("water_deep", d17));
 	m_SpriteResourceMap.insert(std::make_pair("water_shallow", d18));
-	m_SpriteResourceMap.insert(std::make_pair("forest_dying", d19));
+	m_SpriteResourceMap.insert(std::make_pair("forest_temperate_dying", d19));
+	m_SpriteResourceMap.insert(std::make_pair("forest_tundra_dying", d20));
+
+
+	m_SpriteResourceMap.insert(std::make_pair("forest_savannah_scarce", d21));
+	m_SpriteResourceMap.insert(std::make_pair("forest_savannah_deep", d22));
+	m_SpriteResourceMap.insert(std::make_pair("forest_savannah_dying", d23));
+
+	m_SpriteResourceMap.insert(std::make_pair("forest_jungle_scarce", d24));
+	m_SpriteResourceMap.insert(std::make_pair("forest_jungle_deep", d25));
+	m_SpriteResourceMap.insert(std::make_pair("forest_jungle_dying", d26));
+
 
 
 
@@ -465,23 +507,23 @@ bool Game::OnUserCreate() {
 	If we create a forest, it is meant he is scarce from beginning.
 	*/
 	int f_cell[2], f2_cell[2], f3_cell[2] , f4_cell[2], f5_cell[2];
-	f_cell[0] = 1; f_cell[1] = 1;
-	f2_cell[0] = 2; f2_cell[1] = 2;
-	f3_cell[0] = 3; f3_cell[1] = 2;
-	f4_cell[0] = 3; f4_cell[1] = 3;
-	f5_cell[0] = 4; f5_cell[1] = 4;
+	f_cell[0] = 2; f_cell[1] = 2;
+	f2_cell[0] = 2; f2_cell[1] = 1;
+	f3_cell[0] = 1; f3_cell[1] = 2;
+	f4_cell[0] = 3; f4_cell[1] = 2;
+	f5_cell[0] = 2; f5_cell[1] = 3;
 
 
-
-	Forest* f = new Forest("forest_tundra_normal", "layer3", (f_cell[0]) * SPRITES_WIDTH_AND_HEIGHT,
+	
+	Forest* f = new Forest("forest_savannah_normal", "layer3", (f_cell[0]) * SPRITES_WIDTH_AND_HEIGHT,
 													  (f_cell[1]) * SPRITES_WIDTH_AND_HEIGHT);
 	f->m_TransformCmp->m_GameWorldSpaceCell[0] = f_cell[0];
 	f->m_TransformCmp->m_GameWorldSpaceCell[1] = f_cell[1];
 	f->m_AICmp->ChangeState(States::STATE_SEARCH);
 	f->m_AICmp->MapState("state_search", new ForestSearch(*f->m_AICmp));
 	
-
-	Forest* f2 = new Forest("forest_normal", "layer3", (f2_cell[0]) * SPRITES_WIDTH_AND_HEIGHT,
+	
+	Forest* f2 = new Forest("forest_savannah_normal", "layer3", (f2_cell[0]) * SPRITES_WIDTH_AND_HEIGHT,
 													   (f2_cell[1]) * SPRITES_WIDTH_AND_HEIGHT);
 	f2->m_TransformCmp->m_GameWorldSpaceCell[0] = f2_cell[0];
 	f2->m_TransformCmp->m_GameWorldSpaceCell[1] = f2_cell[1];
@@ -490,7 +532,7 @@ bool Game::OnUserCreate() {
 
 	
 
-	Forest* f3 = new Forest("forest_scarce", "layer3", (f3_cell[0]) * SPRITES_WIDTH_AND_HEIGHT,
+	Forest* f3 = new Forest("forest_savannah_normal", "layer3", (f3_cell[0]) * SPRITES_WIDTH_AND_HEIGHT,
 													   (f3_cell[1]) * SPRITES_WIDTH_AND_HEIGHT);
 	f3->m_TransformCmp->m_GameWorldSpaceCell[0] = f3_cell[0];
 	f3->m_TransformCmp->m_GameWorldSpaceCell[1] = f3_cell[1];
@@ -499,21 +541,21 @@ bool Game::OnUserCreate() {
 
 
 
-	Forest* f4 = new Forest("forest_deep", "layer3", (f4_cell[0]) * SPRITES_WIDTH_AND_HEIGHT,
+	Forest* f4 = new Forest("forest_savannah_normal", "layer3", (f4_cell[0]) * SPRITES_WIDTH_AND_HEIGHT,
 		(f4_cell[1]) * SPRITES_WIDTH_AND_HEIGHT);
 	f4->m_TransformCmp->m_GameWorldSpaceCell[0] = f4_cell[0];
 	f4->m_TransformCmp->m_GameWorldSpaceCell[1] = f4_cell[1];
 	f4->m_AICmp->ChangeState(States::STATE_SEARCH);
 	f4->m_AICmp->MapState("state_search", new ForestSearch(*f4->m_AICmp));
+	
 
-
-	Forest* f5 = new Forest("forest_deep", "layer3", (f5_cell[0]) * SPRITES_WIDTH_AND_HEIGHT,
+	Forest* f5 = new Forest("forest_savannah_normal", "layer3", (f5_cell[0]) * SPRITES_WIDTH_AND_HEIGHT,
 		(f5_cell[1]) * SPRITES_WIDTH_AND_HEIGHT);
 	f5->m_TransformCmp->m_GameWorldSpaceCell[0] = f5_cell[0];
 	f5->m_TransformCmp->m_GameWorldSpaceCell[1] = f5_cell[1];
 	f5->m_AICmp->ChangeState(States::STATE_SEARCH);
 	f5->m_AICmp->MapState("state_search", new ForestSearch(*f5->m_AICmp));
-
+	
 
 	EntitiesStorage* storage = EntitiesStorage::Get();
 	storage->AddGameEntitie(f);
@@ -597,7 +639,7 @@ void Game::DebugDrawStats() {
 
 
 	// DrawForests and its Lifetime
-	std::string s5, s6, s7, foresttype, cell, pos;
+	std::string s5, s6, s7, foresttype, cell, pos, forestclass;
 	std::vector< GameEntity* > vec = GetForestEntities();
 	Forest* f = nullptr;
 	for (auto it = vec.begin(); it != vec.end(); ++it) {
@@ -622,6 +664,25 @@ void Game::DebugDrawStats() {
 		}
 
 
+		switch (f->m_ForestClass) {
+		case Forest::ForestClass::FOREST_CLASS_TUNDRA:
+			forestclass = "CLASS_TUNDRA";
+			break;
+		case Forest::ForestClass::FOREST_CLASS_JUNGLE:
+			forestclass = "CLASS_JUNGLE";
+			break;
+		case Forest::ForestClass::FOREST_CLASS_TEMPERATE:
+			forestclass = "CLASS_TEMPERATE";
+			break;
+		case Forest::ForestClass::FOREST_CLASS_SAVANNAH:
+			forestclass = "CLASS_SAVANNAH";
+			break;
+		default:
+			forestclass = "CLASS_INVALID";
+			break;
+		}
+
+
 		s5 = "LifeT.: " + std::to_string(f->m_ForestLifeTimeNow);
 		s6 = " MaxLifeT.: " + std::to_string(f->m_ForestLifetime);
 		s7 = " Type: " + foresttype;
@@ -634,7 +695,7 @@ void Game::DebugDrawStats() {
 		DrawString(olc::vi2d(f->m_TransformCmp->m_PosX, f->m_TransformCmp->m_PosY + 60), cell, olc::CYAN, 1);
 		DrawString(olc::vi2d(f->m_TransformCmp->m_PosX, f->m_TransformCmp->m_PosY + 70), pos, olc::CYAN, 1);
 
-
+		DrawString(olc::vi2d(f->m_TransformCmp->m_PosX, f->m_TransformCmp->m_PosY + 80), forestclass, olc::CYAN, 1);
 
 	}
 
@@ -770,6 +831,7 @@ void Renderer::Render2Layer3() {
 
 	MapTile* maptile = nullptr;
 	GameEntity* entity = nullptr;
+	Forest* f = nullptr;
 
 
 	m_Game->SetDrawTarget(m_Layer3);
@@ -791,6 +853,7 @@ void Renderer::Render2Layer3() {
 			for (auto iter = maptile->m_MapTileEntities->begin(); iter != maptile->m_MapTileEntities->end(); ++iter) {
 						
 				entity = *iter;
+				f = reinterpret_cast<Forest*>(*it);
 
 				// Draw appropriate loaded sprite on position specified.
 				m_Game->DrawDecal(vi2d(entity->m_TransformCmp->m_PosX, entity->m_TransformCmp->m_PosY),
@@ -833,6 +896,16 @@ void Renderer::Render2Layer4() {
 	}
 
 
+	/*
+	m_Game->DrawDecal(vf2d(128, 128), m_Game->m_SpriteResourceMap.at("map_cell_orange"));
+	m_Game->DrawDecal(vf2d(128, 256), m_Game->m_SpriteResourceMap.at("map_cell_orange"));
+	m_Game->DrawDecal(vf2d(256, 128), m_Game->m_SpriteResourceMap.at("map_cell_black"));
+	m_Game->DrawDecal(vf2d(256, 256), m_Game->m_SpriteResourceMap.at("map_cell_magenta"));
+	m_Game->DrawDecal(vf2d(256, 384), m_Game->m_SpriteResourceMap.at("map_cell_red"));
+	m_Game->DrawDecal(vf2d(256, 512), m_Game->m_SpriteResourceMap.at("map_cell_red"));
+	m_Game->DrawDecal(vf2d(512, 512), m_Game->m_SpriteResourceMap.at("map_cell_brown"));
+	*/
+
 	m_Game->EnableLayer(m_Layer4, true);
 	m_Game->SetDrawTarget(nullptr);
 }
@@ -844,7 +917,7 @@ void Renderer::RenderLayer0() {
 	using namespace olc;
 
 	m_Game->Clear(olc::BLANK);
-
+	
 }
 
 
@@ -1126,6 +1199,14 @@ void ForestSearch::_checkForNewForestCreation(Forest* forest) {
 
 	Forest* other_forest = nullptr;
 
+	// Derive the name and type of new forest.
+	std::string forestname;
+	if (forest->m_ForestClass == Forest::ForestClass::FOREST_CLASS_TEMPERATE) forestname = "forest_temperate_scarce";
+	else if (forest->m_ForestClass == Forest::ForestClass::FOREST_CLASS_TUNDRA) forestname = "forest_tundra_scarce";
+	else if (forest->m_ForestClass == Forest::ForestClass::FOREST_CLASS_JUNGLE) forestname = "forest_jungle_scarce";
+	else if (forest->m_ForestClass == Forest::ForestClass::FOREST_CLASS_SAVANNAH) forestname = "forest_savannah_scarce";
+
+
 	/*
 	We nee to check exactly 4 maptiles. the upper left, upper right...
 	
@@ -1158,9 +1239,9 @@ void ForestSearch::_checkForNewForestCreation(Forest* forest) {
 				// Consider to wrap this functionality for ease of use...
 				int xpos = GetXPositionOfMapTile(GetMapTileAtWorldPosition(forest_worldcell[0], forest_worldcell[1] - 1));
 				int ypos = GetYPositionOfMapTile(GetMapTileAtWorldPosition(forest_worldcell[0], forest_worldcell[1] - 1));
+				
 
-
-				Forest* f = new Forest("forest_scarce", "layer3", xpos, ypos);
+				Forest* f = new Forest(forestname, "layer3", xpos, ypos);
 
 
 				f->m_TransformCmp->m_GameWorldSpaceCell[0] = forest_worldcell[0];
@@ -1197,7 +1278,7 @@ void ForestSearch::_checkForNewForestCreation(Forest* forest) {
 				int xpos = GetXPositionOfMapTile(GetMapTileAtWorldPosition(forest_worldcell[0] + 1, forest_worldcell[1]));
 				int ypos = GetYPositionOfMapTile(GetMapTileAtWorldPosition(forest_worldcell[0], forest_worldcell[1]));
 
-				Forest* f = new Forest("forest_scarce", "layer3", xpos, ypos);
+				Forest* f = new Forest(forestname, "layer3", xpos, ypos);
 
 				f->m_TransformCmp->m_GameWorldSpaceCell[0] = forest_worldcell[0] + 1;
 				f->m_TransformCmp->m_GameWorldSpaceCell[1] = forest_worldcell[1];
@@ -1233,7 +1314,7 @@ void ForestSearch::_checkForNewForestCreation(Forest* forest) {
 				int xpos = GetXPositionOfMapTile(GetMapTileAtWorldPosition(forest_worldcell[0] - 1, forest_worldcell[1]));
 				int ypos = GetYPositionOfMapTile(GetMapTileAtWorldPosition(forest_worldcell[0], forest_worldcell[1]));
 
-				Forest* f = new Forest("forest_scarce", "layer3", xpos, ypos);
+				Forest* f = new Forest(forestname, "layer3", xpos, ypos);
 
 				f->m_TransformCmp->m_GameWorldSpaceCell[0] = forest_worldcell[0] - 1;
 				f->m_TransformCmp->m_GameWorldSpaceCell[1] = forest_worldcell[1];
@@ -1267,7 +1348,7 @@ void ForestSearch::_checkForNewForestCreation(Forest* forest) {
 				int xpos = GetXPositionOfMapTile(GetMapTileAtWorldPosition(forest_worldcell[0], forest_worldcell[1]));
 				int ypos = GetYPositionOfMapTile(GetMapTileAtWorldPosition(forest_worldcell[0], forest_worldcell[1] + 1));
 
-				Forest* f = new Forest("forest_scarce", "layer3", xpos, ypos);
+				Forest* f = new Forest(forestname, "layer3", xpos, ypos);
 
 				f->m_TransformCmp->m_GameWorldSpaceCell[0] = forest_worldcell[0];
 				f->m_TransformCmp->m_GameWorldSpaceCell[1] = forest_worldcell[1] + 1;
@@ -1296,6 +1377,15 @@ void ForestSearch::_spawnRandomForestAroundDeepOne(Forest* deepForest) {
 
 	Forest* new_forest = nullptr;
 
+	// Derive the name and type of new forest.
+	std::string forestname;
+	if (deepForest->m_ForestClass == Forest::ForestClass::FOREST_CLASS_TEMPERATE) forestname = "forest_temperate_scarce";
+	else if (deepForest->m_ForestClass == Forest::ForestClass::FOREST_CLASS_TUNDRA) forestname = "forest_tundra_scarce";
+	else if (deepForest->m_ForestClass == Forest::ForestClass::FOREST_CLASS_JUNGLE) forestname = "forest_jungle_scarce";
+	else if (deepForest->m_ForestClass == Forest::ForestClass::FOREST_CLASS_SAVANNAH) forestname = "forest_savannah_scarce";
+
+
+
 	int r = rand() % 10;
 
 	switch (r) {
@@ -1315,7 +1405,7 @@ void ForestSearch::_spawnRandomForestAroundDeepOne(Forest* deepForest) {
 			int xpos = GetXPositionOfMapTile(GetMapTileAtWorldPosition(deepForestCell[0] - 1, deepForestCell[1] - 1));
 			int ypos = GetYPositionOfMapTile(GetMapTileAtWorldPosition(deepForestCell[0] - 1, deepForestCell[1] - 1));
 
-			new_forest = new Forest("forest_scarce", "layer3", xpos, ypos);
+			new_forest = new Forest(forestname, "layer3", xpos, ypos);
 
 			new_forest->m_TransformCmp->m_GameWorldSpaceCell[0] = deepForestCell[0] - 1;
 			new_forest->m_TransformCmp->m_GameWorldSpaceCell[1] = deepForestCell[1] - 1;
@@ -1343,7 +1433,7 @@ void ForestSearch::_spawnRandomForestAroundDeepOne(Forest* deepForest) {
 			int xpos = GetXPositionOfMapTile(GetMapTileAtWorldPosition(deepForestCell[0], deepForestCell[1] - 1));
 			int ypos = GetYPositionOfMapTile(GetMapTileAtWorldPosition(deepForestCell[0], deepForestCell[1] - 1));
 
-			new_forest = new Forest("forest_scarce", "layer3", xpos, ypos);
+			new_forest = new Forest(forestname, "layer3", xpos, ypos);
 
 			new_forest->m_TransformCmp->m_GameWorldSpaceCell[0] = deepForestCell[0];
 			new_forest->m_TransformCmp->m_GameWorldSpaceCell[1] = deepForestCell[1] - 1;
@@ -1372,7 +1462,7 @@ void ForestSearch::_spawnRandomForestAroundDeepOne(Forest* deepForest) {
 			int xpos = GetXPositionOfMapTile(GetMapTileAtWorldPosition(deepForestCell[0] + 1, deepForestCell[1] - 1));
 			int ypos = GetYPositionOfMapTile(GetMapTileAtWorldPosition(deepForestCell[0] + 1, deepForestCell[1] - 1));
 
-			new_forest = new Forest("forest_scarce", "layer3", xpos, ypos);
+			new_forest = new Forest(forestname, "layer3", xpos, ypos);
 
 			new_forest->m_TransformCmp->m_GameWorldSpaceCell[0] = deepForestCell[0] + 1;
 			new_forest->m_TransformCmp->m_GameWorldSpaceCell[1] = deepForestCell[1] - 1;
@@ -1401,7 +1491,7 @@ void ForestSearch::_spawnRandomForestAroundDeepOne(Forest* deepForest) {
 			int xpos = GetXPositionOfMapTile(GetMapTileAtWorldPosition(deepForestCell[0] - 1, deepForestCell[1]));
 			int ypos = GetYPositionOfMapTile(GetMapTileAtWorldPosition(deepForestCell[0] - 1, deepForestCell[1]));
 
-			new_forest = new Forest("forest_scarce", "layer3", xpos, ypos);
+			new_forest = new Forest(forestname, "layer3", xpos, ypos);
 
 			new_forest->m_TransformCmp->m_GameWorldSpaceCell[0] = deepForestCell[0] - 1;
 			new_forest->m_TransformCmp->m_GameWorldSpaceCell[1] = deepForestCell[1];
@@ -1430,7 +1520,7 @@ void ForestSearch::_spawnRandomForestAroundDeepOne(Forest* deepForest) {
 			int xpos = GetXPositionOfMapTile(GetMapTileAtWorldPosition(deepForestCell[0] + 1, deepForestCell[1]));
 			int ypos = GetYPositionOfMapTile(GetMapTileAtWorldPosition(deepForestCell[0] + 1, deepForestCell[1]));
 
-			new_forest = new Forest("forest_scarce", "layer3", xpos, ypos);
+			new_forest = new Forest(forestname, "layer3", xpos, ypos);
 
 			new_forest->m_TransformCmp->m_GameWorldSpaceCell[0] = deepForestCell[0] + 1;
 			new_forest->m_TransformCmp->m_GameWorldSpaceCell[1] = deepForestCell[1];
@@ -1458,7 +1548,7 @@ void ForestSearch::_spawnRandomForestAroundDeepOne(Forest* deepForest) {
 			int xpos = GetXPositionOfMapTile(GetMapTileAtWorldPosition(deepForestCell[0] - 1, deepForestCell[1] + 1));
 			int ypos = GetYPositionOfMapTile(GetMapTileAtWorldPosition(deepForestCell[0] - 1, deepForestCell[1] + 1));
 
-			new_forest = new Forest("forest_scarce", "layer3", xpos, ypos);
+			new_forest = new Forest(forestname, "layer3", xpos, ypos);
 
 			new_forest->m_TransformCmp->m_GameWorldSpaceCell[0] = deepForestCell[0] - 1;
 			new_forest->m_TransformCmp->m_GameWorldSpaceCell[1] = deepForestCell[1] + 1;
@@ -1486,7 +1576,7 @@ void ForestSearch::_spawnRandomForestAroundDeepOne(Forest* deepForest) {
 			int xpos = GetXPositionOfMapTile(GetMapTileAtWorldPosition(deepForestCell[0], deepForestCell[1] + 1));
 			int ypos = GetYPositionOfMapTile(GetMapTileAtWorldPosition(deepForestCell[0], deepForestCell[1] + 1));
 
-			new_forest = new Forest("forest_scarce", "layer3", xpos, ypos);
+			new_forest = new Forest(forestname, "layer3", xpos, ypos);
 
 			new_forest->m_TransformCmp->m_GameWorldSpaceCell[0] = deepForestCell[0];
 			new_forest->m_TransformCmp->m_GameWorldSpaceCell[1] = deepForestCell[1] + 1;
@@ -1515,7 +1605,7 @@ void ForestSearch::_spawnRandomForestAroundDeepOne(Forest* deepForest) {
 			int xpos = GetXPositionOfMapTile(GetMapTileAtWorldPosition(deepForestCell[0] + 1, deepForestCell[1] + 1));
 			int ypos = GetYPositionOfMapTile(GetMapTileAtWorldPosition(deepForestCell[0] + 1, deepForestCell[1] + 1));
 
-			new_forest = new Forest("forest_scarce", "layer3", xpos, ypos);
+			new_forest = new Forest(forestname, "layer3", xpos, ypos);
 
 			new_forest->m_TransformCmp->m_GameWorldSpaceCell[0] = deepForestCell[0] + 1;
 			new_forest->m_TransformCmp->m_GameWorldSpaceCell[1] = deepForestCell[1] + 1;
