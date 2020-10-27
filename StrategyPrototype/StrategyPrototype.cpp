@@ -3,6 +3,15 @@
 static olc::vf2d g_vi2dCameraPosition = olc::vf2d(0.0f, 0.0f);
 
 
+int GetXPositionOfMapTile(MapTile* tile) {
+	return(tile->m_TransformCmp->m_PosX);
+}
+
+int GetYPositionOfMapTile(MapTile* tile) {
+	return(tile->m_TransformCmp->m_PosY);
+}
+
+
 bool IsIndexOutOfBound(int x, int y) {
 
 	if (x < 0 || y < 0) return true;
@@ -1058,8 +1067,15 @@ void ForestSearch::_checkForNewForestCreation(Forest* forest) {
 				if (IsIndexOutOfBound(forest_worldcell[0], forest_worldcell[1] - 1)) return;
 
 				// Empty tile --> create forest.
-				Forest* f = new Forest("forest_scarce", "layer3", (forest_worldcell[0]) * SPRITES_WIDTH_AND_HEIGHT,
-																  (forest_worldcell[1] - 1) * SPRITES_WIDTH_AND_HEIGHT);
+				//Forest* f = new Forest("forest_scarce", "layer3", (forest_worldcell[0]) * SPRITES_WIDTH_AND_HEIGHT,
+				//												  (forest_worldcell[1] - 1) * SPRITES_WIDTH_AND_HEIGHT);
+				
+				int xpos = GetXPositionOfMapTile(GetMapTileAtWorldPosition(forest_worldcell[0], forest_worldcell[1] - 1));
+				int ypos = GetYPositionOfMapTile(GetMapTileAtWorldPosition(forest_worldcell[0], forest_worldcell[1] - 1));
+
+
+				Forest* f = new Forest("forest_scarce", "layer3", xpos, ypos);
+
 
 				f->m_TransformCmp->m_GameWorldSpaceCell[0] = forest_worldcell[0];
 				f->m_TransformCmp->m_GameWorldSpaceCell[1] = forest_worldcell[1] - 1;
@@ -1083,14 +1099,19 @@ void ForestSearch::_checkForNewForestCreation(Forest* forest) {
 		if (other_forest->m_GraphicsCmp->m_SpriteName.find("normal") != std::string::npos) {
 
 			
-			if (!IsGameEntityTypeOnMapTile(GetMapTileAtWorldPosition(forest_worldcell[0]+1, forest_worldcell[1]), "Forest")) {
+			if (!IsGameEntityTypeOnMapTile(GetMapTileAtWorldPosition(forest_worldcell[0] + 1, forest_worldcell[1]), "Forest")) {
 
 				// Check whether new forest would be out of bound.
 				if (IsIndexOutOfBound(forest_worldcell[0] + 1, forest_worldcell[1])) return;
 
 				// Empty tile --> create forest.
-				Forest* f = new Forest("forest_scarce", "layer3", (forest_worldcell[0] + 1) * SPRITES_WIDTH_AND_HEIGHT,
-																  (forest_worldcell[1]) * SPRITES_WIDTH_AND_HEIGHT);
+				//Forest* f = new Forest("forest_scarce", "layer3", (forest_worldcell[0] + 1) * SPRITES_WIDTH_AND_HEIGHT,
+				//												  (forest_worldcell[1]) * SPRITES_WIDTH_AND_HEIGHT);
+
+				int xpos = GetXPositionOfMapTile(GetMapTileAtWorldPosition(forest_worldcell[0] + 1, forest_worldcell[1]));
+				int ypos = GetYPositionOfMapTile(GetMapTileAtWorldPosition(forest_worldcell[0], forest_worldcell[1]));
+
+				Forest* f = new Forest("forest_scarce", "layer3", xpos, ypos);
 
 				f->m_TransformCmp->m_GameWorldSpaceCell[0] = forest_worldcell[0] + 1;
 				f->m_TransformCmp->m_GameWorldSpaceCell[1] = forest_worldcell[1];
@@ -1120,8 +1141,13 @@ void ForestSearch::_checkForNewForestCreation(Forest* forest) {
 
 
 				// Empty tile --> create forest.
-				Forest* f = new Forest("forest_scarce", "layer3", (forest_worldcell[0] - 1) * SPRITES_WIDTH_AND_HEIGHT,
-																  (forest_worldcell[1]) * SPRITES_WIDTH_AND_HEIGHT);
+				//Forest* f = new Forest("forest_scarce", "layer3", (forest_worldcell[0] - 1) * SPRITES_WIDTH_AND_HEIGHT,
+				//												  (forest_worldcell[1]) * SPRITES_WIDTH_AND_HEIGHT);
+
+				int xpos = GetXPositionOfMapTile(GetMapTileAtWorldPosition(forest_worldcell[0] - 1, forest_worldcell[1]));
+				int ypos = GetYPositionOfMapTile(GetMapTileAtWorldPosition(forest_worldcell[0], forest_worldcell[1]));
+
+				Forest* f = new Forest("forest_scarce", "layer3", xpos, ypos);
 
 				f->m_TransformCmp->m_GameWorldSpaceCell[0] = forest_worldcell[0] - 1;
 				f->m_TransformCmp->m_GameWorldSpaceCell[1] = forest_worldcell[1];
@@ -1149,8 +1175,13 @@ void ForestSearch::_checkForNewForestCreation(Forest* forest) {
 				if (IsIndexOutOfBound(forest_worldcell[0], forest_worldcell[1] + 1)) return;
 
 				// Empty tile --> create forest.
-				Forest* f = new Forest("forest_scarce", "layer3", (forest_worldcell[0]) * SPRITES_WIDTH_AND_HEIGHT,
-																  (forest_worldcell[1] + 1) * SPRITES_WIDTH_AND_HEIGHT);
+				//Forest* f = new Forest("forest_scarce", "layer3", (forest_worldcell[0]) * SPRITES_WIDTH_AND_HEIGHT,
+				//												  (forest_worldcell[1] + 1) * SPRITES_WIDTH_AND_HEIGHT);
+
+				int xpos = GetXPositionOfMapTile(GetMapTileAtWorldPosition(forest_worldcell[0], forest_worldcell[1]));
+				int ypos = GetYPositionOfMapTile(GetMapTileAtWorldPosition(forest_worldcell[0], forest_worldcell[1] + 1));
+
+				Forest* f = new Forest("forest_scarce", "layer3", xpos, ypos);
 
 				f->m_TransformCmp->m_GameWorldSpaceCell[0] = forest_worldcell[0];
 				f->m_TransformCmp->m_GameWorldSpaceCell[1] = forest_worldcell[1] + 1;
@@ -1192,8 +1223,13 @@ void ForestSearch::_spawnRandomForestAroundDeepOne(Forest* deepForest) {
 			if (IsIndexOutOfBound(deepForestCell[0] - 1, deepForestCell[1] - 1)) break;
 
 			// Empty tile --> create forest.
-			new_forest = new Forest("forest_scarce", "layer3", (deepForestCell[0] - 1) * SPRITES_WIDTH_AND_HEIGHT,
-															  (deepForestCell[1] - 1) * SPRITES_WIDTH_AND_HEIGHT);
+			//new_forest = new Forest("forest_scarce", "layer3", (deepForestCell[0] - 1) * SPRITES_WIDTH_AND_HEIGHT,
+			//												  (deepForestCell[1] - 1) * SPRITES_WIDTH_AND_HEIGHT);
+
+			int xpos = GetXPositionOfMapTile(GetMapTileAtWorldPosition(deepForestCell[0] - 1, deepForestCell[1] - 1));
+			int ypos = GetYPositionOfMapTile(GetMapTileAtWorldPosition(deepForestCell[0] - 1, deepForestCell[1] - 1));
+
+			new_forest = new Forest("forest_scarce", "layer3", xpos, ypos);
 
 			new_forest->m_TransformCmp->m_GameWorldSpaceCell[0] = deepForestCell[0] - 1;
 			new_forest->m_TransformCmp->m_GameWorldSpaceCell[1] = deepForestCell[1] - 1;
@@ -1215,8 +1251,13 @@ void ForestSearch::_spawnRandomForestAroundDeepOne(Forest* deepForest) {
 
 
 			// Empty tile --> create forest.
-			new_forest = new Forest("forest_scarce", "layer3", (deepForestCell[0]) * SPRITES_WIDTH_AND_HEIGHT,
-															   (deepForestCell[1] - 1) * SPRITES_WIDTH_AND_HEIGHT);
+			//new_forest = new Forest("forest_scarce", "layer3", (deepForestCell[0]) * SPRITES_WIDTH_AND_HEIGHT,
+			//												   (deepForestCell[1] - 1) * SPRITES_WIDTH_AND_HEIGHT);
+
+			int xpos = GetXPositionOfMapTile(GetMapTileAtWorldPosition(deepForestCell[0], deepForestCell[1] - 1));
+			int ypos = GetYPositionOfMapTile(GetMapTileAtWorldPosition(deepForestCell[0], deepForestCell[1] - 1));
+
+			new_forest = new Forest("forest_scarce", "layer3", xpos, ypos);
 
 			new_forest->m_TransformCmp->m_GameWorldSpaceCell[0] = deepForestCell[0];
 			new_forest->m_TransformCmp->m_GameWorldSpaceCell[1] = deepForestCell[1] - 1;
@@ -1239,8 +1280,13 @@ void ForestSearch::_spawnRandomForestAroundDeepOne(Forest* deepForest) {
 			if (IsIndexOutOfBound(deepForestCell[0] + 1, deepForestCell[1] - 1)) break;
 
 			// Empty tile --> create forest.
-			new_forest = new Forest("forest_scarce", "layer3", (deepForestCell[0] + 1) * SPRITES_WIDTH_AND_HEIGHT,
-																(deepForestCell[1] - 1) * SPRITES_WIDTH_AND_HEIGHT);
+			//new_forest = new Forest("forest_scarce", "layer3", (deepForestCell[0] + 1) * SPRITES_WIDTH_AND_HEIGHT,
+			//													(deepForestCell[1] - 1) * SPRITES_WIDTH_AND_HEIGHT);
+
+			int xpos = GetXPositionOfMapTile(GetMapTileAtWorldPosition(deepForestCell[0] + 1, deepForestCell[1] - 1));
+			int ypos = GetYPositionOfMapTile(GetMapTileAtWorldPosition(deepForestCell[0] + 1, deepForestCell[1] - 1));
+
+			new_forest = new Forest("forest_scarce", "layer3", xpos, ypos);
 
 			new_forest->m_TransformCmp->m_GameWorldSpaceCell[0] = deepForestCell[0] + 1;
 			new_forest->m_TransformCmp->m_GameWorldSpaceCell[1] = deepForestCell[1] - 1;
@@ -1263,8 +1309,13 @@ void ForestSearch::_spawnRandomForestAroundDeepOne(Forest* deepForest) {
 
 
 			// Empty tile --> create forest.
-			new_forest = new Forest("forest_scarce", "layer3", (deepForestCell[0] - 1) * SPRITES_WIDTH_AND_HEIGHT,
-															   (deepForestCell[1]) * SPRITES_WIDTH_AND_HEIGHT);
+			//new_forest = new Forest("forest_scarce", "layer3", (deepForestCell[0] - 1) * SPRITES_WIDTH_AND_HEIGHT,
+			//												   (deepForestCell[1]) * SPRITES_WIDTH_AND_HEIGHT);
+
+			int xpos = GetXPositionOfMapTile(GetMapTileAtWorldPosition(deepForestCell[0] - 1, deepForestCell[1]));
+			int ypos = GetYPositionOfMapTile(GetMapTileAtWorldPosition(deepForestCell[0] - 1, deepForestCell[1]));
+
+			new_forest = new Forest("forest_scarce", "layer3", xpos, ypos);
 
 			new_forest->m_TransformCmp->m_GameWorldSpaceCell[0] = deepForestCell[0] - 1;
 			new_forest->m_TransformCmp->m_GameWorldSpaceCell[1] = deepForestCell[1];
@@ -1287,8 +1338,13 @@ void ForestSearch::_spawnRandomForestAroundDeepOne(Forest* deepForest) {
 
 
 			// Empty tile --> create forest.
-			new_forest = new Forest("forest_scarce", "layer3", (deepForestCell[0] + 1) * SPRITES_WIDTH_AND_HEIGHT,
-																(deepForestCell[1]) * SPRITES_WIDTH_AND_HEIGHT);
+			//new_forest = new Forest("forest_scarce", "layer3", (deepForestCell[0] + 1) * SPRITES_WIDTH_AND_HEIGHT,
+			//													(deepForestCell[1]) * SPRITES_WIDTH_AND_HEIGHT);
+
+			int xpos = GetXPositionOfMapTile(GetMapTileAtWorldPosition(deepForestCell[0] + 1, deepForestCell[1]));
+			int ypos = GetYPositionOfMapTile(GetMapTileAtWorldPosition(deepForestCell[0] + 1, deepForestCell[1]));
+
+			new_forest = new Forest("forest_scarce", "layer3", xpos, ypos);
 
 			new_forest->m_TransformCmp->m_GameWorldSpaceCell[0] = deepForestCell[0] + 1;
 			new_forest->m_TransformCmp->m_GameWorldSpaceCell[1] = deepForestCell[1];
@@ -1310,8 +1366,13 @@ void ForestSearch::_spawnRandomForestAroundDeepOne(Forest* deepForest) {
 
 
 			// Empty tile --> create forest.
-			new_forest = new Forest("forest_scarce", "layer3", (deepForestCell[0] - 1) * SPRITES_WIDTH_AND_HEIGHT,
-																(deepForestCell[1] + 1) * SPRITES_WIDTH_AND_HEIGHT);
+			//new_forest = new Forest("forest_scarce", "layer3", (deepForestCell[0] - 1) * SPRITES_WIDTH_AND_HEIGHT,
+			//													(deepForestCell[1] + 1) * SPRITES_WIDTH_AND_HEIGHT);
+
+			int xpos = GetXPositionOfMapTile(GetMapTileAtWorldPosition(deepForestCell[0] - 1, deepForestCell[1] + 1));
+			int ypos = GetYPositionOfMapTile(GetMapTileAtWorldPosition(deepForestCell[0] - 1, deepForestCell[1] + 1));
+
+			new_forest = new Forest("forest_scarce", "layer3", xpos, ypos);
 
 			new_forest->m_TransformCmp->m_GameWorldSpaceCell[0] = deepForestCell[0] - 1;
 			new_forest->m_TransformCmp->m_GameWorldSpaceCell[1] = deepForestCell[1] + 1;
@@ -1332,8 +1393,14 @@ void ForestSearch::_spawnRandomForestAroundDeepOne(Forest* deepForest) {
 			if (IsIndexOutOfBound(deepForestCell[0], deepForestCell[1] + 1)) break;
 
 			// Empty tile --> create forest.
-			new_forest = new Forest("forest_scarce", "layer3", (deepForestCell[0]) * SPRITES_WIDTH_AND_HEIGHT,
-																(deepForestCell[1] + 1) * SPRITES_WIDTH_AND_HEIGHT);
+			//new_forest = new Forest("forest_scarce", "layer3", (deepForestCell[0]) * SPRITES_WIDTH_AND_HEIGHT,
+			//													(deepForestCell[1] + 1) * SPRITES_WIDTH_AND_HEIGHT);
+
+
+			int xpos = GetXPositionOfMapTile(GetMapTileAtWorldPosition(deepForestCell[0], deepForestCell[1] + 1));
+			int ypos = GetYPositionOfMapTile(GetMapTileAtWorldPosition(deepForestCell[0], deepForestCell[1] + 1));
+
+			new_forest = new Forest("forest_scarce", "layer3", xpos, ypos);
 
 			new_forest->m_TransformCmp->m_GameWorldSpaceCell[0] = deepForestCell[0];
 			new_forest->m_TransformCmp->m_GameWorldSpaceCell[1] = deepForestCell[1] + 1;
@@ -1355,8 +1422,14 @@ void ForestSearch::_spawnRandomForestAroundDeepOne(Forest* deepForest) {
 			if (IsIndexOutOfBound(deepForestCell[0] + 1, deepForestCell[1] + 1)) break;
 
 			// Empty tile --> create forest.
-			new_forest = new Forest("forest_scarce", "layer3", (deepForestCell[0] + 1) * SPRITES_WIDTH_AND_HEIGHT,
-																(deepForestCell[1] + 1) * SPRITES_WIDTH_AND_HEIGHT);
+			//new_forest = new Forest("forest_scarce", "layer3", (deepForestCell[0] + 1) * SPRITES_WIDTH_AND_HEIGHT,
+			//													(deepForestCell[1] + 1) * SPRITES_WIDTH_AND_HEIGHT);
+
+
+			int xpos = GetXPositionOfMapTile(GetMapTileAtWorldPosition(deepForestCell[0] + 1, deepForestCell[1] + 1));
+			int ypos = GetYPositionOfMapTile(GetMapTileAtWorldPosition(deepForestCell[0] + 1, deepForestCell[1] + 1));
+
+			new_forest = new Forest("forest_scarce", "layer3", xpos, ypos);
 
 			new_forest->m_TransformCmp->m_GameWorldSpaceCell[0] = deepForestCell[0] + 1;
 			new_forest->m_TransformCmp->m_GameWorldSpaceCell[1] = deepForestCell[1] + 1;
