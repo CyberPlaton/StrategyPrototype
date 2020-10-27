@@ -135,6 +135,10 @@ void CMPCameraInput::HandleKeyboard(Camera* cam) {
 
 	int speed = 4;
 
+	if (context->GetKey(olc::Key::ENTER).bReleased) {
+		context->m_Renderer->ChangeRenderMode();
+	}
+
 	if (context->GetKey(olc::Key::CTRL).bHeld) {
 
 		if (context->GetKey(olc::Key::G).bPressed) {
@@ -606,17 +610,109 @@ bool Game::OnUserUpdate(float fElapsedTime) {
 	m_Renderer->m_MainCam->m_CamInput->HandleKeyboard(m_Renderer->m_MainCam);
 	m_Renderer->m_MainCam->m_CamInput->HandleMouse(m_Renderer->m_MainCam);
 
-	// Layered rendering.
-	m_Renderer->RenderLayer1();  // units layer.
-	m_Renderer->RenderLayer2();  // buildings, cities...
-	m_Renderer->Render2Layer3();  // terrain, hills ...
-	m_Renderer->Render2Layer4();  // ground maptiles
-	m_Renderer->RenderLayer0();  // effects, general things...
 
-	if (m_DebugDraw) DebugDrawStats();
+	m_Renderer->Render();
 
 	return true;
 }
+
+void Renderer::Render() {
+	switch (m_RenderMode) {
+	case RenderMode::RENDERMODE_CITYVIEW:
+
+		// Layered rendering.
+		RenderCityLayer1();  // 
+		RenderCityLayer2();  // 
+		RenderCityLayer3();  // 
+		RenderCityLayer4();  // 
+		RenderCityLayer0();  // 
+
+		break;
+	case RenderMode::RENDERMODE_MAPVIEW:
+
+		// Layered rendering.
+		RenderLayer1();  // units layer.
+		RenderLayer2();  // buildings, cities...
+		Render2Layer3();  // terrain, hills ...
+		Render2Layer4();  // ground maptiles
+		RenderLayer0();  // effects, general things...
+
+		if (m_Game->m_DebugDraw) m_Game->DebugDrawStats();
+
+		break;
+	default:
+		break;
+	}
+}
+
+
+void Renderer::RenderCityLayer0() {
+
+	m_Game->Clear(olc::BLANK);
+
+
+
+}
+
+
+void Renderer::RenderCityLayer1() {
+
+	m_Game->SetDrawTarget(m_Layer1);
+	m_Game->Clear(olc::BLANK);
+
+
+
+
+
+	m_Game->EnableLayer(m_Layer1, true);
+	m_Game->SetDrawTarget(nullptr);
+}
+
+
+void Renderer::RenderCityLayer2() {
+
+	m_Game->SetDrawTarget(m_Layer2);
+	m_Game->Clear(olc::BLANK);
+
+
+
+
+
+	m_Game->EnableLayer(m_Layer2, true);
+	m_Game->SetDrawTarget(nullptr);
+}
+
+
+void Renderer::RenderCityLayer3() {
+
+	m_Game->SetDrawTarget(m_Layer3);
+	m_Game->Clear(olc::BLANK);
+
+
+
+
+
+
+	m_Game->EnableLayer(m_Layer3, true);
+	m_Game->SetDrawTarget(nullptr);
+}
+
+
+void Renderer::RenderCityLayer4() {
+
+	m_Game->SetDrawTarget(m_Layer4);
+	m_Game->Clear(olc::BLANK);
+
+
+
+
+
+	m_Game->EnableLayer(m_Layer4, true);
+	m_Game->SetDrawTarget(nullptr);
+}
+
+
+
 
 
 

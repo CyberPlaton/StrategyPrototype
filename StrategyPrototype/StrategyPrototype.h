@@ -56,9 +56,22 @@ private:
 
 
 class Renderer {
-public:
-	Renderer(Game* g, Camera* cam) { m_Game = g; m_MainCam = cam; }
 
+public:
+	enum class RenderMode {
+		RENDERMODE_INVALID = -1,
+		RENDERMODE_MAPVIEW = 0,
+		RENDERMODE_CITYVIEW = 1
+	};
+
+public:
+	Renderer(Game* g, Camera* cam) { m_Game = g; m_MainCam = cam; m_RenderMode = RenderMode::RENDERMODE_MAPVIEW; }
+
+
+	void ChangeRenderMode() { m_RenderMode = (m_RenderMode == RenderMode::RENDERMODE_CITYVIEW) ? RenderMode::RENDERMODE_MAPVIEW : RenderMode::RENDERMODE_CITYVIEW; }
+
+	// Should be the only public method for rendering.
+	void Render();
 
 	/*
 	NOTE FOR DRAWING LAYERS.
@@ -87,6 +100,17 @@ public:
 	void RenderLayer0();
 
 
+
+	/*
+	CITY DRAWING LOGIC
+	*/
+	void RenderCityLayer0();
+	void RenderCityLayer1();
+	void RenderCityLayer2();
+	void RenderCityLayer3();
+	void RenderCityLayer4();
+
+
 	Camera* m_MainCam = nullptr;
 	Game* m_Game = nullptr;
 
@@ -100,6 +124,7 @@ public:
 	int m_Layer2;
 	int m_Layer1;
 
+	RenderMode m_RenderMode = RenderMode::RENDERMODE_INVALID;
 
 private:
 

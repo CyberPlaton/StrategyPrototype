@@ -42,7 +42,7 @@ public:
 		*/
 	}
 
-
+	/*
 	void UpdateMapCellCoords() {
 
 		if (m_TransformCmp) {
@@ -50,7 +50,7 @@ public:
 			m_TransformCmp->m_GameWorldSpaceCell[1] = (int)m_TransformCmp->m_PosY / SPRITES_WIDTH_AND_HEIGHT;
 		}
 	}
-
+	*/
 
 	// Basic components for an Entity.
 	CMPIdentifier* m_IDCmp = nullptr;
@@ -60,6 +60,37 @@ public:
 	CMPArtificialIntelligence* m_AICmp = nullptr;
 	FiniteStateMachine* m_FSM = nullptr;
 };
+
+
+struct Ressource : public GameEntity{
+	Ressource(std::string ressourcename, unsigned int ressourcecount) {
+
+		m_RessourceName = ressourcename;
+		m_RessourceCount = ressourcecount;
+	}
+
+	~Ressource() = default;
+
+	void IncreaseRessourceCount(unsigned int num) { m_RessourceCount += num; }
+	void DecreaseRessourceCount(unsigned int num) { m_RessourceCount -= num; }
+
+	std::string m_RessourceName;
+	unsigned int m_RessourceCount = 0;
+};
+
+
+class City : public GameEntity {
+public:
+	City();
+	~City() = default;
+
+
+
+
+private:
+
+};
+
 
 
 class Forest : public GameEntity {
