@@ -406,14 +406,14 @@ bool Game::OnUserCreate() {
 	*/
 	int f_cell[2], f2_cell[2], f3_cell[2] , f4_cell[2], f5_cell[2];
 	f_cell[0] = 1; f_cell[1] = 1;
-	f2_cell[0] = 0; f2_cell[1] = 1;
-	f3_cell[0] = 1; f3_cell[1] = 2;
-	f4_cell[0] = 1; f4_cell[1] = 0;
-	f5_cell[0] = 2; f5_cell[1] = 1;
+	f2_cell[0] = 2; f2_cell[1] = 2;
+	f3_cell[0] = 3; f3_cell[1] = 2;
+	f4_cell[0] = 3; f4_cell[1] = 3;
+	f5_cell[0] = 4; f5_cell[1] = 4;
 
 
 
-	Forest* f = new Forest("forest_scarce", "layer3", (f_cell[0]) * SPRITES_WIDTH_AND_HEIGHT,
+	Forest* f = new Forest("forest_normal", "layer3", (f_cell[0]) * SPRITES_WIDTH_AND_HEIGHT,
 													  (f_cell[1]) * SPRITES_WIDTH_AND_HEIGHT);
 	f->m_TransformCmp->m_GameWorldSpaceCell[0] = f_cell[0];
 	f->m_TransformCmp->m_GameWorldSpaceCell[1] = f_cell[1];
@@ -421,7 +421,7 @@ bool Game::OnUserCreate() {
 	f->m_AICmp->MapState("state_search", new ForestSearch(*f->m_AICmp));
 	
 
-	Forest* f2 = new Forest("forest_scarce", "layer3", (f2_cell[0]) * SPRITES_WIDTH_AND_HEIGHT,
+	Forest* f2 = new Forest("forest_normal", "layer3", (f2_cell[0]) * SPRITES_WIDTH_AND_HEIGHT,
 													   (f2_cell[1]) * SPRITES_WIDTH_AND_HEIGHT);
 	f2->m_TransformCmp->m_GameWorldSpaceCell[0] = f2_cell[0];
 	f2->m_TransformCmp->m_GameWorldSpaceCell[1] = f2_cell[1];
