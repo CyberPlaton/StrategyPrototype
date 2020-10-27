@@ -39,17 +39,6 @@ public:
 	}
 
 
-	// View rectangle is from middle of the screen plus width/2 and plus height/2 accordingly.
-	void SetViewRect(int width, int height) {
-
-		m_ViewRect[0].x = m_Transform->m_PosX;
-		m_ViewRect[0].y = m_Transform->m_PosY;
-
-		m_ViewRect[1].x = m_ViewRect[0].x + width;
-		m_ViewRect[1].y = m_ViewRect[0].y + height;
-
-	}
-
 
 	CMPCameraInput* m_CamInput = nullptr;
 	CMPTransform* m_Transform = nullptr;
@@ -58,9 +47,7 @@ public:
 
 
 
-private:
-	olc::vi2d m_ViewRect[2];
-	
+private:	
 
 private:
 
@@ -100,7 +87,6 @@ public:
 	void RenderLayer0();
 
 
-
 	Camera* m_MainCam = nullptr;
 	Game* m_Game = nullptr;
 
@@ -113,6 +99,12 @@ public:
 	int m_Layer3;
 	int m_Layer2;
 	int m_Layer1;
+
+
+private:
+
+private:
+	void _drawGrid();
 };
 
 
@@ -127,8 +119,6 @@ public:
 	bool OnUserUpdate(float fElapsedTime) override;
 
 
-	void DrawGrid() { _drawDebugGrid(); }
-
 	void DebugDrawStats();
 
 	void AdvanceOneTurn();
@@ -142,6 +132,7 @@ public:
 	std::vector<olc::Sprite*> m_SpriteStorage;
 
 	bool m_DebugDraw = false;
+	bool m_DebugDrawGrid = false;
 
 	int m_TurnCount = 1;
 
@@ -150,8 +141,6 @@ private:
 	void _initialize();
 	void _initializeMap();
 	void _loadSpriteResources();
-
-	void _drawDebugGrid();
 
 	void _initializeMapTileCellCoords();
 	void _updateLocalMapTileCellCoords();

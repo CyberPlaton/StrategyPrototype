@@ -126,6 +126,14 @@ void CMPCameraInput::HandleKeyboard(Camera* cam) {
 
 	int speed = 4;
 
+	if (context->GetKey(olc::Key::CTRL).bHeld) {
+
+		if (context->GetKey(olc::Key::G).bPressed) {
+
+			context->m_DebugDrawGrid = (context->m_DebugDrawGrid == true) ? false : true;
+		}
+	}
+
 	if (context->GetKey(olc::Key::SPACE).bReleased) {
 
 		using namespace std;
@@ -507,7 +515,11 @@ void Game::DebugDrawStats() {
 	DrawString(olc::vi2d(2, 30), turncount, olc::RED, 2.0f);
 
 	std::string forestcount = "Forests " + std::to_string(GetTotalForestsCount());
-	DrawString(olc::vi2d(2, 60), forestcount, olc::RED, 2.0f);
+	DrawString(olc::vi2d(2, 50), forestcount, olc::RED, 2.0f);
+
+	std::string on_off = (m_DebugDrawGrid == true) ? "On" : "Off";
+	std::string debuggrid = "Grid (Ctrl + G): " + on_off;
+	DrawString(olc::vi2d(2, 70), debuggrid, olc::RED, 2.0f);
 
 
 
@@ -577,22 +589,39 @@ void Game::DebugDrawStats() {
 }
 
 
-void Game::_drawDebugGrid() {
+void Renderer::_drawGrid() {
 
 	using namespace olc;
 
-	int w = ScreenWidth();
-	int h = ScreenHeight();
+	EntitiesStorage* storage = EntitiesStorage::Get();
+	std::vector< GameEntity* > vec = *storage->GetMapTilesStorage();
+	
+	MapTile* maptile = nullptr;
+	int startpos[2], endpos[2];
+
+	for (auto it = vec.begin(); it != vec.end(); ++it) {
+
+		maptile = reinterpret_cast<MapTile*>(*it);
+
+		startpos[0] = maptile->m_TransformCmp->m_PosX;
+		startpos[1] = maptile->m_TransformCmp->m_PosY;
+
+		endpos[0] = maptile->m_TransformCmp->m_PosX;
+		endpos[1] = MAP_SIZE * SPRITES_WIDTH_AND_HEIGHT;
+
+		m_Game->DrawLine(vi2d(startpos[0], startpos[1]), vi2d(endpos[0], endpos[1]), olc::BLACK);
 
 
-	for (int i = 0; i < w; i += 128) {
 
-		DrawLine(vi2d(i, 0), vi2d(i, h), olc::BLACK);
-	}
+		startpos[0] = maptile->m_TransformCmp->m_PosX;
+		startpos[1] = maptile->m_TransformCmp->m_PosY;
 
-	for (int j = 0; j < h; j += 128) {
+		endpos[0] = MAP_SIZE * SPRITES_WIDTH_AND_HEIGHT;
+		endpos[1] = maptile->m_TransformCmp->m_PosY;
 
-		DrawLine(vi2d(0, j), vi2d(w, j), olc::BLACK);
+		m_Game->DrawLine(vi2d(startpos[0], startpos[1]), vi2d(endpos[0], endpos[1]), olc::BLACK);
+
+
 	}
 }
 
@@ -660,11 +689,10 @@ void Renderer::RenderLayer1() {
 		}
 	}
 
-	
-#ifdef _DEBUG
-	m_Game->DrawGrid();
-#endif // _DEBUG
-	
+
+
+	if(m_Game->m_DebugDrawGrid) _drawGrid();
+
 
 	m_Game->EnableLayer(m_Layer1, true);
 	m_Game->SetDrawTarget(nullptr);
