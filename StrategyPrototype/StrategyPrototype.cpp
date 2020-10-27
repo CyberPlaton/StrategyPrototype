@@ -304,6 +304,38 @@ void Game::_loadSpriteResources() {
 	Sprite* s19 = new Sprite("assets/map/forest_dying.png");
 
 
+	// Load colored cells
+	Sprite* c1 = new Sprite("assets/map/overlay_cell/map_cell_black.png");
+	Sprite* c2 = new Sprite("assets/map/overlay_cell/map_cell_blue.png");
+	Sprite* c3 = new Sprite("assets/map/overlay_cell/map_cell_brown.png");
+	Sprite* c4 = new Sprite("assets/map/overlay_cell/map_cell_green.png");
+	Sprite* c5 = new Sprite("assets/map/overlay_cell/map_cell_magenta.png");
+	Sprite* c6 = new Sprite("assets/map/overlay_cell/map_cell_orange.png");
+	Sprite* c7 = new Sprite("assets/map/overlay_cell/map_cell_red.png");
+	Sprite* c8 = new Sprite("assets/map/overlay_cell/map_cell_yellow.png");
+
+	m_SpriteStorage.push_back(c1);
+	m_SpriteStorage.push_back(c2);
+	m_SpriteStorage.push_back(c3);
+	m_SpriteStorage.push_back(c4);
+	m_SpriteStorage.push_back(c5);
+	m_SpriteStorage.push_back(c6);
+	m_SpriteStorage.push_back(c7);
+	m_SpriteStorage.push_back(c8);
+
+	// Decals for colored cells
+	Decal* dc1 = new Decal(c1);
+	Decal* dc2 = new Decal(c2);
+	Decal* dc3 = new Decal(c3);
+	Decal* dc4 = new Decal(c4);
+	Decal* dc5 = new Decal(c5);
+	Decal* dc6 = new Decal(c6);
+	Decal* dc7 = new Decal(c7);
+	Decal* dc8 = new Decal(c8);
+
+
+
+
 	m_SpriteStorage.push_back(s1);
 	m_SpriteStorage.push_back(s2);
 	m_SpriteStorage.push_back(s3);
@@ -369,6 +401,17 @@ void Game::_loadSpriteResources() {
 	m_SpriteResourceMap.insert(std::make_pair("water_shallow", d18));
 	m_SpriteResourceMap.insert(std::make_pair("forest_dying", d19));
 
+
+
+	// Map colored cells.
+	m_SpriteResourceMap.insert(std::make_pair("map_cell_black", dc1));
+	m_SpriteResourceMap.insert(std::make_pair("map_cell_blue", dc2));
+	m_SpriteResourceMap.insert(std::make_pair("map_cell_brown", dc3));
+	m_SpriteResourceMap.insert(std::make_pair("map_cell_green", dc4));
+	m_SpriteResourceMap.insert(std::make_pair("map_cell_magenta", dc5));
+	m_SpriteResourceMap.insert(std::make_pair("map_cell_orange", dc6));
+	m_SpriteResourceMap.insert(std::make_pair("map_cell_red", dc7));
+	m_SpriteResourceMap.insert(std::make_pair("map_cell_yellow", dc8));
 
 }
 
