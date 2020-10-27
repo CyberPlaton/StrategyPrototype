@@ -1073,6 +1073,9 @@ void ForestSearch::_checkForNewForestCreation(Forest* forest) {
 				//Forest* f = new Forest("forest_scarce", "layer3", (forest_worldcell[0]) * SPRITES_WIDTH_AND_HEIGHT,
 				//												  (forest_worldcell[1] - 1) * SPRITES_WIDTH_AND_HEIGHT);
 				
+				// To create a new forest, we place its x and y position accordingly to that of the maptile at it position
+				// We have to do this, as the x and y positions are dynamically updated accordingly to camera position.
+				// Consider to wrap this functionality for ease of use...
 				int xpos = GetXPositionOfMapTile(GetMapTileAtWorldPosition(forest_worldcell[0], forest_worldcell[1] - 1));
 				int ypos = GetYPositionOfMapTile(GetMapTileAtWorldPosition(forest_worldcell[0], forest_worldcell[1] - 1));
 
