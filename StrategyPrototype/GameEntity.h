@@ -28,6 +28,7 @@ Forest* MakeNewForest(std::string name, int x_cell_pos, int y_cell_pos);
 Forest* MakeNewForestAtPos(std::string name, int xpos, int ypos, int set_x_cell, int set_y_cell);
 std::string MapTileTypeToString(MapTile* tile);
 bool MapTileAppropriteForForest(MapTile* tile, Forest* forest);
+bool IsMapTilePartOfRegion(MapTile* tile);
 
 
 enum class TileImprovementLevel {
@@ -342,14 +343,23 @@ public:
 	}
 
 
+	void AssociateToMapTileRegion(MapTileRegion* region) {
+		if (region == nullptr) return;
+
+		m_AssociatedRegion = region;
+	}
+
+
 	std::vector<GameEntity*>* m_MapTileEntities;
 	std::string m_MapTileName = "NULL";
 	MapTileType m_MapTileType = MapTileType::MAPTILE_TYPE_INVALID;
+
+	MapTileRegion* m_AssociatedRegion = nullptr;
 };
 
 
 struct MapTileRegion : public GameEntity{
-	MapTileRegion() {
+	MapTileRegion(std::string spritename) {
 		m_IDCmp->m_DynamicTypeName = "MapTileRegion";
 
 		// Our MapTileRegion is an abstract entity that combines real maptiles.
@@ -360,7 +370,7 @@ struct MapTileRegion : public GameEntity{
 
 		m_GraphicsCmp = new CMPGraphics();
 		m_GraphicsCmp->m_DrawingLayer = "layer2";
-		m_GraphicsCmp->m_SpriteName = "map_cell_orange";
+		m_GraphicsCmp->m_SpriteName = spritename;
 	}
 
 	void AddTileToRegion(MapTile* maptile) {
@@ -418,6 +428,10 @@ struct EntitiesStorage {
 				_addCity(e);
 			}
 
+			// Is it a MapTileRegion?
+			if (_isMapTileRegion(e)) {
+				_addMapTileRegion(e);
+			}
 		}
 			
 	}
@@ -499,6 +513,16 @@ struct EntitiesStorage {
 				m_CityVec->erase(it);
 			}
 		}
+
+		// Delete regions from Maptileregionsvec.
+		if (_isMapTileRegion(e)) {
+			std::vector< GameEntity* >::iterator it = std::find(m_MapTileRegionsVec->begin(), m_MapTileRegionsVec->end(), e);
+
+			if (it != m_MapTileRegionsVec->end()) {
+				m_MapTileRegionsVec->erase(it);
+			}
+		}
+		
 	}
 
 	void DeleteGameEntitie(CMPIdentifier* id) {
@@ -540,6 +564,7 @@ private:
 	std::vector<GameEntity*>* m_GameEntitiesWithAIVec; // Holds entities in game with AI.
 	std::vector<GameEntity*>* m_MapViewRessourcesVec; // Holds all ressources in game, that are explicitly on the mapview.
 	std::vector<GameEntity*>* m_CityVec; // Holds all cities in the game.
+	std::vector<GameEntity*>* m_MapTileRegionsVec; // Holds all regions defined in game.
 
 private:
 	EntitiesStorage() = default;
@@ -554,8 +579,12 @@ private:
 
 		m_MapViewRessourcesVec = new std::vector<GameEntity*>();
 		m_CityVec = new std::vector<GameEntity*>();
+		m_MapTileRegionsVec = new std::vector<GameEntity*>();
 	}
 
+	void _addMapTileRegion(GameEntity* e) {
+		m_MapTileRegionsVec->push_back(e);
+	}
 
 	void _addCity(GameEntity* e) {
 		m_CityVec->push_back(e);
@@ -622,6 +651,12 @@ private:
 		}
 
 		return false;
+	}
+
+
+	bool _isMapTileRegion(GameEntity* e) {
+		if (COMPARE_STRINGS(e->m_IDCmp->m_DynamicTypeName, "MapTileRegion") == 0) return true;
+		else return false;
 	}
 };
 

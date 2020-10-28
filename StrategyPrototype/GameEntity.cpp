@@ -36,6 +36,16 @@ void WorldMapDrawingOptions::_createMap() {
 
 			storage->AddGameEntitie(m_MapDefinitions->at(i).at(j)); // Add Maptile to EntitiesStorage.
 
+			// Define regions for map and add to storage
+			/*
+			NOTE:
+			Every maptile must(!) be associated to  region.
+			Do it like 
+
+			m_MapDefinitions->at(i).at(j)->AssociateToMapTileRegion(region);
+
+			Thus the particular maptile will belong to a region.
+			*/
 		}
 	}
 }
@@ -152,7 +162,10 @@ void Forest::Update() {
 
 void City::ClaimRegions() {
 
-	MapTileRegion* region = new MapTileRegion();
+	MapTileRegion* region = new MapTileRegion("map_cell_orange");
+
+	// Here we claim TILES, not REGIONS.
+	// This needs to be redone...
 
 	// Normal
 	region->AddTileToRegion(GetMapTileAtWorldPosition(1, 0));

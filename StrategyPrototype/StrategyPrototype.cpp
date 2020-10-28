@@ -2,6 +2,18 @@
 
 static olc::vf2d g_vi2dCameraPosition = olc::vf2d(0.0f, 0.0f);
 
+bool IsMapTilePartOfRegion(MapTile* tile) {
+
+	if (!nullptr) return false;
+	if (IsIndexOutOfBound(tile->m_TransformCmp->m_GameWorldSpaceCell[0], tile->m_TransformCmp->m_GameWorldSpaceCell[1])) return false;
+
+	// This MapTile is already part of a region.
+	if (tile->m_AssociatedRegion == nullptr) return true;
+
+	return false;
+}
+
+
 olc::Pixel* Game::RandomColor(){
 
 	int r = rand() % 6;
