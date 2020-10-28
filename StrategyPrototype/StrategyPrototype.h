@@ -89,7 +89,6 @@ public:
 	void Render2Layer3();
 
 	// Layer for drawing buildings, cities, caves and improvements.
-	void RenderLayer2();
 	void Render2Layer2();
 
 	// Layer for drawing units.

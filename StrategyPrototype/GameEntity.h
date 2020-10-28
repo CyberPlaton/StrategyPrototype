@@ -80,9 +80,9 @@ struct MapRessource : public GameEntity{
 		m_TransformCmp->m_PosX = xpos;
 		m_TransformCmp->m_PosY = ypos;
 
-		// Standardized drawing layer is layer3.
+		// Standardized drawing layer is layer2.
 		m_GraphicsCmp = new CMPGraphics();
-		m_GraphicsCmp->m_DrawingLayer = "layer3";
+		m_GraphicsCmp->m_DrawingLayer = "layer2";
 		m_GraphicsCmp->m_SpriteName = spritename;
 
 
@@ -91,8 +91,6 @@ struct MapRessource : public GameEntity{
 	}
 
 	~MapRessource() = default;
-
-
 
 
 
@@ -232,18 +230,35 @@ struct EntitiesStorage {
 	std::vector< GameEntity* >* GetAIEntitiesStorage() { return m_GameEntitiesWithAIVec; }
 	std::vector< GameEntity* >* GetStorage() { return m_GameEntitiesVec; }
 	std::vector< GameEntity* >* GetMapTilesStorage() { return m_MapTileGameEntitiesVec; }
+	std::vector< GameEntity* >* GetMapViewRessources() { return m_MapViewRessourcesVec; }
+	
 
 
 	void AddGameEntitie(GameEntity* e) {
 
+		// General saving.
 		m_GameEntitiesVec->push_back(e);
 
+		// Does it have an AI component?
 		if (e->m_AICmp) _addEntitieWithAI(e);
+		
+		// Is it a maptile?
 		if (_isMaptile(e)) {
+
+			// Yes, so just add it here...
 			_addMaptileEntity(e);
 		}
 		else {
+
+			// No, it is some entity on a mapttile.
 			_addEntityToMapTileVector(e);
+
+
+			// Is it a mapressource?
+			if (_isMapViewRessource(e)) {
+				_addMapViewRessource(e);
+			}
+
 		}
 			
 	}
@@ -294,16 +309,26 @@ struct EntitiesStorage {
 		}
 
 
-
+		// Delete from maptileve if needed.
 		if (_isMaptile(e)) {
 
 			std::vector< GameEntity* >::iterator it = std::find(m_MapTileGameEntitiesVec->begin(), m_MapTileGameEntitiesVec->end(), e);
 
 			if (it != m_MapTileGameEntitiesVec->end()) {
 				m_MapTileGameEntitiesVec->erase(it);
-			
-
 			}
+		}
+
+
+		// If needed, delete from mapviewressource.
+		if (_isMapViewRessource(e)) {
+
+			std::vector< GameEntity* >::iterator it = std::find(m_MapViewRessourcesVec->begin(), m_MapViewRessourcesVec->end(), e);
+
+			if (it != m_MapViewRessourcesVec->end()) {
+				m_MapViewRessourcesVec->erase(it);
+			}
+
 		}
 		
 	}
@@ -345,6 +370,7 @@ private:
 	std::vector< GameEntity*>* m_MapTileGameEntitiesVec; // Vector that explicitly hold Maptiles. 
 	std::vector< GameEntity* >* m_GameEntitiesVec; // Holds all entities ingame.
 	std::vector<GameEntity*>* m_GameEntitiesWithAIVec; // Holds entities in game with AI.
+	std::vector<GameEntity*>* m_MapViewRessourcesVec; // Holds all ressources in game, that are explicitly on the mapview.
 
 private:
 	EntitiesStorage() = default;
@@ -356,6 +382,12 @@ private:
 		m_GameEntitiesVec = new std::vector< GameEntity*>();
 		m_GameEntitiesWithAIVec = new std::vector<GameEntity*>();
 		m_MapTileGameEntitiesVec = new std::vector<GameEntity*>();
+
+		m_MapViewRessourcesVec = new std::vector<GameEntity*>();
+	}
+
+	void _addMapViewRessource(GameEntity* e) {
+		m_MapViewRessourcesVec->push_back(e);
 	}
 
 
@@ -376,15 +408,17 @@ private:
 		GetMapTileAtWorldPosition(entity_cell[0], entity_cell[1])->m_MapTileEntities->push_back(e);
 	}
 
+
+	bool _isMapViewRessource(GameEntity* e) {
+
+		MapRessource* r = reinterpret_cast<MapRessource*>(e);
+
+		if (r != nullptr && COMPARE_STRINGS(r->m_IDCmp->m_DynamicTypeName, "MapRessource") == 0) return true;
+		else return false;
+	}
+
 	bool _isMaptile(GameEntity* e) {
 
-		// Stringify 
-		/*
-		std::stringstream ss;
-		std::string name;
-		ss << static_cast<MapTile*>(e)->m_MapTileName;
-		name = ss.str();
-		*/
 		std::string name;
 		name = e->m_GraphicsCmp->m_SpriteName;
 

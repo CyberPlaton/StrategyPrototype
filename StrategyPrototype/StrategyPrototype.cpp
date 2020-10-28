@@ -384,6 +384,21 @@ void Game::_loadSpriteResources() {
 	m_SpriteStorage.push_back(c7);
 	m_SpriteStorage.push_back(c8);
 
+
+	// Mapview Ressources
+	Sprite* r1 = new Sprite("assets/ressources/mapview/ressource_map_bear.png");
+
+	m_SpriteStorage.push_back(r1);
+
+
+	// Decals for mapressources
+	Decal* dr1 = new Decal(r1);
+
+	m_SpriteResourceMap.insert(std::make_pair("ressource_map_bear", dr1));
+
+
+
+
 	// Decals for colored cells
 	Decal* dc1 = new Decal(c1);
 	Decal* dc2 = new Decal(c2);
@@ -580,6 +595,22 @@ bool Game::OnUserCreate() {
 	storage->AddGameEntitie(f8);
 	storage->AddGameEntitie(f9);
 
+
+
+
+	MapRessource* r1 = new MapRessource("Bear", "ressource_map_bear", 384, 128, 5);
+	MapRessource* r2 = new MapRessource("Bear", "ressource_map_bear", 128, 384, 5);
+	MapRessource* r3 = new MapRessource("Bear", "ressource_map_bear", 128, 128, 5);
+
+	storage->AddGameEntitie(r1);
+	storage->AddGameEntitie(r2);
+	storage->AddGameEntitie(r3);
+
+
+
+
+
+
 	return true;
 }
 
@@ -617,7 +648,7 @@ void Renderer::Render() {
 
 		// Layered rendering.
 		RenderLayer1();  // units layer.
-		RenderLayer2();  // buildings, cities...
+		Render2Layer2();  // buildings, cities...
 		Render2Layer3();  // terrain, hills ...
 		Render2Layer4();  // ground maptiles
 		RenderLayer0();  // effects, general things...
@@ -854,34 +885,6 @@ int main()
 
 
 
-void Renderer::RenderLayer2() {
-
-	using namespace olc;
-
-	EntitiesStorage* storage = EntitiesStorage::Get();
-	std::vector< GameEntity* >* vec = storage->GetStorage();
-
-
-	m_Game->SetDrawTarget(m_Layer2);
-	m_Game->Clear(olc::BLANK);
-
-
-	for (auto const& it : *vec) {
-		if (COMPARE_STRINGS(it->m_GraphicsCmp->m_DrawingLayer, "layer2") == 0) {
-
-			// Draw appropriate loaded sprite on position specified.
-			m_Game->DrawDecal(vi2d(it->m_TransformCmp->m_PosX, it->m_TransformCmp->m_PosY),
-				m_Game->m_SpriteResourceMap.at(it->m_GraphicsCmp->m_SpriteName));
-		}
-	}
-
-
-	m_Game->EnableLayer(m_Layer2, true);
-	m_Game->SetDrawTarget(nullptr);
-
-}
-
-
 void Renderer::RenderLayer1() {
 
 	using namespace olc;
@@ -921,6 +924,36 @@ void Renderer::Render2Layer1() {
 
 void Renderer::Render2Layer2() {
 
+	using namespace olc;
+
+	EntitiesStorage* storage = EntitiesStorage::Get();
+	std::vector< GameEntity* > vec = *storage->GetMapViewRessources();
+
+	m_Game->SetDrawTarget(m_Layer2);
+	m_Game->Clear(olc::BLANK);
+
+	GameEntity* entity = nullptr;
+
+	// First, draw the mapviewressources.
+	for (auto it = vec.begin(); it != vec.end(); ++it) {
+
+		entity = reinterpret_cast<MapRessource*>(*it);
+
+		// Draw appropriate loaded sprite on position specified.
+		m_Game->DrawDecal(vi2d(entity->m_TransformCmp->m_PosX, entity->m_TransformCmp->m_PosY),
+			m_Game->m_SpriteResourceMap.at(entity->m_GraphicsCmp->m_SpriteName));
+
+	}
+
+
+	// Then, we can draw improvements, roads etc.
+	// For this, we iterate through a specially define vector and draw everything like above in
+	// the correct local order...
+	// ...
+
+
+	m_Game->EnableLayer(m_Layer2, true);
+	m_Game->SetDrawTarget(nullptr);
 }
 
 void Renderer::Render2Layer3() {
