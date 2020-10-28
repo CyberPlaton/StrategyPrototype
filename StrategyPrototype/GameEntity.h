@@ -3,6 +3,7 @@
 #include"FiniteStateMachine.h"
 
 class MapTile;
+class Forest;
 typedef std::array<std::array<MapTile*, 20>, 20> MapTileArray;
 
 #define MAP_SIZE 20
@@ -20,6 +21,8 @@ std::vector<GameEntity*> GetForestEntities();
 bool IsIndexOutOfBound(int x, int y);
 int GetTotalForestsCount();
 bool IsSubstringInString(std::string substring, std::string string);
+Forest* MakeNewForest(std::string name, int x_cell_pos, int y_cell_pos);
+Forest* MakeNewForestAtPos(std::string name, int xpos, int ypos, int set_x_cell, int set_y_cell);
 
 
 
@@ -165,6 +168,11 @@ public:
 
 	// Update is not meant to be done on each tick, only on occured changes.
 	void Update();
+
+	bool HasSameForestClass(Forest* other) {
+		return((m_ForestClass == other->m_ForestClass) ? true : false);
+	}
+
 
 	int m_ForestLifeTimeNow = 0;
 	int m_ForestLifetime = 0;
