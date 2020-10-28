@@ -25,6 +25,12 @@ Forest* MakeNewForest(std::string name, int x_cell_pos, int y_cell_pos);
 Forest* MakeNewForestAtPos(std::string name, int xpos, int ypos, int set_x_cell, int set_y_cell);
 
 
+enum class TileImprovementLevel {
+	TILE_IMPROVEMENT_LVL_INVALID = -1,
+	TILE_IMPROVEMENT_LVL_ONE = 0,
+	TILE_IMPROVEMENT_LVL_TWO = 1,
+	TILE_IMPROVEMENT_LVL_THREE = 2
+};
 
 
 class GameEntity{
@@ -65,20 +71,33 @@ public:
 };
 
 
-struct Ressource : public GameEntity{
-	Ressource(std::string ressourcename, unsigned int ressourcecount) {
+struct MapRessource : public GameEntity{
+	MapRessource(std::string ressourcename, std::string spritename, int xpos, int ypos, int initialGatheringYield) {
 
+		m_IDCmp->m_DynamicTypeName = "MapRessource";
 		m_RessourceName = ressourcename;
-		m_RessourceCount = ressourcecount;
+
+		m_TransformCmp->m_PosX = xpos;
+		m_TransformCmp->m_PosY = ypos;
+
+		// Standardized drawing layer is layer3.
+		m_GraphicsCmp = new CMPGraphics();
+		m_GraphicsCmp->m_DrawingLayer = "layer3";
+		m_GraphicsCmp->m_SpriteName = spritename;
+
+
+		m_AICmp = new CMPArtificialIntelligence(this); // AI is needed to determine yield changes and other logic.
+		m_GatheringYield = initialGatheringYield; // This will change dynamically based on improvements around and on specific tile.
 	}
 
-	~Ressource() = default;
+	~MapRessource() = default;
 
-	void IncreaseRessourceCount(unsigned int num) { m_RessourceCount += num; }
-	void DecreaseRessourceCount(unsigned int num) { m_RessourceCount -= num; }
+
+
+
 
 	std::string m_RessourceName;
-	unsigned int m_RessourceCount = 0;
+	int m_GatheringYield = 0;
 };
 
 
@@ -130,9 +149,6 @@ public:
 
 
 		m_AICmp = new CMPArtificialIntelligence(this);
-		m_FSM = new FiniteStateMachine(States::STATE_INVALID);
-
-
 
 		// Define props
 		m_ForestLifetime = 100;

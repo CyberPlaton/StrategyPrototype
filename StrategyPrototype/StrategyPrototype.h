@@ -180,21 +180,13 @@ private:
 
 
 // FOREST AI LOGIC DEF
-// If we let it be like this, then 
-// we have for every forest instance an own forestsearch logic object and thus
-// higher memory consumption... but thus we can run them parallel to each other and
-// purely independent. Too, we can make adjustments for different types of forest or even make 
-// individual forests with unique AI...
-//
-// For now, we do not change it.
 class ForestSearch : public IStateLogic {
 public:
 	ForestSearch(CMPArtificialIntelligence& ai) {
 		m_AICmp = &ai;
 		m_ManagedForest = static_cast<Forest*>(m_AICmp->m_ManagedObject);
 
-
-		// As forest have only one state, predefine it accotrdingly.
+		// As forest have only one state, predefine it accordingly.
 		m_AICmp->ChangeState(States::STATE_SEARCH);
 	}
 
