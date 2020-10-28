@@ -23,6 +23,8 @@ int GetTotalForestsCount();
 bool IsSubstringInString(std::string substring, std::string string);
 Forest* MakeNewForest(std::string name, int x_cell_pos, int y_cell_pos);
 Forest* MakeNewForestAtPos(std::string name, int xpos, int ypos, int set_x_cell, int set_y_cell);
+std::string MapTileTypeToString(MapTile* tile);
+bool MapTileAppropriteForForest(MapTile* tile, Forest* forest);
 
 
 enum class TileImprovementLevel {
@@ -201,6 +203,19 @@ private:
 
 class MapTile : public GameEntity {
 public:
+	enum class MapTileType {
+		MAPTILE_TYPE_INVALID = -1,
+		MAPTILE_TYPE_ICE = 0,
+		MAPTILE_TYPE_SAND = 1,
+		MAPTILE_TYPE_SAVANNAH = 2,
+		MAPTILE_TYPE_SNOW = 3,
+		MAPTILE_TYPE_TEMPERATE = 4,
+		MAPTILE_TYPE_TUNDRA = 5,
+		MAPTILE_TYPE_WATER_DEEP = 6,
+		MAPTILE_TYPE_WATER_SHALLOW = 7
+
+	};
+public:
 	MapTile(std::string name, std::string layer, int xpos, int ypos) {
 		
 		m_IDCmp->m_DynamicTypeName = "MapTile";
@@ -215,11 +230,47 @@ public:
 		m_GraphicsCmp = new CMPGraphics();
 		m_GraphicsCmp->m_DrawingLayer = layer;
 
+
+		if (IsSubstringInString("ice", name)) {
+			m_MapTileType = MapTileType::MAPTILE_TYPE_ICE;
+			m_GraphicsCmp->m_SpriteName = "ice";
+		}
+		else if (IsSubstringInString("shallow", name)) {
+			m_MapTileType = MapTileType::MAPTILE_TYPE_WATER_SHALLOW;
+			m_GraphicsCmp->m_SpriteName = "water_shallow";
+		}
+		else if (IsSubstringInString("deep", name)) {
+			m_MapTileType = MapTileType::MAPTILE_TYPE_WATER_DEEP;
+			m_GraphicsCmp->m_SpriteName = "water_deep";
+		}
+		else if (IsSubstringInString("tundra", name)) {
+			m_MapTileType = MapTileType::MAPTILE_TYPE_TUNDRA;
+			m_GraphicsCmp->m_SpriteName = "tundra";
+		}
+		else if (IsSubstringInString("temperate", name)) {
+			m_MapTileType = MapTileType::MAPTILE_TYPE_TEMPERATE;
+			m_GraphicsCmp->m_SpriteName = "temperate";
+		}
+		else if (IsSubstringInString("snow", name)) {
+			m_MapTileType = MapTileType::MAPTILE_TYPE_SNOW;
+			m_GraphicsCmp->m_SpriteName = "snow";
+		}
+		else if (IsSubstringInString("savannah", name)) {
+			m_MapTileType = MapTileType::MAPTILE_TYPE_SAVANNAH;
+			m_GraphicsCmp->m_SpriteName = "savannah";
+		}
+		else if (IsSubstringInString("sand", name)) {
+			m_MapTileType = MapTileType::MAPTILE_TYPE_SAND;
+			m_GraphicsCmp->m_SpriteName = "sand";
+		}
+
+
 	}
 
 
 	std::vector<GameEntity*>* m_MapTileEntities;
 	std::string m_MapTileName = "NULL";
+	MapTileType m_MapTileType = MapTileType::MAPTILE_TYPE_INVALID;
 };
 
 

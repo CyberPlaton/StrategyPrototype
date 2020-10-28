@@ -2,6 +2,56 @@
 
 static olc::vf2d g_vi2dCameraPosition = olc::vf2d(0.0f, 0.0f);
 
+std::string MapTileTypeToString(MapTile* tile) {
+
+	if (tile->m_MapTileType == MapTile::MapTileType::MAPTILE_TYPE_ICE) return "MAPTILE_TYPE_ICE";
+	else if (tile->m_MapTileType == MapTile::MapTileType::MAPTILE_TYPE_SAND) return "MAPTILE_TYPE_SAND";
+	else if (tile->m_MapTileType == MapTile::MapTileType::MAPTILE_TYPE_SAVANNAH) return "MAPTILE_TYPE_SAVANNAH";
+	else if (tile->m_MapTileType == MapTile::MapTileType::MAPTILE_TYPE_SNOW) return "MAPTILE_TYPE_SNOW";
+	else if (tile->m_MapTileType == MapTile::MapTileType::MAPTILE_TYPE_TEMPERATE) return "MAPTILE_TYPE_TEMPERATE";
+	else if (tile->m_MapTileType == MapTile::MapTileType::MAPTILE_TYPE_TUNDRA) return "MAPTILE_TYPE_TUNDRA";
+	else if (tile->m_MapTileType == MapTile::MapTileType::MAPTILE_TYPE_WATER_DEEP) return "MAPTILE_TYPE_WATER_DEEP";
+	else if (tile->m_MapTileType == MapTile::MapTileType::MAPTILE_TYPE_WATER_SHALLOW) return "MAPTILE_TYPE_WATER_SHALLOW";
+
+	else return "MAPTILE_TYPE_INVALID";
+}
+
+bool MapTileAppropriteForForest(MapTile* tile, Forest* forest) {
+
+	switch (tile->m_MapTileType) {
+	case MapTile::MapTileType::MAPTILE_TYPE_ICE:
+		return false;
+		break;
+	case  MapTile::MapTileType::MAPTILE_TYPE_SAND:
+		return false;
+		break;
+	case MapTile::MapTileType::MAPTILE_TYPE_SAVANNAH:
+		if (forest->m_ForestClass == Forest::ForestClass::FOREST_CLASS_SAVANNAH) return true;
+		else return false;
+		break;
+	case  MapTile::MapTileType::MAPTILE_TYPE_SNOW:
+		return false;
+		break;
+	case MapTile::MapTileType::MAPTILE_TYPE_TEMPERATE:
+		if (forest->m_ForestClass == Forest::ForestClass::FOREST_CLASS_TEMPERATE) return true;
+		else if (forest->m_ForestClass == Forest::ForestClass::FOREST_CLASS_JUNGLE) return true;
+		else return false;
+		break;
+	case  MapTile::MapTileType::MAPTILE_TYPE_TUNDRA:
+		if (forest->m_ForestClass == Forest::ForestClass::FOREST_CLASS_TUNDRA) return true;
+		else return false;
+		break;
+	case MapTile::MapTileType::MAPTILE_TYPE_WATER_DEEP:
+		return false;
+		break;
+	case  MapTile::MapTileType::MAPTILE_TYPE_WATER_SHALLOW:
+		return false;
+		break;
+
+	}
+}
+
+
 Forest* MakeNewForest(std::string name, int x_cell_pos, int y_cell_pos) {
 
 	// We draw standardized forests on layer3, so skip this part from the user...
@@ -560,13 +610,13 @@ bool Game::OnUserCreate() {
 	If we create a forest, it is meant he is scarce from beginning.
 	*/
 	int f_cell[2], f2_cell[2], f3_cell[2] , f4_cell[2], f5_cell[2], f6_cell[2], f7_cell[2], f8_cell[2], f9_cell[2];
-	f_cell[0] = 0; f_cell[1] = 0;
-	f2_cell[0] = 1; f2_cell[1] = 1;
+	f_cell[0] = 10; f_cell[1] = 0;
+	f2_cell[0] = 11; f2_cell[1] = 1;
 	f3_cell[0] = 0; f3_cell[1] = 4;
 	f4_cell[0] = 1; f4_cell[1] = 5;
 	f5_cell[0] = 7; f5_cell[1] = 7;
-	f6_cell[0] = 4; f6_cell[1] = 0;
-	f7_cell[0] = 5; f7_cell[1] = 1;
+	f6_cell[0] = 15; f6_cell[1] = 0;
+	f7_cell[0] = 16; f7_cell[1] = 1;
 	f8_cell[0] = 8; f8_cell[1] = 8;
 	f9_cell[0] = 8; f9_cell[1] = 7;
 
@@ -750,7 +800,7 @@ void Game::DebugDrawStats() {
 
 
 	// Draw each maptiles mapcell with position
-	std::string s3, s4, tilepos;
+	std::string s3, s4, tilepos, tiletype;
 	for (auto it : *EntitiesStorage::Get()->GetMapTilesStorage()) {
 
 
@@ -765,6 +815,11 @@ void Game::DebugDrawStats() {
 
 		tilepos = "X: " + std::to_string(it->m_TransformCmp->m_PosX) + " : " + " Y: " + std::to_string(it->m_TransformCmp->m_PosY);
 		DrawString(olc::vi2d(it->m_TransformCmp->m_PosX, it->m_TransformCmp->m_PosY + 40), tilepos, olc::DARK_RED, 1.0f);
+
+
+		
+		tiletype = MapTileTypeToString(reinterpret_cast<MapTile*>(it));
+		DrawString(olc::vi2d(it->m_TransformCmp->m_PosX, it->m_TransformCmp->m_PosY + 60), tiletype, olc::RED, 1.0f);
 
 	}
 
@@ -1354,7 +1409,9 @@ void ForestSearch::_checkForNewForestCreation(Forest* forest) {
 	if (other_forest) { // is there forest on upper left..
 
 		// Check first, if the forest has same class as this one, else skip everything.
+		// And check whether the maptile is right for this forest to grow.
 		if (!forest->HasSameForestClass(other_forest)) return;
+		if (!MapTileAppropriteForForest(GetMapTileAtWorldPosition(forest_worldcell[0] - 1, forest_worldcell[1] - 1), forest)) return;
 
 		// check for needed type of forest --> forest_normal.
 		// We may change this logic later.
@@ -1395,6 +1452,7 @@ void ForestSearch::_checkForNewForestCreation(Forest* forest) {
 
 		// Check first, if the forest has same class as this one, else skip everything.
 		if (!forest->HasSameForestClass(other_forest)) return;
+		if (!MapTileAppropriteForForest(GetMapTileAtWorldPosition(forest_worldcell[0] + 1, forest_worldcell[1] - 1), forest)) return;
 
 		if (other_forest->m_GraphicsCmp->m_SpriteName.find("normal") != std::string::npos) {
 
@@ -1425,6 +1483,7 @@ void ForestSearch::_checkForNewForestCreation(Forest* forest) {
 
 		// Check first, if the forest has same class as this one, else skip everything.
 		if (!forest->HasSameForestClass(other_forest)) return;
+		if (!MapTileAppropriteForForest(GetMapTileAtWorldPosition(forest_worldcell[0] - 1, forest_worldcell[1] + 1), forest)) return;
 
 
 		if (other_forest->m_GraphicsCmp->m_SpriteName.find("normal") != std::string::npos) {
@@ -1457,6 +1516,7 @@ void ForestSearch::_checkForNewForestCreation(Forest* forest) {
 
 		// Check first, if the forest has same class as this one, else skip everything.
 		if (!forest->HasSameForestClass(other_forest)) return;
+		if (!MapTileAppropriteForForest(GetMapTileAtWorldPosition(forest_worldcell[0] + 1, forest_worldcell[1] + 1), forest)) return;
 
 
 		if (other_forest->m_GraphicsCmp->m_SpriteName.find("normal") != std::string::npos) {
@@ -1513,6 +1573,7 @@ void ForestSearch::_spawnRandomForestAroundDeepOne(Forest* deepForest) {
 
 			// Check whether this new tile is out of map...
 			if (IsIndexOutOfBound(deepForestCell[0] - 1, deepForestCell[1] - 1)) break;
+			if (!MapTileAppropriteForForest(GetMapTileAtWorldPosition(deepForestCell[0] - 1, deepForestCell[1] - 1), deepForest)) return;
 
 			// Empty tile --> create forest.
 			int xpos = GetXPositionOfMapTile(GetMapTileAtWorldPosition(deepForestCell[0] - 1, deepForestCell[1] - 1));
@@ -1532,6 +1593,7 @@ void ForestSearch::_spawnRandomForestAroundDeepOne(Forest* deepForest) {
 
 			// Check whether this new tile is out of map...
 			if (IsIndexOutOfBound(deepForestCell[0], deepForestCell[1] - 1)) break;
+			if (!MapTileAppropriteForForest(GetMapTileAtWorldPosition(deepForestCell[0], deepForestCell[1] - 1), deepForest)) return;
 
 
 			// Empty tile --> create forest.
@@ -1553,6 +1615,7 @@ void ForestSearch::_spawnRandomForestAroundDeepOne(Forest* deepForest) {
 
 			// Check whether this new tile is out of map...
 			if (IsIndexOutOfBound(deepForestCell[0] + 1, deepForestCell[1] - 1)) break;
+			if (!MapTileAppropriteForForest(GetMapTileAtWorldPosition(deepForestCell[0] + 1, deepForestCell[1] - 1), deepForest)) return;
 
 			// Empty tile --> create forest.
 			int xpos = GetXPositionOfMapTile(GetMapTileAtWorldPosition(deepForestCell[0] + 1, deepForestCell[1] - 1));
@@ -1572,6 +1635,7 @@ void ForestSearch::_spawnRandomForestAroundDeepOne(Forest* deepForest) {
 
 			// Check whether this new tile is out of map...
 			if (IsIndexOutOfBound(deepForestCell[0] - 1, deepForestCell[1])) break;
+			if (!MapTileAppropriteForForest(GetMapTileAtWorldPosition(deepForestCell[0] - 1, deepForestCell[1]), deepForest)) return;
 
 
 			// Empty tile --> create forest.
@@ -1593,6 +1657,7 @@ void ForestSearch::_spawnRandomForestAroundDeepOne(Forest* deepForest) {
 
 			// Check whether this new tile is out of map...
 			if (IsIndexOutOfBound(deepForestCell[0] + 1, deepForestCell[1])) break;
+			if (!MapTileAppropriteForForest(GetMapTileAtWorldPosition(deepForestCell[0] + 1, deepForestCell[1]), deepForest)) return;
 
 
 			// Empty tile --> create forest.
@@ -1612,6 +1677,7 @@ void ForestSearch::_spawnRandomForestAroundDeepOne(Forest* deepForest) {
 
 			// Check whether this new tile is out of map...
 			if (IsIndexOutOfBound(deepForestCell[0] - 1, deepForestCell[1] + 1)) break;
+			if (!MapTileAppropriteForForest(GetMapTileAtWorldPosition(deepForestCell[0] - 1, deepForestCell[1] + 1), deepForest)) return;
 
 
 			// Empty tile --> create forest.
@@ -1631,6 +1697,9 @@ void ForestSearch::_spawnRandomForestAroundDeepOne(Forest* deepForest) {
 
 			// Check whether this new tile is out of map...
 			if (IsIndexOutOfBound(deepForestCell[0], deepForestCell[1] + 1)) break;
+			if (!MapTileAppropriteForForest(GetMapTileAtWorldPosition(deepForestCell[0], deepForestCell[1] + 1), deepForest)) return;
+
+
 
 			// Empty tile --> create forest.
 			int xpos = GetXPositionOfMapTile(GetMapTileAtWorldPosition(deepForestCell[0], deepForestCell[1] + 1));
@@ -1650,6 +1719,7 @@ void ForestSearch::_spawnRandomForestAroundDeepOne(Forest* deepForest) {
 
 			// Check whether this new tile is out of map...
 			if (IsIndexOutOfBound(deepForestCell[0] + 1, deepForestCell[1] + 1)) break;
+			if (!MapTileAppropriteForForest(GetMapTileAtWorldPosition(deepForestCell[0] + 1, deepForestCell[1] + 1), deepForest)) return;
 
 
 			int xpos = GetXPositionOfMapTile(GetMapTileAtWorldPosition(deepForestCell[0] + 1, deepForestCell[1] + 1));

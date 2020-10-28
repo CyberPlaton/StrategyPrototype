@@ -19,17 +19,22 @@ void WorldMapDrawingOptions::_createMap() {
 
 	EntitiesStorage* storage = EntitiesStorage::Get();
 
+	int random_num;
 
 	// MapTileArray initialization
 	for (int i = 0; i <= m_MapWidth; i++) {
 
 		for (int j = 0; j <= m_MapHeight; j++) {
 
-			
-			m_MapDefinitions->at(i).at(j) = new MapTile("MapTile", "layer4", i*SPRITES_WIDTH_AND_HEIGHT, j* SPRITES_WIDTH_AND_HEIGHT);
-
-			// Define map as purely temperate ground
-			m_MapDefinitions->at(i).at(j)->m_GraphicsCmp->m_SpriteName = "temperate";
+			if (i < 10) {
+				m_MapDefinitions->at(i).at(j) = new MapTile("temperate", "layer4", i * SPRITES_WIDTH_AND_HEIGHT, j * SPRITES_WIDTH_AND_HEIGHT);
+			}
+			else if (i >= 10 && i < 15) {
+				m_MapDefinitions->at(i).at(j) = new MapTile("savannah", "layer4", i * SPRITES_WIDTH_AND_HEIGHT, j * SPRITES_WIDTH_AND_HEIGHT);
+			}
+			else if(i >= 15){
+				m_MapDefinitions->at(i).at(j) = new MapTile("tundra", "layer4", i * SPRITES_WIDTH_AND_HEIGHT, j * SPRITES_WIDTH_AND_HEIGHT);
+			}
 
 			storage->AddGameEntitie(m_MapDefinitions->at(i).at(j)); // Add Maptile to EntitiesStorage.
 

@@ -1,13 +1,15 @@
 ﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(476,5): warning MSB8004: Intermediate Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Intermediate Directory.
 C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(477,5): warning MSB8004: Output Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Output Directory.
   StrategyPrototype.cpp
-C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(738,45): warning C4244: 'argument': conversion from 'float' to 'uint32_t', possible loss of data
-C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(741,52): warning C4244: 'argument': conversion from 'float' to 'uint32_t', possible loss of data
-C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(744,54): warning C4244: 'argument': conversion from 'float' to 'uint32_t', possible loss of data
-C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(748,52): warning C4244: 'argument': conversion from 'float' to 'uint32_t', possible loss of data
-C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(759,95): warning C4244: 'argument': conversion from 'float' to 'uint32_t', possible loss of data
-C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(763,103): warning C4244: 'argument': conversion from 'float' to 'uint32_t', possible loss of data
-C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(767,110): warning C4244: 'argument': conversion from 'float' to 'uint32_t', possible loss of data
-C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(1091,16): warning C4101: 'err': unreferenced local variable
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(788,45): warning C4244: 'argument': conversion from 'float' to 'uint32_t', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(791,52): warning C4244: 'argument': conversion from 'float' to 'uint32_t', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(794,54): warning C4244: 'argument': conversion from 'float' to 'uint32_t', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(798,52): warning C4244: 'argument': conversion from 'float' to 'uint32_t', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(809,95): warning C4244: 'argument': conversion from 'float' to 'uint32_t', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(813,103): warning C4244: 'argument': conversion from 'float' to 'uint32_t', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(817,110): warning C4244: 'argument': conversion from 'float' to 'uint32_t', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(822,106): warning C4244: 'argument': conversion from 'float' to 'uint32_t', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(1146,16): warning C4101: 'err': unreferenced local variable
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(52): warning C4715: 'MapTileAppropriteForForest': not all control paths return a value
 C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\Components.h(132): warning C4715: 'CMPArtificialIntelligence::TryExecuteStateLogic': not all control paths return a value
   StrategyPrototype.vcxproj -> C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\\StrategyPrototype\bin\Debug-Win32\StrategyPrototype\StrategyPrototype.exe
