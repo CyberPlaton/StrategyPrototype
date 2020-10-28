@@ -5,6 +5,8 @@
 class MapTile;
 class MapRessource;
 class Forest;
+struct MapTileRegion;
+class Game;
 typedef std::array<std::array<MapTile*, 20>, 20> MapTileArray;
 
 #define MAP_SIZE 20
@@ -63,6 +65,7 @@ struct CityRessource : public GameEntity {
 		m_IDCmp->m_DynamicTypeName = "CityRessource";
 		m_RessourceName = name;
 
+		// For testing purpose te graphics are none.
 		m_GraphicsCmp = new CMPGraphics();
 		m_GraphicsCmp->m_SpriteName = spritename;
 
@@ -72,9 +75,10 @@ struct CityRessource : public GameEntity {
 
 	}
 
-
 	void IncreaseCount(int n) { m_RessourceCount += n; }
 	void DecreaseCount(int n) { m_RessourceCount -= n; }
+
+
 
 	std::string m_RessourceName;
 	unsigned int m_RessourceCount = 0;
@@ -123,14 +127,64 @@ struct MapRessource : public GameEntity{
 
 class City : public GameEntity {
 public:
-	City();
+
+	enum class CitySizeClass {
+		CITY_SIZE_CLASS_INVALID = -1,
+		CITY_SIZE_CLASS_NORMAL = 0,
+		CITY_SIZE_CLASS_BIG = 1,
+		CITY_SIZE_CLASS_HUGE = 2
+	};
+	
+
+public:
+	City(std::string cityname, std::string spritename, int xpos, int ypos) {
+
+		m_IDCmp->m_DynamicTypeName = "City";
+		
+		m_CityName = cityname;
+
+		m_GraphicsCmp = new CMPGraphics();
+		m_GraphicsCmp->m_DrawingLayer = "layer2";
+		m_GraphicsCmp->m_SpriteName = spritename;
+
+
+		m_TransformCmp->m_PosX = xpos;
+		m_TransformCmp->m_PosY = ypos;
+
+		
+		m_AICmp = new CMPArtificialIntelligence(this);
+
+	}
+
 	~City() = default;
 
 
 
+	void ClaimRegions();
+
+	std::string m_CityName;
+	unsigned int m_CitySize;
+	CitySizeClass m_CitySizeClass = CitySizeClass::CITY_SIZE_CLASS_INVALID;
+
+	std::map<std::string, CityRessource*> m_CityRessourcesMap;
+	std::map<std::string, GameEntity*> m_PresentUnitsMap;
+
+	std::vector<MapTileRegion*> m_ClaimedRegions;
+
 
 private:
 
+	void _updateCitySizeClass() {
+		if (m_CitySize < 16) m_CitySizeClass = CitySizeClass::CITY_SIZE_CLASS_NORMAL;
+		else if(m_CitySize >= 17 && m_CitySize < 31) m_CitySizeClass = CitySizeClass::CITY_SIZE_CLASS_BIG;
+		else if(m_CitySize >= 31) m_CitySizeClass = CitySizeClass::CITY_SIZE_CLASS_HUGE;
+		else m_CitySizeClass = CitySizeClass::CITY_SIZE_CLASS_INVALID;
+	}
+
+
+	void _claimRegion(MapTileRegion* region) {
+		m_ClaimedRegions.push_back(region);
+	}
 };
 
 
@@ -294,6 +348,35 @@ public:
 };
 
 
+struct MapTileRegion : public GameEntity{
+	MapTileRegion() {
+		m_IDCmp->m_DynamicTypeName = "MapTileRegion";
+
+		// Our MapTileRegion is an abstract entity that combines real maptiles.
+		// Thus the region does not have a particular position, nor a graphical representation.
+		// If there should be an overlay sprite for the region, use the saved MapTiles to get the coords.
+		delete m_TransformCmp;
+		m_TransformCmp = nullptr;
+
+		m_GraphicsCmp = new CMPGraphics();
+		m_GraphicsCmp->m_DrawingLayer = "layer2";
+		m_GraphicsCmp->m_SpriteName = "map_cell_orange";
+	}
+
+	void AddTileToRegion(MapTile* maptile) {
+		if (maptile != nullptr) m_MapTileRegionTiles.push_back(maptile);
+	}
+
+	void RemoveTileFromRegion(MapTile* maptile) {
+		std::vector<MapTile*>::iterator it = std::find(m_MapTileRegionTiles.begin(), m_MapTileRegionTiles.end(), maptile);
+		if (it != m_MapTileRegionTiles.end()) m_MapTileRegionTiles.erase(it);
+	}
+
+
+	std::vector<MapTile*> m_MapTileRegionTiles;
+};
+
+
 
 struct EntitiesStorage {
 
@@ -302,7 +385,7 @@ struct EntitiesStorage {
 	std::vector< GameEntity* >* GetStorage() { return m_GameEntitiesVec; }
 	std::vector< GameEntity* >* GetMapTilesStorage() { return m_MapTileGameEntitiesVec; }
 	std::vector< GameEntity* >* GetMapViewRessources() { return m_MapViewRessourcesVec; }
-	
+	std::vector< GameEntity* >* GetCitiesVec() { return m_CityVec; }
 
 
 	void AddGameEntitie(GameEntity* e) {
@@ -328,6 +411,11 @@ struct EntitiesStorage {
 			// Is it a mapressource?
 			if (_isMapViewRessource(e)) {
 				_addMapViewRessource(e);
+			}
+
+			// Is it a city?
+			if (_isCity(e)) {
+				_addCity(e);
 			}
 
 		}
@@ -402,6 +490,15 @@ struct EntitiesStorage {
 
 		}
 		
+
+		// Delete city from CityVec.
+		if (_isCity(e)) {
+			std::vector< GameEntity* >::iterator it = std::find(m_CityVec->begin(), m_CityVec->end(), e);
+
+			if (it != m_CityVec->end()) {
+				m_CityVec->erase(it);
+			}
+		}
 	}
 
 	void DeleteGameEntitie(CMPIdentifier* id) {
@@ -442,6 +539,7 @@ private:
 	std::vector< GameEntity* >* m_GameEntitiesVec; // Holds all entities ingame.
 	std::vector<GameEntity*>* m_GameEntitiesWithAIVec; // Holds entities in game with AI.
 	std::vector<GameEntity*>* m_MapViewRessourcesVec; // Holds all ressources in game, that are explicitly on the mapview.
+	std::vector<GameEntity*>* m_CityVec; // Holds all cities in the game.
 
 private:
 	EntitiesStorage() = default;
@@ -455,6 +553,12 @@ private:
 		m_MapTileGameEntitiesVec = new std::vector<GameEntity*>();
 
 		m_MapViewRessourcesVec = new std::vector<GameEntity*>();
+		m_CityVec = new std::vector<GameEntity*>();
+	}
+
+
+	void _addCity(GameEntity* e) {
+		m_CityVec->push_back(e);
 	}
 
 	void _addMapViewRessource(GameEntity* e) {
@@ -508,6 +612,16 @@ private:
 			return false;
 		}
 
+	}
+
+
+	bool _isCity(GameEntity* e) {
+
+		if (e != nullptr) {
+			if (COMPARE_STRINGS(e->m_IDCmp->m_DynamicTypeName, "City") == 0) return true;
+		}
+
+		return false;
 	}
 };
 

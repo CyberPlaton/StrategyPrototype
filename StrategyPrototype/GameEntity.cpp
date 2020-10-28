@@ -148,3 +148,31 @@ void Forest::Update() {
 		break;
 	}
 }
+
+
+void City::ClaimRegions() {
+
+	MapTileRegion* region = new MapTileRegion();
+
+	// Normal
+	region->AddTileToRegion(GetMapTileAtWorldPosition(1, 0));
+	region->AddTileToRegion(GetMapTileAtWorldPosition(2, 0));
+
+	region->AddTileToRegion(GetMapTileAtWorldPosition(-1, 0));
+	region->AddTileToRegion(GetMapTileAtWorldPosition(-2, 0));
+
+	region->AddTileToRegion(GetMapTileAtWorldPosition(0, 1));
+	region->AddTileToRegion(GetMapTileAtWorldPosition(0, 2));
+
+	region->AddTileToRegion(GetMapTileAtWorldPosition(0, -1));
+	region->AddTileToRegion(GetMapTileAtWorldPosition(0, -2));
+	
+	// Diagonal
+	region->AddTileToRegion(GetMapTileAtWorldPosition(1, 1));
+	region->AddTileToRegion(GetMapTileAtWorldPosition(-1, -1));
+	region->AddTileToRegion(GetMapTileAtWorldPosition(1, -1));
+	region->AddTileToRegion(GetMapTileAtWorldPosition(-1, 1));
+
+
+	m_ClaimedRegions.push_back(region);
+}

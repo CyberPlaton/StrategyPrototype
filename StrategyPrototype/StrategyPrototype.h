@@ -129,6 +129,9 @@ private:
 
 private:
 	void _drawGrid();
+
+	void _drawMapTileRegionRect(MapTileRegion* region);
+
 };
 
 
@@ -142,6 +145,7 @@ public:
 	bool OnUserCreate() override;
 	bool OnUserUpdate(float fElapsedTime) override;
 
+	olc::Pixel* RandomColor();
 
 	void DebugDrawStats();
 

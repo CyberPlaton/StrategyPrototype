@@ -2,6 +2,52 @@
 
 static olc::vf2d g_vi2dCameraPosition = olc::vf2d(0.0f, 0.0f);
 
+olc::Pixel* Game::RandomColor(){
+
+	int r = rand() % 6;
+
+	switch (r){
+	case 0:
+		return &olc::Pixel(olc::BLUE);
+		break;
+	case 1:
+		return &olc::Pixel(olc::GREEN);
+		break;
+	case 2:
+		return &olc::Pixel(olc::RED);
+		break;
+	case 3:
+		return &olc::Pixel(olc::MAGENTA);
+		break;
+	case 4:
+		return &olc::Pixel(olc::YELLOW);
+		break;
+	case 5:
+		return &olc::Pixel(olc::CYAN);
+		break;
+	default:
+		break;
+	}
+}
+
+void Renderer::_drawMapTileRegionRect(MapTileRegion* region) {
+
+	using namespace olc;
+	MapTile* maptile = nullptr;
+
+	for (auto it = region->m_MapTileRegionTiles.begin(); it != region->m_MapTileRegionTiles.end(); ++it) {
+
+		maptile = *it;
+
+		// We want to draw the rectangles with specific to the city color.
+		m_Game->DrawDecal(vi2d(maptile->m_TransformCmp->m_PosX, maptile->m_TransformCmp->m_PosY),
+							   m_Game->m_SpriteResourceMap.at(region->m_GraphicsCmp->m_SpriteName));
+	}
+}
+
+
+
+
 std::string MapTileTypeToString(MapTile* tile) {
 
 	if (tile->m_MapTileType == MapTile::MapTileType::MAPTILE_TYPE_ICE) return "ICE";
@@ -590,6 +636,24 @@ void Game::_loadSpriteResources() {
 	m_SpriteResourceMap.insert(std::make_pair("map_cell_red", dc7));
 	m_SpriteResourceMap.insert(std::make_pair("map_cell_yellow", dc8));
 
+
+
+
+	// Load cities
+	Sprite* city1 = new Sprite("assets/city/orc/city_orc_huge.png");
+
+	
+	m_SpriteStorage.push_back(city1);
+
+
+
+	Decal* dcity1 = new Decal(city1);
+
+
+
+	m_SpriteResourceMap.insert(std::make_pair("city_orc_huge", dcity1));
+
+
 }
 
 
@@ -665,6 +729,16 @@ bool Game::OnUserCreate() {
 	storage->AddGameEntitie(r4);
 	storage->AddGameEntitie(r5);
 	storage->AddGameEntitie(r6);
+
+
+
+
+	// Some testing with cities.
+	City* city = new City("Durotar", "city_orc_huge", 0, 0);
+	city->ClaimRegions();
+
+	storage->AddGameEntitie(city);
+
 
 	return true;
 }
@@ -1006,10 +1080,36 @@ void Renderer::Render2Layer2() {
 	}
 
 
-	// Then, we can draw improvements, roads etc.
+	// Then, we can draw improvements, roads, cities ...
 	// For this, we iterate through a specially define vector and draw everything like above in
 	// the correct local order...
 	// ...
+
+	//Secondly, draw cities.
+	vec = *storage->GetCitiesVec();
+
+	City* city = nullptr;
+	MapTileRegion* region = nullptr;
+
+	for (auto it = vec.begin(); it != vec.end(); ++it) {
+
+		city = reinterpret_cast<City*>(*it);
+
+		// Draw appropriate loaded sprite on position specified.
+		m_Game->DrawDecal(vi2d(city->m_TransformCmp->m_PosX, city->m_TransformCmp->m_PosY),
+			m_Game->m_SpriteResourceMap.at(city->m_GraphicsCmp->m_SpriteName));
+
+
+		// Test, draw region around city.
+
+		for (auto it = city->m_ClaimedRegions.begin(); it != city->m_ClaimedRegions.end(); ++it) {
+
+			region = *it;
+
+			_drawMapTileRegionRect(region);
+		}
+	}
+
 
 
 	m_Game->EnableLayer(m_Layer2, true);
