@@ -437,14 +437,37 @@ void Game::_loadSpriteResources() {
 
 	// Mapview Ressources
 	Sprite* r1 = new Sprite("assets/ressources/mapview/ressource_map_bear.png");
+	Sprite* r2 = new Sprite("assets/ressources/mapview/ressource_map_boar.png");
+	Sprite* r3 = new Sprite("assets/ressources/mapview/ressource_map_deer.png");
+	Sprite* r4 = new Sprite("assets/ressources/mapview/ressource_map_horse.png");
+	Sprite* r5 = new Sprite("assets/ressources/mapview/ressource_map_raptor.png");
+	Sprite* r6 = new Sprite("assets/ressources/mapview/ressource_map_guar.png");
+
 
 	m_SpriteStorage.push_back(r1);
+	m_SpriteStorage.push_back(r2);
+	m_SpriteStorage.push_back(r3);
+	m_SpriteStorage.push_back(r4);
+	m_SpriteStorage.push_back(r5);
+	m_SpriteStorage.push_back(r6);
+
 
 
 	// Decals for mapressources
 	Decal* dr1 = new Decal(r1);
+	Decal* dr2 = new Decal(r2);
+	Decal* dr3 = new Decal(r3);
+	Decal* dr4 = new Decal(r4);
+	Decal* dr5 = new Decal(r5);
+	Decal* dr6 = new Decal(r6);
+
 
 	m_SpriteResourceMap.insert(std::make_pair("ressource_map_bear", dr1));
+	m_SpriteResourceMap.insert(std::make_pair("ressource_map_boar", dr2));
+	m_SpriteResourceMap.insert(std::make_pair("ressource_map_deer", dr3));
+	m_SpriteResourceMap.insert(std::make_pair("ressource_map_horse", dr4));
+	m_SpriteResourceMap.insert(std::make_pair("ressource_map_raptor", dr5));
+	m_SpriteResourceMap.insert(std::make_pair("ressource_map_guar", dr6));
 
 
 
@@ -620,8 +643,13 @@ bool Game::OnUserCreate() {
 
 	// Ressources are just a sprite on the map.
 	MapRessource* r1 = new MapRessource("Bear", "ressource_map_bear", 384, 128);
-	MapRessource* r2 = new MapRessource("Bear", "ressource_map_bear", 128, 384);
-	MapRessource* r3 = new MapRessource("Bear", "ressource_map_bear", 128, 128);
+	MapRessource* r2 = new MapRessource("Raptor", "ressource_map_raptor", 128, 384);
+	MapRessource* r3 = new MapRessource("Horse", "ressource_map_horse", 128, 0);
+	MapRessource* r4 = new MapRessource("Boar", "ressource_map_boar", 384, 128);
+	MapRessource* r5 = new MapRessource("Guar", "ressource_map_guar", 512, 384);
+	MapRessource* r6 = new MapRessource("Deer", "ressource_map_deer", 512, 128);
+
+
 
 	r1->MapRessourceYield("Meat", 3);
 	r1->MapRessourceYield("Hide", 5);
@@ -634,11 +662,9 @@ bool Game::OnUserCreate() {
 	storage->AddGameEntitie(r1);
 	storage->AddGameEntitie(r2);
 	storage->AddGameEntitie(r3);
-	
-
-
-
-
+	storage->AddGameEntitie(r4);
+	storage->AddGameEntitie(r5);
+	storage->AddGameEntitie(r6);
 
 	return true;
 }
