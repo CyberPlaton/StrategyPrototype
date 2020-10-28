@@ -1,8 +1,6 @@
 #include "GameEntity.h"
 
 EntitiesStorage* EntitiesStorage::m_EntitiesStorage = nullptr;
-
-
 WorldMap* WorldMap::m_WorldMapInstance = nullptr;
 
 void WorldMap::SetMapOptions(WorldMapDrawingOptions* worldDef) {

@@ -3,6 +3,7 @@
 #include"FiniteStateMachine.h"
 
 class MapTile;
+class MapRessource;
 class Forest;
 typedef std::array<std::array<MapTile*, 20>, 20> MapTileArray;
 
@@ -44,24 +45,7 @@ public:
 		m_IDCmp->m_DynamicTypeName = "GameEntity";
 
 		m_TransformCmp = new CMPTransform();
-		
-		/*
-		m_PhysicsCmp = new CMPPhysics();
-		m_GraphicsCmp = new CMPGraphics();
-		m_AICmp = new CMPArtificialIntelligence(this);
-		m_FSM = new FiniteStateMachine(States::STATE_INVALID);
-		*/
 	}
-
-	/*
-	void UpdateMapCellCoords() {
-
-		if (m_TransformCmp) {
-			m_TransformCmp->m_GameWorldSpaceCell[0] = (int)m_TransformCmp->m_PosX / SPRITES_WIDTH_AND_HEIGHT;
-			m_TransformCmp->m_GameWorldSpaceCell[1] = (int)m_TransformCmp->m_PosY / SPRITES_WIDTH_AND_HEIGHT;
-		}
-	}
-	*/
 
 	// Basic components for an Entity.
 	CMPIdentifier* m_IDCmp = nullptr;
@@ -73,8 +57,33 @@ public:
 };
 
 
+struct CityRessource : public GameEntity {
+	CityRessource(std::string name, std::string spritename, int xpos, int ypos) {
+
+		m_IDCmp->m_DynamicTypeName = "CityRessource";
+		m_RessourceName = name;
+
+		m_GraphicsCmp = new CMPGraphics();
+		m_GraphicsCmp->m_SpriteName = spritename;
+
+		m_TransformCmp->m_PosX = xpos;
+		m_TransformCmp->m_PosY = ypos;
+
+
+	}
+
+
+	void IncreaseCount(int n) { m_RessourceCount += n; }
+	void DecreaseCount(int n) { m_RessourceCount -= n; }
+
+	std::string m_RessourceName;
+	unsigned int m_RessourceCount = 0;
+};
+
+
+
 struct MapRessource : public GameEntity{
-	MapRessource(std::string ressourcename, std::string spritename, int xpos, int ypos, int initialGatheringYield) {
+	MapRessource(std::string ressourcename, std::string spritename, int xpos, int ypos) {
 
 		m_IDCmp->m_DynamicTypeName = "MapRessource";
 		m_RessourceName = ressourcename;
@@ -86,18 +95,29 @@ struct MapRessource : public GameEntity{
 		m_GraphicsCmp = new CMPGraphics();
 		m_GraphicsCmp->m_DrawingLayer = "layer2";
 		m_GraphicsCmp->m_SpriteName = spritename;
-
-
-		m_AICmp = new CMPArtificialIntelligence(this); // AI is needed to determine yield changes and other logic.
-		m_GatheringYield = initialGatheringYield; // This will change dynamically based on improvements around and on specific tile.
 	}
 
 	~MapRessource() = default;
 
 
+	void MapRessourceYield(std::string ressourcename, unsigned int yield) {
+
+		m_RessourceYieldMap.insert(std::make_pair(ressourcename, yield));
+	}
+
+
+	void UnmapRessourceYield(std::string ressourcename) {
+		
+		m_RessourceYieldMap.erase(m_RessourceYieldMap.find(ressourcename));
+	}
+
+
+	unsigned int GetRessourceYield(std::string ressourcename){
+		return(m_RessourceYieldMap.find(ressourcename)->second);
+	}
 
 	std::string m_RessourceName;
-	int m_GatheringYield = 0;
+	std::map<std::string, int> m_RessourceYieldMap;
 };
 
 

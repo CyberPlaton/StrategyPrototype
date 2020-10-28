@@ -4,16 +4,16 @@ static olc::vf2d g_vi2dCameraPosition = olc::vf2d(0.0f, 0.0f);
 
 std::string MapTileTypeToString(MapTile* tile) {
 
-	if (tile->m_MapTileType == MapTile::MapTileType::MAPTILE_TYPE_ICE) return "MAPTILE_TYPE_ICE";
-	else if (tile->m_MapTileType == MapTile::MapTileType::MAPTILE_TYPE_SAND) return "MAPTILE_TYPE_SAND";
-	else if (tile->m_MapTileType == MapTile::MapTileType::MAPTILE_TYPE_SAVANNAH) return "MAPTILE_TYPE_SAVANNAH";
-	else if (tile->m_MapTileType == MapTile::MapTileType::MAPTILE_TYPE_SNOW) return "MAPTILE_TYPE_SNOW";
-	else if (tile->m_MapTileType == MapTile::MapTileType::MAPTILE_TYPE_TEMPERATE) return "MAPTILE_TYPE_TEMPERATE";
-	else if (tile->m_MapTileType == MapTile::MapTileType::MAPTILE_TYPE_TUNDRA) return "MAPTILE_TYPE_TUNDRA";
-	else if (tile->m_MapTileType == MapTile::MapTileType::MAPTILE_TYPE_WATER_DEEP) return "MAPTILE_TYPE_WATER_DEEP";
-	else if (tile->m_MapTileType == MapTile::MapTileType::MAPTILE_TYPE_WATER_SHALLOW) return "MAPTILE_TYPE_WATER_SHALLOW";
+	if (tile->m_MapTileType == MapTile::MapTileType::MAPTILE_TYPE_ICE) return "ICE";
+	else if (tile->m_MapTileType == MapTile::MapTileType::MAPTILE_TYPE_SAND) return "SAND";
+	else if (tile->m_MapTileType == MapTile::MapTileType::MAPTILE_TYPE_SAVANNAH) return "SAVANNAH";
+	else if (tile->m_MapTileType == MapTile::MapTileType::MAPTILE_TYPE_SNOW) return "SNOW";
+	else if (tile->m_MapTileType == MapTile::MapTileType::MAPTILE_TYPE_TEMPERATE) return "TEMPERATE";
+	else if (tile->m_MapTileType == MapTile::MapTileType::MAPTILE_TYPE_TUNDRA) return "TUNDRA";
+	else if (tile->m_MapTileType == MapTile::MapTileType::MAPTILE_TYPE_WATER_DEEP) return "WATER_DEEP";
+	else if (tile->m_MapTileType == MapTile::MapTileType::MAPTILE_TYPE_WATER_SHALLOW) return "WATER_SHALLOW";
 
-	else return "MAPTILE_TYPE_INVALID";
+	else return "TYPE_INVALID";
 }
 
 bool MapTileAppropriteForForest(MapTile* tile, Forest* forest) {
@@ -605,57 +605,36 @@ bool Game::OnUserCreate() {
 
 
 	// Create some forests for testing.
-	/*
-	NOTE:
-	If we create a forest, it is meant he is scarce from beginning.
-	*/
-	int f_cell[2], f2_cell[2], f3_cell[2] , f4_cell[2], f5_cell[2], f6_cell[2], f7_cell[2], f8_cell[2], f9_cell[2];
-	f_cell[0] = 10; f_cell[1] = 0;
-	f2_cell[0] = 11; f2_cell[1] = 1;
-	f3_cell[0] = 0; f3_cell[1] = 4;
-	f4_cell[0] = 1; f4_cell[1] = 5;
-	f5_cell[0] = 7; f5_cell[1] = 7;
-	f6_cell[0] = 15; f6_cell[1] = 0;
-	f7_cell[0] = 16; f7_cell[1] = 1;
-	f8_cell[0] = 8; f8_cell[1] = 8;
-	f9_cell[0] = 8; f9_cell[1] = 7;
+	Forest* f, * f2, * f3;
 
-	Forest* f, *f2, *f3, *f4, *f5, *f6, *f7, *f8, *f9 = nullptr;
-
-
-	f = MakeNewForest("forest_savannah_deep", f_cell[0], f_cell[1]);
-	f2 = MakeNewForest("forest_savannah_deep", f2_cell[0], f2_cell[1]);
-	f3 = MakeNewForest("forest_jungle_deep", f3_cell[0], f3_cell[1]);
-	f4 = MakeNewForest("forest_jungle_deep", f4_cell[0], f4_cell[1]);
-	f5 = MakeNewForest("forest_temperate_deep", f5_cell[0], f5_cell[1]);
-	f6 = MakeNewForest("forest_tundra_deep", f6_cell[0], f6_cell[1]);
-	f7 = MakeNewForest("forest_tundra_deep", f7_cell[0], f7_cell[1]);
-	f8 = MakeNewForest("forest_temperate_deep", f8_cell[0], f8_cell[1]);
-	f9 = MakeNewForest("forest_temperate_scarce", f9_cell[0], f9_cell[1]);
+	f = MakeNewForest("forest_temperate_deep", 3, 3);
+	f2 = MakeNewForest("forest_temperate_deep", 4, 4);
+	f3 = MakeNewForest("forest_temperate_deep", 5, 5);
 	
 
 	EntitiesStorage* storage = EntitiesStorage::Get();
 	storage->AddGameEntitie(f);
 	storage->AddGameEntitie(f2);
 	storage->AddGameEntitie(f3);
-	storage->AddGameEntitie(f4);
-	storage->AddGameEntitie(f5);
-	storage->AddGameEntitie(f6);
-	storage->AddGameEntitie(f7);
-	storage->AddGameEntitie(f8);
-	storage->AddGameEntitie(f9);
 
 
+	// Ressources are just a sprite on the map.
+	MapRessource* r1 = new MapRessource("Bear", "ressource_map_bear", 384, 128);
+	MapRessource* r2 = new MapRessource("Bear", "ressource_map_bear", 128, 384);
+	MapRessource* r3 = new MapRessource("Bear", "ressource_map_bear", 128, 128);
 
+	r1->MapRessourceYield("Meat", 3);
+	r1->MapRessourceYield("Hide", 5);
+	r2->MapRessourceYield("Meat", 3);
+	r2->MapRessourceYield("Hide", 5);
+	r3->MapRessourceYield("Meat", 3);
+	r3->MapRessourceYield("Hide", 5);
 
-	MapRessource* r1 = new MapRessource("Bear", "ressource_map_bear", 384, 128, 5);
-	MapRessource* r2 = new MapRessource("Bear", "ressource_map_bear", 128, 384, 5);
-	MapRessource* r3 = new MapRessource("Bear", "ressource_map_bear", 128, 128, 5);
 
 	storage->AddGameEntitie(r1);
 	storage->AddGameEntitie(r2);
 	storage->AddGameEntitie(r3);
-
+	
 
 
 
