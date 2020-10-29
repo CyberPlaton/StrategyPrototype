@@ -34,7 +34,7 @@ MapTile* GetMapTileAtXYPosition(int x, int y) {
 	MapTile* maptile = nullptr;
 
 	for (auto it = vec.begin(); it != vec.end(); ++it) {
-
+		
 		maptile = reinterpret_cast<MapTile*>(*it);
 
 		if (maptile->m_TransformCmp->m_PosX == x && maptile->m_TransformCmp->m_PosY == y) return maptile;
