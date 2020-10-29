@@ -13,19 +13,20 @@ temperate,temperate,temperate,temperate,temperate,water_shallow,water_shallow,wa
 maptiles;
 water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,savannah,savannah,savannah,savannah,savannah,savannah,savannah,water_shallow,water_deep,water_deep,water_deep,water_deep;
 maptiles;
-water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,savannah,savannah,savannah,savannah,sand,sand,savannah,water_shallow,water_deep,water_deep,water_deep,water_deep;
+
+water_deep,water_deep,water_deep,water_deep,water_deep,water_deep,water_shallow,water_shallow,savannah,savannah,savannah,savannah,sand,sand,savannah,water_shallow,water_deep,water_deep,water_deep,water_deep;
 maptiles;
-water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,savannah,savannah,sand,sand,savannah,savannah,temperate,temperate,water_deep,water_deep,water_deep,water_deep;
+water_deep,water_deep,water_deep,water_deep,water_deep,water_deep,water_shallow,water_shallow,savannah,savannah,sand,sand,savannah,savannah,temperate,temperate,water_deep,water_deep,water_deep,water_deep;
 maptiles;
-water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,savannah,savannah,savannah,savannah,savannah,savannah,temperate,temperate,water_deep,water_deep,water_deep,water_deep;
+water_deep,water_deep,water_deep,water_deep,water_deep,water_deep,water_shallow,water_shallow,savannah,savannah,savannah,savannah,savannah,savannah,temperate,temperate,water_deep,water_deep,water_deep,water_deep;
 maptiles;
-water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,temperate,temperate,water_deep,water_deep;
+water_deep,water_deep,water_deep,water_deep,water_deep,water_deep,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,temperate,temperate,water_deep,water_deep;
 maptiles;
-water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,temperate,temperate,water_deep,water_deep;
+water_deep,water_deep,water_deep,water_deep,water_deep,water_deep,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,temperate,temperate,water_deep,water_deep;
 maptiles;
-water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,tundra,tundra,tundra,tundra;
+water_deep,water_deep,water_deep,water_deep,water_deep,water_deep,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,tundra,tundra,tundra,tundra;
 maptiles;
-water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,tundra,ice,ice,ice;
+water_deep,water_deep,water_deep,water_deep,water_deep,water_deep,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,tundra,ice,ice,ice;
 
 overlay;
 none,forest,forest,none,mountain,none,forest,forest,none,none,none,none,none,none,none,none,none,none,none,none;
