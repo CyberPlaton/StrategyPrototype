@@ -62,12 +62,13 @@ void WorldMapDrawingOptions::_createMap() {
 
 	int xpos = 0;
 	int ypos = 0;
-	int mapwidth = 18;
-	int mapheight = 13;
+
+	int mapwidth = 3;
+	int mapheight = 2;
 
 	while (getline(map, line)) {
 
-		
+
 		//cout << line << endl;
 
 
@@ -80,6 +81,10 @@ void WorldMapDrawingOptions::_createMap() {
 
 
 			if (COMPARE_STRINGS(line, "maptiles;") == 0) getline(map, line); // Read next line for maptiles definition.
+
+
+			cout << APP_ERROR_COLOR;
+			cout << line << white << endl;
 
 			/*
 			For: every token do:
@@ -206,6 +211,7 @@ void WorldMapDrawingOptions::_createMap() {
 						token.clear();
 						escape_code = false;
 					}
+					/*
 					else if (IsSubstringInString("none", token)) {
 						// Do nothing.
 
@@ -216,23 +222,32 @@ void WorldMapDrawingOptions::_createMap() {
 						token.clear();
 						escape_code = false;
 					}
-
+					*/
 
 
 					// Custom double for-loop iterator...
 					// To get the right cell position of the next tile.
-					xpos++;
+					cout << color(colors::MAGENTA);
+					cout << "X " << xpos << " Y " << ypos << white << endl;
+
+					++xpos;
 					if (xpos > mapwidth) {
 
-						xpos = 0;
-						ypos++;
+						// Move on to the next line.
+						++ypos;
 						if (ypos > mapheight) {
-							ypos = 0;
+							ypos = -1; // Set to 0 or reset it...
 						}
+
+
+						// Reset xpos.
+						xpos = 0;
 					}
 
 
 
+					cout << color(colors::MAGENTA);
+					cout << "X " << xpos << " Y " << ypos << white << endl;
 
 				}
 				else if (line_end_escape_code) {
@@ -243,11 +258,8 @@ void WorldMapDrawingOptions::_createMap() {
 
 			}
 
-
 		}
 		else if (IsSubstringInString("overlay", line)) { // Defining forests, hills, mountains etc.
-
-		xpos = ypos = 0;
 
 		Forest* forest = nullptr;
 
@@ -280,221 +292,217 @@ void WorldMapDrawingOptions::_createMap() {
 				}
 
 
-				if (IsSubstringInString("forest_tundra", token)) {
 
-					// Create forest.
-					forest = MakeNewForest("forest_tundra_deep", xpos, ypos);
-					storage->AddGameEntitie(forest, false);
+				if (escape_code) {
+
+					if (IsSubstringInString("forest_tundra", token)) {
+
+						// Create forest.
+						forest = MakeNewForest("forest_tundra_deep", xpos, ypos);
+						storage->AddGameEntitie(forest, false);
 
 
 
-					cout << token << endl;
-					/*
-					// Custom double for-loop iterator...
-					// To get the right cell position of the next tile.
-					xpos++;
-					if (xpos > mapwidth) {
+						cout << token << endl;
+						/*
+						// Custom double for-loop iterator...
+						// To get the right cell position of the next tile.
+						xpos++;
+						if (xpos > mapwidth) {
 
-						xpos = 0;
-						ypos++;
-						if (ypos > mapheight) {
-							ypos = 0;
+							xpos = 0;
+							ypos++;
+							if (ypos > mapheight) {
+								ypos = 0;
+							}
 						}
+						*/
+						cout << color(colors::CYAN);
+						cout << "Create FOREST_TUNDRA at Position " << xpos << ":" << ypos << white << endl;
+
+						// Reset the reading token and escape_code
+						token.clear();
+						escape_code = false;
 					}
-					*/
-					cout << color(colors::CYAN);
-					cout << "Create FOREST_TUNDRA at Position " << xpos << ":" << ypos << white << endl;
+					else if (IsSubstringInString("forest_jungle", token)) {
 
-					// Reset the reading token and escape_code
-					token.clear();
-					escape_code = false;
-				}
-				else if (IsSubstringInString("forest_jungle", token)) {
+						// Create forest.
+						forest = MakeNewForest("forest_jungle_deep", xpos, ypos);
+						storage->AddGameEntitie(forest, false);
 
-					// Create forest.
-					forest = MakeNewForest("forest_jungle_deep", xpos, ypos);
-					storage->AddGameEntitie(forest, false);
-
-					cout << token << endl;
+						cout << token << endl;
 
 
-					// Custom double for-loop iterator...
-					// To get the right cell position of the next tile.
-					/*
-					xpos++;
-					if (xpos > mapwidth) {
+						// Custom double for-loop iterator...
+						// To get the right cell position of the next tile.
+						/*
+						xpos++;
+						if (xpos > mapwidth) {
 
-						xpos = 0;
-						ypos++;
-						if (ypos > mapheight) {
-							ypos = 0;
+							xpos = 0;
+							ypos++;
+							if (ypos > mapheight) {
+								ypos = 0;
+							}
 						}
+						*/
+
+						cout << color(colors::CYAN);
+						cout << "Create FOREST_JUNGLE at Position " << xpos << ":" << ypos << white << endl;
+
+						// Reset the reading token and escape_code
+						token.clear();
+						escape_code = false;
 					}
-					*/
+					else if (IsSubstringInString("forest_temperate", token)) {
 
-					cout << color(colors::CYAN);
-					cout << "Create FOREST_JUNGLE at Position " << xpos << ":" << ypos << white << endl;
+						// Create forest.
+						forest = MakeNewForest("forest_temperate_deep", xpos, ypos);
+						storage->AddGameEntitie(forest, false);
 
-					// Reset the reading token and escape_code
-					token.clear();
-					escape_code = false;
-				}
-				else if (IsSubstringInString("forest_temperate", token)) {
-
-					// Create forest.
-					forest = MakeNewForest("forest_temperate_deep", xpos, ypos);
-					storage->AddGameEntitie(forest, false);
-
-					cout << token << endl;
+						cout << token << endl;
 
 
-					// Custom double for-loop iterator...
-					// To get the right cell position of the next tile.
-					/*
-					xpos++;
-					if (xpos > mapwidth) {
+						// Custom double for-loop iterator...
+						// To get the right cell position of the next tile.
+						/*
+						xpos++;
+						if (xpos > mapwidth) {
 
-						xpos = 0;
-						ypos++;
-						if (ypos > mapheight) {
-							ypos = 0;
+							xpos = 0;
+							ypos++;
+							if (ypos > mapheight) {
+								ypos = 0;
+							}
 						}
+						*/
+
+						cout << color(colors::CYAN);
+						cout << "Create FOREST_TEMPERATE at Position " << xpos << ":" << ypos << white << endl;
+
+						// Reset the reading token and escape_code
+						token.clear();
+						escape_code = false;
 					}
-					*/
+					else if (IsSubstringInString("forest_savannah", token)) {
 
-					cout << color(colors::CYAN);
-					cout << "Create FOREST_TEMPERATE at Position " << xpos << ":" << ypos << white << endl;
+						// Create forest.
+						forest = MakeNewForest("forest_savannah_deep", xpos, ypos);
+						storage->AddGameEntitie(forest, false);
 
-					// Reset the reading token and escape_code
-					token.clear();
-					escape_code = false;
-				}
-				else if (IsSubstringInString("forest_savannah", token)) {
-
-					// Create forest.
-					forest = MakeNewForest("forest_savannah_deep", xpos, ypos);
-					storage->AddGameEntitie(forest, false);
-
-					cout << token << endl;
+						cout << token << endl;
 
 
-					// Custom double for-loop iterator...
-					// To get the right cell position of the next tile.
-					/*
-					xpos++;
-					if (xpos > mapwidth) {
+						// Custom double for-loop iterator...
+						// To get the right cell position of the next tile.
+						/*
+						xpos++;
+						if (xpos > mapwidth) {
 
-						xpos = 0;
-						ypos++;
-						if (ypos > mapheight) {
-							ypos = 0;
+							xpos = 0;
+							ypos++;
+							if (ypos > mapheight) {
+								ypos = 0;
+							}
 						}
+						*/
+
+						cout << color(colors::CYAN);
+						cout << "Create FOREST_SAVANNAH at Position " << xpos << ":" << ypos << white << endl;
+
+						// Reset the reading token and escape_code
+						token.clear();
+						escape_code = false;
 					}
-					*/
+					else if (IsSubstringInString("hill", token)) {
 
-					cout << color(colors::CYAN);
-					cout << "Create FOREST_SAVANNAH at Position " << xpos << ":" << ypos << white << endl;
-
-					// Reset the reading token and escape_code
-					token.clear();
-					escape_code = false;
-				}
-				else if (IsSubstringInString("hill", token)) {
-
-					cout << token << endl;
+						cout << token << endl;
 
 
-					// Custom double for-loop iterator...
-					// To get the right cell position of the next tile.
-					/*
-					xpos++;
-					if (xpos > mapwidth) {
+						// Custom double for-loop iterator...
+						// To get the right cell position of the next tile.
+						/*
+						xpos++;
+						if (xpos > mapwidth) {
 
-						xpos = 0;
-						ypos++;
-						if (ypos > mapheight) {
-							ypos = 0;
+							xpos = 0;
+							ypos++;
+							if (ypos > mapheight) {
+								ypos = 0;
+							}
 						}
+						*/
+
+						cout << color(colors::CYAN);
+						cout << "Create HILLS at Position " << xpos << ":" << ypos << white << endl;
+
+						// Reset the reading token and escape_code
+						token.clear();
+						escape_code = false;
 					}
-					*/
+					else if (IsSubstringInString("mountain", token)) {
 
-					cout << color(colors::CYAN);
-					cout << "Create HILLS at Position " << xpos << ":" << ypos << white << endl;
-
-					// Reset the reading token and escape_code
-					token.clear();
-					escape_code = false;
-				}
-				else if (IsSubstringInString("mountain", token)) {
-
-				cout << token << endl;
+						cout << token << endl;
 
 
-					// Custom double for-loop iterator...
-					// To get the right cell position of the next tile.
-					/*
-					xpos++;
-					if (xpos > mapwidth) {
+						// Custom double for-loop iterator...
+						// To get the right cell position of the next tile.
+						/*
+						xpos++;
+						if (xpos > mapwidth) {
 
-						xpos = 0;
-						ypos++;
-						if (ypos > mapheight) {
-							ypos = 0;
+							xpos = 0;
+							ypos++;
+							if (ypos > mapheight) {
+								ypos = 0;
+							}
 						}
+						*/
+
+						cout << color(colors::CYAN);
+						cout << "Create MOUNTAINS at Position " << xpos << ":" << ypos << white << endl;
+
+						// Reset the reading token and escape_code
+						token.clear();
+						escape_code = false;
 					}
-					*/
+					else if (IsSubstringInString("none", token)) {
 
-					cout << color(colors::CYAN);
-					cout << "Create MOUNTAINS at Position " << xpos << ":" << ypos << white << endl;
+						cout << token << endl;
 
-					// Reset the reading token and escape_code
-					token.clear();
-					escape_code = false;
-				}
-				else if (IsSubstringInString("none", token)) {
 
-				cout << token << endl;
+						// Custom double for-loop iterator...
+						// To get the right cell position of the next tile.
+							/*
+							xpos++;
+							if (xpos > mapwidth) {
 
-					
-				// Custom double for-loop iterator...
-				// To get the right cell position of the next tile.
-					/*
-					xpos++;
-					if (xpos > mapwidth) {
+								xpos = 0;
+								ypos++;
+								if (ypos > mapheight) {
+									ypos = 0;
+								}
+							}
+							*/
 
-						xpos = 0;
-						ypos++;
-						if (ypos > mapheight) {
-							ypos = 0;
-						}
+						cout << color(colors::CYAN);
+						cout << "Create NONE at Position " << xpos << ":" << ypos << white << endl;
+						// Nothing...
+
+
+						// Reset the reading token and escape_code
+						token.clear();
+						escape_code = false;
 					}
-					*/
-
-					cout << color(colors::CYAN);
-					cout << "Create NONE at Position " << xpos << ":" << ypos << white << endl;
-					// Nothing...
+					else if (line_end_escape_code) {
+						continue;
+					}
 
 
-					// Reset the reading token and escape_code
-					token.clear();
-					escape_code = false;
-				}
-				else if (line_end_escape_code) {
-					continue;
+
 				}
 
-			}
-
-
-			xpos++;
-			if (xpos > mapwidth) {
-
-				xpos = 0;
-				ypos++;
-				if (ypos > mapheight) {
-					ypos = 0;
-				}
-			}
+			} // end for overlay
 
 
 		}
