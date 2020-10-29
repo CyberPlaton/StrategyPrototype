@@ -2,3 +2,8 @@ maptiles;
 tundra,sand,snow,temperate,;
 maptiles;
 water_shallow,temperate,temperate,water_shallow,;
+
+overlay;
+forest_tundra,none,none,forest_temperate,;
+overlay;
+none,forest_temperate,forest_temperate,none,;

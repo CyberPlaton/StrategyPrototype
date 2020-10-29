@@ -63,8 +63,11 @@ void WorldMapDrawingOptions::_createMap() {
 	int xpos = 0;
 	int ypos = 0;
 
+	// Width and Height must always be 1 less then defined in the loaded mapfile. Else errors occur.
 	int mapwidth = 3;
-	int mapheight = 2;
+	int mapheight = 1;
+
+	MapTile* maptile = nullptr;
 
 	while (getline(map, line)) {
 
@@ -115,7 +118,11 @@ void WorldMapDrawingOptions::_createMap() {
 
 
 					if (IsSubstringInString("_shallow", token)) {
-						m_MapDefinitions->at(xpos).at(ypos) = new MapTile("water_shallow", "layer4", xpos * SPRITES_WIDTH_AND_HEIGHT, ypos * SPRITES_WIDTH_AND_HEIGHT);
+						maptile = new MapTile("water_shallow", "layer4", xpos * SPRITES_WIDTH_AND_HEIGHT, ypos * SPRITES_WIDTH_AND_HEIGHT);
+						maptile->m_TransformCmp->m_GameWorldSpaceCell[0] = xpos;
+						maptile->m_TransformCmp->m_GameWorldSpaceCell[1] = ypos;
+
+						m_MapDefinitions->at(xpos).at(ypos) = maptile;
 
 						storage->AddGameEntitie(m_MapDefinitions->at(xpos).at(ypos)); // Add Maptile to EntitiesStorage.
 
@@ -128,7 +135,11 @@ void WorldMapDrawingOptions::_createMap() {
 						escape_code = false;
 					}
 					else if (IsSubstringInString("_deep", token)) {
-						m_MapDefinitions->at(xpos).at(ypos) = new MapTile("water_deep", "layer4", xpos * SPRITES_WIDTH_AND_HEIGHT, ypos * SPRITES_WIDTH_AND_HEIGHT);
+						maptile = new MapTile("water_deep", "layer4", xpos * SPRITES_WIDTH_AND_HEIGHT, ypos * SPRITES_WIDTH_AND_HEIGHT);
+						maptile->m_TransformCmp->m_GameWorldSpaceCell[0] = xpos;
+						maptile->m_TransformCmp->m_GameWorldSpaceCell[1] = ypos;
+
+						m_MapDefinitions->at(xpos).at(ypos) = maptile;
 
 						storage->AddGameEntitie(m_MapDefinitions->at(xpos).at(ypos)); // Add Maptile to EntitiesStorage.
 
@@ -140,7 +151,11 @@ void WorldMapDrawingOptions::_createMap() {
 						escape_code = false;
 					}
 					else if (IsSubstringInString("temperate", token)) {
-						m_MapDefinitions->at(xpos).at(ypos) = new MapTile("temperate", "layer4", xpos * SPRITES_WIDTH_AND_HEIGHT, ypos * SPRITES_WIDTH_AND_HEIGHT);
+						maptile = new MapTile("temperate", "layer4", xpos * SPRITES_WIDTH_AND_HEIGHT, ypos * SPRITES_WIDTH_AND_HEIGHT);
+						maptile->m_TransformCmp->m_GameWorldSpaceCell[0] = xpos;
+						maptile->m_TransformCmp->m_GameWorldSpaceCell[1] = ypos;
+
+						m_MapDefinitions->at(xpos).at(ypos) = maptile;
 
 						storage->AddGameEntitie(m_MapDefinitions->at(xpos).at(ypos)); // Add Maptile to EntitiesStorage.
 
@@ -152,7 +167,12 @@ void WorldMapDrawingOptions::_createMap() {
 						escape_code = false;
 					}
 					else if (IsSubstringInString("tundra", token)) {
-						m_MapDefinitions->at(xpos).at(ypos) = new MapTile("tundra", "layer4", xpos * SPRITES_WIDTH_AND_HEIGHT, ypos * SPRITES_WIDTH_AND_HEIGHT);
+						maptile = new MapTile("tundra", "layer4", xpos * SPRITES_WIDTH_AND_HEIGHT, ypos * SPRITES_WIDTH_AND_HEIGHT);
+
+						maptile->m_TransformCmp->m_GameWorldSpaceCell[0] = xpos;
+						maptile->m_TransformCmp->m_GameWorldSpaceCell[1] = ypos;
+
+						m_MapDefinitions->at(xpos).at(ypos) = maptile;
 
 						storage->AddGameEntitie(m_MapDefinitions->at(xpos).at(ypos)); // Add Maptile to EntitiesStorage.
 
@@ -164,7 +184,12 @@ void WorldMapDrawingOptions::_createMap() {
 						escape_code = false;
 					}
 					else if (IsSubstringInString("savannah", token)) {
-						m_MapDefinitions->at(xpos).at(ypos) = new MapTile("savannah", "layer4", xpos * SPRITES_WIDTH_AND_HEIGHT, ypos * SPRITES_WIDTH_AND_HEIGHT);
+						maptile = new MapTile("savannah", "layer4", xpos * SPRITES_WIDTH_AND_HEIGHT, ypos * SPRITES_WIDTH_AND_HEIGHT);
+
+						maptile->m_TransformCmp->m_GameWorldSpaceCell[0] = xpos;
+						maptile->m_TransformCmp->m_GameWorldSpaceCell[1] = ypos;
+
+						m_MapDefinitions->at(xpos).at(ypos) = maptile;
 
 						storage->AddGameEntitie(m_MapDefinitions->at(xpos).at(ypos)); // Add Maptile to EntitiesStorage.
 
@@ -176,7 +201,12 @@ void WorldMapDrawingOptions::_createMap() {
 						escape_code = false;
 					}
 					else if (IsSubstringInString("snow", token)) {
-						m_MapDefinitions->at(xpos).at(ypos) = new MapTile("snow", "layer4", xpos * SPRITES_WIDTH_AND_HEIGHT, ypos * SPRITES_WIDTH_AND_HEIGHT);
+						maptile = new MapTile("snow", "layer4", xpos * SPRITES_WIDTH_AND_HEIGHT, ypos * SPRITES_WIDTH_AND_HEIGHT);
+
+						maptile->m_TransformCmp->m_GameWorldSpaceCell[0] = xpos;
+						maptile->m_TransformCmp->m_GameWorldSpaceCell[1] = ypos;
+
+						m_MapDefinitions->at(xpos).at(ypos) = maptile;
 
 						storage->AddGameEntitie(m_MapDefinitions->at(xpos).at(ypos)); // Add Maptile to EntitiesStorage.
 
@@ -188,7 +218,12 @@ void WorldMapDrawingOptions::_createMap() {
 						escape_code = false;
 					}
 					else if (IsSubstringInString("ice", token)) {
-						m_MapDefinitions->at(xpos).at(ypos) = new MapTile("ice", "layer4", xpos * SPRITES_WIDTH_AND_HEIGHT, ypos * SPRITES_WIDTH_AND_HEIGHT);
+						maptile = new MapTile("ice", "layer4", xpos * SPRITES_WIDTH_AND_HEIGHT, ypos * SPRITES_WIDTH_AND_HEIGHT);
+
+						maptile->m_TransformCmp->m_GameWorldSpaceCell[0] = xpos;
+						maptile->m_TransformCmp->m_GameWorldSpaceCell[1] = ypos;
+
+						m_MapDefinitions->at(xpos).at(ypos) = maptile;
 
 						storage->AddGameEntitie(m_MapDefinitions->at(xpos).at(ypos)); // Add Maptile to EntitiesStorage.
 
@@ -200,7 +235,12 @@ void WorldMapDrawingOptions::_createMap() {
 						escape_code = false;
 					}
 					else if (IsSubstringInString("sand", token)) {
-						m_MapDefinitions->at(xpos).at(ypos) = new MapTile("sand", "layer4", xpos * SPRITES_WIDTH_AND_HEIGHT, ypos * SPRITES_WIDTH_AND_HEIGHT);
+						maptile = new MapTile("sand", "layer4", xpos * SPRITES_WIDTH_AND_HEIGHT, ypos * SPRITES_WIDTH_AND_HEIGHT);
+
+						maptile->m_TransformCmp->m_GameWorldSpaceCell[0] = xpos;
+						maptile->m_TransformCmp->m_GameWorldSpaceCell[1] = ypos;
+
+						m_MapDefinitions->at(xpos).at(ypos) = maptile;
 
 						storage->AddGameEntitie(m_MapDefinitions->at(xpos).at(ypos)); // Add Maptile to EntitiesStorage.
 
@@ -236,7 +276,7 @@ void WorldMapDrawingOptions::_createMap() {
 						// Move on to the next line.
 						++ypos;
 						if (ypos > mapheight) {
-							ypos = -1; // Set to 0 or reset it...
+							ypos = 0; // Set to 0 or reset it...
 						}
 
 
@@ -265,6 +305,8 @@ void WorldMapDrawingOptions::_createMap() {
 
 		cout << APP_COLOR;
 		cout << "CREATING OVERLAY." << white << endl;
+
+		cout << xpos << ypos << endl;
 
 
 
@@ -299,24 +341,34 @@ void WorldMapDrawingOptions::_createMap() {
 
 						// Create forest.
 						forest = MakeNewForest("forest_tundra_deep", xpos, ypos);
-						storage->AddGameEntitie(forest, false);
+						storage->AddGameEntitie(forest);
 
 
 
 						cout << token << endl;
-						/*
 						// Custom double for-loop iterator...
 						// To get the right cell position of the next tile.
-						xpos++;
+						cout << color(colors::MAGENTA);
+						cout << "X " << xpos << " Y " << ypos << white << endl;
+
+						++xpos;
 						if (xpos > mapwidth) {
 
-							xpos = 0;
-							ypos++;
+							// Move on to the next line.
+							++ypos;
 							if (ypos > mapheight) {
-								ypos = 0;
+								ypos = -1; // Set to 0 or reset it...
 							}
+
+
+							// Reset xpos.
+							xpos = 0;
 						}
-						*/
+
+
+
+						cout << color(colors::MAGENTA);
+						cout << "X " << xpos << " Y " << ypos << white << endl;
 						cout << color(colors::CYAN);
 						cout << "Create FOREST_TUNDRA at Position " << xpos << ":" << ypos << white << endl;
 
@@ -328,24 +380,34 @@ void WorldMapDrawingOptions::_createMap() {
 
 						// Create forest.
 						forest = MakeNewForest("forest_jungle_deep", xpos, ypos);
-						storage->AddGameEntitie(forest, false);
+						storage->AddGameEntitie(forest);
 
 						cout << token << endl;
 
 
 						// Custom double for-loop iterator...
 						// To get the right cell position of the next tile.
-						/*
-						xpos++;
+						cout << color(colors::MAGENTA);
+						cout << "X " << xpos << " Y " << ypos << white << endl;
+
+						++xpos;
 						if (xpos > mapwidth) {
 
-							xpos = 0;
-							ypos++;
+							// Move on to the next line.
+							++ypos;
 							if (ypos > mapheight) {
-								ypos = 0;
+								ypos = -1; // Set to 0 or reset it...
 							}
+
+
+							// Reset xpos.
+							xpos = 0;
 						}
-						*/
+
+
+
+						cout << color(colors::MAGENTA);
+						cout << "X " << xpos << " Y " << ypos << white << endl;
 
 						cout << color(colors::CYAN);
 						cout << "Create FOREST_JUNGLE at Position " << xpos << ":" << ypos << white << endl;
@@ -358,24 +420,34 @@ void WorldMapDrawingOptions::_createMap() {
 
 						// Create forest.
 						forest = MakeNewForest("forest_temperate_deep", xpos, ypos);
-						storage->AddGameEntitie(forest, false);
+						storage->AddGameEntitie(forest);
 
 						cout << token << endl;
 
 
 						// Custom double for-loop iterator...
 						// To get the right cell position of the next tile.
-						/*
-						xpos++;
+						cout << color(colors::MAGENTA);
+						cout << "X " << xpos << " Y " << ypos << white << endl;
+
+						++xpos;
 						if (xpos > mapwidth) {
 
-							xpos = 0;
-							ypos++;
+							// Move on to the next line.
+							++ypos;
 							if (ypos > mapheight) {
-								ypos = 0;
+								ypos = -1; // Set to 0 or reset it...
 							}
+
+
+							// Reset xpos.
+							xpos = 0;
 						}
-						*/
+
+
+
+						cout << color(colors::MAGENTA);
+						cout << "X " << xpos << " Y " << ypos << white << endl;
 
 						cout << color(colors::CYAN);
 						cout << "Create FOREST_TEMPERATE at Position " << xpos << ":" << ypos << white << endl;
@@ -388,24 +460,34 @@ void WorldMapDrawingOptions::_createMap() {
 
 						// Create forest.
 						forest = MakeNewForest("forest_savannah_deep", xpos, ypos);
-						storage->AddGameEntitie(forest, false);
+						storage->AddGameEntitie(forest);
 
 						cout << token << endl;
 
 
 						// Custom double for-loop iterator...
 						// To get the right cell position of the next tile.
-						/*
-						xpos++;
+						cout << color(colors::MAGENTA);
+						cout << "X " << xpos << " Y " << ypos << white << endl;
+
+						++xpos;
 						if (xpos > mapwidth) {
 
-							xpos = 0;
-							ypos++;
+							// Move on to the next line.
+							++ypos;
 							if (ypos > mapheight) {
-								ypos = 0;
+								ypos = -1; // Set to 0 or reset it...
 							}
+
+
+							// Reset xpos.
+							xpos = 0;
 						}
-						*/
+
+
+
+						cout << color(colors::MAGENTA);
+						cout << "X " << xpos << " Y " << ypos << white << endl;
 
 						cout << color(colors::CYAN);
 						cout << "Create FOREST_SAVANNAH at Position " << xpos << ":" << ypos << white << endl;
@@ -421,17 +503,27 @@ void WorldMapDrawingOptions::_createMap() {
 
 						// Custom double for-loop iterator...
 						// To get the right cell position of the next tile.
-						/*
-						xpos++;
+						cout << color(colors::MAGENTA);
+						cout << "X " << xpos << " Y " << ypos << white << endl;
+
+						++xpos;
 						if (xpos > mapwidth) {
 
-							xpos = 0;
-							ypos++;
+							// Move on to the next line.
+							++ypos;
 							if (ypos > mapheight) {
-								ypos = 0;
+								ypos = -1; // Set to 0 or reset it...
 							}
+
+
+							// Reset xpos.
+							xpos = 0;
 						}
-						*/
+
+
+
+						cout << color(colors::MAGENTA);
+						cout << "X " << xpos << " Y " << ypos << white << endl;
 
 						cout << color(colors::CYAN);
 						cout << "Create HILLS at Position " << xpos << ":" << ypos << white << endl;
@@ -447,17 +539,27 @@ void WorldMapDrawingOptions::_createMap() {
 
 						// Custom double for-loop iterator...
 						// To get the right cell position of the next tile.
-						/*
-						xpos++;
+						cout << color(colors::MAGENTA);
+						cout << "X " << xpos << " Y " << ypos << white << endl;
+
+						++xpos;
 						if (xpos > mapwidth) {
 
-							xpos = 0;
-							ypos++;
+							// Move on to the next line.
+							++ypos;
 							if (ypos > mapheight) {
-								ypos = 0;
+								ypos = -1; // Set to 0 or reset it...
 							}
+
+
+							// Reset xpos.
+							xpos = 0;
 						}
-						*/
+
+
+
+						cout << color(colors::MAGENTA);
+						cout << "X " << xpos << " Y " << ypos << white << endl;
 
 						cout << color(colors::CYAN);
 						cout << "Create MOUNTAINS at Position " << xpos << ":" << ypos << white << endl;
@@ -473,17 +575,27 @@ void WorldMapDrawingOptions::_createMap() {
 
 						// Custom double for-loop iterator...
 						// To get the right cell position of the next tile.
-							/*
-							xpos++;
-							if (xpos > mapwidth) {
+						cout << color(colors::MAGENTA);
+						cout << "X " << xpos << " Y " << ypos << white << endl;
 
-								xpos = 0;
-								ypos++;
-								if (ypos > mapheight) {
-									ypos = 0;
-								}
+						++xpos;
+						if (xpos > mapwidth) {
+
+							// Move on to the next line.
+							++ypos;
+							if (ypos > mapheight) {
+								ypos = -1; // Set to 0 or reset it...
 							}
-							*/
+
+
+							// Reset xpos.
+							xpos = 0;
+						}
+
+
+
+						cout << color(colors::MAGENTA);
+						cout << "X " << xpos << " Y " << ypos << white << endl;
 
 						cout << color(colors::CYAN);
 						cout << "Create NONE at Position " << xpos << ":" << ypos << white << endl;

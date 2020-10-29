@@ -5,7 +5,7 @@ static olc::vf2d g_vi2dCameraPosition = olc::vf2d(0.0f, 0.0f);
 MapTile* GetMapTileAtXYPosition(int x, int y) {
 
 	EntitiesStorage* storage = EntitiesStorage::Get();
-	std::vector< GameEntity* > vec = *storage->GetStorage();
+	std::vector< GameEntity* > vec = *storage->GetMapTilesStorage();
 
 	MapTile* maptile = nullptr;
 

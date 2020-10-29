@@ -534,7 +534,7 @@ struct EntitiesStorage {
 	std::vector< GameEntity* >* GetHillsMountains() { return m_MountainsHillsVec; }
 
 
-	void AddGameEntitie(GameEntity* e, bool position_as_cell = true) {
+	void AddGameEntitie(GameEntity* e) {
 
 		// General saving.
 		m_GameEntitiesVec->push_back(e);
@@ -550,14 +550,9 @@ struct EntitiesStorage {
 		}
 		else {
 
-			if (position_as_cell) {
-				// No, it is some entity on a mapttile.
-				_addEntityToMapTileVector(e);
-			}
-			else {
-				// No, it is some entity on a mapttile.
-				_addEntityToMapTileVector(e, false);
-			}
+			// No, it is some entity on a maptile.
+			_addEntityToMapTileVector(e);
+
 
 
 			// Is it a mapressource?
@@ -768,19 +763,11 @@ private:
 	}
 
 
-	void _addEntityToMapTileVector(GameEntity* e, bool position_as_cell = true) {
+	void _addEntityToMapTileVector(GameEntity* e) {
 
 		int entity_cell[2]; entity_cell[0] = e->m_TransformCmp->m_GameWorldSpaceCell[0]; entity_cell[1] = e->m_TransformCmp->m_GameWorldSpaceCell[1];
 
-		if (position_as_cell) {
-			GetMapTileAtWorldPosition(entity_cell[0], entity_cell[1])->m_MapTileEntities->push_back(e);
-		}
-		else {
-
-			int xpos = entity_cell[0] * SPRITES_WIDTH_AND_HEIGHT;
-			int ypos = entity_cell[1] * SPRITES_WIDTH_AND_HEIGHT;
-			GetMapTileAtXYPosition(xpos, ypos)->m_MapTileEntities->push_back(e);
-		}
+		GetMapTileAtWorldPosition(entity_cell[0], entity_cell[1])->m_MapTileEntities->push_back(e);
 	}
 
 
