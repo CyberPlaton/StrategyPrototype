@@ -702,7 +702,7 @@ bool Game::OnUserCreate() {
 
 
 
-
+	/*
 	// Create some forests for testing.
 	Forest* f, * f2, * f3;
 
@@ -750,7 +750,7 @@ bool Game::OnUserCreate() {
 	city->ClaimRegions();
 
 	storage->AddGameEntitie(city);
-
+	*/
 
 	return true;
 }

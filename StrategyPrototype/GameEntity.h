@@ -697,6 +697,7 @@ public:
 	static void Del();
 
 
+
 private:
 	static WorldMap* m_WorldMapInstance;
 	WorldMapDrawingOptions* m_MapDrawOptions = nullptr;

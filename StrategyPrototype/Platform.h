@@ -14,5 +14,7 @@
 #include<array>
 #include<random>
 
+#include<fstream>
+
 
 #define SPRITES_WIDTH_AND_HEIGHT 128
