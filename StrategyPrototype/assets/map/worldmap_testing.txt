@@ -15,13 +15,13 @@ temperate,temperate,temperate,savannah,savannah,savannah,;
 overlay;
 forest_tundra,forest_tundra,none,none,none,none,;
 overlay;
-forest_temperate,none,none,none,none,none,;
+forest_temperate,hill,none,none,none,none,;
 overlay;
 none,forest_temperate,forest_temperate,none,none,none,;
 overlay;
-forest_savannah,none,forest_savannah,forest_savannah,none,none,;
+forest_savannah,hill,forest_savannah,forest_savannah,none,none,;
 overlay;
-none,none,none,none,none,none,;
+hill,none,mountain,mountain,none,none,;
 overlay;
-none,none,none,none,none,none,;
+none,none,none,none,mountain,mountain,;
 

@@ -2,6 +2,30 @@
 
 static olc::vf2d g_vi2dCameraPosition = olc::vf2d(0.0f, 0.0f);
 
+Mountains* MakeNewMountain(std::string spritename, int x_cell_pos, int y_cell_pos) {
+
+	// We draw standardized forests on layer3, so skip this part from the user...
+	Mountains* mountain = new Mountains(spritename, "layer2", x_cell_pos * SPRITES_WIDTH_AND_HEIGHT, y_cell_pos * SPRITES_WIDTH_AND_HEIGHT);
+
+	mountain->m_TransformCmp->m_GameWorldSpaceCell[0] = x_cell_pos;
+	mountain->m_TransformCmp->m_GameWorldSpaceCell[1] = y_cell_pos;
+
+	return mountain;
+}
+
+
+Hills* MakeNewHill(std::string spritename, int x_cell_pos, int y_cell_pos) {
+
+	// We draw standardized forests on layer3, so skip this part from the user...
+	Hills* hills = new Hills(spritename, "layer2", x_cell_pos * SPRITES_WIDTH_AND_HEIGHT, y_cell_pos * SPRITES_WIDTH_AND_HEIGHT);
+
+	hills->m_TransformCmp->m_GameWorldSpaceCell[0] = x_cell_pos;
+	hills->m_TransformCmp->m_GameWorldSpaceCell[1] = y_cell_pos;
+
+	return hills;
+}
+
+
 MapTile* GetMapTileAtXYPosition(int x, int y) {
 
 	EntitiesStorage* storage = EntitiesStorage::Get();

@@ -500,6 +500,8 @@ void WorldMapDrawingOptions::_createMap() {
 
 						cout << token << endl;
 
+						Hills* hills = MakeNewHill("hills", xpos, ypos);
+						storage->AddGameEntitie(hills);
 
 						// Custom double for-loop iterator...
 						// To get the right cell position of the next tile.
@@ -535,6 +537,9 @@ void WorldMapDrawingOptions::_createMap() {
 					else if (IsSubstringInString("mountain", token)) {
 
 						cout << token << endl;
+
+						Mountains* mountains = MakeNewMountain("highmountain", xpos, ypos);
+						storage->AddGameEntitie(mountains);
 
 
 						// Custom double for-loop iterator...

@@ -7,6 +7,8 @@ class MapRessource;
 class Forest;
 struct MapTileRegion;
 class Game;
+class Mountains;
+class Hills;
 typedef std::array<std::array<MapTile*, 20>, 20> MapTileArray;
 
 
@@ -20,6 +22,8 @@ int GetTotalForestsCount();
 bool IsSubstringInString(std::string substring, std::string string);
 Forest* MakeNewForest(std::string name, int x_cell_pos, int y_cell_pos);
 Forest* MakeNewForestAtPos(std::string name, int xpos, int ypos, int set_x_cell, int set_y_cell);
+Mountains* MakeNewMountain(std::string spritename, int x_cell_pos, int y_cell_pos);
+Hills* MakeNewHill(std::string spritename, int x_cell_pos, int y_cell_pos);
 std::string MapTileTypeToString(MapTile* tile);
 bool MapTileAppropriteForForest(MapTile* tile, Forest* forest);
 bool IsMapTilePartOfRegion(MapTile* tile);
@@ -195,6 +199,10 @@ public:
 		m_TransformCmp->m_PosX = xpos;
 		m_TransformCmp->m_PosY = ypos;
 
+		m_TransformCmp->m_GameWorldSpaceCell[0] = xpos;
+		m_TransformCmp->m_GameWorldSpaceCell[1] = ypos;
+
+
 		m_GraphicsCmp = new CMPGraphics();
 		m_GraphicsCmp->m_DrawingLayer = layer;
 		m_GraphicsCmp->m_SpriteName = name;
@@ -233,6 +241,7 @@ public:
 
 		m_TransformCmp->m_PosX = xpos;
 		m_TransformCmp->m_PosY = ypos;
+
 
 		m_GraphicsCmp = new CMPGraphics();
 		m_GraphicsCmp->m_DrawingLayer = layer;
