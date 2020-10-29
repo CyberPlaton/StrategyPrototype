@@ -247,33 +247,255 @@ void WorldMapDrawingOptions::_createMap() {
 		}
 		else if (IsSubstringInString("overlay", line)) { // Defining forests, hills, mountains etc.
 
+		xpos = ypos = 0;
 
-			if (IsSubstringInString("forest", line)) {
+		Forest* forest = nullptr;
+
+		cout << APP_COLOR;
+		cout << "CREATING OVERLAY." << white << endl;
+
+
+
+		string token = ""; // The next word.
+		bool escape_code = false;
+		bool line_end_escape_code = false; // Means, the end of the line was reached, the delimiter ";" was found, thus move to next line.
+
+
+		if (COMPARE_STRINGS(line, "overlay;") == 0) getline(map, line); // Read next line for maptiles definition.
+
+		
+		cout << line << endl;
+
+
+		for (auto it = line.begin(); it != line.end(); ++it) {
+
+				if (*it == ',') { // escape code
+					escape_code = true;
+				}
+				else if (*it == ';') {
+					line_end_escape_code = true;
+				}
+				else {
+					token.push_back((*it)); // At char to string.
+				}
+
+
+				if (IsSubstringInString("forest_tundra", token)) {
+
+					// Create forest.
+					forest = MakeNewForest("forest_tundra_deep", xpos, ypos);
+					storage->AddGameEntitie(forest, false);
+
+
+
+					cout << token << endl;
+					/*
+					// Custom double for-loop iterator...
+					// To get the right cell position of the next tile.
+					xpos++;
+					if (xpos > mapwidth) {
+
+						xpos = 0;
+						ypos++;
+						if (ypos > mapheight) {
+							ypos = 0;
+						}
+					}
+					*/
+					cout << color(colors::CYAN);
+					cout << "Create FOREST_TUNDRA at Position " << xpos << ":" << ypos << white << endl;
+
+					// Reset the reading token and escape_code
+					token.clear();
+					escape_code = false;
+				}
+				else if (IsSubstringInString("forest_jungle", token)) {
+
+					// Create forest.
+					forest = MakeNewForest("forest_jungle_deep", xpos, ypos);
+					storage->AddGameEntitie(forest, false);
+
+					cout << token << endl;
+
+
+					// Custom double for-loop iterator...
+					// To get the right cell position of the next tile.
+					/*
+					xpos++;
+					if (xpos > mapwidth) {
+
+						xpos = 0;
+						ypos++;
+						if (ypos > mapheight) {
+							ypos = 0;
+						}
+					}
+					*/
+
+					cout << color(colors::CYAN);
+					cout << "Create FOREST_JUNGLE at Position " << xpos << ":" << ypos << white << endl;
+
+					// Reset the reading token and escape_code
+					token.clear();
+					escape_code = false;
+				}
+				else if (IsSubstringInString("forest_temperate", token)) {
+
+					// Create forest.
+					forest = MakeNewForest("forest_temperate_deep", xpos, ypos);
+					storage->AddGameEntitie(forest, false);
+
+					cout << token << endl;
+
+
+					// Custom double for-loop iterator...
+					// To get the right cell position of the next tile.
+					/*
+					xpos++;
+					if (xpos > mapwidth) {
+
+						xpos = 0;
+						ypos++;
+						if (ypos > mapheight) {
+							ypos = 0;
+						}
+					}
+					*/
+
+					cout << color(colors::CYAN);
+					cout << "Create FOREST_TEMPERATE at Position " << xpos << ":" << ypos << white << endl;
+
+					// Reset the reading token and escape_code
+					token.clear();
+					escape_code = false;
+				}
+				else if (IsSubstringInString("forest_savannah", token)) {
+
+					// Create forest.
+					forest = MakeNewForest("forest_savannah_deep", xpos, ypos);
+					storage->AddGameEntitie(forest, false);
+
+					cout << token << endl;
+
+
+					// Custom double for-loop iterator...
+					// To get the right cell position of the next tile.
+					/*
+					xpos++;
+					if (xpos > mapwidth) {
+
+						xpos = 0;
+						ypos++;
+						if (ypos > mapheight) {
+							ypos = 0;
+						}
+					}
+					*/
+
+					cout << color(colors::CYAN);
+					cout << "Create FOREST_SAVANNAH at Position " << xpos << ":" << ypos << white << endl;
+
+					// Reset the reading token and escape_code
+					token.clear();
+					escape_code = false;
+				}
+				else if (IsSubstringInString("hill", token)) {
+
+					cout << token << endl;
+
+
+					// Custom double for-loop iterator...
+					// To get the right cell position of the next tile.
+					/*
+					xpos++;
+					if (xpos > mapwidth) {
+
+						xpos = 0;
+						ypos++;
+						if (ypos > mapheight) {
+							ypos = 0;
+						}
+					}
+					*/
+
+					cout << color(colors::CYAN);
+					cout << "Create HILLS at Position " << xpos << ":" << ypos << white << endl;
+
+					// Reset the reading token and escape_code
+					token.clear();
+					escape_code = false;
+				}
+				else if (IsSubstringInString("mountain", token)) {
+
+				cout << token << endl;
+
+
+					// Custom double for-loop iterator...
+					// To get the right cell position of the next tile.
+					/*
+					xpos++;
+					if (xpos > mapwidth) {
+
+						xpos = 0;
+						ypos++;
+						if (ypos > mapheight) {
+							ypos = 0;
+						}
+					}
+					*/
+
+					cout << color(colors::CYAN);
+					cout << "Create MOUNTAINS at Position " << xpos << ":" << ypos << white << endl;
+
+					// Reset the reading token and escape_code
+					token.clear();
+					escape_code = false;
+				}
+				else if (IsSubstringInString("none", token)) {
+
+				cout << token << endl;
+
+					
+				// Custom double for-loop iterator...
+				// To get the right cell position of the next tile.
+					/*
+					xpos++;
+					if (xpos > mapwidth) {
+
+						xpos = 0;
+						ypos++;
+						if (ypos > mapheight) {
+							ypos = 0;
+						}
+					}
+					*/
+
+					cout << color(colors::CYAN);
+					cout << "Create NONE at Position " << xpos << ":" << ypos << white << endl;
+					// Nothing...
+
+
+					// Reset the reading token and escape_code
+					token.clear();
+					escape_code = false;
+				}
+				else if (line_end_escape_code) {
+					continue;
+				}
 
 			}
-			else if (IsSubstringInString("hill", line)) {
-
-			}
-			else if (IsSubstringInString("mountain", line)) {
-
-			}
-			else if (IsSubstringInString("none", line)) {
-				continue; // Nothing...
-			}
 
 
-
-			// Custom double for-loop iterator...
-			// To get the right cell position of the next tile.
 			xpos++;
-			if (xpos >= mapwidth) {
+			if (xpos > mapwidth) {
 
 				xpos = 0;
 				ypos++;
-				if (ypos >= mapheight) {
+				if (ypos > mapheight) {
 					ypos = 0;
 				}
 			}
+
 
 		}
 		else if (IsSubstringInString("regions", line)) { // Defining maptileregions for the map.

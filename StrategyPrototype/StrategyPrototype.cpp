@@ -2,6 +2,23 @@
 
 static olc::vf2d g_vi2dCameraPosition = olc::vf2d(0.0f, 0.0f);
 
+MapTile* GetMapTileAtXYPosition(int x, int y) {
+
+	EntitiesStorage* storage = EntitiesStorage::Get();
+	std::vector< GameEntity* > vec = *storage->GetStorage();
+
+	MapTile* maptile = nullptr;
+
+	for (auto it = vec.begin(); it != vec.end(); ++it) {
+
+		maptile = reinterpret_cast<MapTile*>(*it);
+
+		if (maptile->m_TransformCmp->m_PosX == x && maptile->m_TransformCmp->m_PosY == y) return maptile;
+	}
+
+	return nullptr;
+}
+
 bool IsMapTilePartOfRegion(MapTile* tile) {
 
 	if (!nullptr) return false;
@@ -701,6 +718,18 @@ bool Game::OnUserCreate() {
 	m_Renderer->m_Layer4 = CreateLayer();
 
 
+	/*
+	Mountains* m = new Mountains("highmountain", "layer2", 128, 128);
+	
+	Hills* h = new Hills("hills", "layer2", 256, 128);
+
+
+	EntitiesStorage* storage = EntitiesStorage::Get();
+	
+	storage->AddGameEntitie(m);
+	storage->AddGameEntitie(h);
+	*/
+
 
 	/*
 	// Create some forests for testing.
@@ -1169,6 +1198,40 @@ void Renderer::Render2Layer3() {
 
 		}
 	}
+
+
+	// Render Mountains and Hills
+	vec = *storage->GetHillsMountains();
+
+	Hills* hills = nullptr;
+	Mountains* mountains = nullptr;
+
+	for (auto it = vec.begin(); it != vec.end(); ++it) {
+
+		entity = *it;
+		if (COMPARE_STRINGS(entity->m_IDCmp->m_DynamicTypeName, "Hills")) {
+			hills = reinterpret_cast<Hills*>(*it);
+			mountains = nullptr;
+		}
+		else if (COMPARE_STRINGS(entity->m_IDCmp->m_DynamicTypeName, "Mountains")) {
+			mountains = reinterpret_cast<Mountains*>(*it);
+			hills = nullptr;
+		}
+
+
+		if (hills) {
+			// Draw appropriate loaded sprite on position specified.
+			m_Game->DrawDecal(vi2d(hills->m_TransformCmp->m_PosX, hills->m_TransformCmp->m_PosY),
+				m_Game->m_SpriteResourceMap.at(hills->m_GraphicsCmp->m_SpriteName));
+		}
+		else if (mountains) {
+			// Draw appropriate loaded sprite on position specified.
+			m_Game->DrawDecal(vi2d(mountains->m_TransformCmp->m_PosX, mountains->m_TransformCmp->m_PosY),
+				m_Game->m_SpriteResourceMap.at(mountains->m_GraphicsCmp->m_SpriteName));
+		}
+
+	}
+
 
 
 	m_Game->EnableLayer(m_Layer3, true);

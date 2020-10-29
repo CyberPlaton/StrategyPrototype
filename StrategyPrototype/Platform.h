@@ -18,3 +18,6 @@
 
 
 #define SPRITES_WIDTH_AND_HEIGHT 128
+
+#define COMPARE_STRINGS(x, y) strcmp(x.c_str(), y) // Utility.
+#define COMPARE_STRINGS_2(x, y) strcmp(x.c_str(), y.c_str()) // Utility.

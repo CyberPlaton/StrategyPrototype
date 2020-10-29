@@ -12,13 +12,9 @@ typedef std::array<std::array<MapTile*, 20>, 20> MapTileArray;
 #define MAP_SIZE 20
 
 
-#define COMPARE_STRINGS(x, y) strcmp(x.c_str(), y) // Utility.
-#define COMPARE_STRINGS_2(x, y) strcmp(x.c_str(), y.c_str()) // Utility.
-
-
-
 // Helpers.
 MapTile* GetMapTileAtWorldPosition(int x, int y);
+MapTile* GetMapTileAtXYPosition(int x, int y);
 GameEntity* IsGameEntityTypeOnMapTile(MapTile* maptile, std::string dynamicTypeName);
 std::vector<GameEntity*> GetForestEntities();
 bool IsIndexOutOfBound(int x, int y);
@@ -29,7 +25,6 @@ Forest* MakeNewForestAtPos(std::string name, int xpos, int ypos, int set_x_cell,
 std::string MapTileTypeToString(MapTile* tile);
 bool MapTileAppropriteForForest(MapTile* tile, Forest* forest);
 bool IsMapTilePartOfRegion(MapTile* tile);
-
 
 enum class TileImprovementLevel {
 	TILE_IMPROVEMENT_LVL_INVALID = -1,
@@ -57,6 +52,8 @@ public:
 	CMPGraphics* m_GraphicsCmp = nullptr;
 	CMPArtificialIntelligence* m_AICmp = nullptr;
 	FiniteStateMachine* m_FSM = nullptr;
+	CMPMovementCostModifier* m_MovementCostCmp = nullptr;
+	CMPEntityRace* m_EntityRaceCmp = nullptr;
 };
 
 
@@ -189,6 +186,84 @@ private:
 };
 
 
+class Hills : public GameEntity {
+public:
+
+	Hills(std::string name, std::string layer, int xpos, int ypos) {
+
+		// Forests have transform, graphics, AI, FSM and id.
+		m_IDCmp->m_DynamicTypeName = "Hills";
+
+		m_TransformCmp->m_PosX = xpos;
+		m_TransformCmp->m_PosY = ypos;
+
+		m_GraphicsCmp = new CMPGraphics();
+		m_GraphicsCmp->m_DrawingLayer = layer;
+		m_GraphicsCmp->m_SpriteName = name;
+
+
+		m_MovementCostCmp = new CMPMovementCostModifier();
+		_setMovementCost();
+	}
+
+
+private:
+
+
+private:
+	void _setMovementCost() {
+		m_MovementCostCmp->SetBaseMovementCost(3);
+		m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_HUMAN, 1);
+		m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_ORC, 1);
+		m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_HIGHELF, 1);
+		m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_DARKELF, 1);
+		m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_TROLL, 1);
+		m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_GNOME, -2);
+		m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_DWARF, -2);
+		m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_GOBLIN, -2);
+	}
+};
+
+
+class Mountains : public GameEntity {
+public:
+
+	Mountains(std::string name, std::string layer, int xpos, int ypos) {
+
+		// Forests have transform, graphics, AI, FSM and id.
+		m_IDCmp->m_DynamicTypeName = "Mountains";
+
+		m_TransformCmp->m_PosX = xpos;
+		m_TransformCmp->m_PosY = ypos;
+
+		m_GraphicsCmp = new CMPGraphics();
+		m_GraphicsCmp->m_DrawingLayer = layer;
+		m_GraphicsCmp->m_SpriteName = name;
+
+
+		m_MovementCostCmp = new CMPMovementCostModifier();
+		_setMovementCost();
+	}
+
+
+private:
+
+
+private:
+	void _setMovementCost() {
+		m_MovementCostCmp->SetBaseMovementCost(4);
+		m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_HUMAN, 2);
+		m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_ORC, 2);
+		m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_HIGHELF, 3);
+		m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_DARKELF, 3);
+		m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_TROLL, 3);
+		m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_GNOME, -3);
+		m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_DWARF, -3);
+		m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_GOBLIN, -2);
+	}
+};
+
+
 
 class Forest : public GameEntity {
 public:
@@ -222,6 +297,9 @@ public:
 		m_GraphicsCmp->m_DrawingLayer = layer;
 		m_GraphicsCmp->m_SpriteName = name;
 
+
+		m_MovementCostCmp = new CMPMovementCostModifier();
+		_setMovementCost();
 
 		m_AICmp = new CMPArtificialIntelligence(this);
 
@@ -271,6 +349,63 @@ public:
 	ForestClass m_ForestClass = ForestClass::FOREST_CLASS_INVALID;
 
 private:
+
+
+private:
+
+	void _setMovementCost() {
+		switch (m_ForestType) {
+		case ForestType::FOREST_DEEP:
+			// Base cost for a deepforest...
+			m_MovementCostCmp->SetBaseMovementCost(3);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_HUMAN, 0);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_ORC, 0);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_HIGHELF, -2);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_DARKELF, -2);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_TROLL, -2);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_GNOME, 1);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_DWARF, 1);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_GOBLIN, 1);
+
+			break;
+		case ForestType::FOREST_NORMAL:
+			m_MovementCostCmp->SetBaseMovementCost(2);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_HUMAN, 0);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_ORC, 0);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_HIGHELF, -1);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_DARKELF, -1);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_TROLL, -1);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_GNOME, 1);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_DWARF, 1);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_GOBLIN, 1);
+
+			break;
+		case ForestType::FOREST_SCARCE:
+			m_MovementCostCmp->SetBaseMovementCost(1);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_HUMAN, 0);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_ORC, 0);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_HIGHELF, 0);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_DARKELF, 0);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_TROLL, 0);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_GNOME, 0);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_DWARF, 0);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_GOBLIN, 0);
+			break;
+		case ForestType::FOREST_DYING:
+			m_MovementCostCmp->SetBaseMovementCost(2);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_HUMAN, 0);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_ORC, 0);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_HIGHELF, -1);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_DARKELF, -1);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_TROLL, -1);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_GNOME, 1);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_DWARF, 1);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_GOBLIN, 1);
+			break;
+		default:
+			break;
+		}
+	}
 
 };
 
@@ -396,9 +531,10 @@ struct EntitiesStorage {
 	std::vector< GameEntity* >* GetMapTilesStorage() { return m_MapTileGameEntitiesVec; }
 	std::vector< GameEntity* >* GetMapViewRessources() { return m_MapViewRessourcesVec; }
 	std::vector< GameEntity* >* GetCitiesVec() { return m_CityVec; }
+	std::vector< GameEntity* >* GetHillsMountains() { return m_MountainsHillsVec; }
 
 
-	void AddGameEntitie(GameEntity* e) {
+	void AddGameEntitie(GameEntity* e, bool position_as_cell = true) {
 
 		// General saving.
 		m_GameEntitiesVec->push_back(e);
@@ -414,8 +550,14 @@ struct EntitiesStorage {
 		}
 		else {
 
-			// No, it is some entity on a mapttile.
-			_addEntityToMapTileVector(e);
+			if (position_as_cell) {
+				// No, it is some entity on a mapttile.
+				_addEntityToMapTileVector(e);
+			}
+			else {
+				// No, it is some entity on a mapttile.
+				_addEntityToMapTileVector(e, false);
+			}
 
 
 			// Is it a mapressource?
@@ -431,6 +573,11 @@ struct EntitiesStorage {
 			// Is it a MapTileRegion?
 			if (_isMapTileRegion(e)) {
 				_addMapTileRegion(e);
+			}
+
+			// Is it a hill or mountain?
+			if (_isHillOrMountain(e)) {
+				_addHillMountain(e);
 			}
 		}
 			
@@ -522,6 +669,16 @@ struct EntitiesStorage {
 				m_MapTileRegionsVec->erase(it);
 			}
 		}
+
+		// Delete Hills or Mountains.
+		if (_isHillOrMountain(e)) {
+			std::vector< GameEntity* >::iterator it = std::find(m_MountainsHillsVec->begin(), m_MountainsHillsVec->end(), e);
+
+			if (it != m_MountainsHillsVec->end()) {
+				m_MountainsHillsVec->erase(it);
+			}
+
+		}
 		
 	}
 
@@ -565,6 +722,7 @@ private:
 	std::vector<GameEntity*>* m_MapViewRessourcesVec; // Holds all ressources in game, that are explicitly on the mapview.
 	std::vector<GameEntity*>* m_CityVec; // Holds all cities in the game.
 	std::vector<GameEntity*>* m_MapTileRegionsVec; // Holds all regions defined in game.
+	std::vector<GameEntity*>* m_MountainsHillsVec; // Holds all hills and mountains in game.
 
 private:
 	EntitiesStorage() = default;
@@ -580,6 +738,11 @@ private:
 		m_MapViewRessourcesVec = new std::vector<GameEntity*>();
 		m_CityVec = new std::vector<GameEntity*>();
 		m_MapTileRegionsVec = new std::vector<GameEntity*>();
+		m_MountainsHillsVec = new std::vector<GameEntity*>();
+	}
+
+	void _addHillMountain(GameEntity* e) {
+		m_MountainsHillsVec->push_back(e);
 	}
 
 	void _addMapTileRegion(GameEntity* e) {
@@ -605,11 +768,28 @@ private:
 	}
 
 
-	void _addEntityToMapTileVector(GameEntity* e) {
+	void _addEntityToMapTileVector(GameEntity* e, bool position_as_cell = true) {
 
 		int entity_cell[2]; entity_cell[0] = e->m_TransformCmp->m_GameWorldSpaceCell[0]; entity_cell[1] = e->m_TransformCmp->m_GameWorldSpaceCell[1];
 
-		GetMapTileAtWorldPosition(entity_cell[0], entity_cell[1])->m_MapTileEntities->push_back(e);
+		if (position_as_cell) {
+			GetMapTileAtWorldPosition(entity_cell[0], entity_cell[1])->m_MapTileEntities->push_back(e);
+		}
+		else {
+
+			int xpos = entity_cell[0] * SPRITES_WIDTH_AND_HEIGHT;
+			int ypos = entity_cell[1] * SPRITES_WIDTH_AND_HEIGHT;
+			GetMapTileAtXYPosition(xpos, ypos)->m_MapTileEntities->push_back(e);
+		}
+	}
+
+
+	bool _isHillOrMountain(GameEntity* e) {
+		if (COMPARE_STRINGS(e->m_IDCmp->m_DynamicTypeName, "Hills") == 0 ||
+			COMPARE_STRINGS(e->m_IDCmp->m_DynamicTypeName, "Mountains") == 0) {
+			return true;
+		}
+		else return false;
 	}
 
 

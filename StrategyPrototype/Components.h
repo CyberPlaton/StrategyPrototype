@@ -3,6 +3,7 @@
 #include"ColorConsole.h"
 #include"FiniteStateMachine.h"
 
+
 struct CMPIdentifier {
 	CMPIdentifier() {
 
@@ -143,4 +144,180 @@ struct CMPInput {
 
 	virtual void HandleKeyboard();
 	virtual void HandleMouse();
+};
+
+
+struct CMPEntityRace {
+	
+	enum class Race {
+		RACE_INVALID = -1,
+		RACE_HUMAN = 0,
+		RACE_TROLL = 1,
+		RACE_DWARF = 2,
+		RACE_ORC = 3,
+		RACE_HIGHELF = 4,
+		RACE_DARKELF = 5,
+		RACE_GOBLIN = 6,
+		RACE_GNOME = 7
+	};
+
+	CMPEntityRace(Race race) {
+		switch (race)
+		{
+		case CMPEntityRace::Race::RACE_INVALID:
+			break;
+		case CMPEntityRace::Race::RACE_HUMAN:
+			m_EntityRaceString = "Human";
+			break;
+		case CMPEntityRace::Race::RACE_TROLL:
+			m_EntityRaceString = "Human";
+			break;
+		case CMPEntityRace::Race::RACE_DWARF:
+			m_EntityRaceString = "Dwarf";
+			break;
+		case CMPEntityRace::Race::RACE_ORC:
+			m_EntityRaceString = "Orc";
+			break;
+		case CMPEntityRace::Race::RACE_HIGHELF:
+			m_EntityRaceString = "High Elf";
+			break;
+		case CMPEntityRace::Race::RACE_DARKELF:
+			m_EntityRaceString = "Dark Elf";
+			break;
+		case CMPEntityRace::Race::RACE_GOBLIN:
+			m_EntityRaceString = "Goblin";
+			break;
+		case CMPEntityRace::Race::RACE_GNOME:
+			m_EntityRaceString = "Gnome";
+			break;
+		default:
+			break;
+		}
+	}
+
+	Race m_EntityRace = Race::RACE_INVALID;
+	std::string m_EntityRaceString = "";
+};
+
+
+// This struct defines the movement cost for a specific maptileentity.
+// It gives the movement cost back, based on the race of the entity.
+struct CMPMovementCostModifier {
+
+	// This function should be used to get the actual movement cost for a unit trespassing on this terrain.
+	// It returns the basemovementcost modified by the racial abilities etc. of a unit.
+	int GetRaceModifiedMovementCost(std::string race) {
+
+		if (COMPARE_STRINGS(race, "Human") == 0) {
+			return _getRaceModifierValue(CMPEntityRace::Race::RACE_HUMAN);
+		}
+		else if (COMPARE_STRINGS(race, "Orc") == 0) {
+			return _getRaceModifierValue(CMPEntityRace::Race::RACE_ORC);
+		}
+		else if (COMPARE_STRINGS(race, "High Elf") == 0) {
+			return _getRaceModifierValue(CMPEntityRace::Race::RACE_HIGHELF);
+		}
+		else if (COMPARE_STRINGS(race, "Dark Elf") == 0) {
+			return _getRaceModifierValue(CMPEntityRace::Race::RACE_DARKELF);
+		}
+		else if (COMPARE_STRINGS(race, "Dwarf") == 0) {
+			return _getRaceModifierValue(CMPEntityRace::Race::RACE_DWARF);
+		}
+		else if (COMPARE_STRINGS(race, "Gnome") == 0) {
+			return _getRaceModifierValue(CMPEntityRace::Race::RACE_GNOME);
+		}
+		else if (COMPARE_STRINGS(race, "Goblin") == 0) {
+			return _getRaceModifierValue(CMPEntityRace::Race::RACE_GOBLIN);
+		}
+		else if (COMPARE_STRINGS(race, "Troll") == 0) {
+			return _getRaceModifierValue(CMPEntityRace::Race::RACE_TROLL);
+		}
+
+	}
+
+	void SetRaceSpecificMovementCostModifier(CMPEntityRace::Race race, int modifier) {
+		switch (race) {
+		case CMPEntityRace::Race::RACE_HUMAN:
+			m_RaceModifierHuman = modifier;
+			break;
+		case CMPEntityRace::Race::RACE_ORC:
+			m_RaceModifierOrc = modifier;
+			break;
+		case CMPEntityRace::Race::RACE_HIGHELF:
+			m_RaceModifierHighElf = modifier;
+			break;
+		case CMPEntityRace::Race::RACE_DARKELF:
+			m_RaceModifierDarkElf = modifier;
+			break;
+		case CMPEntityRace::Race::RACE_TROLL:
+			m_RaceModifierTroll = modifier;
+			break;
+		case CMPEntityRace::Race::RACE_GNOME:
+			m_RaceModifierGnome = modifier;
+			break;
+		case CMPEntityRace::Race::RACE_DWARF:
+			m_RaceModifierDwarf = modifier;
+			break;
+		case CMPEntityRace::Race::RACE_GOBLIN:
+			m_RaceModifierGoblin = modifier;
+			break;
+		default:
+			break;
+		}
+
+	}
+
+	void SetBaseMovementCost(unsigned int n) { m_BaseMovementCost = n; }
+	int GetBaseMovementCost() { return m_BaseMovementCost; }
+
+	int m_BaseMovementCost = -1;
+
+private:
+	int m_RaceModifierHuman = 0;
+	int m_RaceModifierOrc = 0;
+	int m_RaceModifierHighElf = 0;
+	int m_RaceModifierDarkElf = 0;
+	int m_RaceModifierTroll = 0;
+	int m_RaceModifierGnome = 0;
+	int m_RaceModifierGoblin = 0;
+	int m_RaceModifierDwarf = 0;
+
+
+private:
+
+	int _getRaceModifierValue(CMPEntityRace::Race race) {
+		switch (race){
+		case CMPEntityRace::Race::RACE_HUMAN:
+			return m_RaceModifierHuman;
+			break;
+		case CMPEntityRace::Race::RACE_ORC:
+			return m_RaceModifierOrc;
+			break;
+		case CMPEntityRace::Race::RACE_HIGHELF:
+			return m_RaceModifierHighElf;
+			break;
+		case CMPEntityRace::Race::RACE_DARKELF:
+			return m_RaceModifierDarkElf;
+			break;
+		case CMPEntityRace::Race::RACE_TROLL:
+			return m_RaceModifierTroll;
+			break;
+		case CMPEntityRace::Race::RACE_GNOME:
+			return m_RaceModifierGnome;
+			break;
+		case CMPEntityRace::Race::RACE_DWARF:
+			return m_RaceModifierDwarf;
+			break;
+		case CMPEntityRace::Race::RACE_GOBLIN:
+			return m_RaceModifierGoblin;
+			break;
+		default:
+			return 0;
+			break;
+		}
+	}
+
+
+
+
 };
