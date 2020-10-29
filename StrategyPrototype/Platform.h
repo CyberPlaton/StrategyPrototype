@@ -18,6 +18,8 @@
 
 
 #define SPRITES_WIDTH_AND_HEIGHT 128
+#define MAP_SIZE 6 // Defines the size of the map. Would be convenient to set it dynamically.
+
 
 #define COMPARE_STRINGS(x, y) strcmp(x.c_str(), y) // Utility.
 #define COMPARE_STRINGS_2(x, y) strcmp(x.c_str(), y.c_str()) // Utility.

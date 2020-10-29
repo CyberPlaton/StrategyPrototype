@@ -64,8 +64,8 @@ void WorldMapDrawingOptions::_createMap() {
 	int ypos = 0;
 
 	// Width and Height must always be 1 less then defined in the loaded mapfile. Else errors occur.
-	int mapwidth = 3;
-	int mapheight = 1;
+	int mapwidth = 5;
+	int mapheight = 5;
 
 	MapTile* maptile = nullptr;
 

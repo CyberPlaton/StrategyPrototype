@@ -9,8 +9,6 @@ struct MapTileRegion;
 class Game;
 typedef std::array<std::array<MapTile*, 20>, 20> MapTileArray;
 
-#define MAP_SIZE 20
-
 
 // Helpers.
 MapTile* GetMapTileAtWorldPosition(int x, int y);

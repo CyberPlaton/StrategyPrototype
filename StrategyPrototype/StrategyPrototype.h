@@ -159,8 +159,11 @@ public:
 	std::map<std::string, olc::Decal*> m_SpriteResourceMap;
 	std::vector<olc::Sprite*> m_SpriteStorage;
 
-	bool m_DebugDraw = false;
+	bool m_DebugDraw = true;
 	bool m_DebugDrawGrid = false;
+	bool m_DebugDrawForestInfo = false;
+	bool m_DebugDrawMapTileInfo = false;
+	bool m_DebugDrawGeneralOptions = false;
 
 	int m_TurnCount = 1;
 

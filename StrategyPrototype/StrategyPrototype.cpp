@@ -124,6 +124,9 @@ bool MapTileAppropriteForForest(MapTile* tile, Forest* forest) {
 		break;
 
 	}
+
+
+	return false;
 }
 
 
@@ -304,6 +307,20 @@ void CMPCameraInput::HandleKeyboard(Camera* cam) {
 
 			context->m_DebugDrawGrid = (context->m_DebugDrawGrid == true) ? false : true;
 		}
+
+		if (context->GetKey(olc::Key::TAB).bPressed) {
+			context->m_DebugDrawGeneralOptions = (context->m_DebugDrawGeneralOptions == true) ? false : true;
+		}
+
+		if (context->GetKey(olc::Key::M).bPressed) {
+			context->m_DebugDrawMapTileInfo = (context->m_DebugDrawMapTileInfo == true) ? false : true;
+		}
+
+		if (context->GetKey(olc::Key::F).bPressed) {
+			context->m_DebugDrawForestInfo = (context->m_DebugDrawForestInfo == true) ? false : true;
+		}
+
+
 	}
 
 	if (context->GetKey(olc::Key::SPACE).bReleased) {
@@ -326,9 +343,6 @@ void CMPCameraInput::HandleKeyboard(Camera* cam) {
 		speed = 4;
 	}
 
-	if (context->GetKey(olc::Key::TAB).bPressed) {
-		context->m_DebugDraw = (context->m_DebugDraw == true) ? false : true;
-	}
 
 	if (context->GetKey(olc::Key::W).bHeld) {
 
@@ -904,106 +918,125 @@ void Renderer::RenderCityLayer4() {
 
 void Game::DebugDrawStats() {
 
-	std::string s2 = "Camera Position " + std::to_string(g_vi2dCameraPosition.x) + " : " + std::to_string(g_vi2dCameraPosition.y);
-	DrawString(olc::vi2d(2, 10), s2, olc::RED, 2.0f);
+	if (!m_DebugDraw) return;
 
-	std::string turncount = "Turn " + std::to_string(m_TurnCount);
-	DrawString(olc::vi2d(2, 30), turncount, olc::RED, 2.0f);
+	if (m_DebugDrawGeneralOptions) {
 
-	std::string forestcount = "Forests " + std::to_string(GetTotalForestsCount());
-	DrawString(olc::vi2d(2, 50), forestcount, olc::RED, 2.0f);
+		std::string s2 = "Camera Position " + std::to_string(g_vi2dCameraPosition.x) + " : " + std::to_string(g_vi2dCameraPosition.y);
+		DrawString(olc::vi2d(2, 10), s2, olc::RED, 2.0f);
 
-	std::string on_off = (m_DebugDrawGrid == true) ? "On" : "Off";
-	std::string debuggrid = "Grid (Ctrl + G): " + on_off;
-	DrawString(olc::vi2d(2, 70), debuggrid, olc::RED, 2.0f);
+		std::string turncount = "Turn " + std::to_string(m_TurnCount);
+		DrawString(olc::vi2d(2, 30), turncount, olc::RED, 2.0f);
 
+		std::string on_off = (m_DebugDrawGrid == true) ? "On" : "Off";
+		std::string debuggrid = "Grid (Ctrl + G): " + on_off;
+		DrawString(olc::vi2d(2, 50), debuggrid, olc::RED, 2.0f);
 
+		std::string maptile_info = (m_DebugDrawMapTileInfo == true) ? "On" : "Off";
+		std::string maptile_info_2 = "Maptile Info (Ctrl + M): " + maptile_info;
+		DrawString(olc::vi2d(2, 70), maptile_info_2, olc::RED, 2.0f);
 
-	// Draw each maptiles mapcell with position
-	std::string s3, s4, tilepos, tiletype;
-	for (auto it : *EntitiesStorage::Get()->GetMapTilesStorage()) {
-
-
-		// Camera dependent Cell 
-		s3 = std::to_string(it->m_TransformCmp->m_Cell[0]) + " : " + std::to_string(it->m_TransformCmp->m_Cell[1]);
-		DrawString(olc::vi2d(it->m_TransformCmp->m_PosX, it->m_TransformCmp->m_PosY), s3, olc::RED, 1.0f);
-
-		// Gameworld Cell
-		s4 = std::to_string(it->m_TransformCmp->m_GameWorldSpaceCell[0]) + " : " + std::to_string(it->m_TransformCmp->m_GameWorldSpaceCell[1]);
-		DrawString(olc::vi2d(it->m_TransformCmp->m_PosX, it->m_TransformCmp->m_PosY+20), s4, olc::DARK_RED, 1.0f);
-
-
-		tilepos = "X: " + std::to_string(it->m_TransformCmp->m_PosX) + " : " + " Y: " + std::to_string(it->m_TransformCmp->m_PosY);
-		DrawString(olc::vi2d(it->m_TransformCmp->m_PosX, it->m_TransformCmp->m_PosY + 40), tilepos, olc::DARK_RED, 1.0f);
-
-
-		
-		tiletype = MapTileTypeToString(reinterpret_cast<MapTile*>(it));
-		DrawString(olc::vi2d(it->m_TransformCmp->m_PosX, it->m_TransformCmp->m_PosY + 60), tiletype, olc::RED, 1.0f);
+		std::string forest_info = (m_DebugDrawForestInfo == true) ? "On" : "Off";
+		std::string forest_info_2 = "Forest Info (Ctrl + F): " + forest_info;
+		DrawString(olc::vi2d(2, 90), forest_info_2, olc::RED, 2.0f);
 
 	}
 
 
+	if (m_DebugDrawMapTileInfo) {
 
-	// DrawForests and its Lifetime
-	std::string s5, s6, s7, foresttype, cell, pos, forestclass;
-	std::vector< GameEntity* > vec = GetForestEntities();
-	Forest* f = nullptr;
-	for (auto it = vec.begin(); it != vec.end(); ++it) {
+		// Draw each maptiles mapcell with position
+		std::string s3, s4, tilepos, tiletype;
+		for (auto it : *EntitiesStorage::Get()->GetMapTilesStorage()) {
 
-		f = reinterpret_cast<Forest*>(*it);
 
-		switch (f->m_ForestType) {
-		case Forest::ForestType::FOREST_NORMAL:
-			foresttype = "NORMAL";
-			break;
-		case Forest::ForestType::FOREST_DYING:
-			foresttype = "DYING";
-			break;
-		case Forest::ForestType::FOREST_SCARCE:
-			foresttype = "SCARCE";
-			break;
-		case Forest::ForestType::FOREST_DEEP:
-			foresttype = "DEEP";
-			break;
-		default:
-			break;
+			// Camera dependent Cell 
+			s3 = std::to_string(it->m_TransformCmp->m_Cell[0]) + " : " + std::to_string(it->m_TransformCmp->m_Cell[1]);
+			DrawString(olc::vi2d(it->m_TransformCmp->m_PosX, it->m_TransformCmp->m_PosY), s3, olc::RED, 1.0f);
+
+			// Gameworld Cell
+			s4 = std::to_string(it->m_TransformCmp->m_GameWorldSpaceCell[0]) + " : " + std::to_string(it->m_TransformCmp->m_GameWorldSpaceCell[1]);
+			DrawString(olc::vi2d(it->m_TransformCmp->m_PosX, it->m_TransformCmp->m_PosY + 20), s4, olc::DARK_RED, 1.0f);
+
+
+			tilepos = "X: " + std::to_string(it->m_TransformCmp->m_PosX) + " : " + " Y: " + std::to_string(it->m_TransformCmp->m_PosY);
+			DrawString(olc::vi2d(it->m_TransformCmp->m_PosX, it->m_TransformCmp->m_PosY + 40), tilepos, olc::DARK_RED, 1.0f);
+
+
+
+			tiletype = MapTileTypeToString(reinterpret_cast<MapTile*>(it));
+			DrawString(olc::vi2d(it->m_TransformCmp->m_PosX, it->m_TransformCmp->m_PosY + 60), tiletype, olc::RED, 1.0f);
+
 		}
 
+	}
 
-		switch (f->m_ForestClass) {
-		case Forest::ForestClass::FOREST_CLASS_TUNDRA:
-			forestclass = "CLASS_TUNDRA";
-			break;
-		case Forest::ForestClass::FOREST_CLASS_JUNGLE:
-			forestclass = "CLASS_JUNGLE";
-			break;
-		case Forest::ForestClass::FOREST_CLASS_TEMPERATE:
-			forestclass = "CLASS_TEMPERATE";
-			break;
-		case Forest::ForestClass::FOREST_CLASS_SAVANNAH:
-			forestclass = "CLASS_SAVANNAH";
-			break;
-		default:
-			forestclass = "CLASS_INVALID";
-			break;
+
+	if (m_DebugDrawForestInfo) {
+
+		std::string forestcount = "Forests " + std::to_string(GetTotalForestsCount());
+		DrawString(olc::vi2d(2, 50), forestcount, olc::RED, 2.0f);
+
+		// DrawForests and its Lifetime
+		std::string s5, s6, s7, foresttype, cell, pos, forestclass;
+		std::vector< GameEntity* > vec = GetForestEntities();
+		Forest* f = nullptr;
+		for (auto it = vec.begin(); it != vec.end(); ++it) {
+
+			f = reinterpret_cast<Forest*>(*it);
+
+			switch (f->m_ForestType) {
+			case Forest::ForestType::FOREST_NORMAL:
+				foresttype = "NORMAL";
+				break;
+			case Forest::ForestType::FOREST_DYING:
+				foresttype = "DYING";
+				break;
+			case Forest::ForestType::FOREST_SCARCE:
+				foresttype = "SCARCE";
+				break;
+			case Forest::ForestType::FOREST_DEEP:
+				foresttype = "DEEP";
+				break;
+			default:
+				break;
+			}
+
+
+			switch (f->m_ForestClass) {
+			case Forest::ForestClass::FOREST_CLASS_TUNDRA:
+				forestclass = "CLASS_TUNDRA";
+				break;
+			case Forest::ForestClass::FOREST_CLASS_JUNGLE:
+				forestclass = "CLASS_JUNGLE";
+				break;
+			case Forest::ForestClass::FOREST_CLASS_TEMPERATE:
+				forestclass = "CLASS_TEMPERATE";
+				break;
+			case Forest::ForestClass::FOREST_CLASS_SAVANNAH:
+				forestclass = "CLASS_SAVANNAH";
+				break;
+			default:
+				forestclass = "CLASS_INVALID";
+				break;
+			}
+
+
+			s5 = "LifeT.: " + std::to_string(f->m_ForestLifeTimeNow);
+			s6 = " MaxLifeT.: " + std::to_string(f->m_ForestLifetime);
+			s7 = " Type: " + foresttype;
+			DrawString(olc::vi2d(f->m_TransformCmp->m_PosX, f->m_TransformCmp->m_PosY + 30), s5, olc::CYAN, 1);
+			DrawString(olc::vi2d(f->m_TransformCmp->m_PosX, f->m_TransformCmp->m_PosY + 40), s6, olc::CYAN, 1);
+			DrawString(olc::vi2d(f->m_TransformCmp->m_PosX, f->m_TransformCmp->m_PosY + 50), s7, olc::CYAN, 1);
+
+			pos = "X: " + std::to_string(f->m_TransformCmp->m_PosX) + " Y: " + std::to_string(f->m_TransformCmp->m_PosY);
+			cell = "(" + std::to_string(f->m_TransformCmp->m_GameWorldSpaceCell[0]) + " : " + std::to_string(f->m_TransformCmp->m_GameWorldSpaceCell[1]) + ")";
+			DrawString(olc::vi2d(f->m_TransformCmp->m_PosX, f->m_TransformCmp->m_PosY + 60), cell, olc::CYAN, 1);
+			DrawString(olc::vi2d(f->m_TransformCmp->m_PosX, f->m_TransformCmp->m_PosY + 70), pos, olc::CYAN, 1);
+
+			DrawString(olc::vi2d(f->m_TransformCmp->m_PosX, f->m_TransformCmp->m_PosY + 80), forestclass, olc::CYAN, 1);
+
 		}
-
-
-		s5 = "LifeT.: " + std::to_string(f->m_ForestLifeTimeNow);
-		s6 = " MaxLifeT.: " + std::to_string(f->m_ForestLifetime);
-		s7 = " Type: " + foresttype;
-		DrawString(olc::vi2d(f->m_TransformCmp->m_PosX, f->m_TransformCmp->m_PosY + 30), s5, olc::CYAN, 1);
-		DrawString(olc::vi2d(f->m_TransformCmp->m_PosX, f->m_TransformCmp->m_PosY + 40), s6, olc::CYAN, 1);
-		DrawString(olc::vi2d(f->m_TransformCmp->m_PosX, f->m_TransformCmp->m_PosY + 50), s7, olc::CYAN, 1);
-
-		pos = "X: " + std::to_string(f->m_TransformCmp->m_PosX) + " Y: " + std::to_string(f->m_TransformCmp->m_PosY);
-		cell = "(" + std::to_string(f->m_TransformCmp->m_GameWorldSpaceCell[0]) + " : " + std::to_string(f->m_TransformCmp->m_GameWorldSpaceCell[1]) + ")";
-		DrawString(olc::vi2d(f->m_TransformCmp->m_PosX, f->m_TransformCmp->m_PosY + 60), cell, olc::CYAN, 1);
-		DrawString(olc::vi2d(f->m_TransformCmp->m_PosX, f->m_TransformCmp->m_PosY + 70), pos, olc::CYAN, 1);
-
-		DrawString(olc::vi2d(f->m_TransformCmp->m_PosX, f->m_TransformCmp->m_PosY + 80), forestclass, olc::CYAN, 1);
-
 	}
 
 }
@@ -1591,7 +1624,7 @@ void ForestSearch::_checkForNewForestCreation(Forest* forest) {
 		// Check first, if the forest has same class as this one, else skip everything.
 		// And check whether the maptile is right for this forest to grow.
 		if (!forest->HasSameForestClass(other_forest)) return;
-		if (!MapTileAppropriteForForest(GetMapTileAtWorldPosition(forest_worldcell[0] - 1, forest_worldcell[1] - 1), forest)) return;
+
 
 		// check for needed type of forest --> forest_normal.
 		// We may change this logic later.
@@ -1603,6 +1636,7 @@ void ForestSearch::_checkForNewForestCreation(Forest* forest) {
 
 				// Check whether new forest would be out of bound.
 				if (IsIndexOutOfBound(forest_worldcell[0], forest_worldcell[1] - 1)) return;
+				if (!MapTileAppropriteForForest(GetMapTileAtWorldPosition(forest_worldcell[0], forest_worldcell[1] - 1), forest)) return;
 
 
 				// Empty tile --> create forest.
@@ -1632,7 +1666,6 @@ void ForestSearch::_checkForNewForestCreation(Forest* forest) {
 
 		// Check first, if the forest has same class as this one, else skip everything.
 		if (!forest->HasSameForestClass(other_forest)) return;
-		if (!MapTileAppropriteForForest(GetMapTileAtWorldPosition(forest_worldcell[0] + 1, forest_worldcell[1] - 1), forest)) return;
 
 		if (other_forest->m_GraphicsCmp->m_SpriteName.find("normal") != std::string::npos) {
 
@@ -1641,6 +1674,8 @@ void ForestSearch::_checkForNewForestCreation(Forest* forest) {
 
 				// Check whether new forest would be out of bound.
 				if (IsIndexOutOfBound(forest_worldcell[0] + 1, forest_worldcell[1])) return;
+				if (!MapTileAppropriteForForest(GetMapTileAtWorldPosition(forest_worldcell[0] + 1, forest_worldcell[1]), forest)) return;
+
 
 				// Empty tile --> create forest.
 				int xpos = GetXPositionOfMapTile(GetMapTileAtWorldPosition(forest_worldcell[0] + 1, forest_worldcell[1]));
@@ -1663,7 +1698,6 @@ void ForestSearch::_checkForNewForestCreation(Forest* forest) {
 
 		// Check first, if the forest has same class as this one, else skip everything.
 		if (!forest->HasSameForestClass(other_forest)) return;
-		if (!MapTileAppropriteForForest(GetMapTileAtWorldPosition(forest_worldcell[0] - 1, forest_worldcell[1] + 1), forest)) return;
 
 
 		if (other_forest->m_GraphicsCmp->m_SpriteName.find("normal") != std::string::npos) {
@@ -1673,6 +1707,7 @@ void ForestSearch::_checkForNewForestCreation(Forest* forest) {
 
 				// Check whether new forest would be out of bound.
 				if (IsIndexOutOfBound(forest_worldcell[0] - 1, forest_worldcell[1])) return;
+				if (!MapTileAppropriteForForest(GetMapTileAtWorldPosition(forest_worldcell[0] - 1, forest_worldcell[1]), forest)) return;
 
 
 				// Empty tile --> create forest.
@@ -1696,7 +1731,6 @@ void ForestSearch::_checkForNewForestCreation(Forest* forest) {
 
 		// Check first, if the forest has same class as this one, else skip everything.
 		if (!forest->HasSameForestClass(other_forest)) return;
-		if (!MapTileAppropriteForForest(GetMapTileAtWorldPosition(forest_worldcell[0] + 1, forest_worldcell[1] + 1), forest)) return;
 
 
 		if (other_forest->m_GraphicsCmp->m_SpriteName.find("normal") != std::string::npos) {
@@ -1705,6 +1739,8 @@ void ForestSearch::_checkForNewForestCreation(Forest* forest) {
 
 				// Check whether new forest would be out of bound.
 				if (IsIndexOutOfBound(forest_worldcell[0], forest_worldcell[1] + 1)) return;
+				if (!MapTileAppropriteForForest(GetMapTileAtWorldPosition(forest_worldcell[0], forest_worldcell[1] + 1), forest)) return;
+
 
 				// Empty tile --> create forest.
 				int xpos = GetXPositionOfMapTile(GetMapTileAtWorldPosition(forest_worldcell[0], forest_worldcell[1]));
