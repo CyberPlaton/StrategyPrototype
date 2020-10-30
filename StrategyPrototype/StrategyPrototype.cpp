@@ -1494,7 +1494,7 @@ void ForestSearch::executeStateLogic() {
 	if (m_ManagedForest->m_ForestType == Forest::ForestType::FOREST_SCARCE) {
 
 
-		if (m_ManagedForest->m_ForestLifeTimeNow > 32) { // scarce --> normal
+		if (m_ManagedForest->m_ForestLifeTimeNow > 32 * TURN_TIME_MODIFIER) { // scarce --> normal
 			
 			m_ManagedForest->m_ForestType = Forest::ForestType::FOREST_NORMAL;
 
@@ -1503,12 +1503,12 @@ void ForestSearch::executeStateLogic() {
 		}
 	}
 	else {
-		if (m_ManagedForest->m_ForestType == Forest::ForestType::FOREST_NORMAL && m_ManagedForest->m_ForestLifeTimeNow > 66 || // normal --> dying
-			m_ManagedForest->m_ForestType == Forest::ForestType::FOREST_DEEP && m_ManagedForest->m_ForestLifeTimeNow > 66*2) { // deep --> dying. This transition takes 2 times longer to fullfill, so the deep forest lives longer.
+		if (m_ManagedForest->m_ForestType == Forest::ForestType::FOREST_NORMAL && m_ManagedForest->m_ForestLifeTimeNow > 66 * TURN_TIME_MODIFIER || // normal --> dying
+			m_ManagedForest->m_ForestType == Forest::ForestType::FOREST_DEEP && m_ManagedForest->m_ForestLifeTimeNow > 66*2 * TURN_TIME_MODIFIER) { // deep --> dying. This transition takes 2 times longer to fullfill, so the deep forest lives longer.
 
 
 			if (m_ManagedForest->m_ForestType == Forest::ForestType::FOREST_DEEP) m_ManagedForest->m_ForestLifeTimeNow = 67; // Needed reset to normal value for deep forest to ensure common dying time.
-			m_ManagedForest->m_ForestLifetime = 100;
+			m_ManagedForest->m_ForestLifetime = 100 * TURN_TIME_MODIFIER;
 
 			m_ManagedForest->m_ForestType = Forest::ForestType::FOREST_DYING;
 
@@ -1532,7 +1532,7 @@ void ForestSearch::executeStateLogic() {
 
 		if (surrounded) {
 			m_ManagedForest->m_ForestType = Forest::ForestType::FOREST_DEEP;
-			m_ManagedForest->m_ForestLifetime = 200;
+			m_ManagedForest->m_ForestLifetime = 200 * TURN_TIME_MODIFIER;
 
 			cout << color(colors::WHITE);
 			cout << "_surroundedByForestNormalOrDeep() successfully executed for " << m_ManagedForest->m_IDCmp->m_ID << " at position " << m_ManagedForest->m_TransformCmp->m_GameWorldSpaceCell[0] << " : " << m_ManagedForest->m_TransformCmp->m_GameWorldSpaceCell[1] << white << endl;
@@ -1545,7 +1545,7 @@ void ForestSearch::executeStateLogic() {
 			// Check whether to raise randomly a deepforest.
 			if( RaiseDeepForestRandomly()) {
 				m_ManagedForest->m_ForestType = Forest::ForestType::FOREST_DEEP;
-				m_ManagedForest->m_ForestLifetime = 200;
+				m_ManagedForest->m_ForestLifetime = 200 * TURN_TIME_MODIFIER;
 
 				cout << color(colors::WHITE);
 				cout << "Randomly raised DeepForest " << m_ManagedForest->m_IDCmp->m_ID << " at position " << m_ManagedForest->m_TransformCmp->m_GameWorldSpaceCell[0] << " : " << m_ManagedForest->m_TransformCmp->m_GameWorldSpaceCell[1] << white << endl;

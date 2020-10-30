@@ -313,7 +313,7 @@ public:
 		m_AICmp = new CMPArtificialIntelligence(this);
 
 		// Define props
-		m_ForestLifetime = 100;
+		m_ForestLifetime = 100* TURN_TIME_MODIFIER;
 		
 		if (IsSubstringInString("_scarce", name)) { // means "_scarce" is in name.
 			m_ForestType = ForestType::FOREST_SCARCE;
