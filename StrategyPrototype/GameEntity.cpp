@@ -34,6 +34,10 @@ void WorldMapDrawingOptions::_createMap() {
 
 	MapTile* maptile = nullptr;
 
+	std::vector<MapTileRegion*> regions_vec;
+	MapTileRegion* region = nullptr;
+
+
 	while (getline(map, line)) {
 
 
@@ -592,10 +596,101 @@ void WorldMapDrawingOptions::_createMap() {
 
 
 		}
-		else if (IsSubstringInString("regions", line)) { // Defining maptileregions for the map.
+		else if (IsSubstringInString("region;", line)) { // Defining maptileregions for the map.
+
+				// Regions are defined like
+				// region;
+				// 1:0, 2:0, 1:1,; ...
+				int map_tile[2];
+				bool first_digit_defined = false;
+
+				region = new MapTileRegion("map_cell_red");
+				regions_vec.push_back(region);
+
+
+				cout << APP_COLOR;
+				cout << "CREATING REGIONS" << white << endl;
+
+				string token = ""; // The next word.
+				bool escape_code = false;
+				bool token_escape_code = false;
+				bool token_end_of_maptile_definition = false;
+				bool line_end_escape_code = false; // Means, the end of the line was reached, the delimiter ";" was found, thus move to next line.
+
+
+				if (COMPARE_STRINGS(line, "region;") == 0) getline(map, line); // Read next line for maptiles definition.
+
+
+				cout << APP_ERROR_COLOR;
+				cout << line << white << endl;
+
+				// Iterate through line
+				for (auto it = line.begin(); it != line.end(); ++it) {
+
+					if (*it == ',') { // escape code
+						escape_code = true;
+					}
+					else if (*it == ';') {
+						line_end_escape_code = true;
+					}
+					else {
+						token.push_back((*it)); // At char to string.
+					}
+
+
+					// Check tokens.
+					if (escape_code) {
+
+						cout << APP_ERROR_COLOR;
+						cout << token << white << endl;
+
+						// Extract numbers out of token
+						string first_number, second_number;
+						bool delimiter_reached = false;
+
+						for (auto it = token.begin(); it != token.end(); ++it) {
+
+							if (*it == ':') delimiter_reached = true;
+
+							if (*it != ':' && delimiter_reached == false) {
+
+								first_number.push_back(*it);
+							}
+							else if(*it != ':'){
+								second_number.push_back(*it);
+							}
+
+						}
+
+
+						// Convert first_number and second_number to a maptile position.
+						map_tile[0] = atoi(first_number.c_str());
+						map_tile[1] = atoi(second_number.c_str());
+
+
+						region->AddTileToRegion(GetMapTileAtWorldPosition(map_tile[0], map_tile[1]));
+
+
+						cout << APP_ERROR_COLOR;
+						cout << "First: "<<first_number << " Second: " << second_number << white << endl;
+						first_number.clear();
+						second_number.clear();
 
 
 
+						// Reset the reading token and escape_code
+						token.clear();
+						escape_code = false;
+
+					}
+					else if (line_end_escape_code) {
+						continue;
+					}
+
+
+
+
+				}
 
 		}
 		else {
@@ -604,7 +699,14 @@ void WorldMapDrawingOptions::_createMap() {
 	}
 
 
+	// At last, add regions made to storage.
+	for (auto it : regions_vec) {
 
+		storage->AddGameEntitie(it);
+	}
+	
+
+	regions_vec.clear();
 	map.close();
 }
 

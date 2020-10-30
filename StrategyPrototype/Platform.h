@@ -24,3 +24,5 @@
 
 #define COMPARE_STRINGS(x, y) strcmp(x.c_str(), y) // Utility.
 #define COMPARE_STRINGS_2(x, y) strcmp(x.c_str(), y.c_str()) // Utility.
+
+int StringToInt(std::string s);

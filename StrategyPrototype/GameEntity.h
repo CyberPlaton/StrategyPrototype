@@ -30,6 +30,7 @@ bool IsMapTilePartOfRegion(MapTile* tile);
 bool RaiseDeepForestRandomly();
 
 
+
 enum class TileImprovementLevel {
 	TILE_IMPROVEMENT_LVL_INVALID = -1,
 	TILE_IMPROVEMENT_LVL_ONE = 0,
@@ -546,9 +547,19 @@ struct EntitiesStorage {
 	std::vector< GameEntity* >* GetMapViewRessources() { return m_MapViewRessourcesVec; }
 	std::vector< GameEntity* >* GetCitiesVec() { return m_CityVec; }
 	std::vector< GameEntity* >* GetHillsMountains() { return m_MountainsHillsVec; }
+	std::vector<GameEntity*>* GetMapTileRegions() { return m_MapTileRegionsVec; }
 
 
 	void AddGameEntitie(GameEntity* e) {
+
+		// This entity is a maptile region. Thus we do not want it in general storage.
+		// We only add it to specific vector and it can be accessed from there only.
+		if (_isMapTileRegion(e)) {
+			_addMapTileRegion(e);
+			return;
+		}
+
+
 
 		// General saving.
 		m_GameEntitiesVec->push_back(e);

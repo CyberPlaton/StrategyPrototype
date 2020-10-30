@@ -165,6 +165,9 @@ public:
 	bool m_DebugDrawMapTileInfo = false;
 	bool m_DebugDrawGeneralOptions = false;
 
+	bool m_DebugDrawRegions = false;
+	std::string m_DebugDrawRegionsCount = "-1";
+
 	int m_TurnCount = 1;
 
 private:

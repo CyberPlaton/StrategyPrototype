@@ -359,6 +359,10 @@ void CMPCameraInput::HandleKeyboard(Camera* cam) {
 			context->m_DebugDrawForestInfo = (context->m_DebugDrawForestInfo == true) ? false : true;
 		}
 
+		if (context->GetKey(olc::Key::R).bPressed) {
+			context->m_DebugDrawRegions = (context->m_DebugDrawRegions == true) ? false : true;
+		}
+
 
 	}
 
@@ -982,6 +986,37 @@ void Game::DebugDrawStats() {
 		std::string forest_info = (m_DebugDrawForestInfo == true) ? "On" : "Off";
 		std::string forest_info_2 = "Forest Info (Ctrl + F): " + forest_info;
 		DrawString(olc::vi2d(2, 90), forest_info_2, olc::RED, 2.0f);
+
+
+		std::string regions = (m_DebugDrawRegions == true) ? "On" : "Off";
+		std::string regions_info = "Regions (Ctrl + R): " + regions;
+		DrawString(olc::vi2d(2, 110), regions_info, olc::RED, 2.0f);
+
+	}
+
+	if (m_DebugDrawRegions) {
+
+		MapTileRegion* region = nullptr;
+
+		std::vector< GameEntity* > vec = *EntitiesStorage::Get()->GetMapTileRegions();
+		m_DebugDrawRegionsCount =  std::to_string(vec.size());
+
+		std::string regions_count = "Regions Count: " + m_DebugDrawRegionsCount;
+		DrawString(olc::vi2d(2, 130), regions_count, olc::RED, 2.0f);
+
+		for (auto it : vec) {
+
+			region = reinterpret_cast<MapTileRegion*>(it);
+
+			for (auto maptile : region->m_MapTileRegionTiles) {
+
+
+				// Draw appropriate loaded sprite on position specified.
+				DrawDecal(olc::vi2d(maptile->m_TransformCmp->m_PosX, maptile->m_TransformCmp->m_PosY),
+					m_SpriteResourceMap.at(region->m_GraphicsCmp->m_SpriteName));
+
+			}			
+		}
 
 	}
 
