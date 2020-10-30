@@ -1511,15 +1511,26 @@ void ForestSearch::executeStateLogic() {
 		_checkForNewForestCreation(m_ManagedForest);
 
 
-		if (_surroundedByForestNormalOrDeep(m_ManagedForest)) {
+		bool surrounded = false;
+		surrounded = _surroundedByForestNormalOrDeep(m_ManagedForest);
+
+		if (surrounded) {
 			m_ManagedForest->m_ForestType = Forest::ForestType::FOREST_DEEP;
 			m_ManagedForest->m_ForestLifetime = 200;
 
-
-
-			cout << color(colors::BLUE);
-			cout << "_surroundedByForestNormalOrDeep() successfully executed for " << m_ManagedForest->m_IDCmp->m_ID << "." << white << endl;
+			cout << color(colors::WHITE);
+			cout << "_surroundedByForestNormalOrDeep() successfully executed for " << m_ManagedForest->m_IDCmp->m_ID << " at position " << m_ManagedForest->m_TransformCmp->m_GameWorldSpaceCell[0] << " : " << m_ManagedForest->m_TransformCmp->m_GameWorldSpaceCell[1] << white << endl;
 		}
+		else {
+			cout << color(colors::WHITE);
+			cout << "_surroundedByForestNormalOrDeep() unsuccessfully executed for " << m_ManagedForest->m_IDCmp->m_ID << " at position " << m_ManagedForest->m_TransformCmp->m_GameWorldSpaceCell[0] << " : " << m_ManagedForest->m_TransformCmp->m_GameWorldSpaceCell[1] << white << endl;
+		}
+
+		/*
+		if (_surroundedByForestNormalOrDeep(m_ManagedForest)) {
+
+		}
+		*/
 	}
 
 
@@ -1561,29 +1572,28 @@ bool ForestSearch::_surroundedByForestNormalOrDeep(Forest* forest) {
 	EntitiesStorage* storage = EntitiesStorage::Get();
 	std::vector< GameEntity* > vec = *storage->GetAIEntitiesStorage();
 
-	// Get Entities that are explicitly forest type and surround given forest.
-	std::string substring = "normal"; // "forest_normal" etc.
+	// TODO:
+	// Add forests to own vector storage, and iterate through it.
+
+
 	Forest* other_forest = nullptr;
 
-	for (auto it = vec.begin(); it != vec.end(); ++it) {
+ 	for (auto it = vec.begin(); it != vec.end(); ++it) {
 
 		if (forest == *it) continue;
 
 		other_forest = reinterpret_cast<Forest*>(*it);
 
+		// TODO continue:
+		// For now, we make sure to iterate only thorugh forests like this.
+		if (!IsSubstringInString("Forest", other_forest->m_IDCmp->m_DynamicTypeName)) continue;
+
+
 		if (other_forest->m_TransformCmp->m_GameWorldSpaceCell[0] == forest_cell[0] &&
 			other_forest->m_TransformCmp->m_GameWorldSpaceCell[1] == forest_cell[1] - 1) { // one tile above our forest.
 
-			/*
-			if (other_forest->m_GraphicsCmp->m_SpriteName.find(substring) != std::string::npos) {
-
-				got_forest_up = true;
-			}
-			*/
-
-			if (other_forest->m_ForestClass == forest->m_ForestClass &&
-				(other_forest->m_ForestType == Forest::ForestType::FOREST_NORMAL ||
-					other_forest->m_ForestType == Forest::ForestType::FOREST_DEEP)) {
+			if (IsSubstringInString("normal", other_forest->m_GraphicsCmp->m_SpriteName) ||
+				IsSubstringInString("deep", other_forest->m_GraphicsCmp->m_SpriteName)) {
 
 				got_forest_up = true;
 			}
@@ -1593,18 +1603,10 @@ bool ForestSearch::_surroundedByForestNormalOrDeep(Forest* forest) {
 		if (other_forest->m_TransformCmp->m_GameWorldSpaceCell[0] == forest_cell[0] - 1 &&
 			other_forest->m_TransformCmp->m_GameWorldSpaceCell[1] == forest_cell[1]) { // one tile left to our forest.
 
-			/*
-			if (other_forest->m_GraphicsCmp->m_SpriteName.find(substring) != std::string::npos) {
+			if (IsSubstringInString("normal", other_forest->m_GraphicsCmp->m_SpriteName) ||
+				IsSubstringInString("deep", other_forest->m_GraphicsCmp->m_SpriteName)) {
 
 				got_forest_left = true;
-			}
-			*/
-
-			if (other_forest->m_ForestClass == forest->m_ForestClass &&
-				(other_forest->m_ForestType == Forest::ForestType::FOREST_NORMAL ||
-					other_forest->m_ForestType == Forest::ForestType::FOREST_DEEP)) {
-
-				got_forest_up = true;
 			}
 		}
 
@@ -1612,18 +1614,10 @@ bool ForestSearch::_surroundedByForestNormalOrDeep(Forest* forest) {
 		if (other_forest->m_TransformCmp->m_GameWorldSpaceCell[0] == forest_cell[0] + 1 &&
 			other_forest->m_TransformCmp->m_GameWorldSpaceCell[1] == forest_cell[1]) { // one tile right to our forest.
 
-			/*
-			if (other_forest->m_GraphicsCmp->m_SpriteName.find(substring) != std::string::npos) {
+			if (IsSubstringInString("normal", other_forest->m_GraphicsCmp->m_SpriteName) ||
+				IsSubstringInString("deep", other_forest->m_GraphicsCmp->m_SpriteName)) {
 
 				got_forest_right = true;
-			}
-			*/
-
-			if (other_forest->m_ForestClass == forest->m_ForestClass &&
-				(other_forest->m_ForestType == Forest::ForestType::FOREST_NORMAL ||
-					other_forest->m_ForestType == Forest::ForestType::FOREST_DEEP)) {
-
-				got_forest_up = true;
 			}
 		}
 
@@ -1632,18 +1626,10 @@ bool ForestSearch::_surroundedByForestNormalOrDeep(Forest* forest) {
 		if (other_forest->m_TransformCmp->m_GameWorldSpaceCell[0] == forest_cell[0] &&
 			other_forest->m_TransformCmp->m_GameWorldSpaceCell[1] == forest_cell[1] + 1) { // one tile down to our forest.
 
-			/*
-			if (other_forest->m_GraphicsCmp->m_SpriteName.find(substring) != std::string::npos) {
+			if (IsSubstringInString("normal", other_forest->m_GraphicsCmp->m_SpriteName) ||
+				IsSubstringInString("deep", other_forest->m_GraphicsCmp->m_SpriteName)) {
 
 				got_forest_down = true;
-			}
-			*/
-
-			if (other_forest->m_ForestClass == forest->m_ForestClass &&
-				(other_forest->m_ForestType == Forest::ForestType::FOREST_NORMAL ||
-					other_forest->m_ForestType == Forest::ForestType::FOREST_DEEP)) {
-
-				got_forest_up = true;
 			}
 		}
 
@@ -1695,7 +1681,8 @@ void ForestSearch::_checkForNewForestCreation(Forest* forest) {
 
 		// check for needed type of forest --> forest_normal.
 		// We may change this logic later.
-		if (other_forest->m_GraphicsCmp->m_SpriteName.find("normal") != std::string::npos) { // Match! Found forest_normal on needed position --> create new forest accordingly.
+		if (IsSubstringInString("normal", other_forest->m_GraphicsCmp->m_SpriteName) ||
+			IsSubstringInString("deep", other_forest->m_GraphicsCmp->m_SpriteName)){ // Match! Found forest_normal  or forest_deep on needed position --> create new forest accordingly.
 
 			// Further, we need to be sure the new forest will not be a duplicate...
 			if (!IsGameEntityTypeOnMapTile(GetMapTileAtWorldPosition(forest_worldcell[0], forest_worldcell[1] - 1), "Forest")) { // As forest is upper left, we check the maptile above for creation.
@@ -1734,7 +1721,8 @@ void ForestSearch::_checkForNewForestCreation(Forest* forest) {
 		// Check first, if the forest has same class as this one, else skip everything.
 		if (!forest->HasSameForestClass(other_forest)) return;
 
-		if (other_forest->m_GraphicsCmp->m_SpriteName.find("normal") != std::string::npos) {
+		if (IsSubstringInString("normal", other_forest->m_GraphicsCmp->m_SpriteName) ||
+			IsSubstringInString("deep", other_forest->m_GraphicsCmp->m_SpriteName)) {
 
 			
 			if (!IsGameEntityTypeOnMapTile(GetMapTileAtWorldPosition(forest_worldcell[0] + 1, forest_worldcell[1]), "Forest")) {
@@ -1767,7 +1755,8 @@ void ForestSearch::_checkForNewForestCreation(Forest* forest) {
 		if (!forest->HasSameForestClass(other_forest)) return;
 
 
-		if (other_forest->m_GraphicsCmp->m_SpriteName.find("normal") != std::string::npos) {
+		if (IsSubstringInString("normal", other_forest->m_GraphicsCmp->m_SpriteName) ||
+			IsSubstringInString("deep", other_forest->m_GraphicsCmp->m_SpriteName)) {
 
 			if (!IsGameEntityTypeOnMapTile(GetMapTileAtWorldPosition(forest_worldcell[0] - 1, forest_worldcell[1]), "Forest")) {
 
@@ -1800,7 +1789,8 @@ void ForestSearch::_checkForNewForestCreation(Forest* forest) {
 		if (!forest->HasSameForestClass(other_forest)) return;
 
 
-		if (other_forest->m_GraphicsCmp->m_SpriteName.find("normal") != std::string::npos) {
+		if (IsSubstringInString("normal", other_forest->m_GraphicsCmp->m_SpriteName) ||
+			IsSubstringInString("deep", other_forest->m_GraphicsCmp->m_SpriteName)) {
 
 			if (!IsGameEntityTypeOnMapTile(GetMapTileAtWorldPosition(forest_worldcell[0], forest_worldcell[1] + 1), "Forest")) {
 
