@@ -16,41 +16,6 @@ void WorldMapDrawingOptions::_createMap() {
 	m_MapDefinitions = new MapTileArray();
 
 	EntitiesStorage* storage = EntitiesStorage::Get();
-	
-	/*
-	int random_num;
-
-	// MapTileArray initialization
-	for (int i = 0; i <= m_MapWidth; i++) {
-
-		for (int j = 0; j <= m_MapHeight; j++) {
-
-			if (i < 10) {
-				m_MapDefinitions->at(i).at(j) = new MapTile("temperate", "layer4", i * SPRITES_WIDTH_AND_HEIGHT, j * SPRITES_WIDTH_AND_HEIGHT);
-			}
-			else if (i >= 10 && i < 15) {
-				m_MapDefinitions->at(i).at(j) = new MapTile("savannah", "layer4", i * SPRITES_WIDTH_AND_HEIGHT, j * SPRITES_WIDTH_AND_HEIGHT);
-			}
-			else if(i >= 15){
-				m_MapDefinitions->at(i).at(j) = new MapTile("tundra", "layer4", i * SPRITES_WIDTH_AND_HEIGHT, j * SPRITES_WIDTH_AND_HEIGHT);
-			}
-
-			storage->AddGameEntitie(m_MapDefinitions->at(i).at(j)); // Add Maptile to EntitiesStorage.
-
-			// Define regions for map and add to storage
-			
-			//NOTE:
-			//Every maptile must(!) be associated to  region.
-			//Do it like 
-			//
-			//m_MapDefinitions->at(i).at(j)->AssociateToMapTileRegion(region);
-			//
-			//Thus the particular maptile will belong to a region.
-			
-		}
-	}
-	*/
-
 
 	using namespace std;
 
@@ -166,6 +131,22 @@ void WorldMapDrawingOptions::_createMap() {
 						token.clear();
 						escape_code = false;
 					}
+					else if (IsSubstringInString("jungle", token)) {
+						maptile = new MapTile("jungle", "layer4", xpos * SPRITES_WIDTH_AND_HEIGHT, ypos * SPRITES_WIDTH_AND_HEIGHT);
+						maptile->m_TransformCmp->m_GameWorldSpaceCell[0] = xpos;
+						maptile->m_TransformCmp->m_GameWorldSpaceCell[1] = ypos;
+
+						m_MapDefinitions->at(xpos).at(ypos) = maptile;
+
+						storage->AddGameEntitie(m_MapDefinitions->at(xpos).at(ypos)); // Add Maptile to EntitiesStorage.
+
+						cout << APP_SUCCESS_COLOR;
+						cout << "Create JUNGLE at Position " << xpos << ":" << ypos << white << endl;
+
+						// Reset the reading token and escape_code
+						token.clear();
+						escape_code = false;
+					}
 					else if (IsSubstringInString("tundra", token)) {
 						maptile = new MapTile("tundra", "layer4", xpos * SPRITES_WIDTH_AND_HEIGHT, ypos * SPRITES_WIDTH_AND_HEIGHT);
 
@@ -251,18 +232,6 @@ void WorldMapDrawingOptions::_createMap() {
 						token.clear();
 						escape_code = false;
 					}
-					/*
-					else if (IsSubstringInString("none", token)) {
-						// Do nothing.
-
-						cout << APP_ERROR_COLOR;
-						cout << "NONE created at Position " << xpos << ":" << ypos << white << endl;
-
-						// Reset the reading token and escape_code
-						token.clear();
-						escape_code = false;
-					}
-					*/
 
 
 					// Custom double for-loop iterator...

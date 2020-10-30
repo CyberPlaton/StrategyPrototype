@@ -17,7 +17,7 @@
 #include<fstream>
 
 
-#define SPRITES_WIDTH_AND_HEIGHT 128
+#define SPRITES_WIDTH_AND_HEIGHT 64
 #define MAP_SIZE 20 // Defines the size of the map. Would be convenient to set it dynamically.
 
 

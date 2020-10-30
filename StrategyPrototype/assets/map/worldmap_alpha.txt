@@ -1,20 +1,20 @@
 maptiles;
-water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,temperate,water_shallow,water_shallow,water_shallow,;
+water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,jungle,water_shallow,water_shallow,water_shallow,;
 
 maptiles;
-water_shallow,snow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,temperate,temperate,temperate,temperate,temperate,temperate,temperate,water_shallow,water_shallow,;
+water_shallow,snow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,jungle,jungle,jungle,jungle,jungle,jungle,jungle,water_shallow,water_shallow,;
 
 maptiles;
-water_shallow,water_shallow,snow,snow,tundra,tundra,snow,tundra,tundra,water_shallow,water_shallow,water_shallow,temperate,temperate,temperate,temperate,temperate,temperate,temperate,temperate,;
+water_shallow,water_shallow,snow,snow,tundra,tundra,snow,tundra,tundra,water_shallow,water_shallow,water_shallow,jungle,jungle,jungle,jungle,jungle,jungle,jungle,jungle,;
 
 maptiles;
-water_shallow,water_shallow,water_shallow,tundra,tundra,tundra,tundra,tundra,tundra,temperate,water_shallow,water_shallow,temperate,temperate,temperate,temperate,water_shallow,temperate,temperate,water_shallow,;
+water_shallow,water_shallow,water_shallow,tundra,tundra,tundra,tundra,tundra,tundra,temperate,water_shallow,water_shallow,jungle,jungle,jungle,jungle,water_shallow,jungle,jungle,water_shallow,;
 
 maptiles;
-water_shallow,water_shallow,water_shallow,water_shallow,temperate,tundra,temperate,tundra,temperate,temperate,water_shallow,water_shallow,water_shallow,temperate,water_shallow,temperate,temperate,temperate,temperate,temperate,;
+water_shallow,water_shallow,water_shallow,water_shallow,temperate,tundra,temperate,tundra,temperate,temperate,water_shallow,water_shallow,water_shallow,jungle,water_shallow,jungle,jungle,jungle,jungle,jungle,;
 
 maptiles;
-water_shallow,water_shallow,water_shallow,temperate,temperate,tundra,temperate,temperate,temperate,temperate,temperate,water_shallow,water_shallow,water_shallow,water_shallow,sand,sand,water_shallow,temperate,temperate,;
+water_shallow,water_shallow,water_shallow,temperate,temperate,tundra,temperate,temperate,temperate,temperate,temperate,water_shallow,water_shallow,water_shallow,water_shallow,sand,sand,water_shallow,jungle,jungle,;
 
 maptiles;
 water_shallow,temperate,temperate,temperate,temperate,temperate,temperate,temperate,temperate,water_shallow,water_shallow,temperate,water_shallow,savannah,savannah,sand,water_shallow,water_shallow,water_shallow,water_shallow,;

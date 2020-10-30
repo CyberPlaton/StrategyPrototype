@@ -2,6 +2,13 @@
 
 static olc::vf2d g_vi2dCameraPosition = olc::vf2d(0.0f, 0.0f);
 
+bool RaiseDeepForestRandomly() {
+
+	int r = rand() % 999;
+	return ((r == 0) ? true : false);
+}
+
+
 Mountains* MakeNewMountain(std::string spritename, int x_cell_pos, int y_cell_pos) {
 
 	// We draw standardized forests on layer3, so skip this part from the user...
@@ -111,6 +118,8 @@ std::string MapTileTypeToString(MapTile* tile) {
 	else if (tile->m_MapTileType == MapTile::MapTileType::MAPTILE_TYPE_TUNDRA) return "TUNDRA";
 	else if (tile->m_MapTileType == MapTile::MapTileType::MAPTILE_TYPE_WATER_DEEP) return "WATER_DEEP";
 	else if (tile->m_MapTileType == MapTile::MapTileType::MAPTILE_TYPE_WATER_SHALLOW) return "WATER_SHALLOW";
+	else if (tile->m_MapTileType == MapTile::MapTileType::MAPTILE_TYPE_JUNGLE) return "JUNGLE";
+
 
 	else return "TYPE_INVALID";
 }
@@ -133,7 +142,10 @@ bool MapTileAppropriteForForest(MapTile* tile, Forest* forest) {
 		break;
 	case MapTile::MapTileType::MAPTILE_TYPE_TEMPERATE:
 		if (forest->m_ForestClass == Forest::ForestClass::FOREST_CLASS_TEMPERATE) return true;
-		else if (forest->m_ForestClass == Forest::ForestClass::FOREST_CLASS_JUNGLE) return true;
+		else return false;
+		break;
+	case MapTile::MapTileType::MAPTILE_TYPE_JUNGLE:
+		if (forest->m_ForestClass == Forest::ForestClass::FOREST_CLASS_JUNGLE) return true;
 		else return false;
 		break;
 	case  MapTile::MapTileType::MAPTILE_TYPE_TUNDRA:
@@ -512,6 +524,8 @@ void Game::_loadSpriteResources() {
 	Sprite* s16 = new Sprite("assets/map/tundra.png");
 	Sprite* s17 = new Sprite("assets/map/water_deep.png");
 	Sprite* s18 = new Sprite("assets/map/water_shallow.png");
+	Sprite* s0 = new Sprite("assets/map/jungle.png");
+
 	
 	Sprite* s19 = new Sprite("assets/map/forest_temperate_dying.png");
 	Sprite* s20 = new Sprite("assets/map/forest_tundra_dying.png");
@@ -600,7 +614,7 @@ void Game::_loadSpriteResources() {
 
 
 
-
+	m_SpriteStorage.push_back(s0);
 	m_SpriteStorage.push_back(s1);
 	m_SpriteStorage.push_back(s2);
 	m_SpriteStorage.push_back(s3);
@@ -631,6 +645,7 @@ void Game::_loadSpriteResources() {
 
 
 
+	Decal* d0 = new Decal(s0);
 	Decal* d1 = new Decal(s1);
 	Decal* d2 = new Decal(s2);
 	Decal* d3 = new Decal(s3);
@@ -663,6 +678,7 @@ void Game::_loadSpriteResources() {
 
 
 	// Create Decals from sprites.
+	m_SpriteResourceMap.insert(std::make_pair("jungle", d0));
 	m_SpriteResourceMap.insert(std::make_pair("forest_temperate_normal", d1));
 	m_SpriteResourceMap.insert(std::make_pair("forest_temperate_deep", d2));
 	m_SpriteResourceMap.insert(std::make_pair("forest_temperate_scarce", d3));
@@ -1241,8 +1257,8 @@ void Renderer::Render2Layer3() {
 		maptile = reinterpret_cast<MapTile*>(*it);
 
 		// Do not draw tiles we do not see.
-		if (maptile->m_TransformCmp->m_Cell[0] > 6 ||
-			maptile->m_TransformCmp->m_Cell[1] > 5) continue;
+		if (maptile->m_TransformCmp->m_Cell[0] > 15 ||
+			maptile->m_TransformCmp->m_Cell[1] > 10) continue;
 
 
 		if (maptile->m_MapTileEntities->size() > 0) {
@@ -1318,8 +1334,8 @@ void Renderer::Render2Layer4() {
 		maptile = reinterpret_cast<MapTile*>(*it);
 
 		// Do not draw tiles we do not see.
-		if (maptile->m_TransformCmp->m_Cell[0] > 6 ||
-			maptile->m_TransformCmp->m_Cell[1] > 5) continue;
+		if (maptile->m_TransformCmp->m_Cell[0] > 15 ||
+			maptile->m_TransformCmp->m_Cell[1] > 10) continue;
 
 
 		// Draw appropriate loaded sprite on position specified.
@@ -1524,13 +1540,19 @@ void ForestSearch::executeStateLogic() {
 		else {
 			cout << color(colors::WHITE);
 			cout << "_surroundedByForestNormalOrDeep() unsuccessfully executed for " << m_ManagedForest->m_IDCmp->m_ID << " at position " << m_ManagedForest->m_TransformCmp->m_GameWorldSpaceCell[0] << " : " << m_ManagedForest->m_TransformCmp->m_GameWorldSpaceCell[1] << white << endl;
-		}
+		
 
-		/*
-		if (_surroundedByForestNormalOrDeep(m_ManagedForest)) {
+			// Check whether to raise randomly a deepforest.
+			if( RaiseDeepForestRandomly()) {
+				m_ManagedForest->m_ForestType = Forest::ForestType::FOREST_DEEP;
+				m_ManagedForest->m_ForestLifetime = 200;
+
+				cout << color(colors::WHITE);
+				cout << "Randomly raised DeepForest " << m_ManagedForest->m_IDCmp->m_ID << " at position " << m_ManagedForest->m_TransformCmp->m_GameWorldSpaceCell[0] << " : " << m_ManagedForest->m_TransformCmp->m_GameWorldSpaceCell[1] << white << endl;
+
+			}
 
 		}
-		*/
 	}
 
 

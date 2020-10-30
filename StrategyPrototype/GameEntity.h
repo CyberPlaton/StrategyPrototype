@@ -27,6 +27,8 @@ Hills* MakeNewHill(std::string spritename, int x_cell_pos, int y_cell_pos);
 std::string MapTileTypeToString(MapTile* tile);
 bool MapTileAppropriteForForest(MapTile* tile, Forest* forest);
 bool IsMapTilePartOfRegion(MapTile* tile);
+bool RaiseDeepForestRandomly();
+
 
 enum class TileImprovementLevel {
 	TILE_IMPROVEMENT_LVL_INVALID = -1,
@@ -429,7 +431,8 @@ public:
 		MAPTILE_TYPE_TEMPERATE = 4,
 		MAPTILE_TYPE_TUNDRA = 5,
 		MAPTILE_TYPE_WATER_DEEP = 6,
-		MAPTILE_TYPE_WATER_SHALLOW = 7
+		MAPTILE_TYPE_WATER_SHALLOW = 7,
+		MAPTILE_TYPE_JUNGLE = 8
 
 	};
 public:
@@ -479,6 +482,10 @@ public:
 		else if (IsSubstringInString("sand", name)) {
 			m_MapTileType = MapTileType::MAPTILE_TYPE_SAND;
 			m_GraphicsCmp->m_SpriteName = "sand";
+		}
+		else if (IsSubstringInString("jungle", name)) {
+			m_MapTileType = MapTileType::MAPTILE_TYPE_JUNGLE;
+			m_GraphicsCmp->m_SpriteName = "jungle";
 		}
 
 
@@ -807,8 +814,8 @@ private:
 			COMPARE_STRINGS(name, "snow") == 0 ||
 			COMPARE_STRINGS(name, "tundra") == 0 ||
 			COMPARE_STRINGS(name, "water_deep") == 0 ||
-			COMPARE_STRINGS(name, "water_shallow") == 0
-			) {
+			COMPARE_STRINGS(name, "water_shallow") == 0 ||
+			COMPARE_STRINGS(name, "jungle") == 0) {
 			return true;
 		}
 		else {
