@@ -211,8 +211,11 @@ bool IsIndexOutOfBound(int x, int y) {
 
 	if (x < 0 || y < 0) return true;
 
-	if (x > MAP_SIZE ||
-		y > MAP_SIZE) return true;
+	// Mapsize counts from 1,..20 for example,
+	// thus we need to check for x > MAP_SIZE - 1...
+
+	if (x > MAP_SIZE - 1 ||
+		y > MAP_SIZE - 1) return true;
 
 
 	return false;
@@ -1002,7 +1005,7 @@ void Game::DebugDrawStats() {
 		DrawString(olc::vi2d(2, 50), forestcount, olc::RED, 2.0f);
 
 		// DrawForests and its Lifetime
-		std::string s5, s6, s7, foresttype, cell, pos, forestclass;
+		std::string s5, s6, s7, foresttype, cell, pos, forestclass, hasAI;
 		std::vector< GameEntity* > vec = GetForestEntities();
 		Forest* f = nullptr;
 		for (auto it = vec.begin(); it != vec.end(); ++it) {
@@ -1060,6 +1063,9 @@ void Game::DebugDrawStats() {
 
 			DrawString(olc::vi2d(f->m_TransformCmp->m_PosX, f->m_TransformCmp->m_PosY + 80), forestclass, olc::CYAN, 1);
 
+
+			hasAI = (f->m_AICmp == nullptr) ? "No AI" : "Has AI";
+			DrawString(olc::vi2d(f->m_TransformCmp->m_PosX, f->m_TransformCmp->m_PosY + 90), hasAI, olc::CYAN, 1);
 		}
 	}
 
@@ -1505,17 +1511,14 @@ void ForestSearch::executeStateLogic() {
 		_checkForNewForestCreation(m_ManagedForest);
 
 
-		if (_surroundedByForestNormal(m_ManagedForest)) {
+		if (_surroundedByForestNormalOrDeep(m_ManagedForest)) {
 			m_ManagedForest->m_ForestType = Forest::ForestType::FOREST_DEEP;
 			m_ManagedForest->m_ForestLifetime = 200;
 
-		
-			// Update on change.
-			m_ManagedForest->Update();
 
 
 			cout << color(colors::BLUE);
-			cout << "_surroundedByForestNormal() successfully executed for " << m_ManagedForest->m_IDCmp->m_ID << "." << white << endl;
+			cout << "_surroundedByForestNormalOrDeep() successfully executed for " << m_ManagedForest->m_IDCmp->m_ID << "." << white << endl;
 		}
 	}
 
@@ -1527,6 +1530,10 @@ void ForestSearch::executeStateLogic() {
 		cout << "_spawnRandomForestAroundDeepOne() for " << m_ManagedForest->m_IDCmp->m_ID << " executed." << white << endl;
 		_spawnRandomForestAroundDeepOne(m_ManagedForest);
 	}
+
+
+	// Update on change.
+	m_ManagedForest->Update();
 }
 
 
@@ -1542,7 +1549,7 @@ void Game::AdvanceOneTurn() {
 
 
 // This function can and must be improved.
-bool ForestSearch::_surroundedByForestNormal(Forest* forest) {
+bool ForestSearch::_surroundedByForestNormalOrDeep(Forest* forest) {
 
 	int forest_cell[2];
 	forest_cell[0] = forest->m_TransformCmp->m_GameWorldSpaceCell[0];
@@ -1567,7 +1574,16 @@ bool ForestSearch::_surroundedByForestNormal(Forest* forest) {
 		if (other_forest->m_TransformCmp->m_GameWorldSpaceCell[0] == forest_cell[0] &&
 			other_forest->m_TransformCmp->m_GameWorldSpaceCell[1] == forest_cell[1] - 1) { // one tile above our forest.
 
+			/*
 			if (other_forest->m_GraphicsCmp->m_SpriteName.find(substring) != std::string::npos) {
+
+				got_forest_up = true;
+			}
+			*/
+
+			if (other_forest->m_ForestClass == forest->m_ForestClass &&
+				(other_forest->m_ForestType == Forest::ForestType::FOREST_NORMAL ||
+					other_forest->m_ForestType == Forest::ForestType::FOREST_DEEP)) {
 
 				got_forest_up = true;
 			}
@@ -1577,9 +1593,18 @@ bool ForestSearch::_surroundedByForestNormal(Forest* forest) {
 		if (other_forest->m_TransformCmp->m_GameWorldSpaceCell[0] == forest_cell[0] - 1 &&
 			other_forest->m_TransformCmp->m_GameWorldSpaceCell[1] == forest_cell[1]) { // one tile left to our forest.
 
+			/*
 			if (other_forest->m_GraphicsCmp->m_SpriteName.find(substring) != std::string::npos) {
 
 				got_forest_left = true;
+			}
+			*/
+
+			if (other_forest->m_ForestClass == forest->m_ForestClass &&
+				(other_forest->m_ForestType == Forest::ForestType::FOREST_NORMAL ||
+					other_forest->m_ForestType == Forest::ForestType::FOREST_DEEP)) {
+
+				got_forest_up = true;
 			}
 		}
 
@@ -1587,9 +1612,18 @@ bool ForestSearch::_surroundedByForestNormal(Forest* forest) {
 		if (other_forest->m_TransformCmp->m_GameWorldSpaceCell[0] == forest_cell[0] + 1 &&
 			other_forest->m_TransformCmp->m_GameWorldSpaceCell[1] == forest_cell[1]) { // one tile right to our forest.
 
+			/*
 			if (other_forest->m_GraphicsCmp->m_SpriteName.find(substring) != std::string::npos) {
 
 				got_forest_right = true;
+			}
+			*/
+
+			if (other_forest->m_ForestClass == forest->m_ForestClass &&
+				(other_forest->m_ForestType == Forest::ForestType::FOREST_NORMAL ||
+					other_forest->m_ForestType == Forest::ForestType::FOREST_DEEP)) {
+
+				got_forest_up = true;
 			}
 		}
 
@@ -1598,9 +1632,18 @@ bool ForestSearch::_surroundedByForestNormal(Forest* forest) {
 		if (other_forest->m_TransformCmp->m_GameWorldSpaceCell[0] == forest_cell[0] &&
 			other_forest->m_TransformCmp->m_GameWorldSpaceCell[1] == forest_cell[1] + 1) { // one tile down to our forest.
 
+			/*
 			if (other_forest->m_GraphicsCmp->m_SpriteName.find(substring) != std::string::npos) {
 
 				got_forest_down = true;
+			}
+			*/
+
+			if (other_forest->m_ForestClass == forest->m_ForestClass &&
+				(other_forest->m_ForestType == Forest::ForestType::FOREST_NORMAL ||
+					other_forest->m_ForestType == Forest::ForestType::FOREST_DEEP)) {
+
+				got_forest_up = true;
 			}
 		}
 

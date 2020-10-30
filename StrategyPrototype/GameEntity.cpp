@@ -54,7 +54,7 @@ void WorldMapDrawingOptions::_createMap() {
 
 	using namespace std;
 
-	ifstream map("assets/map/worldmap_testing.txt", fstream::in);
+	ifstream map("assets/map/worldmap_alpha.txt", fstream::in);
 
 	string line;
 	string token;
@@ -64,8 +64,8 @@ void WorldMapDrawingOptions::_createMap() {
 	int ypos = 0;
 
 	// Width and Height must always be 1 less then defined in the loaded mapfile. Else errors occur.
-	int mapwidth = 5;
-	int mapheight = 5;
+	int mapwidth = 19;
+	int mapheight = 19;
 
 	MapTile* maptile = nullptr;
 
