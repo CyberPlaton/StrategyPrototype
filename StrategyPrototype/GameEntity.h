@@ -34,6 +34,7 @@ bool IsMapTilePartOfRegion(MapTile* tile);
 bool RaiseDeepForestRandomly();
 MapTileRegion* GetRegionAtWorldPosition(int x, int y);
 Player* GetPlayer(std::string name);
+int GetPlayerBorderTilesCount(Player* p);
 
 
 enum class TileImprovementLevel {
@@ -944,8 +945,28 @@ public:
 	}
 
 
+	void Update() {
+
+		_updateEmpireBorder();
+	}
+
 	std::string m_PlayerName;
 	std::string m_PlayerColor;
 	std::vector<City*> m_PlayerCities;
 	CMPEmprieBorder* m_EmpireBorderCmp = nullptr;
+
+
+private:
+	// Flag, whether the empire border was updated.
+	bool m_EmpireBorderDirty = true;
+
+private:
+
+	void _updateEmpireBorder();
+
+	bool _isMapTileSurroundedByOwnRegionTiles(MapTile* tile);
+
+	bool _belongMapTileToThisPlayer(MapTile* tile);
+
+	void _determineBorderDirections();
 };

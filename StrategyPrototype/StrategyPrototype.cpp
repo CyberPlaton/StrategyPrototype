@@ -56,6 +56,13 @@ Player* GetPlayer(std::string name) {
 	}
 }
 
+
+int GetPlayerBorderTilesCount(Player* p) {
+
+	return p->m_EmpireBorderCmp->m_BorderTiles.size();
+}
+
+
 MapTileRegion* GetRegionAtWorldPosition(int x, int y) {
 
 	int x_cell = int((x + g_vi2dCameraPosition.x)/ SPRITES_WIDTH_AND_HEIGHT);
@@ -963,8 +970,10 @@ bool Game::OnUserCreate() {
 	City* city2 = MakeNewCity("Stormhaven", "city_human_huge", player, 5, 3);
 	city2->ClaimRegions();
 
+
 	player->AddCity(city2);
 
+	player->Update();
 
 	storage->AddPlayer(player);
 	storage->AddGameEntitie(city2);
@@ -991,6 +1000,7 @@ bool Game::OnUserUpdate(float fElapsedTime) {
 
 
 	m_Renderer->Render();
+
 
 	return true;
 }
@@ -1332,8 +1342,48 @@ void Renderer::RenderLayer1() {
 }
 */
 
+void Renderer::_drawBorder(int start_x, int start_y, EmpireBorderDirection dir) {
+
+	using namespace olc;
+
+
+	switch (dir)
+	{
+	case Renderer::EmpireBorderDirection::BORDER_DIR_INVALID:
+		break;
+	case Renderer::EmpireBorderDirection::BORDER_DIR_VERTICAL:
+
+		m_Game->FillRect(vi2d(start_x, start_y), vi2d(2, 64), olc::BLACK);
+
+		break;
+	case Renderer::EmpireBorderDirection::BORDER_DIR_HORIZONTAL:
+
+		m_Game->FillRect(vi2d(start_x, start_y), vi2d(64, 2), olc::BLACK);
+
+		break;
+	default:
+		break;
+	}
+}
+
 void Renderer::Render2Layer1() {
 
+	using namespace olc;
+
+	m_Game->SetDrawTarget(m_Layer1);
+	m_Game->Clear(olc::BLANK);
+
+	// TESTING
+	// DRAW LINE FOR BORDER
+	/*
+	_drawBorder(256, 256, EmpireBorderDirection::BORDER_DIR_VERTICAL);
+	_drawBorder(384, 256, EmpireBorderDirection::BORDER_DIR_VERTICAL);
+	_drawBorder(256, 128, EmpireBorderDirection::BORDER_DIR_HORIZONTAL);
+	*/
+
+
+	m_Game->EnableLayer(m_Layer1, true);
+	m_Game->SetDrawTarget(nullptr);
 }
 
 void Renderer::Render2Layer2() {

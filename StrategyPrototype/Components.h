@@ -320,6 +320,8 @@ private:
 
 };
 
+
+
 /*
 Purpose:
 
@@ -331,6 +333,14 @@ Lastly we use an algorithm to draw adjacent tiles of the border to display the b
 */
 struct CMPEmprieBorder {
 
+	// to determine in which direciton the border is looking to.
+	enum class BorderDirection {
+		BORDER_DIRECTION_INVALID = -1,
+		BORDER_DIRECTION_LEFT = 0,
+		BORDER_DIRECTION_RIGHT = 1,
+		BORDER_DIRECTION_DOWN = 2,
+		BORDER_DIRECTION_UP = 3
+	};
 
 	void AddMapTileToBorder(MapTile* maptile) {
 		m_BorderTiles.push_back(maptile);
@@ -345,4 +355,6 @@ struct CMPEmprieBorder {
 	}
 
 	std::vector<MapTile*> m_BorderTiles;
+	std::map< MapTile*, BorderDirection> m_BorderTileWithBorderDirectionMap;
+
 };

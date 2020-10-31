@@ -64,6 +64,14 @@ public:
 		RENDERMODE_CITYVIEW = 1
 	};
 
+
+
+	enum class EmpireBorderDirection {
+		BORDER_DIR_INVALID = -1,
+		BORDER_DIR_VERTICAL = 0,
+		BORDER_DIR_HORIZONTAL = 1,
+	};
+
 public:
 	Renderer(Game* g, Camera* cam) { m_Game = g; m_MainCam = cam; m_RenderMode = RenderMode::RENDERMODE_MAPVIEW; }
 
@@ -132,6 +140,9 @@ private:
 
 	void _drawMapTileRegionRect(MapTileRegion* region);
 
+
+
+	void _drawBorder(int start_x, int start_y, EmpireBorderDirection dir);
 };
 
 

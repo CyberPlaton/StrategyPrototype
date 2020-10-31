@@ -1100,3 +1100,209 @@ City::City(std::string cityname, std::string spritename, Player* player, int xpo
 	m_AssociatedPlayer = player;
 	_determineMapCell(m_AssociatedPlayer->m_PlayerColor);
 }
+
+void Player::_updateEmpireBorder() {
+
+	// A maptile is NOT part of a border,
+	// if it is surrounded by own regional tiles
+	// to the left, right, up and down.
+
+	// Ergo, the rest is part of border.
+
+
+	// The rest is part of borderregion.
+	// To determine where the border is directing to,
+	// we check in which direction there are tiles which do not
+	// belong to own regions.
+
+	// Thus, we can draw according lines or tiles.
+
+	City* city = nullptr;
+	MapTileRegion* region = nullptr;
+	MapTile* maptile = nullptr;
+
+	for (auto it = m_PlayerCities.begin(); it != m_PlayerCities.end(); ++it) {
+
+		city = *it;
+
+		for (auto iter = city->m_ClaimedRegions.begin(); iter != city->m_ClaimedRegions.end(); ++iter) {
+
+			region = *iter;
+
+			for (auto itr = region->m_MapTileRegionTiles.begin(); itr != region->m_MapTileRegionTiles.end(); ++itr) {
+
+				maptile = reinterpret_cast<MapTile*>(*itr);
+
+				if (_isMapTileSurroundedByOwnRegionTiles(maptile) == false) {
+
+					m_EmpireBorderCmp->m_BorderTiles.push_back(maptile);
+				}
+			}
+
+		}
+
+	}
+
+
+	// Second part. We determine the border direction of border tiles.
+	_determineBorderDirections();
+
+}
+
+bool Player::_isMapTileSurroundedByOwnRegionTiles(MapTile* tile) {
+
+	MapTile* other_tile = nullptr;
+
+	bool up = false, down = false, left = false, right = false;
+
+	int up_tile[2], down_tile[2], left_tile[2], right_tile[2];
+
+	up_tile[0] = tile->m_TransformCmp->m_GameWorldSpaceCell[0];
+	up_tile[1] = tile->m_TransformCmp->m_GameWorldSpaceCell[1] - 1;
+
+	down_tile[0] = tile->m_TransformCmp->m_GameWorldSpaceCell[0];
+	down_tile[1] = tile->m_TransformCmp->m_GameWorldSpaceCell[1] + 1;
+
+	left_tile[0] = tile->m_TransformCmp->m_GameWorldSpaceCell[0] - 1;
+	left_tile[1] = tile->m_TransformCmp->m_GameWorldSpaceCell[1];
+
+	right_tile[0] = tile->m_TransformCmp->m_GameWorldSpaceCell[0] + 1;
+	right_tile[1] = tile->m_TransformCmp->m_GameWorldSpaceCell[1];
+
+
+
+	if (IsIndexOutOfBound(up_tile[0], up_tile[1]) == false) {
+
+		other_tile = GetMapTileAtWorldPosition(up_tile[0], up_tile[1]);
+		if (other_tile) {
+
+			if (_belongMapTileToThisPlayer(other_tile) == false) {
+
+				// The up tile belongs to us, thus no border in up diretion.
+				up = false;
+			}
+			else {
+
+				// MAptile does not belong to us, thus border in up dir.
+				up = true;
+
+			}
+		}
+
+	}
+	else {
+		// Map end in up direction means its a border.
+		up = true;
+	}
+
+
+	other_tile = nullptr;
+	if (IsIndexOutOfBound(down_tile[0], down_tile[1]) == false) {
+
+		other_tile = GetMapTileAtWorldPosition(down_tile[0], down_tile[1]);
+		if (other_tile) {
+
+			if (_belongMapTileToThisPlayer(other_tile) == false) {
+
+				// The up tile belongs to us, thus no border in up diretion.
+				down = false;
+			}
+			else {
+
+				// MAptile does not belong to us, thus border in up dir.
+				down = true;
+
+			}
+		}
+
+	}
+	else {
+		// Map end in up direction means its a border.
+		down = true;
+	}
+
+
+	other_tile = nullptr;
+	if (IsIndexOutOfBound(left_tile[0], left_tile[1]) == false) {
+
+		other_tile = GetMapTileAtWorldPosition(left_tile[0], left_tile[1]);
+		if (other_tile) {
+
+			if (_belongMapTileToThisPlayer(other_tile) == false) {
+
+				// The up tile belongs to us, thus no border in up diretion.
+				left = false;
+			}
+			else {
+
+				// MAptile does not belong to us, thus border in up dir.
+				left = true;
+
+			}
+		}
+
+	}
+	else {
+		// Map end in up direction means its a border.
+		left = true;
+	}
+
+
+	other_tile = nullptr;
+	if (IsIndexOutOfBound(right_tile[0], right_tile[1]) == false) {
+
+		other_tile = GetMapTileAtWorldPosition(right_tile[0], right_tile[1]);
+		if (other_tile) {
+
+			if (_belongMapTileToThisPlayer(other_tile) == false) {
+
+				// The up tile belongs to us, thus no border in up diretion.
+				right = false;
+			}
+			else {
+
+				// MAptile does not belong to us, thus border in up dir.
+				right = true;
+
+			}
+		}
+
+	}
+	else {
+		// Map end in up direction means its a border.
+		right = true;
+	}
+
+
+	return (up && right && left && down);
+}
+
+bool Player::_belongMapTileToThisPlayer(MapTile* tile) {
+
+	MapTile* maptile = nullptr;
+
+	for (auto it : m_PlayerCities) {
+
+		for (auto iter : it->m_ClaimedRegions) {
+
+			
+			for (auto itr : iter->m_MapTileRegionTiles) {
+
+				maptile = itr;
+
+				if (maptile == tile) return true;
+			}
+
+		}
+
+	}
+
+	return false;
+
+}
+
+
+void Player::_determineBorderDirections() {
+
+
+}
