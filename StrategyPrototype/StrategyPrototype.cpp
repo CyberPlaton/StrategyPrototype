@@ -1055,7 +1055,7 @@ void Game::DebugDrawStats() {
 
 
 		std::string regions = (m_DebugDrawRegions == true) ? "On" : "Off";
-		std::string regions_info = "Regions (Ctrl + R): " + regions;
+		std::string regions_info = "Regions Info (Ctrl + R): " + regions;
 		DrawString(olc::vi2d(2, 110), regions_info, olc::RED, 2.0f);
 
 	}
@@ -1069,20 +1069,6 @@ void Game::DebugDrawStats() {
 
 		std::string regions_count = "Regions Count: " + m_DebugDrawRegionsCount;
 		DrawString(olc::vi2d(2, 130), regions_count, olc::RED, 2.0f);
-
-		for (auto it : vec) {
-
-			region = reinterpret_cast<MapTileRegion*>(it);
-
-			for (auto maptile : region->m_MapTileRegionTiles) {
-
-
-				// Draw appropriate loaded sprite on position specified.
-				DrawDecal(olc::vi2d(maptile->m_TransformCmp->m_PosX, maptile->m_TransformCmp->m_PosY),
-					m_SpriteResourceMap.at(region->m_GraphicsCmp->m_SpriteName));
-
-			}			
-		}
 
 	}
 
