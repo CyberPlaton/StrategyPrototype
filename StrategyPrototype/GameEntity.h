@@ -197,6 +197,9 @@ private:
 
 	bool _isRegionClaimedAlready(MapTileRegion* region);
 
+	// Call after claiming regions.
+	void _setSpriteForClaimedRegion();
+
 	void _unclaimRegions() {
 		if (m_ClaimedRegions.size() > 0) {
 			m_ClaimedRegions.clear();
@@ -534,6 +537,11 @@ struct MapTileRegion : public GameEntity{
 
 		m_GraphicsCmp = new CMPGraphics();
 		m_GraphicsCmp->m_DrawingLayer = "layer2";
+		m_GraphicsCmp->m_SpriteName = "NULL";
+	}
+
+	void SetRegionSprite(std::string spritename) {
+		m_GraphicsCmp->m_SpriteName = spritename;
 	}
 
 	void AddTileToRegion(MapTile* maptile) {

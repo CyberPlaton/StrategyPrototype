@@ -110,9 +110,13 @@ void Renderer::_drawMapTileRegionRect(MapTileRegion* region) {
 
 		maptile = *it;
 
-		// We want to draw the rectangles with specific to the city color.
-		m_Game->DrawDecal(vi2d(maptile->m_TransformCmp->m_PosX, maptile->m_TransformCmp->m_PosY),
-							   m_Game->m_SpriteResourceMap.at(region->m_GraphicsCmp->m_SpriteName));
+		// Check whether the region has a spriteressource set.
+		if (COMPARE_STRINGS(region->m_GraphicsCmp->m_SpriteName, "NULL") == 0) continue;
+		else {
+			// We want to draw the rectangles with specific to the city color.
+			m_Game->DrawDecal(vi2d(maptile->m_TransformCmp->m_PosX, maptile->m_TransformCmp->m_PosY),
+									m_Game->m_SpriteResourceMap.at(region->m_GraphicsCmp->m_SpriteName));
+		}
 	}
 }
 

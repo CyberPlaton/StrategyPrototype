@@ -604,7 +604,7 @@ void WorldMapDrawingOptions::_createMap() {
 				int map_tile[2];
 				bool first_digit_defined = false;
 
-				region = new MapTileRegion("map_cell_red");
+				region = new MapTileRegion();
 				regions_vec.push_back(region);
 
 
@@ -918,6 +918,9 @@ void City::ClaimRegions() {
 		m_ClaimedRegions.push_back(r4);
 	}
 
+
+
+	_setSpriteForClaimedRegion();
 }
 
 bool City::_isRegionClaimedAlready(MapTileRegion* region) {
@@ -933,4 +936,13 @@ bool City::_isRegionClaimedAlready(MapTileRegion* region) {
 	}
 
 	return false;
+}
+
+
+void City::_setSpriteForClaimedRegion() {
+
+	for (auto it : m_ClaimedRegions) {
+
+		it->m_GraphicsCmp->m_SpriteName = m_ClaimedRegionsSpriteName;
+	}
 }
