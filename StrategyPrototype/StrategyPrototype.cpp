@@ -21,6 +21,17 @@ Mountains* MakeNewMountain(std::string spritename, int x_cell_pos, int y_cell_po
 }
 
 
+City* MakeNewCity(std::string cityname, std::string spritename, std::string regionsspritename, int x_cell_pos, int y_cell_pos) {
+
+	City* city = new City(cityname, spritename, regionsspritename, x_cell_pos * SPRITES_WIDTH_AND_HEIGHT, y_cell_pos * SPRITES_WIDTH_AND_HEIGHT);
+
+	city->m_TransformCmp->m_GameWorldSpaceCell[0] = x_cell_pos;
+	city->m_TransformCmp->m_GameWorldSpaceCell[1] = y_cell_pos;
+
+	return city;
+}
+
+
 Hills* MakeNewHill(std::string spritename, int x_cell_pos, int y_cell_pos) {
 
 	// We draw standardized forests on layer3, so skip this part from the user...
@@ -503,6 +514,7 @@ void CMPCameraInput::HandleKeyboard(Camera* cam) {
 
 void CMPCameraInput::HandleMouse(Camera* cam) {
 
+
 }
 
 
@@ -731,17 +743,24 @@ void Game::_loadSpriteResources() {
 
 	// Load cities
 	Sprite* city1 = new Sprite("assets/city/orc/city_orc_huge.png");
+	Sprite* city2 = new Sprite("assets/city/human/city_human_huge.png");
+
 
 	
 	m_SpriteStorage.push_back(city1);
+	m_SpriteStorage.push_back(city2);
+
 
 
 
 	Decal* dcity1 = new Decal(city1);
+	Decal* dcity2 = new Decal(city2);
 
 
 
 	m_SpriteResourceMap.insert(std::make_pair("city_orc_huge", dcity1));
+	m_SpriteResourceMap.insert(std::make_pair("city_human_huge", dcity2));
+
 
 
 }
@@ -777,6 +796,9 @@ bool Game::OnUserCreate() {
 	m_Renderer->m_Layer2 = CreateLayer();
 	m_Renderer->m_Layer3 = CreateLayer();
 	m_Renderer->m_Layer4 = CreateLayer();
+
+
+	EntitiesStorage* storage = EntitiesStorage::Get();
 
 
 	/*
@@ -831,16 +853,21 @@ bool Game::OnUserCreate() {
 	storage->AddGameEntitie(r4);
 	storage->AddGameEntitie(r5);
 	storage->AddGameEntitie(r6);
-
+	*/
 
 
 
 	// Some testing with cities.
-	City* city = new City("Durotar", "city_orc_huge", 0, 0);
+	City* city = MakeNewCity("Durotar", "city_orc_huge", "map_cell_red", 13, 6);
 	city->ClaimRegions();
 
+	City* city2 = MakeNewCity("Stormaven", "city_human_huge", "map_cell_blue", 5, 3);
+	city2->ClaimRegions();
+
+
 	storage->AddGameEntitie(city);
-	*/
+	storage->AddGameEntitie(city2);
+
 
 	return true;
 }
@@ -1256,7 +1283,6 @@ void Renderer::Render2Layer2() {
 
 
 		// Test, draw region around city.
-
 		for (auto it = city->m_ClaimedRegions.begin(); it != city->m_ClaimedRegions.end(); ++it) {
 
 			region = *it;

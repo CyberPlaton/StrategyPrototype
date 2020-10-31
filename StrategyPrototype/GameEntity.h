@@ -9,6 +9,7 @@ struct MapTileRegion;
 class Game;
 class Mountains;
 class Hills;
+class City;
 typedef std::array<std::array<MapTile*, 20>, 20> MapTileArray;
 
 
@@ -24,10 +25,12 @@ Forest* MakeNewForest(std::string name, int x_cell_pos, int y_cell_pos);
 Forest* MakeNewForestAtPos(std::string name, int xpos, int ypos, int set_x_cell, int set_y_cell);
 Mountains* MakeNewMountain(std::string spritename, int x_cell_pos, int y_cell_pos);
 Hills* MakeNewHill(std::string spritename, int x_cell_pos, int y_cell_pos);
+City* MakeNewCity(std::string cityname, std::string spritename, std::string regionsspritename, int x_cell_pos, int y_cell_pos);
 std::string MapTileTypeToString(MapTile* tile);
 bool MapTileAppropriteForForest(MapTile* tile, Forest* forest);
 bool IsMapTilePartOfRegion(MapTile* tile);
 bool RaiseDeepForestRandomly();
+
 
 
 
@@ -140,7 +143,7 @@ public:
 	
 
 public:
-	City(std::string cityname, std::string spritename, int xpos, int ypos) {
+	City(std::string cityname, std::string spritename, std::string regionsspritename, int xpos, int ypos) {
 
 		m_IDCmp->m_DynamicTypeName = "City";
 		
@@ -157,6 +160,8 @@ public:
 		
 		m_AICmp = new CMPArtificialIntelligence(this);
 
+		m_ClaimedRegionsSpriteName = regionsspritename;
+
 	}
 
 	~City() = default;
@@ -164,6 +169,7 @@ public:
 
 
 	void ClaimRegions();
+	void ReclaimRegions(); // Function for testing.
 
 	std::string m_CityName;
 	unsigned int m_CitySize;
@@ -173,7 +179,7 @@ public:
 	std::map<std::string, GameEntity*> m_PresentUnitsMap;
 
 	std::vector<MapTileRegion*> m_ClaimedRegions;
-
+	std::string m_ClaimedRegionsSpriteName;
 
 private:
 
@@ -187,6 +193,14 @@ private:
 
 	void _claimRegion(MapTileRegion* region) {
 		m_ClaimedRegions.push_back(region);
+	}
+
+	bool _isRegionClaimedAlready(MapTileRegion* region);
+
+	void _unclaimRegions() {
+		if (m_ClaimedRegions.size() > 0) {
+			m_ClaimedRegions.clear();
+		}
 	}
 };
 
@@ -509,7 +523,7 @@ public:
 
 
 struct MapTileRegion : public GameEntity{
-	MapTileRegion(std::string spritename) {
+	MapTileRegion() {
 		m_IDCmp->m_DynamicTypeName = "MapTileRegion";
 
 		// Our MapTileRegion is an abstract entity that combines real maptiles.
@@ -520,11 +534,13 @@ struct MapTileRegion : public GameEntity{
 
 		m_GraphicsCmp = new CMPGraphics();
 		m_GraphicsCmp->m_DrawingLayer = "layer2";
-		m_GraphicsCmp->m_SpriteName = spritename;
 	}
 
 	void AddTileToRegion(MapTile* maptile) {
 		if (maptile != nullptr) m_MapTileRegionTiles.push_back(maptile);
+
+		// Then tell the maptile that it belongs to this region.
+		maptile->AssociateToMapTileRegion(this);
 	}
 
 	void RemoveTileFromRegion(MapTile* maptile) {

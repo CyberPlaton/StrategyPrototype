@@ -819,33 +819,118 @@ void Forest::Update() {
 	}
 }
 
+void City::ReclaimRegions() {
+
+	_unclaimRegions();
+	ClaimRegions();
+}
+
 
 void City::ClaimRegions() {
 
-	MapTileRegion* region = new MapTileRegion("map_cell_orange");
+	/*
+	NOTE: 
 
-	// Here we claim TILES, not REGIONS.
-	// This needs to be redone...
+	Here we test claiming. 
+	For now we do not test whether those tile coords are valid or whether those are already claimed by other player.
+	*/
+
 
 	// Normal
-	region->AddTileToRegion(GetMapTileAtWorldPosition(1, 0));
-	region->AddTileToRegion(GetMapTileAtWorldPosition(2, 0));
+	int right[2], left[2], up[2], down[2];
+	int right_2[2], left_2[2], up_2[2], down_2[2];
 
-	region->AddTileToRegion(GetMapTileAtWorldPosition(-1, 0));
-	region->AddTileToRegion(GetMapTileAtWorldPosition(-2, 0));
 
-	region->AddTileToRegion(GetMapTileAtWorldPosition(0, 1));
-	region->AddTileToRegion(GetMapTileAtWorldPosition(0, 2));
-
-	region->AddTileToRegion(GetMapTileAtWorldPosition(0, -1));
-	region->AddTileToRegion(GetMapTileAtWorldPosition(0, -2));
-	
 	// Diagonal
-	region->AddTileToRegion(GetMapTileAtWorldPosition(1, 1));
-	region->AddTileToRegion(GetMapTileAtWorldPosition(-1, -1));
-	region->AddTileToRegion(GetMapTileAtWorldPosition(1, -1));
-	region->AddTileToRegion(GetMapTileAtWorldPosition(-1, 1));
+	int left_up[2], right_up[2], left_down[2], right_down[2];
 
 
-	m_ClaimedRegions.push_back(region);
+	// Get according maptile coords for claiming.
+	right[0] = this->m_TransformCmp->m_GameWorldSpaceCell[0] + 1;
+	right[1] = this->m_TransformCmp->m_GameWorldSpaceCell[1];
+
+	left[0] = this->m_TransformCmp->m_GameWorldSpaceCell[0] - 1;
+	left[1] = this->m_TransformCmp->m_GameWorldSpaceCell[1];
+
+	up[0] = this->m_TransformCmp->m_GameWorldSpaceCell[0];
+	up[1] = this->m_TransformCmp->m_GameWorldSpaceCell[1] - 1;
+
+	down[0] = this->m_TransformCmp->m_GameWorldSpaceCell[0];
+	down[1] = this->m_TransformCmp->m_GameWorldSpaceCell[1] + 1;
+
+	right_2[0] = this->m_TransformCmp->m_GameWorldSpaceCell[0] + 2;
+	right_2[1] = this->m_TransformCmp->m_GameWorldSpaceCell[1];
+
+	left_2[0] = this->m_TransformCmp->m_GameWorldSpaceCell[0] - 2;
+	left_2[1] = this->m_TransformCmp->m_GameWorldSpaceCell[1];
+
+	up_2[0] = this->m_TransformCmp->m_GameWorldSpaceCell[0];
+	up_2[1] = this->m_TransformCmp->m_GameWorldSpaceCell[1] - 2;
+
+	down_2[0] = this->m_TransformCmp->m_GameWorldSpaceCell[0];
+	down_2[1] = this->m_TransformCmp->m_GameWorldSpaceCell[1] + 2;
+
+	left_up[0] = this->m_TransformCmp->m_GameWorldSpaceCell[0] - 1;
+	left_up[1] = this->m_TransformCmp->m_GameWorldSpaceCell[1] - 1;
+
+	right_up[0] = this->m_TransformCmp->m_GameWorldSpaceCell[0] + 1;
+	right_up[1] = this->m_TransformCmp->m_GameWorldSpaceCell[1] - 1;
+
+	left_down[0] = this->m_TransformCmp->m_GameWorldSpaceCell[0] - 1;
+	left_down[1] = this->m_TransformCmp->m_GameWorldSpaceCell[1] + 1;
+
+	right_down[0] = this->m_TransformCmp->m_GameWorldSpaceCell[0] + 1;
+	right_down[1] = this->m_TransformCmp->m_GameWorldSpaceCell[1] + 1;
+
+
+	// Now claim associated regions of the maptiles for which we got coords.
+	m_ClaimedRegions.push_back(GetMapTileAtWorldPosition(right[0], right[1])->m_AssociatedRegion);
+	m_ClaimedRegions.push_back(GetMapTileAtWorldPosition(left[0], left[1])->m_AssociatedRegion);
+	m_ClaimedRegions.push_back(GetMapTileAtWorldPosition(up[0], up[1])->m_AssociatedRegion);
+	m_ClaimedRegions.push_back(GetMapTileAtWorldPosition(down[0], down[1])->m_AssociatedRegion);
+
+	m_ClaimedRegions.push_back(GetMapTileAtWorldPosition(left_up[0], left_up[1])->m_AssociatedRegion);
+	m_ClaimedRegions.push_back(GetMapTileAtWorldPosition(right_up[0], right_up[1])->m_AssociatedRegion);
+	m_ClaimedRegions.push_back(GetMapTileAtWorldPosition(left_down[0], left_down[1])->m_AssociatedRegion);
+	m_ClaimedRegions.push_back(GetMapTileAtWorldPosition(right_down[0], right_down[1])->m_AssociatedRegion);
+
+
+	MapTileRegion* r1, * r2, * r3, * r4 = nullptr;
+	r1 = GetMapTileAtWorldPosition(right_2[0], right_2[1])->m_AssociatedRegion;
+	r2 = GetMapTileAtWorldPosition(left_2[0], left_2[1])->m_AssociatedRegion;
+	r3 = GetMapTileAtWorldPosition(up_2[0], up_2[1])->m_AssociatedRegion;
+	r4 = GetMapTileAtWorldPosition(down_2[0], down_2[1])->m_AssociatedRegion;
+
+
+	if (_isRegionClaimedAlready(r1) == false) {
+		m_ClaimedRegions.push_back(r1);
+	}
+
+	if (_isRegionClaimedAlready(r2) == false) {
+		m_ClaimedRegions.push_back(r2);
+	}
+
+	if (_isRegionClaimedAlready(r3) == false) {
+		m_ClaimedRegions.push_back(r3);
+	}
+
+	if (_isRegionClaimedAlready(r4) == false) {
+		m_ClaimedRegions.push_back(r4);
+	}
+
+}
+
+bool City::_isRegionClaimedAlready(MapTileRegion* region) {
+
+	std::vector<MapTileRegion*> vec = m_ClaimedRegions;
+	MapTileRegion* r = nullptr;
+
+	for (auto it = vec.begin(); it != vec.end(); ++it) {
+
+		r = *it;
+
+		if (COMPARE_STRINGS_2(r->m_IDCmp->m_ID, region->m_IDCmp->m_ID) == 0) return true;
+	}
+
+	return false;
 }
