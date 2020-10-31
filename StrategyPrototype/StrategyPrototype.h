@@ -92,7 +92,7 @@ public:
 	void Render2Layer2();
 
 	// Layer for drawing units.
-	void RenderLayer1();
+	//void RenderLayer1();
 	void Render2Layer1();
 
 	// Layer for drawin effects or general things.

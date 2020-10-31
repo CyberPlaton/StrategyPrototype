@@ -2,6 +2,60 @@
 
 static olc::vf2d g_vi2dCameraPosition = olc::vf2d(0.0f, 0.0f);
 
+int GetXPositionOfMapTile(MapTile* tile) {
+	return(tile->m_TransformCmp->m_PosX);
+}
+
+int GetYPositionOfMapTile(MapTile* tile) {
+	return(tile->m_TransformCmp->m_PosY);
+}
+
+void SpawnRandomCity() {
+
+	int cell[2];
+
+	cell[0] = rand() % 19;
+	cell[1] = rand() % 19;
+
+
+	int probability = rand() % 2;
+
+	if (probability == 0) {
+
+		if (GetMapTileAtWorldPosition(cell[0], cell[1])->m_MapTileType == MapTile::MapTileType::MAPTILE_TYPE_TEMPERATE ||
+			GetMapTileAtWorldPosition(cell[0], cell[1])->m_MapTileType == MapTile::MapTileType::MAPTILE_TYPE_TUNDRA ||
+			GetMapTileAtWorldPosition(cell[0], cell[1])->m_MapTileType == MapTile::MapTileType::MAPTILE_TYPE_SAVANNAH ||
+			GetMapTileAtWorldPosition(cell[0], cell[1])->m_MapTileType == MapTile::MapTileType::MAPTILE_TYPE_JUNGLE)
+		{
+
+			int xpos = GetXPositionOfMapTile(GetMapTileAtWorldPosition(cell[0], cell[1]));
+			int ypos = GetYPositionOfMapTile(GetMapTileAtWorldPosition(cell[0], cell[1]));
+
+ 			City* city = MakeNewCityAtPos("Village", "city_human_small", *EntitiesStorage::Get()->GetPlayersVec()->begin(), xpos, ypos, cell[0], cell[1]);
+			city->ClaimRegions();
+			
+			EntitiesStorage::Get()->AddGameEntitie(city);
+
+			using namespace std;
+			cout << APP_SUCCESS_COLOR;
+			cout << "City created at  XY-(" << city->m_TransformCmp->m_PosX << ":" << city->m_TransformCmp->m_PosY << ") "
+				<< " --  Cell-(" << city->m_TransformCmp->m_GameWorldSpaceCell[0] << ":" << city->m_TransformCmp->m_GameWorldSpaceCell[1] << ") ." << white << endl;
+		}
+
+	}
+}
+
+
+Player* GetPlayer(std::string name) {
+	
+	for (auto it : *EntitiesStorage::Get()->GetPlayersVec()) {
+
+		if (COMPARE_STRINGS_2(name, it->m_PlayerName) == 0) {
+			return it;
+		}
+	}
+}
+
 MapTileRegion* GetRegionAtWorldPosition(int x, int y) {
 
 	int x_cell = int((x + g_vi2dCameraPosition.x)/ SPRITES_WIDTH_AND_HEIGHT);
@@ -34,14 +88,28 @@ Mountains* MakeNewMountain(std::string spritename, int x_cell_pos, int y_cell_po
 }
 
 
-City* MakeNewCity(std::string cityname, std::string spritename, std::string regionsspritename, int x_cell_pos, int y_cell_pos) {
+City* MakeNewCity(std::string cityname, std::string spritename, Player* player, int x_cell_pos, int y_cell_pos) {
 
-	City* city = new City(cityname, spritename, regionsspritename, x_cell_pos * SPRITES_WIDTH_AND_HEIGHT, y_cell_pos * SPRITES_WIDTH_AND_HEIGHT);
+	City* city = new City(cityname, spritename, player, x_cell_pos * SPRITES_WIDTH_AND_HEIGHT, y_cell_pos * SPRITES_WIDTH_AND_HEIGHT);
 
 	city->m_TransformCmp->m_GameWorldSpaceCell[0] = x_cell_pos;
 	city->m_TransformCmp->m_GameWorldSpaceCell[1] = y_cell_pos;
 
 	return city;
+}
+
+// This function is very useful for dynamically creating a city, especially
+// if the user is moving the camera. With it we can reliably determine the right x-y-position
+// for the new city and the right x-y-cell.
+City* MakeNewCityAtPos(std::string cityname, std::string spritename, Player* player, int xpos, int ypos, int set_x_cell_pos, int set_y_cell_pos) {
+
+	City* city = new City(cityname, spritename, player, xpos, ypos);
+
+	city->m_TransformCmp->m_GameWorldSpaceCell[0] = set_x_cell_pos;
+	city->m_TransformCmp->m_GameWorldSpaceCell[1] = set_y_cell_pos;
+
+	return city;
+
 }
 
 
@@ -64,7 +132,7 @@ MapTile* GetMapTileAtXYPosition(int x, int y) {
 
 	MapTile* maptile = nullptr;
 
-	for (auto it = vec.begin(); it != vec.end(); ++it) {
+ 	for (auto it = vec.begin(); it != vec.end(); ++it) {
 		
 		maptile = reinterpret_cast<MapTile*>(*it);
 
@@ -113,27 +181,6 @@ olc::Pixel* Game::RandomColor(){
 		break;
 	}
 }
-
-void Renderer::_drawMapTileRegionRect(MapTileRegion* region) {
-
-	using namespace olc;
-	MapTile* maptile = nullptr;
-
-	for (auto it = region->m_MapTileRegionTiles.begin(); it != region->m_MapTileRegionTiles.end(); ++it) {
-
-		maptile = *it;
-
-		// Check whether the region has a spriteressource set.
-		if (COMPARE_STRINGS(region->m_GraphicsCmp->m_SpriteName, "NULL") == 0) continue;
-		else {
-			// We want to draw the rectangles with specific to the city color.
-			m_Game->DrawDecal(vi2d(maptile->m_TransformCmp->m_PosX, maptile->m_TransformCmp->m_PosY),
-									m_Game->m_SpriteResourceMap.at(region->m_GraphicsCmp->m_SpriteName));
-		}
-	}
-}
-
-
 
 
 std::string MapTileTypeToString(MapTile* tile) {
@@ -224,17 +271,6 @@ Forest* MakeNewForestAtPos(std::string name, int xpos, int ypos, int set_x_cell,
 
 	return ((forest == nullptr) ? nullptr : forest);
 
-}
-
-
-
-
-int GetXPositionOfMapTile(MapTile* tile) {
-	return(tile->m_TransformCmp->m_PosX);
-}
-
-int GetYPositionOfMapTile(MapTile* tile) {
-	return(tile->m_TransformCmp->m_PosY);
 }
 
 
@@ -392,7 +428,25 @@ void CMPCameraInput::HandleKeyboard(Camera* cam) {
 		}
 
 
+		if (context->GetKey(olc::Key::P).bPressed) {
+
+			using namespace std;
+			cout << APP_COLOR;
+			cout << "Players in game: " << endl;
+
+			for (auto it : *EntitiesStorage::Get()->GetPlayersVec()) {
+
+				cout << "NAME: " << it->m_PlayerName << endl;
+				cout << "COLOR: " << it->m_PlayerColor << endl;
+				cout << "CITIES: " << it->m_PlayerCities.size() << endl;
+
+			}
+
+
+		}
+
 	}
+
 
 	if (context->GetKey(olc::Key::SPACE).bReleased) {
 
@@ -548,6 +602,7 @@ void CMPCameraInput::HandleMouse(Camera* cam) {
 
 		}
 	}
+
 }
 
 
@@ -783,22 +838,29 @@ void Game::_loadSpriteResources() {
 	// Load cities
 	Sprite* city1 = new Sprite("assets/city/orc/city_orc_huge.png");
 	Sprite* city2 = new Sprite("assets/city/human/city_human_huge.png");
+	Sprite* city3 = new Sprite("assets/city/human/city_human_small.png");
+
 
 
 	
 	m_SpriteStorage.push_back(city1);
 	m_SpriteStorage.push_back(city2);
+	m_SpriteStorage.push_back(city3);
+
 
 
 
 
 	Decal* dcity1 = new Decal(city1);
 	Decal* dcity2 = new Decal(city2);
+	Decal* dcity3 = new Decal(city3);
+
 
 
 
 	m_SpriteResourceMap.insert(std::make_pair("city_orc_huge", dcity1));
 	m_SpriteResourceMap.insert(std::make_pair("city_human_huge", dcity2));
+	m_SpriteResourceMap.insert(std::make_pair("city_human_small", dcity3));
 
 
 
@@ -892,19 +954,19 @@ bool Game::OnUserCreate() {
 	storage->AddGameEntitie(r4);
 	storage->AddGameEntitie(r5);
 	storage->AddGameEntitie(r6);
-	*/
+	*/	
 
 
+	// Testing creation of player.
+	Player* player = new Player("Bogdan", "blue");
 
-	// Some testing with cities.
-	City* city = MakeNewCity("Durotar", "city_orc_huge", "map_cell_red", 13, 6);
-	city->ClaimRegions();
-
-	City* city2 = MakeNewCity("Stormaven", "city_human_huge", "map_cell_blue", 5, 3);
+	City* city2 = MakeNewCity("Stormhaven", "city_human_huge", player, 5, 3);
 	city2->ClaimRegions();
 
+	player->AddCity(city2);
 
-	storage->AddGameEntitie(city);
+
+	storage->AddPlayer(player);
 	storage->AddGameEntitie(city2);
 
 
@@ -917,7 +979,11 @@ bool Game::OnUserUpdate(float fElapsedTime) {
 
 	// Update Entities MapCell
 	_updateLocalMapTileCellCoords();
-	_updateEntitiesMapTileCoords(); // This will be very inefficient for looping every turn.
+
+
+	// Do we need this every loop? The gameworld cells are to be defined once,
+	// and always updated for entities which move, like units...
+	//_updateEntitiesMapTileCoords(); // This will be very inefficient for looping every turn.
 
 	// Input handling.
 	m_Renderer->m_MainCam->m_CamInput->HandleKeyboard(m_Renderer->m_MainCam);
@@ -944,7 +1010,7 @@ void Renderer::Render() {
 	case RenderMode::RENDERMODE_MAPVIEW:
 
 		// Layered rendering.
-		RenderLayer1();  // units layer.
+		Render2Layer1();  // units layer.
 		Render2Layer2();  // buildings, cities...
 		Render2Layer3();  // terrain, hills ...
 		Render2Layer4();  // ground maptiles
@@ -1076,8 +1142,12 @@ void Game::DebugDrawStats() {
 	if (m_DebugDrawMapTileInfo) {
 
 		// Draw each maptiles mapcell with position
-		std::string s3, s4, tilepos, tiletype;
+		std::string s3, s4, tilepos, tilepos_2;
 		for (auto it : *EntitiesStorage::Get()->GetMapTilesStorage()) {
+
+
+			if (it->m_TransformCmp->m_Cell[0] > VISIBLE_MAP_WIDTH ||
+				it->m_TransformCmp->m_Cell[1] > VISIBLE_MAP_HEIGHT) continue;
 
 
 			// Camera dependent Cell 
@@ -1086,16 +1156,19 @@ void Game::DebugDrawStats() {
 
 			// Gameworld Cell
 			s4 = std::to_string(it->m_TransformCmp->m_GameWorldSpaceCell[0]) + " : " + std::to_string(it->m_TransformCmp->m_GameWorldSpaceCell[1]);
-			DrawString(olc::vi2d(it->m_TransformCmp->m_PosX, it->m_TransformCmp->m_PosY + 20), s4, olc::DARK_RED, 1.0f);
+			DrawString(olc::vi2d(it->m_TransformCmp->m_PosX, it->m_TransformCmp->m_PosY + 10), s4, olc::DARK_RED, 1.0f);
 
 
-			tilepos = "X: " + std::to_string(it->m_TransformCmp->m_PosX) + " : " + " Y: " + std::to_string(it->m_TransformCmp->m_PosY);
-			DrawString(olc::vi2d(it->m_TransformCmp->m_PosX, it->m_TransformCmp->m_PosY + 40), tilepos, olc::DARK_RED, 1.0f);
+			tilepos = "X: " + std::to_string(it->m_TransformCmp->m_PosX);
+			DrawString(olc::vi2d(it->m_TransformCmp->m_PosX, it->m_TransformCmp->m_PosY + 20), tilepos, olc::BLACK, 1.0f);
 
 
-
+			/*
 			tiletype = MapTileTypeToString(reinterpret_cast<MapTile*>(it));
-			DrawString(olc::vi2d(it->m_TransformCmp->m_PosX, it->m_TransformCmp->m_PosY + 60), tiletype, olc::RED, 1.0f);
+			DrawString(olc::vi2d(it->m_TransformCmp->m_PosX, it->m_TransformCmp->m_PosY + 30), tiletype, olc::RED, 1.0f);
+			*/
+			tilepos_2 = "Y: " + std::to_string(it->m_TransformCmp->m_PosY);
+			DrawString(olc::vi2d(it->m_TransformCmp->m_PosX, it->m_TransformCmp->m_PosY + 30), tilepos_2, olc::BLACK, 1.0f);
 
 		}
 
@@ -1225,7 +1298,7 @@ int main()
 }
 
 
-
+/*
 void Renderer::RenderLayer1() {
 
 	using namespace olc;
@@ -1257,7 +1330,7 @@ void Renderer::RenderLayer1() {
 
 
 }
-
+*/
 
 void Renderer::Render2Layer1() {
 
@@ -1279,6 +1352,10 @@ void Renderer::Render2Layer2() {
 	for (auto it = vec.begin(); it != vec.end(); ++it) {
 
 		entity = reinterpret_cast<MapRessource*>(*it);
+
+		// Do not draw tiles we do not see.
+		if (entity->m_TransformCmp->m_Cell[0] > VISIBLE_MAP_WIDTH ||
+			entity->m_TransformCmp->m_Cell[1] > VISIBLE_MAP_HEIGHT) continue;
 
 		// Draw appropriate loaded sprite on position specified.
 		m_Game->DrawDecal(vi2d(entity->m_TransformCmp->m_PosX, entity->m_TransformCmp->m_PosY),
@@ -1302,6 +1379,10 @@ void Renderer::Render2Layer2() {
 
 		city = reinterpret_cast<City*>(*it);
 
+		// Do not draw tiles we do not see.
+		if (city->m_TransformCmp->m_Cell[0] > VISIBLE_MAP_WIDTH ||
+			city->m_TransformCmp->m_Cell[1] > VISIBLE_MAP_HEIGHT) continue;
+
 		// Draw appropriate loaded sprite on position specified.
 		m_Game->DrawDecal(vi2d(city->m_TransformCmp->m_PosX, city->m_TransformCmp->m_PosY),
 			m_Game->m_SpriteResourceMap.at(city->m_GraphicsCmp->m_SpriteName));
@@ -1321,6 +1402,32 @@ void Renderer::Render2Layer2() {
 	m_Game->EnableLayer(m_Layer2, true);
 	m_Game->SetDrawTarget(nullptr);
 }
+
+
+void Renderer::_drawMapTileRegionRect(MapTileRegion* region) {
+
+	using namespace olc;
+	MapTile* maptile = nullptr;
+
+	for (auto it = region->m_MapTileRegionTiles.begin(); it != region->m_MapTileRegionTiles.end(); ++it) {
+
+		maptile = *it;
+
+		// Do not draw tiles we do not see.
+		if (maptile->m_TransformCmp->m_Cell[0] > VISIBLE_MAP_WIDTH ||
+			maptile->m_TransformCmp->m_Cell[1] > VISIBLE_MAP_HEIGHT) continue;
+
+		// Check whether the region has a spriteressource set.
+		if (COMPARE_STRINGS(region->m_GraphicsCmp->m_SpriteName, "NULL") == 0) continue;
+
+		else {
+			// We want to draw the rectangles with specific to the city color.
+			m_Game->DrawDecal(vi2d(maptile->m_TransformCmp->m_PosX, maptile->m_TransformCmp->m_PosY),
+				m_Game->m_SpriteResourceMap.at(region->m_GraphicsCmp->m_SpriteName));
+		}
+	}
+}
+
 
 void Renderer::Render2Layer3() {
 
@@ -1343,8 +1450,8 @@ void Renderer::Render2Layer3() {
 		maptile = reinterpret_cast<MapTile*>(*it);
 
 		// Do not draw tiles we do not see.
-		if (maptile->m_TransformCmp->m_Cell[0] > 15 ||
-			maptile->m_TransformCmp->m_Cell[1] > 10) continue;
+		if (maptile->m_TransformCmp->m_Cell[0] > VISIBLE_MAP_WIDTH ||
+			maptile->m_TransformCmp->m_Cell[1] > VISIBLE_MAP_HEIGHT) continue;
 
 
 		if (maptile->m_MapTileEntities->size() > 0) {
@@ -1420,25 +1527,14 @@ void Renderer::Render2Layer4() {
 		maptile = reinterpret_cast<MapTile*>(*it);
 
 		// Do not draw tiles we do not see.
-		if (maptile->m_TransformCmp->m_Cell[0] > 15 ||
-			maptile->m_TransformCmp->m_Cell[1] > 10) continue;
+		if (maptile->m_TransformCmp->m_Cell[0] > VISIBLE_MAP_WIDTH ||
+			maptile->m_TransformCmp->m_Cell[1] > VISIBLE_MAP_HEIGHT) continue;
 
 
 		// Draw appropriate loaded sprite on position specified.
 		m_Game->DrawDecal(vi2d(maptile->m_TransformCmp->m_PosX, maptile->m_TransformCmp->m_PosY),
 						  m_Game->m_SpriteResourceMap.at(maptile->m_GraphicsCmp->m_SpriteName));
 	}
-
-
-	/*
-	m_Game->DrawDecal(vf2d(128, 128), m_Game->m_SpriteResourceMap.at("map_cell_orange"));
-	m_Game->DrawDecal(vf2d(128, 256), m_Game->m_SpriteResourceMap.at("map_cell_orange"));
-	m_Game->DrawDecal(vf2d(256, 128), m_Game->m_SpriteResourceMap.at("map_cell_black"));
-	m_Game->DrawDecal(vf2d(256, 256), m_Game->m_SpriteResourceMap.at("map_cell_magenta"));
-	m_Game->DrawDecal(vf2d(256, 384), m_Game->m_SpriteResourceMap.at("map_cell_red"));
-	m_Game->DrawDecal(vf2d(256, 512), m_Game->m_SpriteResourceMap.at("map_cell_red"));
-	m_Game->DrawDecal(vf2d(512, 512), m_Game->m_SpriteResourceMap.at("map_cell_brown"));
-	*/
 
 	m_Game->EnableLayer(m_Layer4, true);
 	m_Game->SetDrawTarget(nullptr);
@@ -1542,15 +1638,29 @@ void Game::_updateLocalMapTileCellCoords() {
 	std::vector< GameEntity* > vec = *storage->GetMapTilesStorage();
 
 	MapTile* maptile = nullptr;
-
+	GameEntity* entity = nullptr;
 
 	for (auto it = vec.begin(); it != vec.end(); ++it) {
 
 		maptile = reinterpret_cast<MapTile*>(*it);
 
 		
-		maptile->m_TransformCmp->m_Cell[0] = ((int)maptile->m_TransformCmp->m_PosX + 110) / SPRITES_WIDTH_AND_HEIGHT;
-		maptile->m_TransformCmp->m_Cell[1] = ((int)maptile->m_TransformCmp->m_PosY + 110) / SPRITES_WIDTH_AND_HEIGHT;
+		maptile->m_TransformCmp->m_Cell[0] = ((int)maptile->m_TransformCmp->m_PosX  + 50) / SPRITES_WIDTH_AND_HEIGHT;
+		maptile->m_TransformCmp->m_Cell[1] = ((int)maptile->m_TransformCmp->m_PosY + 50) / SPRITES_WIDTH_AND_HEIGHT;
+
+		
+		// Update local map coords for entities...
+		if (maptile->m_MapTileEntities->size() > 0) {
+
+			for (auto iter = maptile->m_MapTileEntities->begin(); iter != maptile->m_MapTileEntities->end(); ++iter ) {
+
+				entity = *iter;
+
+				entity->m_TransformCmp->m_Cell[0] = maptile->m_TransformCmp->m_Cell[0];
+				entity->m_TransformCmp->m_Cell[1] = maptile->m_TransformCmp->m_Cell[1];
+			}
+		}
+		
 	}
 }
 
@@ -1660,7 +1770,8 @@ void Game::AdvanceOneTurn() {
 
 	_updateAI2();
 
-
+	// Random city spawning.
+	SpawnRandomCity();
 
 	m_TurnCount++;
 }

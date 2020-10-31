@@ -828,12 +828,14 @@ void City::ReclaimRegions() {
 
 void City::ClaimRegions() {
 
-	/*
-	NOTE: 
 
-	Here we test claiming. 
-	For now we do not test whether those tile coords are valid or whether those are already claimed by other player.
-	*/
+	// First, claim tile the city is on.
+	// We assume, cities are not built on claimed tiles...
+	// Be it own claimed tiles or of another player.
+
+	int city_pos[2];
+	city_pos[0] = this->m_TransformCmp->m_GameWorldSpaceCell[0];
+	city_pos[1] = this->m_TransformCmp->m_GameWorldSpaceCell[1];
 
 
 	// Normal
@@ -884,46 +886,120 @@ void City::ClaimRegions() {
 
 
 	// Now claim associated regions of the maptiles for which we got coords.
-	m_ClaimedRegions.push_back(GetMapTileAtWorldPosition(right[0], right[1])->m_AssociatedRegion);
-	m_ClaimedRegions.push_back(GetMapTileAtWorldPosition(left[0], left[1])->m_AssociatedRegion);
-	m_ClaimedRegions.push_back(GetMapTileAtWorldPosition(up[0], up[1])->m_AssociatedRegion);
-	m_ClaimedRegions.push_back(GetMapTileAtWorldPosition(down[0], down[1])->m_AssociatedRegion);
-
-	m_ClaimedRegions.push_back(GetMapTileAtWorldPosition(left_up[0], left_up[1])->m_AssociatedRegion);
-	m_ClaimedRegions.push_back(GetMapTileAtWorldPosition(right_up[0], right_up[1])->m_AssociatedRegion);
-	m_ClaimedRegions.push_back(GetMapTileAtWorldPosition(left_down[0], left_down[1])->m_AssociatedRegion);
-	m_ClaimedRegions.push_back(GetMapTileAtWorldPosition(right_down[0], right_down[1])->m_AssociatedRegion);
-
-
-	MapTileRegion* r1, * r2, * r3, * r4 = nullptr;
-	r1 = GetMapTileAtWorldPosition(right_2[0], right_2[1])->m_AssociatedRegion;
-	r2 = GetMapTileAtWorldPosition(left_2[0], left_2[1])->m_AssociatedRegion;
-	r3 = GetMapTileAtWorldPosition(up_2[0], up_2[1])->m_AssociatedRegion;
-	r4 = GetMapTileAtWorldPosition(down_2[0], down_2[1])->m_AssociatedRegion;
+	MapTile* m0, *m1, * m2, * m3, * m4,* m5, * m6,* m7, * m8, * m9, * m10, * m11, * m12;
+	m0 = GetMapTileAtWorldPosition(city_pos[0], city_pos[1]);
+	m1 = GetMapTileAtWorldPosition(right[0], right[1]);
+	m2 = GetMapTileAtWorldPosition(left[0], left[1]);
+	m3 = GetMapTileAtWorldPosition(up[0], up[1]);
+	m4 = GetMapTileAtWorldPosition(down[0], down[1]);
+	m5 = GetMapTileAtWorldPosition(right_2[0], right_2[1]);
+	m6 = GetMapTileAtWorldPosition(left_2[0], left_2[1]);
+	m7 = GetMapTileAtWorldPosition(up_2[0], up_2[1]);
+	m8 = GetMapTileAtWorldPosition(down_2[0], down_2[1]);
 
 
-	if (_isRegionClaimedAlready(r1) == false) {
-		m_ClaimedRegions.push_back(r1);
+	// No need for nullptr test here.
+	m_ClaimedRegions.push_back(m0->m_AssociatedRegion);
+
+	// Here we must test whether the tile is valid.
+	if (m1 != nullptr) {
+		
+		if (_isRegionClaimedAlreadyByThisCity(m1->m_AssociatedRegion) == false &&
+			_isRegionClaimedByOtherCity(m1->m_AssociatedRegion) == false) {
+
+			m_ClaimedRegions.push_back(m1->m_AssociatedRegion);
+		}
+	}
+	if (m2 != nullptr) {
+		if (_isRegionClaimedAlreadyByThisCity(m2->m_AssociatedRegion) == false &&
+			_isRegionClaimedByOtherCity(m2->m_AssociatedRegion) == false) {
+
+			m_ClaimedRegions.push_back(m2->m_AssociatedRegion);
+		}
+	}
+	if (m3 != nullptr) {
+		if (_isRegionClaimedAlreadyByThisCity(m3->m_AssociatedRegion) == false &&
+			_isRegionClaimedByOtherCity(m3->m_AssociatedRegion) == false) {
+
+			m_ClaimedRegions.push_back(m3->m_AssociatedRegion);
+		}
+	}
+	if (m4 != nullptr) {
+		if (_isRegionClaimedAlreadyByThisCity(m4->m_AssociatedRegion) == false &&
+			_isRegionClaimedByOtherCity(m4->m_AssociatedRegion) == false) {
+
+			m_ClaimedRegions.push_back(m4->m_AssociatedRegion);
+		}
+	}
+	if (m5 != nullptr) {
+		if (_isRegionClaimedAlreadyByThisCity(m5->m_AssociatedRegion) == false &&
+			_isRegionClaimedByOtherCity(m5->m_AssociatedRegion) == false) {
+
+
+			m_ClaimedRegions.push_back(m5->m_AssociatedRegion);
+		}
+	}
+	if (m6 != nullptr) {
+		if (_isRegionClaimedAlreadyByThisCity(m6->m_AssociatedRegion) == false &&
+			_isRegionClaimedByOtherCity(m6->m_AssociatedRegion) == false) {
+
+			m_ClaimedRegions.push_back(m6->m_AssociatedRegion);
+		}
+	}
+	if (m7 != nullptr) {
+		if (_isRegionClaimedAlreadyByThisCity(m7->m_AssociatedRegion) == false &&
+			_isRegionClaimedByOtherCity(m7->m_AssociatedRegion) == false) {
+
+			m_ClaimedRegions.push_back(m7->m_AssociatedRegion);
+		}
+	}
+	if (m8 != nullptr) {
+		if (_isRegionClaimedAlreadyByThisCity(m8->m_AssociatedRegion) == false &&
+			_isRegionClaimedByOtherCity(m8->m_AssociatedRegion) == false) {
+
+			m_ClaimedRegions.push_back(m8->m_AssociatedRegion);
+		}
 	}
 
-	if (_isRegionClaimedAlready(r2) == false) {
-		m_ClaimedRegions.push_back(r2);
+
+	m9 = GetMapTileAtWorldPosition(left_up[0], left_up[1]);
+	m10 = GetMapTileAtWorldPosition(right_up[0], right_up[1]);
+	m11 = GetMapTileAtWorldPosition(left_down[0], left_down[1]);
+	m12 = GetMapTileAtWorldPosition(right_down[0], right_down[1]);
+
+	if (m9 != nullptr) {
+		if (_isRegionClaimedAlreadyByThisCity(m9->m_AssociatedRegion) == false &&
+			_isRegionClaimedByOtherCity(m9->m_AssociatedRegion) == false) {
+
+			m_ClaimedRegions.push_back(m9->m_AssociatedRegion);
+		}
 	}
+	if (m10 != nullptr) {
+		if (_isRegionClaimedAlreadyByThisCity(m10->m_AssociatedRegion) == false &&
+			_isRegionClaimedByOtherCity(m10->m_AssociatedRegion) == false) {
 
-	if (_isRegionClaimedAlready(r3) == false) {
-		m_ClaimedRegions.push_back(r3);
+			m_ClaimedRegions.push_back(m10->m_AssociatedRegion);
+		}
 	}
+	if (m11 != nullptr) {
+		if (_isRegionClaimedAlreadyByThisCity(m11->m_AssociatedRegion) == false &&
+			_isRegionClaimedByOtherCity(m11->m_AssociatedRegion) == false) {
 
-	if (_isRegionClaimedAlready(r4) == false) {
-		m_ClaimedRegions.push_back(r4);
+			m_ClaimedRegions.push_back(m11->m_AssociatedRegion);
+		}
 	}
+	if (m12 != nullptr) {
+		if (_isRegionClaimedAlreadyByThisCity(m12->m_AssociatedRegion) == false &&
+			_isRegionClaimedByOtherCity(m12->m_AssociatedRegion) == false) {
 
-
+			m_ClaimedRegions.push_back(m12->m_AssociatedRegion);
+		}
+	}
 
 	_setSpriteForClaimedRegion();
 }
 
-bool City::_isRegionClaimedAlready(MapTileRegion* region) {
+bool City::_isRegionClaimedAlreadyByThisCity(MapTileRegion* region) {
 
 	std::vector<MapTileRegion*> vec = m_ClaimedRegions;
 	MapTileRegion* r = nullptr;
@@ -939,10 +1015,88 @@ bool City::_isRegionClaimedAlready(MapTileRegion* region) {
 }
 
 
+bool City::_isRegionClaimedByOtherCity(MapTileRegion* region) {
+
+	if (region == nullptr) throw;
+
+	std::vector<Player*>* vec = EntitiesStorage::Get()->GetPlayersVec();
+	Player* player = nullptr;
+	City* city = nullptr;
+	MapTileRegion* r = nullptr;
+
+	std::vector<City*> city_vec;
+	std::vector<MapTileRegion*> regions_vec;
+
+	for (auto it = vec->begin(); it != vec->end(); ++it) {
+
+		player = *it;
+
+		city_vec = player->m_PlayerCities;
+
+		for (auto iter = city_vec.begin(); iter != city_vec.end(); ++iter) {
+
+			city = *iter;
+
+			regions_vec = city->m_ClaimedRegions;
+
+			for (auto itr = regions_vec.begin(); itr != regions_vec.end(); ++itr) {
+
+				r = *itr;
+
+ 				if (COMPARE_STRINGS_2(r->m_IDCmp->m_ID, region->m_IDCmp->m_ID) == 0) return true;
+			}
+
+		}
+
+	}
+
+
+	return false;
+
+}
+
+
 void City::_setSpriteForClaimedRegion() {
 
 	for (auto it : m_ClaimedRegions) {
 
 		it->m_GraphicsCmp->m_SpriteName = m_ClaimedRegionsSpriteName;
 	}
+}
+
+
+
+void EntitiesStorage::RemovePlayer(std::string playername) {
+
+	for (auto it : *m_PlayersVec) {
+		if (COMPARE_STRINGS_2(it->m_PlayerName, playername) == 0) {
+			RemovePlayer(it);
+		}
+	}
+}
+
+void EntitiesStorage::RemovePlayer(Player* p) {
+
+	std::vector<Player*>::iterator it = std::find(m_PlayersVec->begin(), m_PlayersVec->end(), p);
+	if (it != m_PlayersVec->end()) m_PlayersVec->erase(it);
+}
+
+City::City(std::string cityname, std::string spritename, Player* player, int xpos, int ypos) {
+
+	m_IDCmp->m_DynamicTypeName = "City";
+
+	m_CityName = cityname;
+
+	m_GraphicsCmp = new CMPGraphics();
+	m_GraphicsCmp->m_DrawingLayer = "layer2";
+	m_GraphicsCmp->m_SpriteName = spritename;
+
+	m_TransformCmp->m_PosX = xpos;
+	m_TransformCmp->m_PosY = ypos;
+
+
+	m_AICmp = new CMPArtificialIntelligence(this);
+
+	m_AssociatedPlayer = player;
+	_determineMapCell(m_AssociatedPlayer->m_PlayerColor);
 }

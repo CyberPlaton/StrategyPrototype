@@ -10,6 +10,7 @@ class Game;
 class Mountains;
 class Hills;
 class City;
+class Player;
 typedef std::array<std::array<MapTile*, 20>, 20> MapTileArray;
 
 
@@ -25,14 +26,14 @@ Forest* MakeNewForest(std::string name, int x_cell_pos, int y_cell_pos);
 Forest* MakeNewForestAtPos(std::string name, int xpos, int ypos, int set_x_cell, int set_y_cell);
 Mountains* MakeNewMountain(std::string spritename, int x_cell_pos, int y_cell_pos);
 Hills* MakeNewHill(std::string spritename, int x_cell_pos, int y_cell_pos);
-City* MakeNewCity(std::string cityname, std::string spritename, std::string regionsspritename, int x_cell_pos, int y_cell_pos);
+City* MakeNewCity(std::string cityname, std::string spritename, Player* player, int x_cell_pos, int y_cell_pos);
+City* MakeNewCityAtPos(std::string cityname, std::string spritename, Player* player, int xpos, int ypos, int set_x_cell_pos, int set_y_cell_pos);
 std::string MapTileTypeToString(MapTile* tile);
 bool MapTileAppropriteForForest(MapTile* tile, Forest* forest);
 bool IsMapTilePartOfRegion(MapTile* tile);
 bool RaiseDeepForestRandomly();
 MapTileRegion* GetRegionAtWorldPosition(int x, int y);
-
-
+Player* GetPlayer(std::string name);
 
 
 enum class TileImprovementLevel {
@@ -144,30 +145,9 @@ public:
 	
 
 public:
-	City(std::string cityname, std::string spritename, std::string regionsspritename, int xpos, int ypos) {
-
-		m_IDCmp->m_DynamicTypeName = "City";
-		
-		m_CityName = cityname;
-
-		m_GraphicsCmp = new CMPGraphics();
-		m_GraphicsCmp->m_DrawingLayer = "layer2";
-		m_GraphicsCmp->m_SpriteName = spritename;
-
-
-		m_TransformCmp->m_PosX = xpos;
-		m_TransformCmp->m_PosY = ypos;
-
-		
-		m_AICmp = new CMPArtificialIntelligence(this);
-
-		m_ClaimedRegionsSpriteName = regionsspritename;
-
-	}
+	City(std::string cityname, std::string spritename, Player* player, int xpos, int ypos);
 
 	~City() = default;
-
-
 
 	void ClaimRegions();
 	void ReclaimRegions(); // Function for testing.
@@ -181,6 +161,9 @@ public:
 
 	std::vector<MapTileRegion*> m_ClaimedRegions;
 	std::string m_ClaimedRegionsSpriteName;
+
+	// To which player this city belongs.
+	Player* m_AssociatedPlayer = nullptr;
 
 private:
 
@@ -196,7 +179,8 @@ private:
 		m_ClaimedRegions.push_back(region);
 	}
 
-	bool _isRegionClaimedAlready(MapTileRegion* region);
+	bool _isRegionClaimedAlreadyByThisCity(MapTileRegion* region);
+	bool _isRegionClaimedByOtherCity(MapTileRegion* region);
 
 	// Call after claiming regions.
 	void _setSpriteForClaimedRegion();
@@ -204,6 +188,13 @@ private:
 	void _unclaimRegions() {
 		if (m_ClaimedRegions.size() > 0) {
 			m_ClaimedRegions.clear();
+		}
+	}
+
+	void _determineMapCell(std::string color) {
+
+		if (COMPARE_STRINGS(color, "blue") == 0) {
+			m_ClaimedRegionsSpriteName = "map_cell_blue";
 		}
 	}
 };
@@ -573,7 +564,16 @@ struct EntitiesStorage {
 	std::vector< GameEntity* >* GetCitiesVec() { return m_CityVec; }
 	std::vector< GameEntity* >* GetHillsMountains() { return m_MountainsHillsVec; }
 	std::vector<GameEntity*>* GetMapTileRegions() { return m_MapTileRegionsVec; }
+	std::vector<Player*>* GetPlayersVec() { return m_PlayersVec; }
 
+
+	void AddPlayer(Player* p) {
+		m_PlayersVec->push_back(p);
+	}
+
+	void RemovePlayer(Player* p);
+
+	void RemovePlayer(std::string playername);
 
 	void AddGameEntitie(GameEntity* e) {
 
@@ -768,6 +768,7 @@ private:
 	std::vector<GameEntity*>* m_CityVec; // Holds all cities in the game.
 	std::vector<GameEntity*>* m_MapTileRegionsVec; // Holds all regions defined in game.
 	std::vector<GameEntity*>* m_MountainsHillsVec; // Holds all hills and mountains in game.
+	std::vector<Player*>* m_PlayersVec; // Holds all player of the game.
 
 private:
 	EntitiesStorage() = default;
@@ -784,6 +785,8 @@ private:
 		m_CityVec = new std::vector<GameEntity*>();
 		m_MapTileRegionsVec = new std::vector<GameEntity*>();
 		m_MountainsHillsVec = new std::vector<GameEntity*>();
+
+		m_PlayersVec = new std::vector<Player*>();
 	}
 
 	void _addHillMountain(GameEntity* e) {
@@ -922,4 +925,27 @@ private:
 
 private:
 
+};
+
+
+
+class Player {
+public:
+	Player(std::string playername, std::string playercolor) {
+
+		m_EmpireBorderCmp = new CMPEmprieBorder();
+		
+		m_PlayerName = playername;
+		m_PlayerColor = playercolor;
+	}
+
+	void AddCity(City* c) {
+		m_PlayerCities.push_back(c);
+	}
+
+
+	std::string m_PlayerName;
+	std::string m_PlayerColor;
+	std::vector<City*> m_PlayerCities;
+	CMPEmprieBorder* m_EmpireBorderCmp = nullptr;
 };

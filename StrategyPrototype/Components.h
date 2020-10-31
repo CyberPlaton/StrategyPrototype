@@ -3,6 +3,7 @@
 #include"ColorConsole.h"
 #include"FiniteStateMachine.h"
 
+class MapTile;
 
 struct CMPIdentifier {
 	CMPIdentifier() {
@@ -317,7 +318,31 @@ private:
 		}
 	}
 
+};
+
+/*
+Purpose:
+
+Each player has an Empire, thus an empireborder (=CMPEmpireBorder).
+
+We add to this Border the maptiles coords to define the border tiles.
+
+Lastly we use an algorithm to draw adjacent tiles of the border to display the borderlines.
+*/
+struct CMPEmprieBorder {
 
 
+	void AddMapTileToBorder(MapTile* maptile) {
+		m_BorderTiles.push_back(maptile);
+	}
 
+	void RemoveMapTileFromBorder(MapTile* maptile) {
+
+		std::vector<MapTile*>::iterator it = std::find(m_BorderTiles.begin(), m_BorderTiles.end(), maptile);
+
+		if (it != m_BorderTiles.end()) m_BorderTiles.erase(it);
+
+	}
+
+	std::vector<MapTile*> m_BorderTiles;
 };
