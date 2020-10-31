@@ -30,6 +30,7 @@ std::string MapTileTypeToString(MapTile* tile);
 bool MapTileAppropriteForForest(MapTile* tile, Forest* forest);
 bool IsMapTilePartOfRegion(MapTile* tile);
 bool RaiseDeepForestRandomly();
+MapTileRegion* GetRegionAtWorldPosition(int x, int y);
 
 
 

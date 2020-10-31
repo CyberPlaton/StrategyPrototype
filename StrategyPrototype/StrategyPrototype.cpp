@@ -2,6 +2,19 @@
 
 static olc::vf2d g_vi2dCameraPosition = olc::vf2d(0.0f, 0.0f);
 
+MapTileRegion* GetRegionAtWorldPosition(int x, int y) {
+
+	int x_cell = int((x + g_vi2dCameraPosition.x)/ SPRITES_WIDTH_AND_HEIGHT);
+	int y_cell = int((y + g_vi2dCameraPosition.y) / SPRITES_WIDTH_AND_HEIGHT);
+
+	if (IsIndexOutOfBound(x_cell, y_cell) == false) {
+		return (GetMapTileAtWorldPosition(x_cell, y_cell)->m_AssociatedRegion);
+	}
+
+	return nullptr;
+}
+
+
 bool RaiseDeepForestRandomly() {
 
 	int r = rand() % 999;
@@ -518,7 +531,23 @@ void CMPCameraInput::HandleKeyboard(Camera* cam) {
 
 void CMPCameraInput::HandleMouse(Camera* cam) {
 
+	Game* context = cam->m_Game;
 
+	// Draw Region around mouse position.
+	MapTileRegion* region = nullptr;
+	
+	region = GetRegionAtWorldPosition(context->GetMouseX(), context->GetMouseY());
+
+	if (region != nullptr) {
+
+		for (auto it : region->m_MapTileRegionTiles) {
+
+
+			context->DrawDecal(olc::vi2d(it->m_TransformCmp->m_PosX, it->m_TransformCmp->m_PosY),
+				context->m_SpriteResourceMap.at("map_cell_white"));
+
+		}
+	}
 }
 
 
@@ -574,6 +603,8 @@ void Game::_loadSpriteResources() {
 	Sprite* c6 = new Sprite("assets/map/overlay_cell/map_cell_orange.png");
 	Sprite* c7 = new Sprite("assets/map/overlay_cell/map_cell_red.png");
 	Sprite* c8 = new Sprite("assets/map/overlay_cell/map_cell_yellow.png");
+	Sprite* c9 = new Sprite("assets/map/overlay_cell/map_cell_white.png");
+
 
 	m_SpriteStorage.push_back(c1);
 	m_SpriteStorage.push_back(c2);
@@ -583,6 +614,8 @@ void Game::_loadSpriteResources() {
 	m_SpriteStorage.push_back(c6);
 	m_SpriteStorage.push_back(c7);
 	m_SpriteStorage.push_back(c8);
+	m_SpriteStorage.push_back(c9);
+
 
 
 	// Mapview Ressources
@@ -631,6 +664,7 @@ void Game::_loadSpriteResources() {
 	Decal* dc6 = new Decal(c6);
 	Decal* dc7 = new Decal(c7);
 	Decal* dc8 = new Decal(c8);
+	Decal* dc9 = new Decal(c9);
 
 
 
@@ -741,6 +775,7 @@ void Game::_loadSpriteResources() {
 	m_SpriteResourceMap.insert(std::make_pair("map_cell_orange", dc6));
 	m_SpriteResourceMap.insert(std::make_pair("map_cell_red", dc7));
 	m_SpriteResourceMap.insert(std::make_pair("map_cell_yellow", dc8));
+	m_SpriteResourceMap.insert(std::make_pair("map_cell_white", dc9));
 
 
 
