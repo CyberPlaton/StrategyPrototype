@@ -1764,7 +1764,7 @@ void Game::AdvanceOneTurn() {
 	_updateAI2();
 
 	// Random city spawning.
-	SpawnRandomCity();
+	//SpawnRandomCity();
 
 	m_TurnCount++;
 }
