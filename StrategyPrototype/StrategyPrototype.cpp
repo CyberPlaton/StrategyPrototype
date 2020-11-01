@@ -14,11 +14,11 @@ void SpawnRandomCity() {
 
 	int cell[2];
 
-	cell[0] = rand() % 19;
-	cell[1] = rand() % 19;
+	cell[0] = Random() % 19;
+	cell[1] = Random() % 19;
 
 
-	int probability = rand() % 2;
+	int probability = Random() % 2;
 
 	if (probability == 0) {
 
@@ -73,7 +73,7 @@ MapTileRegion* GetRegionAtWorldPosition(int x, int y) {
 
 bool RaiseDeepForestRandomly() {
 
-	int r = rand() % 999;
+	int r = Random() % 999;
 	return ((r == 0) ? true : false);
 }
 
@@ -158,7 +158,7 @@ bool IsMapTilePartOfRegion(MapTile* tile) {
 
 olc::Pixel* Game::RandomColor(){
 
-	int r = rand() % 6;
+	int r = Random() % 6;
 
 	switch (r){
 	case 0:
@@ -1731,7 +1731,7 @@ void ForestSearch::executeStateLogic() {
 			cout << "_surroundedByForestNormalOrDeep() unsuccessfully executed for " << m_ManagedForest->m_IDCmp->m_ID << " at position " << m_ManagedForest->m_TransformCmp->m_GameWorldSpaceCell[0] << " : " << m_ManagedForest->m_TransformCmp->m_GameWorldSpaceCell[1] << white << endl;
 		
 
-			// Check whether to raise randomly a deepforest.
+			// Check whether to raise Randomly a deepforest.
 			if( RaiseDeepForestRandomly()) {
 				m_ManagedForest->m_ForestType = Forest::ForestType::FOREST_DEEP;
 				m_ManagedForest->m_ForestLifetime = 200 * TURN_TIME_MODIFIER;
@@ -1745,7 +1745,7 @@ void ForestSearch::executeStateLogic() {
 	}
 
 
-	// Spawning random forest around deep forest logic.
+	// Spawning Random forest around deep forest logic.
 	if (m_ManagedForest->m_ForestType == Forest::ForestType::FOREST_DEEP) {
 
 		cout << color(colors::BLUE);
@@ -2048,7 +2048,7 @@ void ForestSearch::_spawnRandomForestAroundDeepOne(Forest* deepForest) {
 
 
 
-	int r = rand() % 10;
+	int r = Random() % 10;
 
 	switch (r) {
 	case 0:

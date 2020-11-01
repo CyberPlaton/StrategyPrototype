@@ -1,5 +1,12 @@
 #include"Platform.h"
 
+int Random() {
+	srand(unsigned int(omp_get_wtime()));
+	return rand();
+}
+
+
+
 int StringToInt(std::string s) {
 
 	if (s.compare("0") == 0) {

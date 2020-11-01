@@ -219,7 +219,7 @@ public:
 
 	bool OnUserUpdate(float fElapsedTime) override
 	{
-		// called once per frame, draws random coloured pixels
+		// called once per frame, draws Random coloured pixels
 		for (int x = 0; x < ScreenWidth(); x++)
 			for (int y = 0; y < ScreenHeight(); y++)
 				Draw(x, y, olc::Pixel(rand() % 256, rand() % 256, rand()% 256));

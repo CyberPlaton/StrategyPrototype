@@ -8,11 +8,12 @@
 #include<vector>
 #include<map>
 #include<thread>
-#include<random>
+#include<Random>
 #include<stdexcept>
 #include<stdarg.h> // for custom printf function.
 #include<array>
 #include<random>
+#include<cstdlib>
 
 #include<fstream>
 
@@ -29,3 +30,4 @@
 #define COMPARE_STRINGS_2(x, y) strcmp(x.c_str(), y.c_str()) // Utility.
 
 int StringToInt(std::string s);
+int Random();
