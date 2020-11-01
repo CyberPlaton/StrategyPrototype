@@ -197,6 +197,10 @@ private:
 		if (COMPARE_STRINGS(color, "blue") == 0) {
 			m_ClaimedRegionsSpriteName = "map_cell_blue";
 		}
+
+		if (COMPARE_STRINGS(color, "red") == 0) {
+			m_ClaimedRegionsSpriteName = "map_cell_red";
+		}
 	}
 };
 
@@ -533,6 +537,8 @@ struct MapTileRegion : public GameEntity{
 		m_GraphicsCmp->m_SpriteName = "NULL";
 	}
 
+	void SetAssociatedPlayer(Player* p) { m_AssociatedPlayer = p; }
+
 	void SetRegionSprite(std::string spritename) {
 		m_GraphicsCmp->m_SpriteName = spritename;
 	}
@@ -551,6 +557,7 @@ struct MapTileRegion : public GameEntity{
 
 
 	std::vector<MapTile*> m_MapTileRegionTiles;
+	Player* m_AssociatedPlayer = nullptr; // To which player this region belongs.
 };
 
 

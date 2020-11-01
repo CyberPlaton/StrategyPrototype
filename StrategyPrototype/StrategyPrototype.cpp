@@ -961,12 +961,31 @@ bool Game::OnUserCreate() {
 
 	// Testing creation of player.
 	Player* player = new Player("Bogdan", "blue");
+	Player* player2 = new Player("AI", "red");
+	storage->AddPlayer(player);
+	storage->AddPlayer(player2);
+
 
 	City* city2 = MakeNewCity("Stormhaven", "city_human_huge", player, 5, 3);
-	city2->ClaimRegions();
+	City* city3 = MakeNewCity("Under Stormhaven", "city_human_huge", player, 9, 3);
+	City* city4 = MakeNewCity("Faerograd", "city_human_huge", player, 13, 6);
 
-	storage->AddPlayer(player);
+	City *city = MakeNewCity("Gundaad", "city_orc_huge", player2, 6, 5);
+
 	storage->AddGameEntitie(city2);
+	storage->AddGameEntitie(city3);
+	storage->AddGameEntitie(city4);
+
+	storage->AddGameEntitie(city);
+
+
+
+	city2->ClaimRegions();
+	city3->ClaimRegions();
+	city4->ClaimRegions();
+
+	city->ClaimRegions();
+
 
 
 	return true;

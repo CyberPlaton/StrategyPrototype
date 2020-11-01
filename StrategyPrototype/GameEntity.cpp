@@ -997,6 +997,13 @@ void City::ClaimRegions() {
 	}
 
 	_setSpriteForClaimedRegion();
+	
+
+	// Set region owner for claimed regions.
+	for (auto it : m_ClaimedRegions) {
+
+		it->SetAssociatedPlayer(m_AssociatedPlayer);
+	}
 }
 
 bool City::_isRegionClaimedAlreadyByThisCity(MapTileRegion* region) {
@@ -1019,40 +1026,8 @@ bool City::_isRegionClaimedByOtherCity(MapTileRegion* region) {
 
 	if (region == nullptr) throw;
 
-	std::vector<Player*>* vec = EntitiesStorage::Get()->GetPlayersVec();
-	Player* player = nullptr;
-	City* city = nullptr;
-	MapTileRegion* r = nullptr;
-
-	std::vector<City*> city_vec;
-	std::vector<MapTileRegion*> regions_vec;
-
-	for (auto it = vec->begin(); it != vec->end(); ++it) {
-
-		player = *it;
-
-		city_vec = player->m_PlayerCities;
-
-		for (auto iter = city_vec.begin(); iter != city_vec.end(); ++iter) {
-
-			city = *iter;
-
-			regions_vec = city->m_ClaimedRegions;
-
-			for (auto itr = regions_vec.begin(); itr != regions_vec.end(); ++itr) {
-
-				r = *itr;
-
- 				if (COMPARE_STRINGS_2(r->m_IDCmp->m_ID, region->m_IDCmp->m_ID) == 0) return true;
-			}
-
-		}
-
-	}
-
-
-	return false;
-
+	if (region->m_AssociatedPlayer == nullptr) return false;
+	else return true;
 }
 
 
