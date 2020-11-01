@@ -3,6 +3,34 @@
 #include"ColorConsole.h"
 #include"FiniteStateMachine.h"
 
+struct TimeCounter {
+
+	void Start() {
+		m_TimeNow = std::clock();
+	}
+
+	void SetTimerForSeconds(unsigned int seconds) {
+		m_Timer = seconds;
+	}
+
+	bool TimeOut() {
+
+		auto duration = (std::clock() - m_TimeNow) / (double)CLOCKS_PER_SEC;
+		if (duration > m_Timer) {
+
+			m_TimeNow = std::clock();
+			return true;
+		}
+
+		else return false;
+	}
+
+	int m_TimeNow = 0;
+	int m_Timer = 0;
+};
+
+
+
 class MapTile;
 
 struct CMPIdentifier {

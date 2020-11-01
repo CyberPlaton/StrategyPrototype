@@ -14,6 +14,7 @@
 #include<array>
 #include<random>
 #include<cstdlib>
+#include<ctime>
 
 #include<fstream>
 

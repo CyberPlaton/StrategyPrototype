@@ -172,11 +172,14 @@ public:
 	bool m_DebugDrawMapTileInfo = false;
 	bool m_DebugDrawGeneralOptions = false;
 
+	bool m_TimeModeTurnBased = true;
+
 	bool m_DebugDrawRegions = false;
 	std::string m_DebugDrawRegionsCount = "-1";
 
 	int m_TurnCount = 1;
 
+	TimeCounter* m_TimeCounter = nullptr;
 private:
 
 	void _initialize();

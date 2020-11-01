@@ -429,6 +429,10 @@ void CMPCameraInput::HandleKeyboard(Camera* cam) {
 			context->m_DebugDrawRegions = (context->m_DebugDrawRegions == true) ? false : true;
 		}
 
+		if (context->GetKey(olc::Key::T).bPressed) {
+			context->m_TimeModeTurnBased = (context->m_TimeModeTurnBased == true) ? false : true;
+		}
+
 
 		if (context->GetKey(olc::Key::P).bPressed) {
 
@@ -451,6 +455,8 @@ void CMPCameraInput::HandleKeyboard(Camera* cam) {
 
 
 	if (context->GetKey(olc::Key::SPACE).bReleased) {
+
+		if (context->m_TimeModeTurnBased == false) return;
 
 		using namespace std;
 
@@ -891,6 +897,7 @@ bool Game::OnUserCreate() {
 	_initialize();
 	_initializeMapTileCellCoords();
 
+	m_TimeCounter = new TimeCounter();
 
 	Camera* cam = new Camera(this, 0, 0);
 	m_Renderer = new Renderer(this, cam);
@@ -987,12 +994,23 @@ bool Game::OnUserCreate() {
 	city->ClaimRegions();
 
 
+	// TimeCounter
+	m_TimeCounter->SetTimerForSeconds(1);
+	m_TimeCounter->Start();
 
 	return true;
 }
 
 
 bool Game::OnUserUpdate(float fElapsedTime) {
+
+
+	if (m_TimeModeTurnBased == false) {
+		
+		if (m_TimeCounter->TimeOut()) {
+			AdvanceOneTurn();
+		}
+	}
 
 
 	// Update Entities MapCell
@@ -1138,11 +1156,15 @@ void Game::DebugDrawStats() {
 		std::string forest_info_2 = "Forest Info (Ctrl + F): " + forest_info;
 		DrawString(olc::vi2d(2, 90), forest_info_2, olc::RED, 2.0f);
 
-
+		/*
 		std::string regions = (m_DebugDrawRegions == true) ? "On" : "Off";
 		std::string regions_info = "Regions Info (Ctrl + R): " + regions;
 		DrawString(olc::vi2d(2, 110), regions_info, olc::RED, 2.0f);
+		*/
 
+		std::string timemode = (m_TimeModeTurnBased == true) ? "Turn-Based" : "Real-Time";
+		std::string timemode_info = "Timemode (Ctrl + T): " + timemode;
+		DrawString(olc::vi2d(2, 110), timemode_info, olc::RED, 2.0f);
 	}
 
 	if (m_DebugDrawRegions) {
