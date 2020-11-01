@@ -139,10 +139,6 @@ private:
 	void _drawGrid();
 
 	void _drawMapTileRegionRect(MapTileRegion* region);
-
-
-
-	void _drawBorder(int start_x, int start_y, EmpireBorderDirection dir);
 };
 
 

@@ -57,11 +57,6 @@ Player* GetPlayer(std::string name) {
 }
 
 
-int GetPlayerBorderTilesCount(Player* p) {
-
-	return p->m_EmpireBorderCmp->m_BorderTiles.size();
-}
-
 
 MapTileRegion* GetRegionAtWorldPosition(int x, int y) {
 
@@ -970,11 +965,6 @@ bool Game::OnUserCreate() {
 	City* city2 = MakeNewCity("Stormhaven", "city_human_huge", player, 5, 3);
 	city2->ClaimRegions();
 
-
-	player->AddCity(city2);
-
-	player->Update();
-
 	storage->AddPlayer(player);
 	storage->AddGameEntitie(city2);
 
@@ -1308,78 +1298,12 @@ int main()
 }
 
 
-/*
-void Renderer::RenderLayer1() {
-
-	using namespace olc;
-
-	EntitiesStorage* storage = EntitiesStorage::Get();
-	std::vector< GameEntity* >* vec = storage->GetStorage();
-
-
-	m_Game->SetDrawTarget(m_Layer1);
-	m_Game->Clear(olc::BLANK);
-
-
-	for (auto const& it : *vec) {
-		if (COMPARE_STRINGS(it->m_GraphicsCmp->m_DrawingLayer, "layer1") == 0) {
-
-			// Draw appropriate loaded sprite on position specified.
-			m_Game->DrawDecal(vi2d(it->m_TransformCmp->m_PosX, it->m_TransformCmp->m_PosY),
-				m_Game->m_SpriteResourceMap.at(it->m_GraphicsCmp->m_SpriteName));
-		}
-	}
-
-
-
-	if(m_Game->m_DebugDrawGrid) _drawGrid();
-
-
-	m_Game->EnableLayer(m_Layer1, true);
-	m_Game->SetDrawTarget(nullptr);
-
-
-}
-*/
-
-void Renderer::_drawBorder(int start_x, int start_y, EmpireBorderDirection dir) {
-
-	using namespace olc;
-
-
-	switch (dir)
-	{
-	case Renderer::EmpireBorderDirection::BORDER_DIR_INVALID:
-		break;
-	case Renderer::EmpireBorderDirection::BORDER_DIR_VERTICAL:
-
-		m_Game->FillRect(vi2d(start_x, start_y), vi2d(2, 64), olc::BLACK);
-
-		break;
-	case Renderer::EmpireBorderDirection::BORDER_DIR_HORIZONTAL:
-
-		m_Game->FillRect(vi2d(start_x, start_y), vi2d(64, 2), olc::BLACK);
-
-		break;
-	default:
-		break;
-	}
-}
-
 void Renderer::Render2Layer1() {
 
 	using namespace olc;
 
 	m_Game->SetDrawTarget(m_Layer1);
 	m_Game->Clear(olc::BLANK);
-
-	// TESTING
-	// DRAW LINE FOR BORDER
-	/*
-	_drawBorder(256, 256, EmpireBorderDirection::BORDER_DIR_VERTICAL);
-	_drawBorder(384, 256, EmpireBorderDirection::BORDER_DIR_VERTICAL);
-	_drawBorder(256, 128, EmpireBorderDirection::BORDER_DIR_HORIZONTAL);
-	*/
 
 
 	m_Game->EnableLayer(m_Layer1, true);

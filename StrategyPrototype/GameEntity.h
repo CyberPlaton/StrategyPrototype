@@ -933,8 +933,6 @@ private:
 class Player {
 public:
 	Player(std::string playername, std::string playercolor) {
-
-		m_EmpireBorderCmp = new CMPEmprieBorder();
 		
 		m_PlayerName = playername;
 		m_PlayerColor = playercolor;
@@ -945,28 +943,16 @@ public:
 	}
 
 
-	void Update() {
-
-		_updateEmpireBorder();
-	}
-
 	std::string m_PlayerName;
 	std::string m_PlayerColor;
 	std::vector<City*> m_PlayerCities;
-	CMPEmprieBorder* m_EmpireBorderCmp = nullptr;
-
-
-private:
-	// Flag, whether the empire border was updated.
-	bool m_EmpireBorderDirty = true;
 
 private:
 
-	void _updateEmpireBorder();
 
-	bool _isMapTileSurroundedByOwnRegionTiles(MapTile* tile);
+private:
 
+
+	bool _isMapTileSurroundedByOwnTiles(MapTile* tile);
 	bool _belongMapTileToThisPlayer(MapTile* tile);
-
-	void _determineBorderDirections();
 };

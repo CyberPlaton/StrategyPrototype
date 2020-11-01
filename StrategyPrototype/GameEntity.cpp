@@ -1098,58 +1098,13 @@ City::City(std::string cityname, std::string spritename, Player* player, int xpo
 	m_AICmp = new CMPArtificialIntelligence(this);
 
 	m_AssociatedPlayer = player;
+	player->AddCity(this);
 	_determineMapCell(m_AssociatedPlayer->m_PlayerColor);
 }
 
-void Player::_updateEmpireBorder() {
-
-	// A maptile is NOT part of a border,
-	// if it is surrounded by own regional tiles
-	// to the left, right, up and down.
-
-	// Ergo, the rest is part of border.
 
 
-	// The rest is part of borderregion.
-	// To determine where the border is directing to,
-	// we check in which direction there are tiles which do not
-	// belong to own regions.
-
-	// Thus, we can draw according lines or tiles.
-
-	City* city = nullptr;
-	MapTileRegion* region = nullptr;
-	MapTile* maptile = nullptr;
-
-	for (auto it = m_PlayerCities.begin(); it != m_PlayerCities.end(); ++it) {
-
-		city = *it;
-
-		for (auto iter = city->m_ClaimedRegions.begin(); iter != city->m_ClaimedRegions.end(); ++iter) {
-
-			region = *iter;
-
-			for (auto itr = region->m_MapTileRegionTiles.begin(); itr != region->m_MapTileRegionTiles.end(); ++itr) {
-
-				maptile = reinterpret_cast<MapTile*>(*itr);
-
-				if (_isMapTileSurroundedByOwnRegionTiles(maptile) == false) {
-
-					m_EmpireBorderCmp->m_BorderTiles.push_back(maptile);
-				}
-			}
-
-		}
-
-	}
-
-
-	// Second part. We determine the border direction of border tiles.
-	_determineBorderDirections();
-
-}
-
-bool Player::_isMapTileSurroundedByOwnRegionTiles(MapTile* tile) {
+bool Player::_isMapTileSurroundedByOwnTiles(MapTile* tile) {
 
 	MapTile* other_tile = nullptr;
 
@@ -1298,11 +1253,5 @@ bool Player::_belongMapTileToThisPlayer(MapTile* tile) {
 	}
 
 	return false;
-
-}
-
-
-void Player::_determineBorderDirections() {
-
 
 }
