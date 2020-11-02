@@ -15,6 +15,7 @@ typedef std::array<std::array<MapTile*, 20>, 20> MapTileArray;
 
 
 // Helpers.
+MapTile* GetMaptileAtMousePosition(int x, int y);
 MapTile* GetMapTileAtWorldPosition(int x, int y);
 MapTile* GetMapTileAtXYPosition(int x, int y);
 GameEntity* IsGameEntityTypeOnMapTile(MapTile* maptile, std::string dynamicTypeName);

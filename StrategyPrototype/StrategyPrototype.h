@@ -14,6 +14,15 @@ struct CMPCameraInput{
 
 	void HandleKeyboard(Camera* cam);
 	void HandleMouse(Camera* cam);
+
+
+private:
+	void _handleMapViewKeyBoard(Camera* cam);
+	void _handleCityViewKeyboard(Camera* cam);
+
+	void _handleMapViewMouse(Camera* cam);
+	void _handleCityViewMouse(Camera* cam);
+
 };
 
 
@@ -62,14 +71,6 @@ public:
 		RENDERMODE_INVALID = -1,
 		RENDERMODE_MAPVIEW = 0,
 		RENDERMODE_CITYVIEW = 1
-	};
-
-
-
-	enum class EmpireBorderDirection {
-		BORDER_DIR_INVALID = -1,
-		BORDER_DIR_VERTICAL = 0,
-		BORDER_DIR_HORIZONTAL = 1,
 	};
 
 public:

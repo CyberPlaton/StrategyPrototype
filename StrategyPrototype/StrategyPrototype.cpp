@@ -61,6 +61,19 @@ Player* GetPlayer(std::string name) {
 }
 
 
+MapTile* GetMaptileAtMousePosition(int x, int y) {
+
+	int x_cell = int((x + g_vi2dCameraPosition.x) / SPRITES_WIDTH_AND_HEIGHT);
+	int y_cell = int((y + g_vi2dCameraPosition.y) / SPRITES_WIDTH_AND_HEIGHT);
+
+	if (IsIndexOutOfBound(x_cell, y_cell) == false) {
+		return (GetMapTileAtWorldPosition(x_cell, y_cell));
+	}
+
+	return nullptr;
+}
+
+
 
 MapTileRegion* GetRegionAtWorldPosition(int x, int y) {
 
@@ -214,6 +227,7 @@ std::string MapTileTypeToString(MapTile* tile) {
 
 bool MapTileAppropriteForForest(MapTile* tile, Forest* forest) {
 
+	/*
 	switch (tile->m_MapTileType) {
 	case MapTile::MapTileType::MAPTILE_TYPE_ICE:
 		return false;
@@ -248,9 +262,46 @@ bool MapTileAppropriteForForest(MapTile* tile, Forest* forest) {
 		break;
 
 	}
+	*/
+	bool tile_type_ok = false;
+	bool tile_free = true;
+
+	// Check whether maptile is appropriate for forest type.
+	switch (tile->m_MapTileType) {
+	case MapTile::MapTileType::MAPTILE_TYPE_SAVANNAH:
+		if (forest->m_ForestClass == Forest::ForestClass::FOREST_CLASS_SAVANNAH) tile_type_ok =  true;
+		break;
+	case MapTile::MapTileType::MAPTILE_TYPE_TEMPERATE:
+		if (forest->m_ForestClass == Forest::ForestClass::FOREST_CLASS_TEMPERATE) tile_type_ok =  true;
+		break;
+	case MapTile::MapTileType::MAPTILE_TYPE_JUNGLE:
+		if (forest->m_ForestClass == Forest::ForestClass::FOREST_CLASS_JUNGLE) tile_type_ok =  true;
+		break;
+	case  MapTile::MapTileType::MAPTILE_TYPE_TUNDRA:
+		if (forest->m_ForestClass == Forest::ForestClass::FOREST_CLASS_TUNDRA) tile_type_ok = true;
+		break;
+	default:
+		break;
+	}
 
 
-	return false;
+	// Now check whether there is a mountain or city etc.
+	for (auto it : *tile->m_MapTileEntities) {
+
+		if (COMPARE_STRINGS(it->m_IDCmp->m_DynamicTypeName, "Mountains") == 0) {
+			tile_free = false;
+		}
+		else if (COMPARE_STRINGS(it->m_IDCmp->m_DynamicTypeName, "Hills") == 0) {
+			tile_free = false;
+		}
+		else if (COMPARE_STRINGS(it->m_IDCmp->m_DynamicTypeName, "City") == 0) {
+			tile_free = false;
+		}
+
+	}
+
+
+	return (tile_type_ok && tile_free);
 }
 
 
@@ -411,6 +462,23 @@ void CMPCameraInput::HandleKeyboard(Camera* cam) {
 
 	Game* context = cam->m_Game;
 
+	switch (context->m_Renderer->m_RenderMode) {
+	case Renderer::RenderMode::RENDERMODE_CITYVIEW:
+		_handleCityViewKeyboard(cam);
+		break;
+	case Renderer::RenderMode::RENDERMODE_MAPVIEW:
+		_handleMapViewKeyBoard(cam);
+		break;
+	default:
+		break;
+	}
+}
+
+
+void CMPCameraInput::_handleMapViewKeyBoard(Camera* cam) {
+
+	Game* context = cam->m_Game;
+
 	int speed = 4;
 
 	if (context->GetKey(olc::Key::ENTER).bReleased) {
@@ -465,7 +533,7 @@ void CMPCameraInput::HandleKeyboard(Camera* cam) {
 
 		if (context->GetKey(olc::Key::SPACE).bPressed) {
 			Player* p = GetPlayer("Bogdan");
-			
+
 			for (auto it : p->m_PlayerCities) {
 				ColorValue = (ColorValue + 1) % 8;
 				it->m_CityBorderColor = City::CityBorderColor(ColorValue);
@@ -490,7 +558,7 @@ void CMPCameraInput::HandleKeyboard(Camera* cam) {
 
 		cout << APP_ERROR_COLOR;
 		cout << "EXECUTING TURN " << turn << " AI LOGIC." << white << endl;
-		
+
 		context->AdvanceOneTurn();
 
 		cout << APP_ERROR_COLOR;
@@ -514,14 +582,14 @@ void CMPCameraInput::HandleKeyboard(Camera* cam) {
 
 		for (auto it : *EntitiesStorage::Get()->GetMapTilesStorage()) {
 
-			it->m_TransformCmp->m_PosY += 1* speed;
+			it->m_TransformCmp->m_PosY += 1 * speed;
 
 			if (static_cast<MapTile*>(it)->m_MapTileEntities != nullptr) {
 				if (static_cast<MapTile*>(it)->m_MapTileEntities->size() > 0) {
 
 
 					for (auto iter : *static_cast<MapTile*>(it)->m_MapTileEntities) {
-						
+
 						iter->m_TransformCmp->m_PosY += 1 * speed;
 					}
 				}
@@ -585,13 +653,13 @@ void CMPCameraInput::HandleKeyboard(Camera* cam) {
 
 	if (context->GetKey(olc::Key::D).bHeld) {
 
-		if (g_vi2dCameraPosition.x  >= MAP_SIZE * SPRITES_WIDTH_AND_HEIGHT) {
+		if (g_vi2dCameraPosition.x >= MAP_SIZE * SPRITES_WIDTH_AND_HEIGHT) {
 			g_vi2dCameraPosition.x = MAP_SIZE * SPRITES_WIDTH_AND_HEIGHT; return;
 		}
 
 		g_vi2dCameraPosition.x += 1 * speed;
 
-		for (auto it : *EntitiesStorage::Get()->GetMapTilesStorage() ) {
+		for (auto it : *EntitiesStorage::Get()->GetMapTilesStorage()) {
 
 			it->m_TransformCmp->m_PosX -= 1 * speed;
 
@@ -617,13 +685,27 @@ void CMPCameraInput::HandleKeyboard(Camera* cam) {
 }
 
 
-void CMPCameraInput::HandleMouse(Camera* cam) {
+void CMPCameraInput::_handleCityViewKeyboard(Camera* cam) {
 
 	Game* context = cam->m_Game;
 
+
+	if (context->GetKey(olc::Key::ESCAPE).bReleased) {
+
+		context->m_Renderer->ChangeRenderMode();
+	}
+
+}
+
+
+void CMPCameraInput::_handleMapViewMouse(Camera* cam) {
+
+	Game* context = cam->m_Game;
+
+
 	// Draw Region around mouse position.
 	MapTileRegion* region = nullptr;
-	
+
 	region = GetRegionAtWorldPosition(context->GetMouseX(), context->GetMouseY());
 
 	if (region != nullptr) {
@@ -637,6 +719,42 @@ void CMPCameraInput::HandleMouse(Camera* cam) {
 		}
 	}
 
+	MapTile* tile = nullptr;
+	if (context->GetMouse(0).bPressed) {
+
+		tile = GetMaptileAtMousePosition(context->GetMouseX(), context->GetMouseY());
+
+		for (auto it : *tile->m_MapTileEntities) {
+
+			if (COMPARE_STRINGS(it->m_IDCmp->m_DynamicTypeName, "City") == 0) {
+
+				context->m_Renderer->ChangeRenderMode();
+
+			}
+		}
+	}
+}
+
+
+void CMPCameraInput::_handleCityViewMouse(Camera* cam) {
+
+}
+
+
+void CMPCameraInput::HandleMouse(Camera* cam) {
+
+	Game* context = cam->m_Game;
+
+	switch (context->m_Renderer->m_RenderMode) {
+	case Renderer::RenderMode::RENDERMODE_CITYVIEW:
+		_handleCityViewMouse(cam);
+		break;
+	case Renderer::RenderMode::RENDERMODE_MAPVIEW:
+		_handleMapViewMouse(cam);
+		break;
+	default:
+		break;
+	}
 }
 
 
@@ -1440,7 +1558,7 @@ int main()
 {
 	Game demo;
 
-	if (demo.Construct(968, 720, 1, 1, false, true, false))
+	if (demo.Construct(1280, 720, 1, 1, false, true, false))
 		demo.Start();
 
 
