@@ -1085,6 +1085,18 @@ void Game::_loadSpriteResources() {
 	m_SpriteResourceMap.insert(std::make_pair("city_highelf_small", dcity4));
 
 
+	// Cityview sprites
+	/*
+	* NOTE:
+	* 
+	* Load city view sprites like this...
+	* 
+	Sprite* cityview1 = new Sprite("assets/city/human/city_human_normal_cityview.jpg");
+
+	Decal* dcityview1 = new Decal(cityview1);
+
+	m_SpriteResourceMap.insert(std::make_pair("city_human_normal_cityview", dcityview1));
+	*/
 
 }
 
@@ -1313,7 +1325,7 @@ void Renderer::RenderCityLayer3() {
 	m_Game->SetDrawTarget(m_Layer3);
 	m_Game->Clear(olc::BLANK);
 
-
+	using namespace olc;
 
 
 
