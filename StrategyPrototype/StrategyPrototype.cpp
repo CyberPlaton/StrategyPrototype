@@ -31,15 +31,17 @@ void SpawnRandomCity() {
 			int xpos = GetXPositionOfMapTile(GetMapTileAtWorldPosition(cell[0], cell[1]));
 			int ypos = GetYPositionOfMapTile(GetMapTileAtWorldPosition(cell[0], cell[1]));
 
+			/*
  			City* city = MakeNewCityAtPos("Village", "city_human_small", *EntitiesStorage::Get()->GetPlayersVec()->begin(), xpos, ypos, cell[0], cell[1]);
 			city->ClaimRegions();
 			
 			EntitiesStorage::Get()->AddGameEntitie(city);
-
+			
 			using namespace std;
 			cout << APP_SUCCESS_COLOR;
 			cout << "City created at  XY-(" << city->m_TransformCmp->m_PosX << ":" << city->m_TransformCmp->m_PosY << ") "
 				<< " --  Cell-(" << city->m_TransformCmp->m_GameWorldSpaceCell[0] << ":" << city->m_TransformCmp->m_GameWorldSpaceCell[1] << ") ." << white << endl;
+			*/
 		}
 
 	}
@@ -90,12 +92,16 @@ Mountains* MakeNewMountain(std::string spritename, int x_cell_pos, int y_cell_po
 }
 
 
-City* MakeNewCity(std::string cityname, std::string spritename, Player* player, int x_cell_pos, int y_cell_pos) {
+City* MakeNewCity(std::string cityname, std::string spritename, Player* player, int x_cell_pos, int y_cell_pos, int citySize) {
 
-	City* city = new City(cityname, spritename, player, x_cell_pos * SPRITES_WIDTH_AND_HEIGHT, y_cell_pos * SPRITES_WIDTH_AND_HEIGHT);
+	City* city = new City(cityname, spritename, player, x_cell_pos * SPRITES_WIDTH_AND_HEIGHT, y_cell_pos * SPRITES_WIDTH_AND_HEIGHT, citySize);
 
 	city->m_TransformCmp->m_GameWorldSpaceCell[0] = x_cell_pos;
 	city->m_TransformCmp->m_GameWorldSpaceCell[1] = y_cell_pos;
+
+
+	city->ClaimRegions();
+	city->MakeCityBorders();
 
 	return city;
 }
@@ -103,12 +109,15 @@ City* MakeNewCity(std::string cityname, std::string spritename, Player* player, 
 // This function is very useful for dynamically creating a city, especially
 // if the user is moving the camera. With it we can reliably determine the right x-y-position
 // for the new city and the right x-y-cell.
-City* MakeNewCityAtPos(std::string cityname, std::string spritename, Player* player, int xpos, int ypos, int set_x_cell_pos, int set_y_cell_pos) {
+City* MakeNewCityAtPos(std::string cityname, std::string spritename, Player* player, int xpos, int ypos, int set_x_cell_pos, int set_y_cell_pos, int citySize) {
 
-	City* city = new City(cityname, spritename, player, xpos, ypos);
+	City* city = new City(cityname, spritename, player, xpos, ypos, citySize);
 
 	city->m_TransformCmp->m_GameWorldSpaceCell[0] = set_x_cell_pos;
 	city->m_TransformCmp->m_GameWorldSpaceCell[1] = set_y_cell_pos;
+
+	city->ClaimRegions();
+	city->MakeCityBorders();
 
 	return city;
 
@@ -669,6 +678,23 @@ void Game::_loadSpriteResources() {
 	Sprite* c9 = new Sprite("assets/map/overlay_cell/map_cell_white.png");
 
 
+	// Borders cells
+	Sprite* c10 = new Sprite("assets/map/overlay_cell/map_cell_border_down.png");
+	Sprite* c11 = new Sprite("assets/map/overlay_cell/map_cell_border_down_left.png");
+	Sprite* c12 = new Sprite("assets/map/overlay_cell/map_cell_border_down_right.png");
+	Sprite* c13 = new Sprite("assets/map/overlay_cell/map_cell_border_down_up_right.png");
+	Sprite* c14 = new Sprite("assets/map/overlay_cell/map_cell_border_left.png");
+	Sprite* c15 = new Sprite("assets/map/overlay_cell/map_cell_border_left_right.png");
+	Sprite* c16 = new Sprite("assets/map/overlay_cell/map_cell_border_left_right_down.png");
+	Sprite* c17 = new Sprite("assets/map/overlay_cell/map_cell_border_left_up_down.png");
+	Sprite* c18 = new Sprite("assets/map/overlay_cell/map_cell_border_left_up_right.png");
+	Sprite* c19 = new Sprite("assets/map/overlay_cell/map_cell_border_right.png");
+	Sprite* c20 = new Sprite("assets/map/overlay_cell/map_cell_border_up.png");
+	Sprite* c21 = new Sprite("assets/map/overlay_cell/map_cell_border_up_down.png");
+	Sprite* c22 = new Sprite("assets/map/overlay_cell/map_cell_border_up_left.png");
+	Sprite* c23 = new Sprite("assets/map/overlay_cell/map_cell_border_up_right.png");
+
+
 	m_SpriteStorage.push_back(c1);
 	m_SpriteStorage.push_back(c2);
 	m_SpriteStorage.push_back(c3);
@@ -678,6 +704,53 @@ void Game::_loadSpriteResources() {
 	m_SpriteStorage.push_back(c7);
 	m_SpriteStorage.push_back(c8);
 	m_SpriteStorage.push_back(c9);
+
+	m_SpriteStorage.push_back(c10);
+	m_SpriteStorage.push_back(c11);
+	m_SpriteStorage.push_back(c12);
+	m_SpriteStorage.push_back(c13);
+	m_SpriteStorage.push_back(c14);
+	m_SpriteStorage.push_back(c15);
+	m_SpriteStorage.push_back(c16);
+	m_SpriteStorage.push_back(c17);
+	m_SpriteStorage.push_back(c18);
+	m_SpriteStorage.push_back(c19);
+	m_SpriteStorage.push_back(c20);
+	m_SpriteStorage.push_back(c21);
+	m_SpriteStorage.push_back(c22);
+	m_SpriteStorage.push_back(c23);
+
+
+	Decal* dec10 = new Decal(c10);
+	Decal* dec11 = new Decal(c11);
+	Decal* dec12 = new Decal(c12);
+	Decal* dec13 = new Decal(c13);
+	Decal* dec14 = new Decal(c14);
+	Decal* dec15 = new Decal(c15);
+	Decal* dec16 = new Decal(c16);
+	Decal* dec17 = new Decal(c17);
+	Decal* dec18 = new Decal(c18);
+	Decal* dec19 = new Decal(c19);
+	Decal* dec20 = new Decal(c20);
+	Decal* dec21 = new Decal(c21);
+	Decal* dec22 = new Decal(c22);
+	Decal* dec23 = new Decal(c23);
+
+	m_SpriteResourceMap.insert(std::make_pair("map_cell_border_down", dec10));
+	m_SpriteResourceMap.insert(std::make_pair("map_cell_border_down_left", dec11));
+	m_SpriteResourceMap.insert(std::make_pair("map_cell_border_down_right", dec12));
+	m_SpriteResourceMap.insert(std::make_pair("map_cell_border_down_up_right", dec13));
+	m_SpriteResourceMap.insert(std::make_pair("map_cell_border_left", dec14));
+	m_SpriteResourceMap.insert(std::make_pair("map_cell_border_left_right", dec15));
+	m_SpriteResourceMap.insert(std::make_pair("map_cell_border_left_right_down", dec16));
+	m_SpriteResourceMap.insert(std::make_pair("map_cell_border_left_up_down", dec17));
+	m_SpriteResourceMap.insert(std::make_pair("map_cell_border_left_up_right", dec18));
+	m_SpriteResourceMap.insert(std::make_pair("map_cell_border_right", dec19));
+	m_SpriteResourceMap.insert(std::make_pair("map_cell_border_up", dec20));
+	m_SpriteResourceMap.insert(std::make_pair("map_cell_border_up_down", dec21));
+	m_SpriteResourceMap.insert(std::make_pair("map_cell_border_up_left", dec22));
+	m_SpriteResourceMap.insert(std::make_pair("map_cell_border_up_right", dec23));
+
 
 
 
@@ -847,6 +920,8 @@ void Game::_loadSpriteResources() {
 	Sprite* city1 = new Sprite("assets/city/orc/city_orc_huge.png");
 	Sprite* city2 = new Sprite("assets/city/human/city_human_huge.png");
 	Sprite* city3 = new Sprite("assets/city/human/city_human_small.png");
+	Sprite* city4 = new Sprite("assets/city/highelf/city_highelf_small.png");
+
 
 
 
@@ -854,6 +929,7 @@ void Game::_loadSpriteResources() {
 	m_SpriteStorage.push_back(city1);
 	m_SpriteStorage.push_back(city2);
 	m_SpriteStorage.push_back(city3);
+	m_SpriteStorage.push_back(city4);
 
 
 
@@ -862,6 +938,8 @@ void Game::_loadSpriteResources() {
 	Decal* dcity1 = new Decal(city1);
 	Decal* dcity2 = new Decal(city2);
 	Decal* dcity3 = new Decal(city3);
+	Decal* dcity4 = new Decal(city4);
+
 
 
 
@@ -869,6 +947,7 @@ void Game::_loadSpriteResources() {
 	m_SpriteResourceMap.insert(std::make_pair("city_orc_huge", dcity1));
 	m_SpriteResourceMap.insert(std::make_pair("city_human_huge", dcity2));
 	m_SpriteResourceMap.insert(std::make_pair("city_human_small", dcity3));
+	m_SpriteResourceMap.insert(std::make_pair("city_highelf_small", dcity4));
 
 
 
@@ -973,25 +1052,20 @@ bool Game::OnUserCreate() {
 	storage->AddPlayer(player2);
 
 
-	City* city2 = MakeNewCity("Stormhaven", "city_human_huge", player, 5, 3);
-	City* city3 = MakeNewCity("Under Stormhaven", "city_human_huge", player, 9, 3);
-	City* city4 = MakeNewCity("Faerograd", "city_human_huge", player, 13, 6);
+	City* city2 = MakeNewCity("Stormhaven", "city_human_huge", player, 5, 3, 32);
+	City* city3 = MakeNewCity("Under Stormhaven", "city_human_huge", player, 9, 3, 32);
+	City* city4 = MakeNewCity("Faerograd", "city_human_huge", player, 13, 6, 32);
 
-	City *city = MakeNewCity("Gundaad", "city_orc_huge", player2, 6, 5);
+	City *city = MakeNewCity("Gnarmol", "city_orc_huge", player2, 6, 12, 32);
+	City* city5 = MakeNewCity("Gundrassil", "city_highelf_small", player2, 15, 2, 10);
+
 
 	storage->AddGameEntitie(city2);
 	storage->AddGameEntitie(city3);
 	storage->AddGameEntitie(city4);
 
 	storage->AddGameEntitie(city);
-
-
-
-	city2->ClaimRegions();
-	city3->ClaimRegions();
-	city4->ClaimRegions();
-
-	city->ClaimRegions();
+	storage->AddGameEntitie(city5);
 
 
 	// TimeCounter
@@ -1412,6 +1486,29 @@ void Renderer::Render2Layer2() {
 		}
 	}
 
+
+
+
+	std::vector<GameEntity*> vec_2 = *EntitiesStorage::Get()->GetCitiesVec();
+	City* c = nullptr;
+	MapTile* tile = nullptr;
+
+	for (auto it = vec_2.begin(); it != vec_2.end(); ++it) {
+
+		c = reinterpret_cast<City*>(*it);
+
+
+		for (auto iter = c->m_MapTileBorderDirectionMap.begin(); iter != c->m_MapTileBorderDirectionMap.end(); ++iter) {
+
+			tile = iter->first;
+
+			// Draw appropriate loaded sprite on position specified.
+			m_Game->DrawDecal(vi2d(tile->m_TransformCmp->m_PosX, tile->m_TransformCmp->m_PosY),
+				m_Game->m_SpriteResourceMap.at(c->m_MapTileBorderDirectionMap.at(tile)));
+
+		}
+
+	}
 
 
 	m_Game->EnableLayer(m_Layer2, true);

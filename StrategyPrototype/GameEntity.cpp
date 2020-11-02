@@ -1056,11 +1056,15 @@ void EntitiesStorage::RemovePlayer(Player* p) {
 	if (it != m_PlayersVec->end()) m_PlayersVec->erase(it);
 }
 
-City::City(std::string cityname, std::string spritename, Player* player, int xpos, int ypos) {
+City::City(std::string cityname, std::string spritename, Player* player, int xpos, int ypos, int citySize) {
 
 	m_IDCmp->m_DynamicTypeName = "City";
 
+
 	m_CityName = cityname;
+	m_CitySize = citySize;
+	_updateCitySizeClass();
+
 
 	m_GraphicsCmp = new CMPGraphics();
 	m_GraphicsCmp->m_DrawingLayer = "layer2";
@@ -1229,4 +1233,222 @@ bool Player::_belongMapTileToThisPlayer(MapTile* tile) {
 
 	return false;
 
+}
+
+
+void City::_determineCityBorderTiles() {
+
+	// Iterate through each regions maptiles.
+	MapTileRegion* region = nullptr;
+	MapTile* tile = nullptr;
+
+	int tile_up[2], tile_down[2], tile_right[2], tile_left[2];
+
+	bool up = false, down = false, right = false, left = false;
+
+
+	for (auto it = m_ClaimedRegions.begin(); it != m_ClaimedRegions.end(); ++it) {
+
+		region = *it;
+
+		for (auto iter = region->m_MapTileRegionTiles.begin(); iter != region->m_MapTileRegionTiles.end(); ++iter) {
+
+			tile = *iter;
+
+
+			tile_up[0] = tile->m_TransformCmp->m_GameWorldSpaceCell[0];
+			tile_up[1] = tile->m_TransformCmp->m_GameWorldSpaceCell[1] - 1;
+
+			tile_down[0] = tile->m_TransformCmp->m_GameWorldSpaceCell[0];
+			tile_down[1] = tile->m_TransformCmp->m_GameWorldSpaceCell[1] + 1;
+
+			tile_right[0] = tile->m_TransformCmp->m_GameWorldSpaceCell[0] + 1;
+			tile_right[1] = tile->m_TransformCmp->m_GameWorldSpaceCell[1];
+
+			tile_left[0] = tile->m_TransformCmp->m_GameWorldSpaceCell[0] - 1;
+			tile_left[1] = tile->m_TransformCmp->m_GameWorldSpaceCell[1];
+
+
+
+			if (_isMapTileClaimedByCity(GetMapTileAtWorldPosition(tile_up[0], tile_up[1]))) { // true, if up is own maptile.
+				up = true;
+			}
+
+			if (_isMapTileClaimedByCity(GetMapTileAtWorldPosition(tile_down[0], tile_down[1]))) {
+				down = true;
+			}
+
+			if (_isMapTileClaimedByCity(GetMapTileAtWorldPosition(tile_right[0], tile_right[1]))) {
+				right = true;
+			}
+
+			if (_isMapTileClaimedByCity(GetMapTileAtWorldPosition(tile_left[0], tile_left[1]))) {
+				left = true;
+			}
+
+
+
+
+
+			if (up && down && right && left){
+				// Means, this tile is surrounded by own, so no border tile.
+
+				// reset for next tile.
+				up = down = left = right = false;
+				continue;
+			}
+			else {
+				m_CityBorderMapTileVec.push_back(tile);
+				up = down = left = right = false;
+			}
+		}
+	}
+}
+
+
+void City::_determineMapTilesBorderDirection() {
+
+	// Iterate through all border tiles.
+	MapTile* tile = nullptr;
+	int tile_up[2], tile_down[2], tile_right[2], tile_left[2];
+
+	bool border_up = false, border_down = false, border_right = false, border_left = false;
+
+
+	for (auto it = m_CityBorderMapTileVec.begin(); it != m_CityBorderMapTileVec.end(); ++it) {
+
+		tile = *it;
+
+		tile_up[0] = tile->m_TransformCmp->m_GameWorldSpaceCell[0];
+		tile_up[1] = tile->m_TransformCmp->m_GameWorldSpaceCell[1] - 1;
+
+		tile_down[0] = tile->m_TransformCmp->m_GameWorldSpaceCell[0];
+		tile_down[1] = tile->m_TransformCmp->m_GameWorldSpaceCell[1] + 1;
+
+		tile_right[0] = tile->m_TransformCmp->m_GameWorldSpaceCell[0] + 1;
+		tile_right[1] = tile->m_TransformCmp->m_GameWorldSpaceCell[1];
+
+		tile_left[0] = tile->m_TransformCmp->m_GameWorldSpaceCell[0] - 1;
+		tile_left[1] = tile->m_TransformCmp->m_GameWorldSpaceCell[1];
+
+
+		// Determine the border direction.
+		if (_isMapTileClaimedByCity(GetMapTileAtWorldPosition(tile_up[0], tile_up[1])) == false) {
+
+			// .. border in up direction.
+			border_up = true;
+		}
+		
+		if (_isMapTileClaimedByCity(GetMapTileAtWorldPosition(tile_down[0], tile_down[1])) == false) {
+			
+			// .. border in down direction.
+			border_down = true;
+		}
+		
+		if (_isMapTileClaimedByCity(GetMapTileAtWorldPosition(tile_right[0], tile_right[1])) == false) {
+			
+			// .. border in right direction.
+			border_right = true;
+		}
+		
+		if (_isMapTileClaimedByCity(GetMapTileAtWorldPosition(tile_left[0], tile_left[1])) == false) {
+			
+			// .. border in left direction.
+			border_left = true;
+		}
+
+		
+		// Define decal for appropriate bordertype.
+		// In order to get valid results, we must iterate backwards all possibilities.
+		if (border_up && border_down && border_right && !border_left) { // Three borders.
+			m_MapTileBorderDirectionMap.insert(std::make_pair(tile, "map_cell_border_down_up_right"));
+
+		}
+		else if (!border_up && border_down && border_right && border_left) {
+			m_MapTileBorderDirectionMap.insert(std::make_pair(tile, "map_cell_border_left_right_down"));
+
+		}
+		else if (border_up && border_down && !border_right && border_left) {
+			m_MapTileBorderDirectionMap.insert(std::make_pair(tile, "map_cell_border_left_up_down"));
+
+		}
+		else if (border_up && !border_down && border_right && border_left) {
+			m_MapTileBorderDirectionMap.insert(std::make_pair(tile, "map_cell_border_left_up_right"));
+
+		}
+		else if (border_up && border_down && !border_right && !border_left) { // Two borders
+			m_MapTileBorderDirectionMap.insert(std::make_pair(tile, "map_cell_border_up_down"));
+
+		}
+		else if (border_up && !border_down && border_right && !border_left) {
+			m_MapTileBorderDirectionMap.insert(std::make_pair(tile, "map_cell_border_up_right"));
+
+		}
+		else if (border_up && !border_down && !border_right && border_left) {
+			m_MapTileBorderDirectionMap.insert(std::make_pair(tile, "map_cell_border_up_left"));
+
+		}
+		else if (!border_up && border_down && border_right && !border_left) {
+			m_MapTileBorderDirectionMap.insert(std::make_pair(tile, "map_cell_border_down_right"));
+
+		}
+		else if (!border_up && border_down && !border_right && border_left) {
+			m_MapTileBorderDirectionMap.insert(std::make_pair(tile, "map_cell_border_down_left"));
+
+		}
+		else if (!border_up && !border_down && border_right && border_left) {
+			m_MapTileBorderDirectionMap.insert(std::make_pair(tile, "map_cell_border_left_right"));
+
+		}
+		else if (border_up && !border_down && !border_right && !border_left) { // One border.
+			m_MapTileBorderDirectionMap.insert(std::make_pair(tile, "map_cell_border_up"));
+
+		}
+		else if (!border_up && border_down && !border_right && !border_left) {
+			m_MapTileBorderDirectionMap.insert(std::make_pair(tile, "map_cell_border_down"));
+
+		}
+		else if (!border_up && !border_down && border_right && !border_left) {
+			m_MapTileBorderDirectionMap.insert(std::make_pair(tile, "map_cell_border_right"));
+
+		}
+		else if (!border_up && !border_down && !border_right && border_left) {
+			m_MapTileBorderDirectionMap.insert(std::make_pair(tile, "map_cell_border_left"));
+
+		}
+		else {
+			throw;
+		}
+
+
+		// Reset border flags...
+		border_up = false, border_down = false, border_right = false, border_left = false;
+	}
+}
+
+
+bool City::_isMapTileClaimedByCity(MapTile* maptile) {
+
+	if (maptile == nullptr) return false;
+
+	/*
+	MapTile* other_tile = nullptr;
+
+	// See whether we have claimed the region that has this maptile.
+	for (auto it : this->m_ClaimedRegions) {
+		for (auto iter : it->m_MapTileRegionTiles) {
+
+			other_tile = iter;
+			if (other_tile == maptile) return true;
+		}
+	}
+	*/
+	
+	for (auto it : this->m_ClaimedRegions) {
+		for (auto iter : it->m_MapTileRegionTiles) {
+			if (maptile->m_AssociatedRegion == iter->m_AssociatedRegion) return true;
+		}
+	}
+	
+	return false;
 }

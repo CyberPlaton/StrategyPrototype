@@ -26,8 +26,8 @@ Forest* MakeNewForest(std::string name, int x_cell_pos, int y_cell_pos);
 Forest* MakeNewForestAtPos(std::string name, int xpos, int ypos, int set_x_cell, int set_y_cell);
 Mountains* MakeNewMountain(std::string spritename, int x_cell_pos, int y_cell_pos);
 Hills* MakeNewHill(std::string spritename, int x_cell_pos, int y_cell_pos);
-City* MakeNewCity(std::string cityname, std::string spritename, Player* player, int x_cell_pos, int y_cell_pos);
-City* MakeNewCityAtPos(std::string cityname, std::string spritename, Player* player, int xpos, int ypos, int set_x_cell_pos, int set_y_cell_pos);
+City* MakeNewCity(std::string cityname, std::string spritename, Player* player, int x_cell_pos, int y_cell_pos, int citySize);
+City* MakeNewCityAtPos(std::string cityname, std::string spritename, Player* player, int xpos, int ypos, int set_x_cell_pos, int set_y_cell_pos, int citySize);
 std::string MapTileTypeToString(MapTile* tile);
 bool MapTileAppropriteForForest(MapTile* tile, Forest* forest);
 bool IsMapTilePartOfRegion(MapTile* tile);
@@ -146,12 +146,20 @@ public:
 	
 
 public:
-	City(std::string cityname, std::string spritename, Player* player, int xpos, int ypos);
+	City(std::string cityname, std::string spritename, Player* player, int xpos, int ypos, int citySize);
 
 	~City() = default;
 
 	void ClaimRegions();
 	void ReclaimRegions(); // Function for testing.
+
+	void MakeCityBorders() {
+		_determineCityBorderTiles();
+		_determineMapTilesBorderDirection();
+	}
+
+
+
 
 	std::string m_CityName;
 	unsigned int m_CitySize;
@@ -166,8 +174,22 @@ public:
 	// To which player this city belongs.
 	Player* m_AssociatedPlayer = nullptr;
 
+	// Determine and Draw Borders.
+	std::vector<MapTile*> m_CityBorderMapTileVec; // Stores maptiles that belong to city border.
+	std::map<MapTile*, std::string> m_MapTileBorderDirectionMap; // Stores for each bordertile in which direction the border is looking to.
+																 // Directions are stored like: "left_up_down" etc.
+
 private:
 
+	// Cityborder functions.
+	void _determineCityBorderTiles();
+	void _determineMapTilesBorderDirection();
+
+	// Border helpers.
+	bool _isMapTileClaimedByCity(MapTile* maptile);
+	//bool _isMapTileClaimedByOtherCity(MapTile* maptile); // Needed?
+
+	// General functions.
 	void _updateCitySizeClass() {
 		if (m_CitySize < 16) m_CitySizeClass = CitySizeClass::CITY_SIZE_CLASS_NORMAL;
 		else if(m_CitySize >= 17 && m_CitySize < 31) m_CitySizeClass = CitySizeClass::CITY_SIZE_CLASS_BIG;
