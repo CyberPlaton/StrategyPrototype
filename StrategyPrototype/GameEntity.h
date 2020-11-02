@@ -34,7 +34,7 @@ bool IsMapTilePartOfRegion(MapTile* tile);
 bool RaiseDeepForestRandomly();
 MapTileRegion* GetRegionAtWorldPosition(int x, int y);
 Player* GetPlayer(std::string name);
-int GetPlayerBorderTilesCount(Player* p);
+
 
 
 enum class TileImprovementLevel {
@@ -144,6 +144,17 @@ public:
 		CITY_SIZE_CLASS_HUGE = 2
 	};
 	
+	enum class CityBorderColor {
+		CITY_BORDERCOLOR_INVALID = -1,
+		CITY_BORDERCOLOR_RED = 0,
+		CITY_BORDERCOLOR_BLUE = 1,
+		CITY_BORDERCOLOR_GREEN = 2,
+		CITY_BORDERCOLOR_YELLOW = 3,
+		CITY_BORDERCOLOR_MAGENTA = 4,
+		CITY_BORDERCOLOR_ORANGE = 5,
+		CITY_BORDERCOLOR_BROWN = 6,
+		CITY_BORDERCOLOR_BLACK = 7
+	};
 
 public:
 	City(std::string cityname, std::string spritename, Player* player, int xpos, int ypos, int citySize);
@@ -179,6 +190,8 @@ public:
 	std::map<MapTile*, std::string> m_MapTileBorderDirectionMap; // Stores for each bordertile in which direction the border is looking to.
 																 // Directions are stored like: "left_up_down" etc.
 
+	CityBorderColor m_CityBorderColor = CityBorderColor::CITY_BORDERCOLOR_INVALID; // For appropriate coloring of borders.
+
 private:
 
 	// Cityborder functions.
@@ -187,7 +200,7 @@ private:
 
 	// Border helpers.
 	bool _isMapTileClaimedByCity(MapTile* maptile);
-	//bool _isMapTileClaimedByOtherCity(MapTile* maptile); // Needed?
+
 
 	// General functions.
 	void _updateCitySizeClass() {
@@ -218,10 +231,12 @@ private:
 
 		if (COMPARE_STRINGS(color, "blue") == 0) {
 			m_ClaimedRegionsSpriteName = "map_cell_blue";
+			m_CityBorderColor = CityBorderColor::CITY_BORDERCOLOR_BLUE;
 		}
 
 		if (COMPARE_STRINGS(color, "red") == 0) {
 			m_ClaimedRegionsSpriteName = "map_cell_red";
+			m_CityBorderColor = CityBorderColor::CITY_BORDERCOLOR_RED;
 		}
 	}
 };

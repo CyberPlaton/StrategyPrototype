@@ -1,6 +1,8 @@
 #include"StrategyPrototype.h"
 
 static olc::vf2d g_vi2dCameraPosition = olc::vf2d(0.0f, 0.0f);
+static int ColorValue = 0;
+
 
 int GetXPositionOfMapTile(MapTile* tile) {
 	return(tile->m_TransformCmp->m_PosX);
@@ -460,8 +462,23 @@ void CMPCameraInput::HandleKeyboard(Camera* cam) {
 
 		}
 
+
+		if (context->GetKey(olc::Key::SPACE).bPressed) {
+			Player* p = GetPlayer("Bogdan");
+			
+			for (auto it : p->m_PlayerCities) {
+				ColorValue = (ColorValue + 1) % 8;
+				it->m_CityBorderColor = City::CityBorderColor(ColorValue);
+			}
+		}
+
 	}
 
+
+	if (context->GetKey(olc::Key::M).bPressed) {
+
+		context->m_PoliticalMap = (context->m_PoliticalMap == false) ? true : false;
+	}
 
 	if (context->GetKey(olc::Key::SPACE).bReleased) {
 
@@ -1210,6 +1227,24 @@ void Game::DebugDrawStats() {
 
 	if (!m_DebugDraw) return;
 
+	if (!m_DebugDrawGeneralOptions) {
+
+		std::string turncount = "Turn " + std::to_string(m_TurnCount);
+		DrawString(olc::vi2d(2, 10), turncount, olc::BLACK, 1.0f);
+
+		std::string political_map, political_map_on_off;
+		political_map_on_off = (m_PoliticalMap == true) ? "On" : "Off";
+		political_map = "Political Map ( M ): " + political_map_on_off;
+		DrawString(olc::vi2d(2, 20), political_map, olc::BLACK, 1.0f);
+
+
+	}
+
+
+
+
+
+
 	if (m_DebugDrawGeneralOptions) {
 
 		std::string s2 = "Camera Position " + std::to_string(g_vi2dCameraPosition.x) + " : " + std::to_string(g_vi2dCameraPosition.y);
@@ -1472,39 +1507,57 @@ void Renderer::Render2Layer2() {
 		if (city->m_TransformCmp->m_Cell[0] > VISIBLE_MAP_WIDTH ||
 			city->m_TransformCmp->m_Cell[1] > VISIBLE_MAP_HEIGHT) continue;
 
+
+
+		// First, we draw political region tiles.
+		// Draw political map related borders.
+		if (m_Game->m_PoliticalMap) {
+
+			// Test, draw region around city.
+			for (auto it = city->m_ClaimedRegions.begin(); it != city->m_ClaimedRegions.end(); ++it) {
+
+				region = *it;
+
+				_drawMapTileRegionRect(region);
+			}
+
+		}
+
+
+		// After that we draw city. Thus the city will be drawn oer the regiontiles...
 		// Draw appropriate loaded sprite on position specified.
 		m_Game->DrawDecal(vi2d(city->m_TransformCmp->m_PosX, city->m_TransformCmp->m_PosY),
 			m_Game->m_SpriteResourceMap.at(city->m_GraphicsCmp->m_SpriteName));
 
-
-		// Test, draw region around city.
-		for (auto it = city->m_ClaimedRegions.begin(); it != city->m_ClaimedRegions.end(); ++it) {
-
-			region = *it;
-
-			_drawMapTileRegionRect(region);
-		}
 	}
 
 
 
+	// Continue rendering political map related borders. Here, city borders.
+	if (m_Game->m_PoliticalMap) {
+			
+		std::vector<GameEntity*> vec_2 = *EntitiesStorage::Get()->GetCitiesVec();
+		City* c = nullptr;
+		MapTile* tile = nullptr;
 
-	std::vector<GameEntity*> vec_2 = *EntitiesStorage::Get()->GetCitiesVec();
-	City* c = nullptr;
-	MapTile* tile = nullptr;
+		for (auto it = vec_2.begin(); it != vec_2.end(); ++it) {
 
-	for (auto it = vec_2.begin(); it != vec_2.end(); ++it) {
+			c = reinterpret_cast<City*>(*it);
 
-		c = reinterpret_cast<City*>(*it);
+			for (auto iter = c->m_MapTileBorderDirectionMap.begin(); iter != c->m_MapTileBorderDirectionMap.end(); ++iter) {
 
+				tile = iter->first;
 
-		for (auto iter = c->m_MapTileBorderDirectionMap.begin(); iter != c->m_MapTileBorderDirectionMap.end(); ++iter) {
+				// Do not draw tiles we do not see.
+				if (tile->m_TransformCmp->m_Cell[0] > VISIBLE_MAP_WIDTH ||
+					tile->m_TransformCmp->m_Cell[1] > VISIBLE_MAP_HEIGHT) continue;
 
-			tile = iter->first;
+				// Draw appropriate loaded sprite on position specified.
+				m_Game->DrawDecal(vi2d(tile->m_TransformCmp->m_PosX, tile->m_TransformCmp->m_PosY),
+					m_Game->m_SpriteResourceMap.at(c->m_MapTileBorderDirectionMap.at(tile)), vf2d(1.0f, 1.0f),
+					m_Game->MakeOlcColorFromCityBorderColor(c->m_CityBorderColor));
 
-			// Draw appropriate loaded sprite on position specified.
-			m_Game->DrawDecal(vi2d(tile->m_TransformCmp->m_PosX, tile->m_TransformCmp->m_PosY),
-				m_Game->m_SpriteResourceMap.at(c->m_MapTileBorderDirectionMap.at(tile)));
+			}
 
 		}
 
@@ -1513,6 +1566,45 @@ void Renderer::Render2Layer2() {
 
 	m_Game->EnableLayer(m_Layer2, true);
 	m_Game->SetDrawTarget(nullptr);
+}
+
+
+
+olc::Pixel Game::MakeOlcColorFromCityBorderColor(City::CityBorderColor color) {
+
+	switch (color) {
+	case City::CityBorderColor::CITY_BORDERCOLOR_BLACK:
+		return olc::Pixel(0, 0, 0, 255);
+		break;
+	case City::CityBorderColor::CITY_BORDERCOLOR_RED:
+		return olc::Pixel(178, 0, 0, 255);
+		break;
+	case City::CityBorderColor::CITY_BORDERCOLOR_BLUE:
+		return olc::Pixel(0, 17, 255, 255);
+		break;
+	case City::CityBorderColor::CITY_BORDERCOLOR_GREEN:
+		return olc::Pixel(0, 102, 40, 255);
+
+		break;
+	case City::CityBorderColor::CITY_BORDERCOLOR_YELLOW:
+		return olc::Pixel(252, 200, 12, 255);
+
+		break;
+	case City::CityBorderColor::CITY_BORDERCOLOR_MAGENTA:
+		return olc::Pixel(65, 0, 178, 255);
+
+		break;
+	case City::CityBorderColor::CITY_BORDERCOLOR_ORANGE:
+		return olc::Pixel(252, 84, 12, 255);
+
+		break;
+	case City::CityBorderColor::CITY_BORDERCOLOR_BROWN:
+		return olc::Pixel(101, 67, 33, 255);
+		break;
+	default:
+		return olc::Pixel(255, 255, 255, 255);
+		break;
+	}
 }
 
 

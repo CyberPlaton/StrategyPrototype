@@ -153,6 +153,7 @@ public:
 	bool OnUserUpdate(float fElapsedTime) override;
 
 	olc::Pixel* RandomColor();
+	olc::Pixel MakeOlcColorFromCityBorderColor(City::CityBorderColor color);
 
 	void DebugDrawStats();
 
@@ -173,6 +174,7 @@ public:
 	bool m_DebugDrawGeneralOptions = false;
 
 	bool m_TimeModeTurnBased = true;
+	bool m_PoliticalMap = false;
 
 	bool m_DebugDrawRegions = false;
 	std::string m_DebugDrawRegionsCount = "-1";
