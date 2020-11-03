@@ -131,34 +131,35 @@ Mountains* MakeNewMountain(std::string spritename, int x_cell_pos, int y_cell_po
 }
 
 
-City* MakeNewCity(std::string cityname, std::string spritename, Player* player, int x_cell_pos, int y_cell_pos, int citySize) {
 
-	City* city = new City(cityname, spritename, player, x_cell_pos * SPRITES_WIDTH_AND_HEIGHT, y_cell_pos * SPRITES_WIDTH_AND_HEIGHT, citySize);
+City* MakeNewCity(bool city, std::string cityname, CMPEntityRace::Race race, Player* player, int x_cell_pos, int y_cell_pos, int citySize) {
 
-	city->m_TransformCmp->m_GameWorldSpaceCell[0] = x_cell_pos;
-	city->m_TransformCmp->m_GameWorldSpaceCell[1] = y_cell_pos;
+	City* c = new City(cityname, city, race, player, x_cell_pos * SPRITES_WIDTH_AND_HEIGHT, y_cell_pos * SPRITES_WIDTH_AND_HEIGHT, citySize);
+
+	c->m_TransformCmp->m_GameWorldSpaceCell[0] = x_cell_pos;
+	c->m_TransformCmp->m_GameWorldSpaceCell[1] = y_cell_pos;
 
 
-	city->ClaimRegions();
-	city->MakeCityBorders();
+	c->ClaimRegions();
+	c->MakeCityBorders();
 
-	return city;
+	return c;
 }
 
 // This function is very useful for dynamically creating a city, especially
 // if the user is moving the camera. With it we can reliably determine the right x-y-position
 // for the new city and the right x-y-cell.
-City* MakeNewCityAtPos(std::string cityname, std::string spritename, Player* player, int xpos, int ypos, int set_x_cell_pos, int set_y_cell_pos, int citySize) {
+City* MakeNewCityAtPos(bool city, std::string cityname, CMPEntityRace::Race race, Player* player, int xpos, int ypos, int set_x_cell_pos, int set_y_cell_pos, int citySize) {
 
-	City* city = new City(cityname, spritename, player, xpos, ypos, citySize);
+	City* c = new City(cityname, city, race, player, xpos, ypos, citySize);
 
-	city->m_TransformCmp->m_GameWorldSpaceCell[0] = set_x_cell_pos;
-	city->m_TransformCmp->m_GameWorldSpaceCell[1] = set_y_cell_pos;
+	c->m_TransformCmp->m_GameWorldSpaceCell[0] = set_x_cell_pos;
+	c->m_TransformCmp->m_GameWorldSpaceCell[1] = set_y_cell_pos;
 
-	city->ClaimRegions();
-	city->MakeCityBorders();
+	c->ClaimRegions();
+	c->MakeCityBorders();
 
-	return city;
+	return c;
 
 }
 
@@ -1132,33 +1133,32 @@ void Game::_loadSpriteResources() {
 	Sprite* city2 = new Sprite("assets/city/human/city_human_huge.png");
 	Sprite* city3 = new Sprite("assets/city/human/city_human_small.png");
 	Sprite* city4 = new Sprite("assets/city/highelf/city_highelf_small.png");
-
-
-
-
 	
 	m_SpriteStorage.push_back(city1);
 	m_SpriteStorage.push_back(city2);
 	m_SpriteStorage.push_back(city3);
 	m_SpriteStorage.push_back(city4);
 
-
-
-
-
 	Decal* dcity1 = new Decal(city1);
 	Decal* dcity2 = new Decal(city2);
 	Decal* dcity3 = new Decal(city3);
 	Decal* dcity4 = new Decal(city4);
 
-
-
-
-
 	m_SpriteResourceMap.insert(std::make_pair("city_orc_huge", dcity1));
 	m_SpriteResourceMap.insert(std::make_pair("city_human_huge", dcity2));
 	m_SpriteResourceMap.insert(std::make_pair("city_human_small", dcity3));
 	m_SpriteResourceMap.insert(std::make_pair("city_highelf_small", dcity4));
+
+
+	// Forts
+	Sprite* fort1 = new Sprite("assets/fort/human/fort_human_small.png");
+
+	m_SpriteStorage.push_back(fort1);
+
+	Decal* dfort1 = new Decal(fort1);
+
+	m_SpriteResourceMap.insert(std::make_pair("fort_human_small", dfort1));
+
 
 
 	// Cityview sprites
@@ -1275,12 +1275,12 @@ bool Game::OnUserCreate() {
 	storage->AddPlayer(player2);
 
 
-	City* city2 = MakeNewCity("Stormhaven", "city_human_huge", player, 5, 3, 32);
-	City* city3 = MakeNewCity("Under Stormhaven", "city_human_huge", player, 9, 3, 32);
-	City* city4 = MakeNewCity("Faerograd", "city_human_huge", player, 13, 6, 32);
+	City* city2 = MakeNewCity(true, "Stormhaven", CMPEntityRace::Race::RACE_HUMAN, player, 5, 3, 32);
+	City* city3 = MakeNewCity(true, "Under Stormhaven", CMPEntityRace::Race::RACE_HUMAN, player, 9, 3, 32);
+	City* city4 = MakeNewCity(true, "Faerograd", CMPEntityRace::Race::RACE_HUMAN, player, 13, 6, 32);
 
-	City *city = MakeNewCity("Gnarmol", "city_orc_huge", player2, 6, 12, 32);
-	City* city5 = MakeNewCity("Gundrassil", "city_highelf_small", player2, 15, 2, 10);
+	City *city = MakeNewCity(true, "Gnarmol", CMPEntityRace::Race::RACE_ORC, player2, 6, 12, 32);
+	City* city5 = MakeNewCity(true, "Gundrassil", CMPEntityRace::Race::RACE_HIGHELF, player2, 15, 2, 5);
 
 
 	storage->AddGameEntitie(city2);
@@ -1730,7 +1730,7 @@ void Renderer::Render2Layer2() {
 		// After that we draw city. Thus the city will be drawn oer the regiontiles...
 		// Draw appropriate loaded sprite on position specified.
 		m_Game->DrawDecal(vi2d(city->m_TransformCmp->m_PosX, city->m_TransformCmp->m_PosY),
-			m_Game->m_SpriteResourceMap.at(city->m_GraphicsCmp->m_SpriteName));
+			m_Game->m_SpriteResourceMap.at(city->GetCurrentCitySprite()));
 
 	}
 
@@ -1841,6 +1841,7 @@ void Renderer::Render2Layer3() {
 	using namespace olc;
 
 	EntitiesStorage* storage = EntitiesStorage::Get();
+	/*
 	std::vector< GameEntity* > vec = *storage->GetMapTilesStorage();
 
 	MapTile* maptile = nullptr;
@@ -1866,18 +1867,63 @@ void Renderer::Render2Layer3() {
 
 			for (auto iter = maptile->m_MapTileEntities->begin(); iter != maptile->m_MapTileEntities->end(); ++iter) {
 						
-				entity = *iter;
+				//entity = *iter;
 				f = reinterpret_cast<Forest*>(*it);
 
 				// Draw appropriate loaded sprite on position specified.
-				m_Game->DrawDecal(vi2d(entity->m_TransformCmp->m_PosX, entity->m_TransformCmp->m_PosY),
-										m_Game->m_SpriteResourceMap.at(entity->m_GraphicsCmp->m_SpriteName));
+				m_Game->DrawDecal(vi2d(f->m_TransformCmp->m_PosX, f->m_TransformCmp->m_PosY),
+										m_Game->m_SpriteResourceMap.at(f->m_GraphicsCmp->m_SpriteName));
 
 			}
 
 		}
 	}
+	*/
 
+	m_Game->SetDrawTarget(m_Layer3);
+	m_Game->Clear(olc::BLANK);
+
+	MapTile* maptile = nullptr;
+	Forest* forest = nullptr;
+	GameEntity* entity = nullptr;
+
+
+
+	// Render Forests
+	std::vector< GameEntity* > vec = *storage->GetMapTilesStorage();
+
+	for (auto it = vec.begin(); it != vec.end(); ++it) {
+
+		maptile = reinterpret_cast<MapTile*>(*it);
+
+		// Do not draw tiles we do not see.
+		if (maptile->m_TransformCmp->m_Cell[0] > VISIBLE_MAP_WIDTH ||
+			maptile->m_TransformCmp->m_Cell[1] > VISIBLE_MAP_HEIGHT) continue;
+
+
+		if (maptile->m_MapTileEntities->size() > 0) {
+
+			for (auto iter = maptile->m_MapTileEntities->begin(); iter != maptile->m_MapTileEntities->end(); ++iter) {
+
+				entity = *iter;
+
+				if (COMPARE_STRINGS(entity->m_IDCmp->m_DynamicTypeName, "Forest") == 0) {
+
+					forest = reinterpret_cast<Forest*>(*iter);
+
+
+
+					// Draw appropriate loaded sprite on position specified.
+					m_Game->DrawDecal(vi2d(forest->m_TransformCmp->m_PosX, forest->m_TransformCmp->m_PosY),
+						m_Game->m_SpriteResourceMap.at(forest->m_GraphicsCmp->m_SpriteName));
+				}
+
+			}
+
+		}
+
+
+	}
 
 	// Render Mountains and Hills
 	vec = *storage->GetHillsMountains();

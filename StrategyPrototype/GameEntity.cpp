@@ -1384,7 +1384,32 @@ void EntitiesStorage::RemovePlayer(Player* p) {
 	if (it != m_PlayersVec->end()) m_PlayersVec->erase(it);
 }
 
-City::City(std::string cityname, std::string spritename, Player* player, int xpos, int ypos, int citySize) {
+
+std::string City::GetCurrentCitySprite() {
+
+	switch (m_CitySizeClass)
+	{
+	case CitySizeClass::CITY_SIZE_CLASS_SMALL:
+		return m_CitySpritesStorage->m_SmallCitySprite;
+		break;
+	case CitySizeClass::CITY_SIZE_CLASS_NORMAL:
+		return m_CitySpritesStorage->m_NormalCitySprite;
+		break;
+	case CitySizeClass::CITY_SIZE_CLASS_BIG:
+		return m_CitySpritesStorage->m_BigCitySprite;
+		break;
+	case CitySizeClass::CITY_SIZE_CLASS_HUGE:
+		return m_CitySpritesStorage->m_HugeCitySprite;
+		break;
+
+	default:
+		break;
+	}
+	
+}
+
+
+City::City(std::string cityname, bool city, CMPEntityRace::Race race, Player* player, int xpos, int ypos, int citySize) {
 
 	m_IDCmp->m_DynamicTypeName = "City";
 
@@ -1393,10 +1418,16 @@ City::City(std::string cityname, std::string spritename, Player* player, int xpo
 	m_CitySize = citySize;
 	_updateCitySizeClass();
 
+	m_CityRaceCmp = new CMPEntityRace(CMPEntityRace::Race::RACE_INVALID);
+	_deriveCityRace(race); // Initializes the race for the city.
+
+	m_CityType = (city == true) ? City::CityType::CITY_TYPE_CITY : City::CityType::CITY_TYPE_FORT;
+
 
 	m_GraphicsCmp = new CMPGraphics();
 	m_GraphicsCmp->m_DrawingLayer = "layer2";
-	m_GraphicsCmp->m_SpriteName = spritename;
+	m_CitySpritesStorage = new CitySpritesHolder();
+	_deriveCitySprites(); // Derives the cities sprites for the specific race.
 
 	m_TransformCmp->m_PosX = xpos;
 	m_TransformCmp->m_PosY = ypos;

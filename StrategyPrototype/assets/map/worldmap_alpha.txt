@@ -77,7 +77,7 @@ overlay;
 none,none,none,forest_temperate,none,forest_temperate,none,forest_temperate,none,none,none,none,none,none,none,none,none,none,none,none,;
 
 overlay;
-none,hill,hill,mountain,forest_temperate,none,none,none,none,none,none,hill,hill,none,forest_savannah,none,none,none,none,none,;
+none,hill,hill,mountain,forest_temperate,none,none,none,none,none,none,hill,hill,none,forest_savannah,none,hill,none,none,none,;
 
 overlay;
 none,none,none,none,none,none,none,none,none,none,none,hill,none,none,none,forest_savannah,none,none,none,none,;

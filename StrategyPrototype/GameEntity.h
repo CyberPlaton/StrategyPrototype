@@ -28,8 +28,10 @@ Forest* MakeNewForest(std::string name, int x_cell_pos, int y_cell_pos);
 Forest* MakeNewForestAtPos(std::string name, int xpos, int ypos, int set_x_cell, int set_y_cell);
 Mountains* MakeNewMountain(std::string spritename, int x_cell_pos, int y_cell_pos);
 Hills* MakeNewHill(std::string spritename, int x_cell_pos, int y_cell_pos);
-City* MakeNewCity(std::string cityname, std::string spritename, Player* player, int x_cell_pos, int y_cell_pos, int citySize);
-City* MakeNewCityAtPos(std::string cityname, std::string spritename, Player* player, int xpos, int ypos, int set_x_cell_pos, int set_y_cell_pos, int citySize);
+
+// If city = false, then a fort will be defined.
+City* MakeNewCity(bool city, std::string cityname, CMPEntityRace::Race race, Player* player, int x_cell_pos, int y_cell_pos, int citySize);
+City* MakeNewCityAtPos(bool city, std::string cityname, CMPEntityRace::Race race, Player* player, int xpos, int ypos, int set_x_cell_pos, int set_y_cell_pos, int citySize);
 std::string MapTileTypeToString(MapTile* tile);
 bool MapTileAppropriteForForest(MapTile* tile, Forest* forest);
 bool IsMapTilePartOfRegion(MapTile* tile);
@@ -140,12 +142,20 @@ struct MapRessource : public GameEntity{
 
 class City : public GameEntity {
 public:
+	// Define here whether this cityentity is a fort or city.
+	// Based on it, it will have other functinalities and possibilities.
+	enum class CityType {
+		CITY_TYPE_INVALID = -1,
+		CITY_TYPE_CITY = 0,
+		CITY_TYPE_FORT = 1
+	};
 
 	enum class CitySizeClass {
 		CITY_SIZE_CLASS_INVALID = -1,
-		CITY_SIZE_CLASS_NORMAL = 0,
-		CITY_SIZE_CLASS_BIG = 1,
-		CITY_SIZE_CLASS_HUGE = 2
+		CITY_SIZE_CLASS_SMALL = 0,
+		CITY_SIZE_CLASS_NORMAL = 1,
+		CITY_SIZE_CLASS_BIG = 2,
+		CITY_SIZE_CLASS_HUGE = 3
 	};
 	
 	enum class CityBorderColor {
@@ -160,10 +170,22 @@ public:
 		CITY_BORDERCOLOR_BLACK = 7
 	};
 
+	struct CitySpritesHolder {
+		std::string m_SmallCitySprite;
+		std::string m_NormalCitySprite;
+		std::string m_BigCitySprite;
+		std::string m_HugeCitySprite;
+	};
+
 public:
-	City(std::string cityname, std::string spritename, Player* player, int xpos, int ypos, int citySize);
+	// Constructor for cityentities, whether a city or fort.
+	// Make sure to set always the correct sprite for fort or city, as we do not test semantics...
+	City(std::string cityname, bool city, CMPEntityRace::Race race, Player* player, int xpos, int ypos, int citySize);
 
 	~City() = default;
+
+	// Use this to render current city representation.
+	std::string GetCurrentCitySprite();
 
 	void ClaimRegions();
 	void ReclaimRegions(); // Function for testing.
@@ -174,11 +196,12 @@ public:
 	}
 
 
-
-
+	CMPEntityRace* m_CityRaceCmp = nullptr;
 	std::string m_CityName;
 	unsigned int m_CitySize;
 	CitySizeClass m_CitySizeClass = CitySizeClass::CITY_SIZE_CLASS_INVALID;
+	CityType m_CityType = CityType::CITY_TYPE_INVALID;
+	CitySpritesHolder* m_CitySpritesStorage = nullptr;
 
 	std::map<std::string, CityRessource*> m_CityRessourcesMap;
 	std::map<std::string, GameEntity*> m_PresentUnitsMap;
@@ -207,8 +230,250 @@ private:
 
 
 	// General functions.
+	void _deriveCitySprites() {
+		switch (m_CityRaceCmp->m_EntityRace)
+		{
+		case CMPEntityRace::Race::RACE_INVALID:
+			break;
+		case CMPEntityRace::Race::RACE_HUMAN:
+			switch (m_CityType)
+			{
+			case CityType::CITY_TYPE_FORT:
+				m_CitySpritesStorage->m_SmallCitySprite = "fort_human_small";
+				m_CitySpritesStorage->m_NormalCitySprite = "fort_human_normal";
+				m_CitySpritesStorage->m_BigCitySprite = "fort_human_big";
+				m_CitySpritesStorage->m_HugeCitySprite = "fort_human_huge";
+				break;
+			case CityType::CITY_TYPE_CITY:
+				m_CitySpritesStorage->m_SmallCitySprite = "city_human_small";
+				m_CitySpritesStorage->m_NormalCitySprite = "city_human_normal";
+				m_CitySpritesStorage->m_BigCitySprite = "city_human_big";
+				m_CitySpritesStorage->m_HugeCitySprite = "city_human_huge";
+				break;
+
+			default:
+				break;
+			}
+
+
+			break;
+		case CMPEntityRace::Race::RACE_TROLL:
+			switch (m_CityType)
+			{
+			case CityType::CITY_TYPE_FORT:
+				m_CitySpritesStorage->m_SmallCitySprite = "fort_troll_small";
+				m_CitySpritesStorage->m_NormalCitySprite = "fort_troll_normal";
+				m_CitySpritesStorage->m_BigCitySprite = "fort_troll_big";
+				m_CitySpritesStorage->m_HugeCitySprite = "fort_troll_huge";
+				break;
+			case CityType::CITY_TYPE_CITY:
+				m_CitySpritesStorage->m_SmallCitySprite = "city_troll_small";
+				m_CitySpritesStorage->m_NormalCitySprite = "city_troll_normal";
+				m_CitySpritesStorage->m_BigCitySprite = "city_troll_big";
+				m_CitySpritesStorage->m_HugeCitySprite = "city_troll_huge";
+				break;
+
+			default:
+				break;
+			}
+
+			break;
+		case CMPEntityRace::Race::RACE_DWARF:
+			switch (m_CityType)
+			{
+			case CityType::CITY_TYPE_FORT:
+				m_CitySpritesStorage->m_SmallCitySprite = "fort_dwarf_small";
+				m_CitySpritesStorage->m_NormalCitySprite = "fort_dwarf_normal";
+				m_CitySpritesStorage->m_BigCitySprite = "fort_dwarf_big";
+				m_CitySpritesStorage->m_HugeCitySprite = "fort_dwarf_huge";
+				break;
+			case CityType::CITY_TYPE_CITY:
+				m_CitySpritesStorage->m_SmallCitySprite = "city_dwarf_small";
+				m_CitySpritesStorage->m_NormalCitySprite = "city_dwarf_normal";
+				m_CitySpritesStorage->m_BigCitySprite = "city_dwarf_big";
+				m_CitySpritesStorage->m_HugeCitySprite = "city_dwarf_huge";
+				break;
+
+			default:
+				break;
+			}
+
+
+			break;
+		case CMPEntityRace::Race::RACE_ORC:
+			switch (m_CityType)
+			{
+			case CityType::CITY_TYPE_FORT:
+				m_CitySpritesStorage->m_SmallCitySprite = "fort_orc_small";
+				m_CitySpritesStorage->m_NormalCitySprite = "fort_orc_normal";
+				m_CitySpritesStorage->m_BigCitySprite = "fort_orc_big";
+				m_CitySpritesStorage->m_HugeCitySprite = "fort_orc_huge";
+				break;
+			case CityType::CITY_TYPE_CITY:
+				m_CitySpritesStorage->m_SmallCitySprite = "city_orc_small";
+				m_CitySpritesStorage->m_NormalCitySprite = "city_orc_normal";
+				m_CitySpritesStorage->m_BigCitySprite = "city_orc_big";
+				m_CitySpritesStorage->m_HugeCitySprite = "city_orc_huge";
+				break;
+
+			default:
+				break;
+			}
+
+
+			break;
+		case CMPEntityRace::Race::RACE_HIGHELF:
+			switch (m_CityType)
+			{
+			case CityType::CITY_TYPE_FORT:
+				m_CitySpritesStorage->m_SmallCitySprite = "fort_highelf_small";
+				m_CitySpritesStorage->m_NormalCitySprite = "fort_highelf_normal";
+				m_CitySpritesStorage->m_BigCitySprite = "fort_highelf_big";
+				m_CitySpritesStorage->m_HugeCitySprite = "fort_highelf_huge";
+				break;
+			case CityType::CITY_TYPE_CITY:
+				m_CitySpritesStorage->m_SmallCitySprite = "city_highelf_small";
+				m_CitySpritesStorage->m_NormalCitySprite = "city_highelf_normal";
+				m_CitySpritesStorage->m_BigCitySprite = "city_highelf_big";
+				m_CitySpritesStorage->m_HugeCitySprite = "city_highelf_huge";
+				break;
+
+			default:
+				break;
+			}
+
+
+			break;
+		case CMPEntityRace::Race::RACE_DARKELF:
+			switch (m_CityType)
+			{
+			case CityType::CITY_TYPE_FORT:
+				m_CitySpritesStorage->m_SmallCitySprite = "fort_darkelf_small";
+				m_CitySpritesStorage->m_NormalCitySprite = "fort_darkelf_normal";
+				m_CitySpritesStorage->m_BigCitySprite = "fort_darkelf_big";
+				m_CitySpritesStorage->m_HugeCitySprite = "fort_darkelf_huge";
+				break;
+			case CityType::CITY_TYPE_CITY:
+				m_CitySpritesStorage->m_SmallCitySprite = "city_darkelf_small";
+				m_CitySpritesStorage->m_NormalCitySprite = "city_darkelf_normal";
+				m_CitySpritesStorage->m_BigCitySprite = "city_darkelf_big";
+				m_CitySpritesStorage->m_HugeCitySprite = "city_darkelf_huge";
+				break;
+
+			default:
+				break;
+			}
+
+
+			break;
+		case CMPEntityRace::Race::RACE_GOBLIN:
+			switch (m_CityType)
+			{
+			case CityType::CITY_TYPE_FORT:
+				m_CitySpritesStorage->m_SmallCitySprite = "fort_goblin_small";
+				m_CitySpritesStorage->m_NormalCitySprite = "fort_goblin_normal";
+				m_CitySpritesStorage->m_BigCitySprite = "fort_goblin_big";
+				m_CitySpritesStorage->m_HugeCitySprite = "fort_goblin_huge";
+				break;
+			case CityType::CITY_TYPE_CITY:
+				m_CitySpritesStorage->m_SmallCitySprite = "city_goblin_small";
+				m_CitySpritesStorage->m_NormalCitySprite = "city_goblin_normal";
+				m_CitySpritesStorage->m_BigCitySprite = "city_goblin_big";
+				m_CitySpritesStorage->m_HugeCitySprite = "city_goblin_huge";
+				break;
+
+			default:
+				break;
+			}
+
+
+			break;
+		case CMPEntityRace::Race::RACE_GNOME:
+			switch (m_CityType)
+			{
+			case CityType::CITY_TYPE_FORT:
+				m_CitySpritesStorage->m_SmallCitySprite = "fort_gnome_small";
+				m_CitySpritesStorage->m_NormalCitySprite = "fort_gnome_normal";
+				m_CitySpritesStorage->m_BigCitySprite = "fort_gnome_big";
+				m_CitySpritesStorage->m_HugeCitySprite = "fort_gnome_huge";
+				break;
+			case CityType::CITY_TYPE_CITY:
+				m_CitySpritesStorage->m_SmallCitySprite = "city_gnome_small";
+				m_CitySpritesStorage->m_NormalCitySprite = "city_gnome_normal";
+				m_CitySpritesStorage->m_BigCitySprite = "city_gnome_big";
+				m_CitySpritesStorage->m_HugeCitySprite = "city_gnome_huge";
+				break;
+
+			default:
+				break;
+			}
+
+
+			break;
+
+		default:
+			break;
+		}
+	}
+
+	void _deriveCityRace(CMPEntityRace::Race race) {
+		switch (race)
+		{
+		case CMPEntityRace::Race::RACE_INVALID:
+			break;
+		case CMPEntityRace::Race::RACE_HUMAN:
+			m_CityRaceCmp->m_EntityRace = CMPEntityRace::Race::RACE_HUMAN;
+			m_CityRaceCmp->m_EntityRaceString = "Human";
+			break;
+		case CMPEntityRace::Race::RACE_TROLL:
+			m_CityRaceCmp->m_EntityRace = CMPEntityRace::Race::RACE_TROLL;
+			m_CityRaceCmp->m_EntityRaceString = "Troll";
+
+			break;
+		case CMPEntityRace::Race::RACE_DWARF:
+			m_CityRaceCmp->m_EntityRace = CMPEntityRace::Race::RACE_DWARF;
+			m_CityRaceCmp->m_EntityRaceString = "Dwarf";
+
+
+			break;
+		case CMPEntityRace::Race::RACE_ORC:
+			m_CityRaceCmp->m_EntityRace = CMPEntityRace::Race::RACE_ORC;
+			m_CityRaceCmp->m_EntityRaceString = "Orc";
+
+
+			break;
+		case CMPEntityRace::Race::RACE_HIGHELF:
+			m_CityRaceCmp->m_EntityRace = CMPEntityRace::Race::RACE_HIGHELF;
+			m_CityRaceCmp->m_EntityRaceString = "High Elf";
+
+
+			break;
+		case CMPEntityRace::Race::RACE_DARKELF:
+			m_CityRaceCmp->m_EntityRace = CMPEntityRace::Race::RACE_DARKELF;
+			m_CityRaceCmp->m_EntityRaceString = "Dark Elf";
+
+
+			break;
+		case CMPEntityRace::Race::RACE_GOBLIN:
+			m_CityRaceCmp->m_EntityRace = CMPEntityRace::Race::RACE_GOBLIN;
+			m_CityRaceCmp->m_EntityRaceString = "Goblin";
+
+
+			break;
+		case CMPEntityRace::Race::RACE_GNOME:
+			m_CityRaceCmp->m_EntityRace = CMPEntityRace::Race::RACE_GNOME;
+			m_CityRaceCmp->m_EntityRaceString = "Gnome";
+
+
+			break;
+		default:
+			break;
+		}
+	}
+
 	void _updateCitySizeClass() {
-		if (m_CitySize < 16) m_CitySizeClass = CitySizeClass::CITY_SIZE_CLASS_NORMAL;
+		if (m_CitySize < 6) m_CitySizeClass = CitySizeClass::CITY_SIZE_CLASS_SMALL;
+		else if (m_CitySize >= 6 && m_CitySize < 17) m_CitySizeClass = CitySizeClass::CITY_SIZE_CLASS_NORMAL;
 		else if(m_CitySize >= 17 && m_CitySize < 31) m_CitySizeClass = CitySizeClass::CITY_SIZE_CLASS_BIG;
 		else if(m_CitySize >= 31) m_CitySizeClass = CitySizeClass::CITY_SIZE_CLASS_HUGE;
 		else m_CitySizeClass = CitySizeClass::CITY_SIZE_CLASS_INVALID;
