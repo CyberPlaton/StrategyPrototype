@@ -77,13 +77,13 @@ overlay;
 none,none,none,forest_temperate,none,forest_temperate,none,forest_temperate,none,none,none,none,none,none,none,none,none,none,none,none,;
 
 overlay;
-none,none,none,none,forest_temperate,none,none,none,none,none,none,none,none,none,forest_savannah,none,none,none,none,none,;
+none,hill,hill,mountain,forest_temperate,none,none,none,none,none,none,hill,hill,none,forest_savannah,none,none,none,none,none,;
 
 overlay;
-none,none,none,none,none,none,none,none,none,none,none,none,none,none,none,forest_savannah,none,none,none,none,;
+none,none,none,none,none,none,none,none,none,none,none,hill,none,none,none,forest_savannah,none,none,none,none,;
 
 overlay;
-none,none,none,none,none,none,none,none,none,none,none,none,none,none,none,none,forest_temperate,none,none,none,;
+none,none,none,mountain,none,none,none,none,none,none,none,none,none,none,none,none,forest_temperate,none,none,none,;
 
 overlay;
 none,none,none,none,none,none,none,none,none,none,none,none,none,none,none,none,none,forest_temperate,forest_tundra,none,;
