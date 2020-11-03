@@ -191,6 +191,7 @@ public:
 		_claimRegions();
 	}
 
+	// Checks whether city size has changed and borders must be reclaimed.
 	void Update();
 
 	// Should be called when city grows or declines in size.
