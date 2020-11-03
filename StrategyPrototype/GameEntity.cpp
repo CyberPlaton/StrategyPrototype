@@ -330,7 +330,7 @@ void WorldMapDrawingOptions::_createMap() {
 							// Move on to the next line.
 							++ypos;
 							if (ypos > mapheight) {
-								ypos = -1; // Set to 0 or reset it...
+								ypos = 0; // Set to 0 or reset it...
 							}
 
 
@@ -369,7 +369,7 @@ void WorldMapDrawingOptions::_createMap() {
 							// Move on to the next line.
 							++ypos;
 							if (ypos > mapheight) {
-								ypos = -1; // Set to 0 or reset it...
+								ypos = 0; // Set to 0 or reset it...
 							}
 
 
@@ -409,7 +409,7 @@ void WorldMapDrawingOptions::_createMap() {
 							// Move on to the next line.
 							++ypos;
 							if (ypos > mapheight) {
-								ypos = -1; // Set to 0 or reset it...
+								ypos = 0; // Set to 0 or reset it...
 							}
 
 
@@ -449,7 +449,7 @@ void WorldMapDrawingOptions::_createMap() {
 							// Move on to the next line.
 							++ypos;
 							if (ypos > mapheight) {
-								ypos = -1; // Set to 0 or reset it...
+								ypos = 0; // Set to 0 or reset it...
 							}
 
 
@@ -487,7 +487,7 @@ void WorldMapDrawingOptions::_createMap() {
 							// Move on to the next line.
 							++ypos;
 							if (ypos > mapheight) {
-								ypos = -1; // Set to 0 or reset it...
+								ypos = 0; // Set to 0 or reset it...
 							}
 
 
@@ -526,7 +526,7 @@ void WorldMapDrawingOptions::_createMap() {
 							// Move on to the next line.
 							++ypos;
 							if (ypos > mapheight) {
-								ypos = -1; // Set to 0 or reset it...
+								ypos = 0; // Set to 0 or reset it...
 							}
 
 
@@ -562,7 +562,7 @@ void WorldMapDrawingOptions::_createMap() {
 							// Move on to the next line.
 							++ypos;
 							if (ypos > mapheight) {
-								ypos = -1; // Set to 0 or reset it...
+								ypos = 0; // Set to 0 or reset it...
 							}
 
 
@@ -694,13 +694,19 @@ void WorldMapDrawingOptions::_createMap() {
 
 		}
 		else if (IsSubstringInString("rivers;", line)) {
+
+		/*
+		TODO: 
+		Theres a bug in rivers mapfile definitions.
+		The positions in file e.g. 9:9 are not 8:8 in game, there is an offset of 1 as I remember.
+
+		Eliminate this bug later with a mapeditor. Because mapdefinitions like this are crappy hell...
+		*/
 			
 			cout << APP_COLOR;
 			cout << "CREATING RIVERS." << white << endl;
 
 			cout << xpos << ypos << endl;
-
-
 
 			string token = ""; // The next word.
 			bool escape_code = false;
@@ -730,8 +736,70 @@ void WorldMapDrawingOptions::_createMap() {
 					cout << token << white << endl;
 
 					// Make river.
+				if (IsSubstringInString("up_right_left_down", token)) {
 
-					if (IsSubstringInString("down_left", token)) {
+					River* r = MakeNewRiver("river_up_right_left_down", xpos, ypos);
+					storage->AddGameEntitie(r);
+
+					/*
+					++xpos;
+					if (xpos > mapwidth) {
+
+						// Move on to the next line.
+						++ypos;
+						if (ypos > mapheight) {
+							ypos = -1; // Set to 0 or reset it...
+						}
+
+
+						// Reset xpos.
+						xpos = 0;
+					}
+					*/
+				}
+				else if (IsSubstringInString("up_right_left", token)) {
+
+					River* r = MakeNewRiver("river_up_right_left", xpos, ypos);
+					storage->AddGameEntitie(r);
+
+					/*
+					++xpos;
+					if (xpos > mapwidth) {
+
+						// Move on to the next line.
+						++ypos;
+						if (ypos > mapheight) {
+							ypos = -1; // Set to 0 or reset it...
+						}
+
+
+						// Reset xpos.
+						xpos = 0;
+					}
+					*/
+				}
+				else if (IsSubstringInString("up_right_down", token)) {
+
+					River* r = MakeNewRiver("river_up_right_down", xpos, ypos);
+					storage->AddGameEntitie(r);
+
+					/*
+					++xpos;
+					if (xpos > mapwidth) {
+
+						// Move on to the next line.
+						++ypos;
+						if (ypos > mapheight) {
+							ypos = -1; // Set to 0 or reset it...
+						}
+
+
+						// Reset xpos.
+						xpos = 0;
+					}
+					*/
+				}
+				else if (IsSubstringInString("down_left", token)) {
 
 						River* r = MakeNewRiver("river_down_left", xpos, ypos);
 						storage->AddGameEntitie(r);
@@ -902,69 +970,6 @@ void WorldMapDrawingOptions::_createMap() {
 						}
 						*/
 					}
-					else if (IsSubstringInString("up_right_down", token)) {
-
-						River* r = MakeNewRiver("river_up_right_down", xpos, ypos);
-						storage->AddGameEntitie(r);
-
-						/*
-						++xpos;
-						if (xpos > mapwidth) {
-
-							// Move on to the next line.
-							++ypos;
-							if (ypos > mapheight) {
-								ypos = -1; // Set to 0 or reset it...
-							}
-
-
-							// Reset xpos.
-							xpos = 0;
-						}
-						*/
-					}
-					else if (IsSubstringInString("up_right_left", token)) {
-
-						River* r = MakeNewRiver("river_up_right_left", xpos, ypos);
-						storage->AddGameEntitie(r);
-
-						/*
-						++xpos;
-						if (xpos > mapwidth) {
-
-							// Move on to the next line.
-							++ypos;
-							if (ypos > mapheight) {
-								ypos = -1; // Set to 0 or reset it...
-							}
-
-
-							// Reset xpos.
-							xpos = 0;
-						}
-						*/
-					}
-					else if (IsSubstringInString("up_right_left_down", token)) {
-
-						River* r = MakeNewRiver("river_up_right_left_down", xpos, ypos);
-						storage->AddGameEntitie(r);
-
-						/*
-						++xpos;
-						if (xpos > mapwidth) {
-
-							// Move on to the next line.
-							++ypos;
-							if (ypos > mapheight) {
-								ypos = -1; // Set to 0 or reset it...
-							}
-
-
-							// Reset xpos.
-							xpos = 0;
-						}
-						*/
-					}
 					else if (IsSubstringInString("none", token)) {
 						/*
 						// No river defined here.
@@ -994,7 +999,7 @@ void WorldMapDrawingOptions::_createMap() {
 						// Move on to the next line.
 						++ypos;
 						if (ypos > mapheight) {
-							ypos = -1; // Set to 0 or reset it...
+							ypos = 0; // Set to 0 or reset it...
 						}
 
 
