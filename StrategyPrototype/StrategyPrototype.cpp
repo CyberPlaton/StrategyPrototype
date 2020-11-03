@@ -1772,6 +1772,7 @@ void Renderer::Render2Layer2() {
 		m_Game->DrawString(vi2d(city->m_TransformCmp->m_PosX, city->m_TransformCmp->m_PosY),
 			s, olc::BLACK);
 
+
 	}
 
 
