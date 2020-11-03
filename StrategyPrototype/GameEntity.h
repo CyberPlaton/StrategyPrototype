@@ -35,6 +35,7 @@ bool IsMapTilePartOfRegion(MapTile* tile);
 bool RaiseDeepForestRandomly();
 MapTileRegion* GetRegionAtWorldPosition(int x, int y);
 Player* GetPlayer(std::string name);
+bool HasMapTileRiver(MapTile* maptile);
 
 
 
@@ -286,6 +287,36 @@ private:
 };
 
 
+
+
+class River : public GameEntity {
+public:
+	River(std::string spritename, std::string layer, int xpos, int ypos) {
+		// Forests have transform, graphics, AI, FSM and id.
+		m_IDCmp->m_DynamicTypeName = "River";
+
+		m_TransformCmp->m_PosX = xpos;
+		m_TransformCmp->m_PosY = ypos;
+
+
+		m_GraphicsCmp = new CMPGraphics();
+		m_GraphicsCmp->m_DrawingLayer = layer;
+
+		// As we do not dynamically create rivers, we dont have to update theyre sprite based
+		// on other rivers around. But we need to set it correctly at the beginning.
+		m_GraphicsCmp->m_SpriteName = spritename;
+
+
+		m_MovementCostCmp = new CMPMovementCostModifier();
+	}
+
+
+private:
+	void _initMovementCost();
+};
+
+
+
 class Mountains : public GameEntity {
 public:
 
@@ -324,6 +355,9 @@ private:
 		m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_GOBLIN, -2);
 	}
 };
+
+
+
 
 
 
@@ -473,6 +507,10 @@ private:
 
 
 
+
+
+
+
 class MapTile : public GameEntity {
 public:
 	enum class MapTileType {
@@ -560,6 +598,10 @@ public:
 };
 
 
+
+
+
+
 struct MapTileRegion : public GameEntity{
 	MapTileRegion() {
 		m_IDCmp->m_DynamicTypeName = "MapTileRegion";
@@ -597,6 +639,11 @@ struct MapTileRegion : public GameEntity{
 	std::vector<MapTile*> m_MapTileRegionTiles;
 	Player* m_AssociatedPlayer = nullptr; // To which player this region belongs.
 };
+
+
+
+
+
 
 
 
@@ -669,6 +716,11 @@ struct EntitiesStorage {
 			// Is it a hill or mountain?
 			if (_isHillOrMountain(e)) {
 				_addHillMountain(e);
+			}
+
+			// Is it a river?
+			if (_isRiver(e)) {
+				_addRiver(e);
 			}
 		}
 			
@@ -770,6 +822,17 @@ struct EntitiesStorage {
 			}
 
 		}
+
+
+		// Delete rivers
+		if (_isRiver(e)) {
+
+			std::vector< GameEntity* >::iterator it = std::find( m_Riversvec->begin(), m_Riversvec->end(), e);
+
+			if (it != m_Riversvec->end()) {
+				m_Riversvec->erase(it);
+			}
+		}
 		
 	}
 
@@ -807,6 +870,7 @@ private:
 	static EntitiesStorage* m_EntitiesStorage;
 
 
+	std::vector<GameEntity*>* m_Riversvec; // Holds all rivers in game.
 	std::vector< GameEntity*>* m_MapTileGameEntitiesVec; // Vector that explicitly hold Maptiles. 
 	std::vector< GameEntity* >* m_GameEntitiesVec; // Holds all entities ingame.
 	std::vector<GameEntity*>* m_GameEntitiesWithAIVec; // Holds entities in game with AI.
@@ -831,9 +895,24 @@ private:
 		m_CityVec = new std::vector<GameEntity*>();
 		m_MapTileRegionsVec = new std::vector<GameEntity*>();
 		m_MountainsHillsVec = new std::vector<GameEntity*>();
+		m_Riversvec = new std::vector<GameEntity*>();
 
 		m_PlayersVec = new std::vector<Player*>();
 	}
+
+	bool _isRiver(GameEntity* e) {
+		if (COMPARE_STRINGS(e->m_IDCmp->m_DynamicTypeName, "River") == 0) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+
+	void _addRiver(GameEntity* e) {
+		m_Riversvec->push_back(e);
+	}
+
 
 	void _addHillMountain(GameEntity* e) {
 		m_MountainsHillsVec->push_back(e);

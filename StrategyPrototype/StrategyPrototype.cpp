@@ -3,6 +3,18 @@
 static olc::vf2d g_vi2dCameraPosition = olc::vf2d(0.0f, 0.0f);
 static int ColorValue = 0;
 
+bool HasMapTileRiver(MapTile* maptile) {
+
+	GameEntity* entity = nullptr;
+
+	for (auto it = maptile->m_MapTileEntities->begin(); it != maptile->m_MapTileEntities->end(); ++it) {
+
+		entity = *it;
+		if (COMPARE_STRINGS(entity->m_IDCmp->m_DynamicTypeName, "River") == 0) return true;
+	}
+
+	return false;
+}
 
 int GetXPositionOfMapTile(MapTile* tile) {
 	return(tile->m_TransformCmp->m_PosX);
@@ -738,6 +750,9 @@ void CMPCameraInput::_handleMapViewMouse(Camera* cam) {
 
 void CMPCameraInput::_handleCityViewMouse(Camera* cam) {
 
+	Game* context = cam->m_Game;
+
+
 }
 
 
@@ -886,6 +901,55 @@ void Game::_loadSpriteResources() {
 	m_SpriteResourceMap.insert(std::make_pair("map_cell_border_up_left", dec22));
 	m_SpriteResourceMap.insert(std::make_pair("map_cell_border_up_right", dec23));
 
+
+	// River tiles.
+	Sprite* rv1 = new Sprite("assets/map/river_down_left.png");
+	Sprite* rv2 = new Sprite("assets/map/river_down_right.png");
+	Sprite* rv3 = new Sprite("assets/map/river_left_right.png");
+	Sprite* rv4 = new Sprite("assets/map/river_left_right_down.png");
+	Sprite* rv5 = new Sprite("assets/map/river_left_up_down.png");
+	Sprite* rv6 = new Sprite("assets/map/river_up_down.png");
+	Sprite* rv7 = new Sprite("assets/map/river_up_left.png");
+	Sprite* rv8 = new Sprite("assets/map/river_up_right.png");
+	Sprite* rv9 = new Sprite("assets/map/river_up_right_down.png");
+	Sprite* rv10 = new Sprite("assets/map/river_up_right_left.png");
+	Sprite* rv11 = new Sprite("assets/map/river_up_right_left_down.png");
+
+	m_SpriteStorage.push_back(rv1);
+	m_SpriteStorage.push_back(rv2);
+	m_SpriteStorage.push_back(rv3);
+	m_SpriteStorage.push_back(rv4);
+	m_SpriteStorage.push_back(rv5);
+	m_SpriteStorage.push_back(rv6);
+	m_SpriteStorage.push_back(rv7);
+	m_SpriteStorage.push_back(rv8);
+	m_SpriteStorage.push_back(rv9);
+	m_SpriteStorage.push_back(rv10);
+	m_SpriteStorage.push_back(rv11);
+
+	Decal* drv1 = new Decal(rv1);
+	Decal* drv2 = new Decal(rv2);
+	Decal* drv3 = new Decal(rv3);
+	Decal* drv4 = new Decal(rv4);
+	Decal* drv5 = new Decal(rv5);
+	Decal* drv6 = new Decal(rv6);
+	Decal* drv7 = new Decal(rv7);
+	Decal* drv8 = new Decal(rv8);
+	Decal* drv9 = new Decal(rv9);
+	Decal* drv10 = new Decal(rv10);
+	Decal* drv11 = new Decal(rv11);
+
+	m_SpriteResourceMap.insert(std::make_pair("river_down_left", drv1));
+	m_SpriteResourceMap.insert(std::make_pair("river_down_right", drv2));
+	m_SpriteResourceMap.insert(std::make_pair("river_left_right", drv3));
+	m_SpriteResourceMap.insert(std::make_pair("river_left_right_down", drv4));
+	m_SpriteResourceMap.insert(std::make_pair("river_left_up_down", drv5));
+	m_SpriteResourceMap.insert(std::make_pair("river_up_down", drv6));
+	m_SpriteResourceMap.insert(std::make_pair("river_up_left", drv7));
+	m_SpriteResourceMap.insert(std::make_pair("river_up_right", drv8));
+	m_SpriteResourceMap.insert(std::make_pair("river_up_right_down", drv9));
+	m_SpriteResourceMap.insert(std::make_pair("river_up_right_left", drv10));
+	m_SpriteResourceMap.insert(std::make_pair("river_up_right_left_down", drv11));
 
 
 
@@ -1310,9 +1374,6 @@ void Renderer::RenderCityLayer2() {
 
 	m_Game->SetDrawTarget(m_Layer2);
 	m_Game->Clear(olc::BLANK);
-
-
-
 
 
 	m_Game->EnableLayer(m_Layer2, true);

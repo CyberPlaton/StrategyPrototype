@@ -62,10 +62,10 @@ overlay;
 none,none,none,none,none,none,none,none,none,none,none,none,forest_jungle,forest_jungle,none,none,forest_jungle,none,none,none,;
 
 overlay;
-none,none,none,none,none,forest_tundra,none,forest_tundra,none,none,none,none,forest_jungle,none,forest_jungle,forest_jungle,none,forest_jungle,none,none,;
+none,none,none,none,none,forest_tundra,none,forest_tundra,none,none,none,none,forest_jungle,none,forest_jungle,none,none,forest_jungle,none,none,;
 
 overlay;
-none,none,none,none,forest_tundra,none,forest_tundra,none,forest_tundra,none,none,none,none,forest_jungle,none,none,none,none,forest_jungle,none,;
+none,none,none,none,forest_tundra,none,forest_tundra,none,forest_tundra,none,none,none,none,forest_jungle,none,forest_jungle,none,none,forest_jungle,none,;
 
 overlay;
 none,none,none,none,none,none,none,none,none,none,none,none,none,none,none,forest_jungle,none,forest_jungle,none,forest_jungle,;
