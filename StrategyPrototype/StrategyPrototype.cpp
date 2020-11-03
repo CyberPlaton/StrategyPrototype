@@ -567,6 +567,19 @@ void CMPCameraInput::_handleMapViewKeyBoard(Camera* cam) {
 
 	}
 
+	if (context->GetKey(olc::Key::P).bPressed) {
+
+		City* city = nullptr;
+		for (auto it : *EntitiesStorage::Get()->GetCitiesVec()) {
+			
+			city = reinterpret_cast<City*>(it);
+
+			city->m_CitySize++;
+			city->Update();
+
+		}
+
+	}
 
 	if (context->GetKey(olc::Key::M).bPressed) {
 
@@ -1133,21 +1146,44 @@ void Game::_loadSpriteResources() {
 	Sprite* city2 = new Sprite("assets/city/human/city_human_huge.png");
 	Sprite* city3 = new Sprite("assets/city/human/city_human_small.png");
 	Sprite* city4 = new Sprite("assets/city/highelf/city_highelf_small.png");
+	Sprite* city5 = new Sprite("assets/city/orc/city_orc_small.png");
+	Sprite* city6 = new Sprite("assets/city/orc/city_orc_normal.png");
+	Sprite* city7 = new Sprite("assets/city/orc/city_orc_big.png");
+	Sprite* city8 = new Sprite("assets/city/human/city_human_normal.png");
+	Sprite* city9 = new Sprite("assets/city/human/city_human_big.png");
+
 	
 	m_SpriteStorage.push_back(city1);
 	m_SpriteStorage.push_back(city2);
 	m_SpriteStorage.push_back(city3);
 	m_SpriteStorage.push_back(city4);
+	m_SpriteStorage.push_back(city5);
+	m_SpriteStorage.push_back(city6);
+	m_SpriteStorage.push_back(city7);
+	m_SpriteStorage.push_back(city8);
+	m_SpriteStorage.push_back(city9);
+
 
 	Decal* dcity1 = new Decal(city1);
 	Decal* dcity2 = new Decal(city2);
 	Decal* dcity3 = new Decal(city3);
 	Decal* dcity4 = new Decal(city4);
+	Decal* dcity5 = new Decal(city5);
+	Decal* dcity6 = new Decal(city6);
+	Decal* dcity7 = new Decal(city7);
+	Decal* dcity8 = new Decal(city8);
+	Decal* dcity9 = new Decal(city9);
+
 
 	m_SpriteResourceMap.insert(std::make_pair("city_orc_huge", dcity1));
 	m_SpriteResourceMap.insert(std::make_pair("city_human_huge", dcity2));
 	m_SpriteResourceMap.insert(std::make_pair("city_human_small", dcity3));
 	m_SpriteResourceMap.insert(std::make_pair("city_highelf_small", dcity4));
+	m_SpriteResourceMap.insert(std::make_pair("city_orc_small", dcity5));
+	m_SpriteResourceMap.insert(std::make_pair("city_orc_normal", dcity6));
+	m_SpriteResourceMap.insert(std::make_pair("city_orc_big", dcity7));
+	m_SpriteResourceMap.insert(std::make_pair("city_human_normal", dcity8));
+	m_SpriteResourceMap.insert(std::make_pair("city_human_big", dcity9));
 
 
 	// Forts
@@ -1276,19 +1312,19 @@ bool Game::OnUserCreate() {
 
 
 	City* city2 = MakeNewCity(true, "Stormhaven", CMPEntityRace::Race::RACE_HUMAN, player, 5, 3, 32);
-	City* city3 = MakeNewCity(true, "Under Stormhaven", CMPEntityRace::Race::RACE_HUMAN, player, 9, 3, 32);
-	City* city4 = MakeNewCity(true, "Faerograd", CMPEntityRace::Race::RACE_HUMAN, player, 13, 6, 32);
+	City* city3 = MakeNewCity(true, "Under Stormhaven", CMPEntityRace::Race::RACE_HUMAN, player, 12, 7, 5);
+	//City* city4 = MakeNewCity(true, "Faerograd", CMPEntityRace::Race::RACE_HUMAN, player, 13, 6, 32);
 
-	City *city = MakeNewCity(true, "Gnarmol", CMPEntityRace::Race::RACE_ORC, player2, 6, 12, 32);
-	City* city5 = MakeNewCity(true, "Gundrassil", CMPEntityRace::Race::RACE_HIGHELF, player2, 15, 2, 5);
+	//City *city = MakeNewCity(true, "Gnarmol", CMPEntityRace::Race::RACE_ORC, player2, 6, 12, 32);
+	//City* city5 = MakeNewCity(true, "Gundrassil", CMPEntityRace::Race::RACE_HIGHELF, player2, 15, 2, 5);
 
 
 	storage->AddGameEntitie(city2);
 	storage->AddGameEntitie(city3);
-	storage->AddGameEntitie(city4);
+	//storage->AddGameEntitie(city4);
 
-	storage->AddGameEntitie(city);
-	storage->AddGameEntitie(city5);
+	//storage->AddGameEntitie(city);
+	//storage->AddGameEntitie(city5);
 
 
 	// TimeCounter
@@ -1731,6 +1767,10 @@ void Renderer::Render2Layer2() {
 		// Draw appropriate loaded sprite on position specified.
 		m_Game->DrawDecal(vi2d(city->m_TransformCmp->m_PosX, city->m_TransformCmp->m_PosY),
 			m_Game->m_SpriteResourceMap.at(city->GetCurrentCitySprite()));
+
+		std::string s = city->m_CityName + ". Size " + std::to_string(city->m_CitySize);
+		m_Game->DrawString(vi2d(city->m_TransformCmp->m_PosX, city->m_TransformCmp->m_PosY),
+			s, olc::BLACK);
 
 	}
 

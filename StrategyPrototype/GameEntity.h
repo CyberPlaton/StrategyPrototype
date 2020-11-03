@@ -187,8 +187,14 @@ public:
 	// Use this to render current city representation.
 	std::string GetCurrentCitySprite();
 
-	void ClaimRegions();
-	void ReclaimRegions(); // Function for testing.
+	void ClaimRegions() {
+		_claimRegions();
+	}
+
+	void Update();
+
+	// Should be called when city grows or declines in size.
+	void ReclaimRegions();
 
 	void MakeCityBorders() {
 		_determineCityBorderTiles();
@@ -220,6 +226,23 @@ public:
 	CityBorderColor m_CityBorderColor = CityBorderColor::CITY_BORDERCOLOR_INVALID; // For appropriate coloring of borders.
 
 private:
+	// Regions claiming version 2.0
+	/*
+	NOTE:
+	Primary: for small city that are one tile around him by definition.
+	Secondary: ...normal city, tiles are 2 tiles away by def.
+	Tertiary: ...big city, tiles are 3 tiles away...
+	Quartary: ...huge city, tiles are 4 tiles away...
+	*/
+	void _claimPrimaryRegions();
+	void _claimSecondaryRegions();
+	void _claimTertiaryReions();
+	void _claimQuartaryRegions();
+
+	// New function for claiming appropriate regions,
+	// which are claimed are determined by citytype and -size.
+	// ClaimRegions() will call this function.
+	void _claimRegions();
 
 	// Cityborder functions.
 	void _determineCityBorderTiles();
@@ -490,11 +513,7 @@ private:
 	// Call after claiming regions.
 	void _setSpriteForClaimedRegion();
 
-	void _unclaimRegions() {
-		if (m_ClaimedRegions.size() > 0) {
-			m_ClaimedRegions.clear();
-		}
-	}
+	void _unclaimRegions();
 
 	void _determineMapCell(std::string color) {
 
