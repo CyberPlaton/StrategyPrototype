@@ -693,6 +693,329 @@ void WorldMapDrawingOptions::_createMap() {
 				}
 
 		}
+		else if (IsSubstringInString("rivers;", line)) {
+			
+			cout << APP_COLOR;
+			cout << "CREATING RIVERS." << white << endl;
+
+			cout << xpos << ypos << endl;
+
+
+
+			string token = ""; // The next word.
+			bool escape_code = false;
+			bool line_end_escape_code = false; // Means, the end of the line was reached, the delimiter ";" was found, thus move to next line.
+
+			if (COMPARE_STRINGS(line, "rivers;") == 0) getline(map, line); // Read next line for rivers definition.
+
+			cout << line << endl;
+
+
+			for (auto it = line.begin(); it != line.end(); ++it) {
+
+				if (*it == ',') { // escape code
+					escape_code = true;
+				}
+				else if (*it == ';') {
+					line_end_escape_code = true;
+				}
+				else {
+					token.push_back((*it)); // At char to string.
+				}
+
+				// Check tokens.
+				if (escape_code) {
+
+					cout << APP_ERROR_COLOR;
+					cout << token << white << endl;
+
+					// Make river.
+
+					if (IsSubstringInString("down_left", token)) {
+
+						River* r = MakeNewRiver("river_down_left", xpos, ypos);
+						storage->AddGameEntitie(r);
+
+						/*
+						++xpos;
+						if (xpos > mapwidth) {
+
+							// Move on to the next line.
+							++ypos;
+							if (ypos > mapheight) {
+								ypos = -1; // Set to 0 or reset it...
+							}
+
+
+							// Reset xpos.
+							xpos = 0;
+						}
+						*/
+					}
+					else if (IsSubstringInString("down_right", token)) {
+
+						River* r = MakeNewRiver("river_down_right", xpos, ypos);
+						storage->AddGameEntitie(r);
+
+
+						/*
+						++xpos;
+						if (xpos > mapwidth) {
+
+							// Move on to the next line.
+							++ypos;
+							if (ypos > mapheight) {
+								ypos = -1; // Set to 0 or reset it...
+							}
+
+
+							// Reset xpos.
+							xpos = 0;
+						}
+						*/
+					}
+					else if (IsSubstringInString("left_right", token)) {
+
+						River* r = MakeNewRiver("river_left_right", xpos, ypos);
+						storage->AddGameEntitie(r);
+
+						/*
+						++xpos;
+						if (xpos > mapwidth) {
+
+							// Move on to the next line.
+							++ypos;
+							if (ypos > mapheight) {
+								ypos = -1; // Set to 0 or reset it...
+							}
+
+
+							// Reset xpos.
+							xpos = 0;
+						}
+						*/
+					}
+					else if (IsSubstringInString("left_right_down", token)) {
+
+						River* r = MakeNewRiver("river_left_right_down", xpos, ypos);
+						storage->AddGameEntitie(r);
+
+
+						/*
+						++xpos;
+						if (xpos > mapwidth) {
+
+							// Move on to the next line.
+							++ypos;
+							if (ypos > mapheight) {
+								ypos = -1; // Set to 0 or reset it...
+							}
+
+
+							// Reset xpos.
+							xpos = 0;
+						}
+						*/
+					}
+					else if (IsSubstringInString("left_up_down", token)) {
+
+						River* r = MakeNewRiver("river_left_up_down", xpos, ypos);
+						storage->AddGameEntitie(r);
+
+						/*
+						++xpos;
+						if (xpos > mapwidth) {
+
+							// Move on to the next line.
+							++ypos;
+							if (ypos > mapheight) {
+								ypos = -1; // Set to 0 or reset it...
+							}
+
+
+							// Reset xpos.
+							xpos = 0;
+						}
+						*/
+					}
+					else if (IsSubstringInString("up_down", token)) {
+
+						River* r = MakeNewRiver("river_up_down", xpos, ypos);
+						storage->AddGameEntitie(r);
+
+						/*
+						++xpos;
+						if (xpos > mapwidth) {
+
+							// Move on to the next line.
+							++ypos;
+							if (ypos > mapheight) {
+								ypos = -1; // Set to 0 or reset it...
+							}
+
+
+							// Reset xpos.
+							xpos = 0;
+						}
+						*/
+					}
+					else if (IsSubstringInString("up_left", token)) {
+
+						River* r = MakeNewRiver("river_up_left", xpos, ypos);
+						storage->AddGameEntitie(r);
+
+						/*
+						++xpos;
+						if (xpos > mapwidth) {
+
+							// Move on to the next line.
+							++ypos;
+							if (ypos > mapheight) {
+								ypos = -1; // Set to 0 or reset it...
+							}
+
+
+							// Reset xpos.
+							xpos = 0;
+						}
+						*/
+					}
+					else if (IsSubstringInString("up_right", token)) {
+
+						River* r = MakeNewRiver("river_up_right", xpos, ypos);
+						storage->AddGameEntitie(r);
+
+
+						/*
+						++xpos;
+						if (xpos > mapwidth) {
+
+							// Move on to the next line.
+							++ypos;
+							if (ypos > mapheight) {
+								ypos = -1; // Set to 0 or reset it...
+							}
+
+
+							// Reset xpos.
+							xpos = 0;
+						}
+						*/
+					}
+					else if (IsSubstringInString("up_right_down", token)) {
+
+						River* r = MakeNewRiver("river_up_right_down", xpos, ypos);
+						storage->AddGameEntitie(r);
+
+						/*
+						++xpos;
+						if (xpos > mapwidth) {
+
+							// Move on to the next line.
+							++ypos;
+							if (ypos > mapheight) {
+								ypos = -1; // Set to 0 or reset it...
+							}
+
+
+							// Reset xpos.
+							xpos = 0;
+						}
+						*/
+					}
+					else if (IsSubstringInString("up_right_left", token)) {
+
+						River* r = MakeNewRiver("river_up_right_left", xpos, ypos);
+						storage->AddGameEntitie(r);
+
+						/*
+						++xpos;
+						if (xpos > mapwidth) {
+
+							// Move on to the next line.
+							++ypos;
+							if (ypos > mapheight) {
+								ypos = -1; // Set to 0 or reset it...
+							}
+
+
+							// Reset xpos.
+							xpos = 0;
+						}
+						*/
+					}
+					else if (IsSubstringInString("up_right_left_down", token)) {
+
+						River* r = MakeNewRiver("river_up_right_left_down", xpos, ypos);
+						storage->AddGameEntitie(r);
+
+						/*
+						++xpos;
+						if (xpos > mapwidth) {
+
+							// Move on to the next line.
+							++ypos;
+							if (ypos > mapheight) {
+								ypos = -1; // Set to 0 or reset it...
+							}
+
+
+							// Reset xpos.
+							xpos = 0;
+						}
+						*/
+					}
+					else if (IsSubstringInString("none", token)) {
+						/*
+						// No river defined here.
+						++xpos;
+						if (xpos > mapwidth) {
+
+							// Move on to the next line.
+							++ypos;
+							if (ypos > mapheight) {
+								ypos = -1; // Set to 0 or reset it...
+							}
+
+
+							// Reset xpos.
+							xpos = 0;
+						}
+						continue;
+						*/
+					}
+
+
+
+
+					++xpos;
+					if (xpos > mapwidth) {
+
+						// Move on to the next line.
+						++ypos;
+						if (ypos > mapheight) {
+							ypos = -1; // Set to 0 or reset it...
+						}
+
+
+						// Reset xpos.
+						xpos = 0;
+					}
+
+
+					// Reset the reading token and escape_code
+					token.clear();
+					escape_code = false;
+
+				}
+				else if (line_end_escape_code) {
+					continue;
+				}
+
+		}
+
+
+		}
 		else {
 			continue;
 		}

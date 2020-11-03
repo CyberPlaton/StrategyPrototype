@@ -11,6 +11,7 @@ class Mountains;
 class Hills;
 class City;
 class Player;
+class River;
 typedef std::array<std::array<MapTile*, 20>, 20> MapTileArray;
 
 
@@ -36,6 +37,7 @@ bool RaiseDeepForestRandomly();
 MapTileRegion* GetRegionAtWorldPosition(int x, int y);
 Player* GetPlayer(std::string name);
 bool HasMapTileRiver(MapTile* maptile);
+River* MakeNewRiver(std::string spritename, int x_cell_pos, int y_cell_pos);
 
 
 
@@ -657,7 +659,9 @@ struct EntitiesStorage {
 	std::vector< GameEntity* >* GetCitiesVec() { return m_CityVec; }
 	std::vector< GameEntity* >* GetHillsMountains() { return m_MountainsHillsVec; }
 	std::vector<GameEntity*>* GetMapTileRegions() { return m_MapTileRegionsVec; }
+	std::vector<GameEntity*>* GetRiversVec() { return m_Riversvec; }
 	std::vector<Player*>* GetPlayersVec() { return m_PlayersVec; }
+
 
 
 	void AddPlayer(Player* p) {

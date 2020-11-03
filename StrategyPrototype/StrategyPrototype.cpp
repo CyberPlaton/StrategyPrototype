@@ -3,6 +3,18 @@
 static olc::vf2d g_vi2dCameraPosition = olc::vf2d(0.0f, 0.0f);
 static int ColorValue = 0;
 
+
+River* MakeNewRiver(std::string spritename, int x_cell_pos, int y_cell_pos) {
+
+	// TODO:
+	// Define later on which layer to render rivers...
+	River* r = new River(spritename, "layer3", int(x_cell_pos * SPRITES_WIDTH_AND_HEIGHT), int(y_cell_pos * SPRITES_WIDTH_AND_HEIGHT));
+	r->m_TransformCmp->m_GameWorldSpaceCell[0] = x_cell_pos;
+	r->m_TransformCmp->m_GameWorldSpaceCell[1] = y_cell_pos;
+
+	return r;
+}
+
 bool HasMapTileRiver(MapTile* maptile) {
 
 	GameEntity* entity = nullptr;
@@ -1876,6 +1888,14 @@ void Renderer::Render2Layer3() {
 	for (auto it = vec.begin(); it != vec.end(); ++it) {
 
 		entity = *it;
+
+		// Do not draw tiles we do not see.
+		if (entity->m_TransformCmp->m_Cell[0] > VISIBLE_MAP_WIDTH ||
+			entity->m_TransformCmp->m_Cell[1] > VISIBLE_MAP_HEIGHT) continue;
+
+
+
+
 		if (COMPARE_STRINGS(entity->m_IDCmp->m_DynamicTypeName, "Hills")) {
 			hills = reinterpret_cast<Hills*>(*it);
 			mountains = nullptr;
@@ -1896,6 +1916,27 @@ void Renderer::Render2Layer3() {
 			m_Game->DrawDecal(vi2d(mountains->m_TransformCmp->m_PosX, mountains->m_TransformCmp->m_PosY),
 				m_Game->m_SpriteResourceMap.at(mountains->m_GraphicsCmp->m_SpriteName));
 		}
+
+	}
+
+
+
+	
+	// Render rivers over other to see them
+	River* river = nullptr;
+	vec = *storage->GetRiversVec();
+	for (auto it = vec.begin(); it != vec.end(); ++it) {
+
+		river = reinterpret_cast<River*>(*it);
+
+		// Do not draw tiles we do not see.
+		if (river->m_TransformCmp->m_Cell[0] > VISIBLE_MAP_WIDTH ||
+			river->m_TransformCmp->m_Cell[1] > VISIBLE_MAP_HEIGHT) continue;
+
+
+		// Draw appropriate loaded sprite on position specified.
+		m_Game->DrawDecal(vi2d(river->m_TransformCmp->m_PosX, river->m_TransformCmp->m_PosY),
+			m_Game->m_SpriteResourceMap.at(river->m_GraphicsCmp->m_SpriteName));
 
 	}
 
