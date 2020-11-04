@@ -142,6 +142,17 @@ struct MapRessource : public GameEntity{
 
 class City : public GameEntity {
 public:
+
+	// Defines the type of landscape 
+	// the city is built upon.
+	enum class CityLandscapeType {
+		CITY_LANDSCAPE_INVALID = -1,
+		CITY_LANDSCAPE_HILLS = 0,
+		CITY_LANDSCAPE_MOUNTAINS = 1,
+		CITY_LANDSCAPE_FOREST = 2,
+		CITY_LANDSCAPE_PLAIN = 3
+	};
+
 	// Define here whether this cityentity is a fort or city.
 	// Based on it, it will have other functinalities and possibilities.
 	enum class CityType {
@@ -184,8 +195,21 @@ public:
 
 	~City() = default;
 
+	// First function to be called after creation of a city.
+	// Initializes properly all needed definitions for a city entity.
+	void Initialize() {
+
+		ClaimRegions();
+		MakeCityBorders();
+		_deriveCityLandscapeType();
+	}
+
 	// Use this to render current city representation.
 	std::string GetCurrentCitySprite();
+
+	// Stringifies the landscape type of the city.
+	std::string GetCityLandscapeTypeString();
+	CityLandscapeType GetCityLandscapeType();
 
 	void ClaimRegions() {
 		_claimRegions();
@@ -209,6 +233,8 @@ public:
 	CitySizeClass m_CitySizeClass = CitySizeClass::CITY_SIZE_CLASS_INVALID;
 	CityType m_CityType = CityType::CITY_TYPE_INVALID;
 	CitySpritesHolder* m_CitySpritesStorage = nullptr;
+	CityLandscapeType* m_CityLandscapeType = nullptr;
+	bool m_RiverPresentInCity = false;
 
 	std::map<std::string, CityRessource*> m_CityRessourcesMap;
 	std::map<std::string, GameEntity*> m_PresentUnitsMap;
@@ -227,6 +253,12 @@ public:
 	CityBorderColor m_CityBorderColor = CityBorderColor::CITY_BORDERCOLOR_INVALID; // For appropriate coloring of borders.
 
 private:
+
+	// Function defines the m_CityLandscapeType based on the tile on which
+	// this city is built upon. 
+	// m_CityLandscapeType define the cities CityView layout and/or buildings possibilities.
+	void _deriveCityLandscapeType();
+
 	// Regions claiming version 2.0
 	/*
 	NOTE:

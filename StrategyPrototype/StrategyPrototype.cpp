@@ -139,9 +139,7 @@ City* MakeNewCity(bool city, std::string cityname, CMPEntityRace::Race race, Pla
 	c->m_TransformCmp->m_GameWorldSpaceCell[0] = x_cell_pos;
 	c->m_TransformCmp->m_GameWorldSpaceCell[1] = y_cell_pos;
 
-
-	c->ClaimRegions();
-	c->MakeCityBorders();
+	c->Initialize();
 
 	return c;
 }
@@ -156,8 +154,7 @@ City* MakeNewCityAtPos(bool city, std::string cityname, CMPEntityRace::Race race
 	c->m_TransformCmp->m_GameWorldSpaceCell[0] = set_x_cell_pos;
 	c->m_TransformCmp->m_GameWorldSpaceCell[1] = set_y_cell_pos;
 
-	c->ClaimRegions();
-	c->MakeCityBorders();
+	c->Initialize();
 
 	return c;
 
@@ -1355,9 +1352,9 @@ bool Game::OnUserCreate() {
 
 
 
-	City* city2 = MakeNewCity(true, "Stormhaven", CMPEntityRace::Race::RACE_HUMAN, player, 5, 3, 3);
-	City* city3 = MakeNewCity(true, "Under Stormhaven", CMPEntityRace::Race::RACE_ORC, player2, 8, 4, 3);
-	City* city4 = MakeNewCity(false, "Stargrad", CMPEntityRace::Race::RACE_HUMAN, player3, 3, 10, 3);
+	City* city2 = MakeNewCity(true, "Rom", CMPEntityRace::Race::RACE_HUMAN, player, 5, 3, 3);
+	City* city3 = MakeNewCity(true, "Glum", CMPEntityRace::Race::RACE_ORC, player2, 8, 5, 3);
+	City* city4 = MakeNewCity(false, "Vaengir", CMPEntityRace::Race::RACE_HUMAN, player3, 3, 9, 3);
 
 	//City* city4 = MakeNewCity(true, "Faerograd", CMPEntityRace::Race::RACE_HUMAN, player, 13, 6, 32);
 
@@ -1814,9 +1811,18 @@ void Renderer::Render2Layer2() {
 		m_Game->DrawDecal(vi2d(city->m_TransformCmp->m_PosX, city->m_TransformCmp->m_PosY),
 			m_Game->m_SpriteResourceMap.at(city->GetCurrentCitySprite()));
 
-		std::string s = city->m_CityName + ". Size " + std::to_string(city->m_CitySize);
+		std::string cityname = city->m_CityName;
+		std::string citysize = std::to_string(city->m_CitySize);
+		std::string citylandscape = city->GetCityLandscapeTypeString();
+
+
 		m_Game->DrawString(vi2d(city->m_TransformCmp->m_PosX, city->m_TransformCmp->m_PosY),
-			s, olc::BLACK);
+			cityname, olc::BLACK);
+		m_Game->DrawString(vi2d(city->m_TransformCmp->m_PosX + SPRITES_WIDTH_AND_HEIGHT, city->m_TransformCmp->m_PosY),
+			citysize, olc::BLACK);
+		m_Game->DrawString(vi2d(city->m_TransformCmp->m_PosX, city->m_TransformCmp->m_PosY + 10),
+			citylandscape, olc::BLACK);
+
 
 
 	}

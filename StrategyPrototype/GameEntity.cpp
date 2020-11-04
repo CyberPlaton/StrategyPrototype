@@ -1353,6 +1353,60 @@ void City::Update() {
 
 
 
+void City::_deriveCityLandscapeType() {
+
+	/*
+	NOTE: How do we handle rivers.
+
+	Rivers are additional to cities landscape. As rivers can be on hills, forests and plain.
+	Thus, we give for a river a boolean, that is true, if a river is present on the cities tile.
+	*/
+
+	MapTile* city_tile = GetMapTileAtWorldPosition(this->m_TransformCmp->m_GameWorldSpaceCell[0], this->m_TransformCmp->m_GameWorldSpaceCell[1]);
+
+	bool mountain = false, hill = false, forest = false;
+
+	// First, check for mountains.
+	for (auto it : *city_tile->m_MapTileEntities) {
+
+		if (COMPARE_STRINGS(it->m_IDCmp->m_DynamicTypeName, "Mountains") == 0) {
+			mountain = true;
+		}
+		// .. check for hills.
+		else if (COMPARE_STRINGS(it->m_IDCmp->m_DynamicTypeName, "Hills") == 0) {
+			hill = true;
+
+		}
+		// .. check for river.
+		else if (COMPARE_STRINGS(it->m_IDCmp->m_DynamicTypeName, "River") == 0) {
+			m_RiverPresentInCity = true;
+
+		}
+		// .. check for forest
+		else if (COMPARE_STRINGS(it->m_IDCmp->m_DynamicTypeName, "Forest") == 0) {
+			forest = true;
+		}
+
+
+	}
+
+	if (mountain) {
+		m_CityLandscapeType = new CityLandscapeType(CityLandscapeType::CITY_LANDSCAPE_MOUNTAINS);
+	}
+	else if (hill) {
+		m_CityLandscapeType = new CityLandscapeType(CityLandscapeType::CITY_LANDSCAPE_HILLS);
+	}
+	else if (forest) {
+		m_CityLandscapeType = new CityLandscapeType(CityLandscapeType::CITY_LANDSCAPE_FOREST);
+	}
+	// .. lastly, if nothing present, define as plain city.
+	else {
+		m_CityLandscapeType = new CityLandscapeType(CityLandscapeType::CITY_LANDSCAPE_PLAIN);
+	}
+}
+
+
+
 void City::_unclaimRegions() {
 
 	for (auto it : m_ClaimedRegions) {
@@ -2101,6 +2155,32 @@ City::City(std::string cityname, bool city, CMPEntityRace::Race race, Player* pl
 	m_AssociatedPlayer = player;
 	player->AddCity(this);
 	_determineMapCell(m_AssociatedPlayer->m_PlayerColor);
+}
+
+
+std::string City::GetCityLandscapeTypeString() {
+	switch (*m_CityLandscapeType) {
+	case CityLandscapeType::CITY_LANDSCAPE_FOREST:
+		return "Forest";
+		break;
+	case CityLandscapeType::CITY_LANDSCAPE_MOUNTAINS:
+		return "Mountains";
+		break;
+	case CityLandscapeType::CITY_LANDSCAPE_HILLS:
+		return "Hills";
+		break;
+	case CityLandscapeType::CITY_LANDSCAPE_PLAIN:
+		return "Plain";
+		break;
+	default:
+		throw;
+		break;
+	}
+}
+
+
+City::CityLandscapeType City::GetCityLandscapeType() {
+	return *m_CityLandscapeType;
 }
 
 

@@ -89,10 +89,10 @@ overlay;
 none,none,none,none,none,none,none,none,none,none,none,none,none,none,none,none,none,forest_temperate,forest_tundra,none,;
 
 overlay;
-none,none,none,none,none,none,none,none,none,none,none,none,none,none,none,none,none,forest_tundra,none,forest_tundra,;
+none,none,none,none,forest_tundra,none,none,none,none,none,none,none,none,none,none,none,none,forest_tundra,none,forest_tundra,;
 
 overlay;
-none,none,none,none,none,none,none,none,none,none,none,none,none,none,none,none,none,none,forest_tundra,none,;
+none,none,none,none,none,forest_tundra,none,none,none,none,none,none,none,none,none,none,none,none,forest_tundra,none,;
 
 overlay;
 none,none,none,none,none,none,none,none,none,none,none,none,none,none,none,none,none,none,none,none,;
