@@ -1703,9 +1703,9 @@ int main()
 {
 	Game demo;
 
-	if (demo.Construct(1280, 720, 1, 1, false, true, false))
+	if (demo.Construct(1280, 720, 1, 1, false, true, false)) {
 		demo.Start();
-
+	}
 
 	return 0;
 }

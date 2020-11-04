@@ -3374,6 +3374,7 @@ namespace olc
 
 		virtual olc::rcode CreateWindowPane(const olc::vi2d& vWindowPos, olc::vi2d& vWindowSize, bool bFullScreen) override
 		{
+
 			WNDCLASS wc;
 			wc.hIcon = LoadIcon(NULL, IDI_APPLICATION);
 			wc.hCursor = LoadCursor(NULL, IDC_ARROW);
@@ -3386,6 +3387,7 @@ namespace olc
 			wc.hbrBackground = nullptr;
 			wc.lpszClassName = olcT("OLC_PIXEL_GAME_ENGINE");
 			RegisterClass(&wc);
+
 
 			// Define window furniture
 			DWORD dwExStyle = WS_EX_APPWINDOW | WS_EX_WINDOWEDGE;
