@@ -759,8 +759,9 @@ void CMPCameraInput::_handleCityViewKeyboard(Camera* cam) {
 
 void CMPCameraInput::_handleMapViewMouse(Camera* cam) {
 
-	Game* context = cam->m_Game;
+	using namespace std;
 
+	Game* context = cam->m_Game;
 
 	// Draw Region around mouse position.
 	MapTileRegion* region = nullptr;
@@ -777,7 +778,7 @@ void CMPCameraInput::_handleMapViewMouse(Camera* cam) {
 
 		}
 	}
-
+	
 	MapTile* tile = nullptr;
 	if (context->GetMouse(0).bPressed) {
 
@@ -792,6 +793,8 @@ void CMPCameraInput::_handleMapViewMouse(Camera* cam) {
 			}
 		}
 	}
+	
+
 }
 
 

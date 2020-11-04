@@ -15,7 +15,6 @@ struct CMPCameraInput{
 	void HandleKeyboard(Camera* cam);
 	void HandleMouse(Camera* cam);
 
-
 private:
 	void _handleMapViewKeyBoard(Camera* cam);
 	void _handleCityViewKeyboard(Camera* cam);
