@@ -1212,25 +1212,38 @@ void Game::_loadSpriteResources() {
 	Sprite* fort2 = new Sprite("assets/fort/human/fort_human_normal.png");
 	Sprite* fort3 = new Sprite("assets/fort/human/fort_human_big.png");
 	Sprite* fort4 = new Sprite("assets/fort/human/fort_human_huge.png");
-
+	Sprite* fort5 = new Sprite("assets/fort/orc/fort_orc_small.png");
+	Sprite* fort6 = new Sprite("assets/fort/orc/fort_orc_normal.png");
+	Sprite* fort7 = new Sprite("assets/fort/orc/fort_orc_big.png");
+	Sprite* fort8 = new Sprite("assets/fort/orc/fort_orc_huge.png");
 
 	m_SpriteStorage.push_back(fort1);
 	m_SpriteStorage.push_back(fort2);
 	m_SpriteStorage.push_back(fort3);
 	m_SpriteStorage.push_back(fort4);
-
+	m_SpriteStorage.push_back(fort5);
+	m_SpriteStorage.push_back(fort6);
+	m_SpriteStorage.push_back(fort7);
+	m_SpriteStorage.push_back(fort8);
 
 	Decal* dfort1 = new Decal(fort1);
 	Decal* dfort2 = new Decal(fort2);
 	Decal* dfort3 = new Decal(fort3);
 	Decal* dfort4 = new Decal(fort4);
+	Decal* dfort5 = new Decal(fort5);
+	Decal* dfort6 = new Decal(fort6);
+	Decal* dfort7 = new Decal(fort7);
+	Decal* dfort8 = new Decal(fort8);
 
 
 	m_SpriteResourceMap.insert(std::make_pair("fort_human_small", dfort1));
 	m_SpriteResourceMap.insert(std::make_pair("fort_human_normal", dfort2));
 	m_SpriteResourceMap.insert(std::make_pair("fort_human_big", dfort3));
 	m_SpriteResourceMap.insert(std::make_pair("fort_human_huge", dfort4));
-
+	m_SpriteResourceMap.insert(std::make_pair("fort_orc_small", dfort5));
+	m_SpriteResourceMap.insert(std::make_pair("fort_orc_normal", dfort6));
+	m_SpriteResourceMap.insert(std::make_pair("fort_orc_big", dfort7));
+	m_SpriteResourceMap.insert(std::make_pair("fort_orc_huge", dfort8));
 
 
 
@@ -1352,9 +1365,10 @@ bool Game::OnUserCreate() {
 
 
 
-	City* city2 = MakeNewCity(true, "Rom", CMPEntityRace::Race::RACE_HUMAN, player, 5, 3, 3);
-	City* city3 = MakeNewCity(true, "Glum", CMPEntityRace::Race::RACE_ORC, player2, 8, 5, 3);
-	City* city4 = MakeNewCity(false, "Vaengir", CMPEntityRace::Race::RACE_HUMAN, player3, 3, 9, 3);
+	City* city2 = MakeNewCity(true, "Rom", CMPEntityRace::Race::RACE_HUMAN, player, 5, 3, 1);
+	City* city3 = MakeNewCity(true, "Glum", CMPEntityRace::Race::RACE_ORC, player2, 8, 5, 5);
+	City* fort = MakeNewCity(false, "Glum-Lon", CMPEntityRace::Race::RACE_ORC, player2, 12, 7, 8);
+	City* city4 = MakeNewCity(false, "Vaengir", CMPEntityRace::Race::RACE_HUMAN, player3, 3, 9, 2);
 
 	//City* city4 = MakeNewCity(true, "Faerograd", CMPEntityRace::Race::RACE_HUMAN, player, 13, 6, 32);
 
@@ -1365,6 +1379,8 @@ bool Game::OnUserCreate() {
 	storage->AddGameEntitie(city2);
 	storage->AddGameEntitie(city3);
 	storage->AddGameEntitie(city4);
+	storage->AddGameEntitie(fort);
+
 
 	//storage->AddGameEntitie(city);
 	//storage->AddGameEntitie(city5);
