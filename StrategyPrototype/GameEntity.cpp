@@ -3,6 +3,20 @@
 EntitiesStorage* EntitiesStorage::m_EntitiesStorage = nullptr;
 WorldMap* WorldMap::m_WorldMapInstance = nullptr;
 
+
+bool Forest::IsCityOnForest() {
+
+	MapTile* maptile = GetMapTileAtWorldPosition(m_TransformCmp->m_GameWorldSpaceCell[0], m_TransformCmp->m_GameWorldSpaceCell[1]);
+
+	for (auto it : *maptile->m_MapTileEntities) {
+
+		if (COMPARE_STRINGS(it->m_IDCmp->m_DynamicTypeName, "City") == 0) return true;
+	}
+
+	return false;
+}
+
+
 void WorldMap::SetMapOptions(WorldMapDrawingOptions* worldDef) {
 
 	m_MapDrawOptions = worldDef;

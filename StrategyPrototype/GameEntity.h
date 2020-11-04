@@ -763,6 +763,10 @@ public:
 		return((m_ForestClass == other->m_ForestClass) ? true : false);
 	}
 
+	// See whether a city occupies this forest.
+	// Thus the forest will not get older.
+	bool IsCityOnForest();
+
 
 	int m_ForestLifeTimeNow = 0;
 	int m_ForestLifetime = 0;
@@ -773,7 +777,6 @@ private:
 
 
 private:
-
 	void _setMovementCost() {
 		switch (m_ForestType) {
 		case ForestType::FOREST_DEEP:

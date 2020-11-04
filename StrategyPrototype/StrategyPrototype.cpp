@@ -2263,7 +2263,10 @@ void ForestSearch::executeStateLogic() {
 	using namespace std;
 
 	// increase lifetime on update. Counted in gameturns.
-	m_ManagedForest->m_ForestLifeTimeNow++;
+	// .. but only if no city occupies this forest.
+	if (m_ManagedForest->IsCityOnForest() == false) {
+		m_ManagedForest->m_ForestLifeTimeNow++;
+	}
 
 	// Forest too old, means dies of old age.
 	if (m_ManagedForest->m_ForestLifeTimeNow > m_ManagedForest->m_ForestLifetime) {
