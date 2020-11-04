@@ -496,9 +496,9 @@ private:
 	}
 
 	void _updateCitySizeClass() {
-		if (m_CitySize < 6) m_CitySizeClass = CitySizeClass::CITY_SIZE_CLASS_SMALL;
-		else if (m_CitySize >= 6 && m_CitySize < 17) m_CitySizeClass = CitySizeClass::CITY_SIZE_CLASS_NORMAL;
-		else if(m_CitySize >= 17 && m_CitySize < 31) m_CitySizeClass = CitySizeClass::CITY_SIZE_CLASS_BIG;
+		if (m_CitySize < 11) m_CitySizeClass = CitySizeClass::CITY_SIZE_CLASS_SMALL;
+		else if (m_CitySize >= 1 && m_CitySize < 21) m_CitySizeClass = CitySizeClass::CITY_SIZE_CLASS_NORMAL;
+		else if(m_CitySize >= 21 && m_CitySize < 31) m_CitySizeClass = CitySizeClass::CITY_SIZE_CLASS_BIG;
 		else if(m_CitySize >= 31) m_CitySizeClass = CitySizeClass::CITY_SIZE_CLASS_HUGE;
 		else m_CitySizeClass = CitySizeClass::CITY_SIZE_CLASS_INVALID;
 	}

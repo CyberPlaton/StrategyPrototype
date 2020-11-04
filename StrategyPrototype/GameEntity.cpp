@@ -1337,6 +1337,10 @@ void City::ClaimRegions() {
 
 void City::Update() {
 
+	// Later make that this city ceases if population is smaller than 1.
+	// For now, we just skip this and do not let the city die.
+	if (m_CitySize < 1) m_CitySize = 1;
+
 	CitySizeClass size = this->m_CitySizeClass;
 
 	_updateCitySizeClass();
@@ -1410,7 +1414,7 @@ void City::_claimRegions() {
 			_claimPrimaryRegions();
 			_claimSecondaryRegions();
 			_claimTertiaryReions();
-			// Fort does not claim tertiary tiles.
+			// Fort does not claim quartary tiles.
 			break;
 		default:
 			break;
@@ -1763,6 +1767,7 @@ void City::_claimTertiaryReions() {
 
 
 void City::_claimQuartaryRegions() {
+
 
 }
 

@@ -574,9 +574,17 @@ void CMPCameraInput::_handleMapViewKeyBoard(Camera* cam) {
 			
 			city = reinterpret_cast<City*>(it);
 
-			city->m_CitySize++;
-			city->Update();
 
+			if (COMPARE_STRINGS(city->m_CityName, "Stormhaven") == 0) {
+
+				city->m_CitySize--;
+				city->Update();
+			}
+			else {
+
+				city->m_CitySize++;
+				city->Update();
+			}
 		}
 
 	}
