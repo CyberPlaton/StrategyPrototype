@@ -1371,26 +1371,41 @@ void City::_unclaimRegions() {
 
 void City::_claimRegions() {
 
+	using namespace std;
+	cout << APP_SUCCESS_COLOR;
+	cout << "_claimRegions() for " << m_CityName;
+
 	switch (m_CityType){
 	case CityType::CITY_TYPE_CITY:
 		switch (m_CitySizeClass) {
 		case CitySizeClass::CITY_SIZE_CLASS_SMALL:
 			_claimPrimaryRegions();
+
+
+			cout << ". Claim _claimPrimaryRegions()." << white << endl;
 			break;
 		case CitySizeClass::CITY_SIZE_CLASS_NORMAL:
 			_claimPrimaryRegions();
 			_claimSecondaryRegions();
+
+
+			cout << ". Claim up to _claimSecondaryRegions()." << white << endl;
 			break;
 		case CitySizeClass::CITY_SIZE_CLASS_BIG:
 			_claimPrimaryRegions();
 			_claimSecondaryRegions();
 			_claimTertiaryReions();
+
+
+			cout << ". Claim up to _claimTertiaryReions()." << white << endl;
 			break;
 		case CitySizeClass::CITY_SIZE_CLASS_HUGE:
 			_claimPrimaryRegions();
 			_claimSecondaryRegions();
 			_claimTertiaryReions();
 			_claimQuartaryRegions();
+
+			cout << ". Claim up to _claimQuartaryRegions()." << white << endl;
 			break;
 		default:
 			break;
@@ -1766,10 +1781,219 @@ void City::_claimTertiaryReions() {
 }
 
 
+
 void City::_claimQuartaryRegions() {
 
+	// Tertiry regions are that tiles, that are 3 tiles away around city.
+	// Those are 16.
+	int city_pos[2];
+	city_pos[0] = this->m_TransformCmp->m_GameWorldSpaceCell[0];
+	city_pos[1] = this->m_TransformCmp->m_GameWorldSpaceCell[1];
 
+
+	int up[2], right[2], down[2], left[2],
+		left_up[2], right_up[2], down_left[2], down_right[2],
+		left_up_2[2], right_up_2[2], down_left_2[2], down_right_2[2],
+		left_up_3[2], right_up_3[2], down_left_3[2], down_right_3[2];
+
+
+
+	right[0] = this->m_TransformCmp->m_GameWorldSpaceCell[0] + 4;
+	right[1] = this->m_TransformCmp->m_GameWorldSpaceCell[1];
+
+	left[0] = this->m_TransformCmp->m_GameWorldSpaceCell[0] - 4;
+	left[1] = this->m_TransformCmp->m_GameWorldSpaceCell[1];
+
+	up[0] = this->m_TransformCmp->m_GameWorldSpaceCell[0];
+	up[1] = this->m_TransformCmp->m_GameWorldSpaceCell[1] - 4;
+
+	down[0] = this->m_TransformCmp->m_GameWorldSpaceCell[0];
+	down[1] = this->m_TransformCmp->m_GameWorldSpaceCell[1] + 4;
+
+
+	left_up[0] = this->m_TransformCmp->m_GameWorldSpaceCell[0] - 1;
+	left_up[1] = this->m_TransformCmp->m_GameWorldSpaceCell[1] - 3;
+
+	right_up[0] = this->m_TransformCmp->m_GameWorldSpaceCell[0] + 1;
+	right_up[1] = this->m_TransformCmp->m_GameWorldSpaceCell[1] - 3;
+
+	down_left[0] = this->m_TransformCmp->m_GameWorldSpaceCell[0] - 1;
+	down_left[1] = this->m_TransformCmp->m_GameWorldSpaceCell[1] + 3;
+
+	down_right[0] = this->m_TransformCmp->m_GameWorldSpaceCell[0] + 1;
+	down_right[1] = this->m_TransformCmp->m_GameWorldSpaceCell[1] + 3;
+
+
+	left_up_2[0] = this->m_TransformCmp->m_GameWorldSpaceCell[0] - 2;
+	left_up_2[1] = this->m_TransformCmp->m_GameWorldSpaceCell[1] - 2;
+
+	right_up_2[0] = this->m_TransformCmp->m_GameWorldSpaceCell[0] + 2;
+	right_up_2[1] = this->m_TransformCmp->m_GameWorldSpaceCell[1] - 2;
+
+	down_left_2[0] = this->m_TransformCmp->m_GameWorldSpaceCell[0] - 2;
+	down_left_2[1] = this->m_TransformCmp->m_GameWorldSpaceCell[1] + 2;
+
+	down_right_2[0] = this->m_TransformCmp->m_GameWorldSpaceCell[0] + 2;
+	down_right_2[1] = this->m_TransformCmp->m_GameWorldSpaceCell[1] + 2;
+
+	left_up_3[0] = this->m_TransformCmp->m_GameWorldSpaceCell[0] - 3;
+	left_up_3[1] = this->m_TransformCmp->m_GameWorldSpaceCell[1] - 1;
+
+	right_up_3[0] = this->m_TransformCmp->m_GameWorldSpaceCell[0] + 3;
+	right_up_3[1] = this->m_TransformCmp->m_GameWorldSpaceCell[1] - 1;
+
+	down_left_3[0] = this->m_TransformCmp->m_GameWorldSpaceCell[0] - 3;
+	down_left_3[1] = this->m_TransformCmp->m_GameWorldSpaceCell[1] + 1;
+
+	down_right_3[0] = this->m_TransformCmp->m_GameWorldSpaceCell[0] + 3;
+	down_right_3[1] = this->m_TransformCmp->m_GameWorldSpaceCell[1] + 1;
+
+
+
+	MapTile* m1, * m2, * m3, * m4, * m5, * m6, * m7, * m8, * m9, * m10, * m11, * m12, * m13, * m14, * m15, * m16;
+	m1 = GetMapTileAtWorldPosition(right[0], right[1]);
+	m2 = GetMapTileAtWorldPosition(left[0], left[1]);
+	m3 = GetMapTileAtWorldPosition(up[0], up[1]);
+	m4 = GetMapTileAtWorldPosition(down[0], down[1]);
+
+	m5 = GetMapTileAtWorldPosition(down_right[0], down_right[1]);
+	m6 = GetMapTileAtWorldPosition(down_left[0], down_left[1]);
+	m7 = GetMapTileAtWorldPosition(right_up[0], right_up[1]);
+	m8 = GetMapTileAtWorldPosition(left_up[0], left_up[1]);
+
+	m9 = GetMapTileAtWorldPosition(left_up_2[0], left_up_2[1]);
+	m10 = GetMapTileAtWorldPosition(right_up_2[0], right_up_2[1]);
+	m11 = GetMapTileAtWorldPosition(down_left_2[0], down_left_2[1]);
+	m12 = GetMapTileAtWorldPosition(down_right_2[0], down_right_2[1]);
+
+	m13 = GetMapTileAtWorldPosition(left_up_3[0], left_up_3[1]);
+	m14 = GetMapTileAtWorldPosition(right_up_3[0], right_up_3[1]);
+	m15 = GetMapTileAtWorldPosition(down_left_3[0], down_left_3[1]);
+	m16 = GetMapTileAtWorldPosition(down_right_3[0], down_right_3[1]);
+
+
+	// Here we must test whether the tile is valid.
+	if (m1 != nullptr) {
+
+		if (_isRegionClaimedAlreadyByThisCity(m1->m_AssociatedRegion) == false &&
+			_isRegionClaimedByOtherCity(m1->m_AssociatedRegion) == false) {
+
+			m_ClaimedRegions.push_back(m1->m_AssociatedRegion);
+		}
+	}
+	if (m2 != nullptr) {
+		if (_isRegionClaimedAlreadyByThisCity(m2->m_AssociatedRegion) == false &&
+			_isRegionClaimedByOtherCity(m2->m_AssociatedRegion) == false) {
+
+			m_ClaimedRegions.push_back(m2->m_AssociatedRegion);
+		}
+	}
+	if (m3 != nullptr) {
+		if (_isRegionClaimedAlreadyByThisCity(m3->m_AssociatedRegion) == false &&
+			_isRegionClaimedByOtherCity(m3->m_AssociatedRegion) == false) {
+
+			m_ClaimedRegions.push_back(m3->m_AssociatedRegion);
+		}
+	}
+	if (m4 != nullptr) {
+		if (_isRegionClaimedAlreadyByThisCity(m4->m_AssociatedRegion) == false &&
+			_isRegionClaimedByOtherCity(m4->m_AssociatedRegion) == false) {
+
+			m_ClaimedRegions.push_back(m4->m_AssociatedRegion);
+		}
+	}
+	if (m5 != nullptr) {
+
+		if (_isRegionClaimedAlreadyByThisCity(m5->m_AssociatedRegion) == false &&
+			_isRegionClaimedByOtherCity(m5->m_AssociatedRegion) == false) {
+
+			m_ClaimedRegions.push_back(m5->m_AssociatedRegion);
+		}
+	}
+	if (m6 != nullptr) {
+		if (_isRegionClaimedAlreadyByThisCity(m6->m_AssociatedRegion) == false &&
+			_isRegionClaimedByOtherCity(m6->m_AssociatedRegion) == false) {
+
+			m_ClaimedRegions.push_back(m6->m_AssociatedRegion);
+		}
+	}
+	if (m7 != nullptr) {
+		if (_isRegionClaimedAlreadyByThisCity(m7->m_AssociatedRegion) == false &&
+			_isRegionClaimedByOtherCity(m7->m_AssociatedRegion) == false) {
+
+			m_ClaimedRegions.push_back(m7->m_AssociatedRegion);
+		}
+	}
+	if (m8 != nullptr) {
+		if (_isRegionClaimedAlreadyByThisCity(m8->m_AssociatedRegion) == false &&
+			_isRegionClaimedByOtherCity(m8->m_AssociatedRegion) == false) {
+
+			m_ClaimedRegions.push_back(m8->m_AssociatedRegion);
+		}
+	}
+	if (m9 != nullptr) {
+
+		if (_isRegionClaimedAlreadyByThisCity(m9->m_AssociatedRegion) == false &&
+			_isRegionClaimedByOtherCity(m9->m_AssociatedRegion) == false) {
+
+			m_ClaimedRegions.push_back(m9->m_AssociatedRegion);
+		}
+	}
+	if (m10 != nullptr) {
+		if (_isRegionClaimedAlreadyByThisCity(m10->m_AssociatedRegion) == false &&
+			_isRegionClaimedByOtherCity(m10->m_AssociatedRegion) == false) {
+
+			m_ClaimedRegions.push_back(m10->m_AssociatedRegion);
+		}
+	}
+	if (m11 != nullptr) {
+		if (_isRegionClaimedAlreadyByThisCity(m11->m_AssociatedRegion) == false &&
+			_isRegionClaimedByOtherCity(m11->m_AssociatedRegion) == false) {
+
+			m_ClaimedRegions.push_back(m11->m_AssociatedRegion);
+		}
+	}
+	if (m12 != nullptr) {
+		if (_isRegionClaimedAlreadyByThisCity(m12->m_AssociatedRegion) == false &&
+			_isRegionClaimedByOtherCity(m12->m_AssociatedRegion) == false) {
+
+			m_ClaimedRegions.push_back(m12->m_AssociatedRegion);
+		}
+	}
+	if (m13 != nullptr) {
+
+		if (_isRegionClaimedAlreadyByThisCity(m13->m_AssociatedRegion) == false &&
+			_isRegionClaimedByOtherCity(m13->m_AssociatedRegion) == false) {
+
+			m_ClaimedRegions.push_back(m13->m_AssociatedRegion);
+		}
+	}
+	if (m14 != nullptr) {
+		if (_isRegionClaimedAlreadyByThisCity(m14->m_AssociatedRegion) == false &&
+			_isRegionClaimedByOtherCity(m14->m_AssociatedRegion) == false) {
+
+			m_ClaimedRegions.push_back(m14->m_AssociatedRegion);
+		}
+	}
+	if (m15 != nullptr) {
+		if (_isRegionClaimedAlreadyByThisCity(m15->m_AssociatedRegion) == false &&
+			_isRegionClaimedByOtherCity(m15->m_AssociatedRegion) == false) {
+
+			m_ClaimedRegions.push_back(m15->m_AssociatedRegion);
+		}
+	}
+	if (m16 != nullptr) {
+		if (_isRegionClaimedAlreadyByThisCity(m16->m_AssociatedRegion) == false &&
+			_isRegionClaimedByOtherCity(m16->m_AssociatedRegion) == false) {
+
+			m_ClaimedRegions.push_back(m16->m_AssociatedRegion);
+		}
+	}
 }
+
+
+
+
 
 
 

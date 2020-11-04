@@ -574,7 +574,7 @@ void CMPCameraInput::_handleMapViewKeyBoard(Camera* cam) {
 			
 			city = reinterpret_cast<City*>(it);
 
-
+			/*
 			if (COMPARE_STRINGS(city->m_CityName, "Stormhaven") == 0) {
 
 				city->m_CitySize--;
@@ -585,6 +585,22 @@ void CMPCameraInput::_handleMapViewKeyBoard(Camera* cam) {
 				city->m_CitySize++;
 				city->Update();
 			}
+			*/
+			city->m_CitySize++;
+			city->Update();
+		}
+
+	}
+
+	if (context->GetKey(olc::Key::O).bPressed) {
+
+		City* city = nullptr;
+		for (auto it : *EntitiesStorage::Get()->GetCitiesVec()) {
+
+			city = reinterpret_cast<City*>(it);
+
+			city->m_CitySize--;
+			city->Update();
 		}
 
 	}
@@ -1319,8 +1335,8 @@ bool Game::OnUserCreate() {
 	storage->AddPlayer(player2);
 
 
-	City* city2 = MakeNewCity(true, "Stormhaven", CMPEntityRace::Race::RACE_HUMAN, player, 5, 3, 32);
-	City* city3 = MakeNewCity(true, "Under Stormhaven", CMPEntityRace::Race::RACE_HUMAN, player, 12, 7, 5);
+	City* city2 = MakeNewCity(true, "Stormhaven", CMPEntityRace::Race::RACE_HUMAN, player, 5, 3, 3);
+	City* city3 = MakeNewCity(true, "Under Stormhaven", CMPEntityRace::Race::RACE_ORC, player2, 8, 4, 3);
 	//City* city4 = MakeNewCity(true, "Faerograd", CMPEntityRace::Race::RACE_HUMAN, player, 13, 6, 32);
 
 	//City *city = MakeNewCity(true, "Gnarmol", CMPEntityRace::Race::RACE_ORC, player2, 6, 12, 32);
