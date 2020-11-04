@@ -527,6 +527,12 @@ private:
 			m_ClaimedRegionsSpriteName = "map_cell_red";
 			m_CityBorderColor = CityBorderColor::CITY_BORDERCOLOR_RED;
 		}
+
+		if (COMPARE_STRINGS(color, "magenta") == 0) {
+			m_ClaimedRegionsSpriteName = "map_cell_magenta";
+			m_CityBorderColor = CityBorderColor::CITY_BORDERCOLOR_MAGENTA;
+		}
+
 	}
 };
 

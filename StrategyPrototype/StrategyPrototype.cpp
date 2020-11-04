@@ -1212,12 +1212,28 @@ void Game::_loadSpriteResources() {
 
 	// Forts
 	Sprite* fort1 = new Sprite("assets/fort/human/fort_human_small.png");
+	Sprite* fort2 = new Sprite("assets/fort/human/fort_human_normal.png");
+	Sprite* fort3 = new Sprite("assets/fort/human/fort_human_big.png");
+	Sprite* fort4 = new Sprite("assets/fort/human/fort_human_huge.png");
+
 
 	m_SpriteStorage.push_back(fort1);
+	m_SpriteStorage.push_back(fort2);
+	m_SpriteStorage.push_back(fort3);
+	m_SpriteStorage.push_back(fort4);
+
 
 	Decal* dfort1 = new Decal(fort1);
+	Decal* dfort2 = new Decal(fort2);
+	Decal* dfort3 = new Decal(fort3);
+	Decal* dfort4 = new Decal(fort4);
+
 
 	m_SpriteResourceMap.insert(std::make_pair("fort_human_small", dfort1));
+	m_SpriteResourceMap.insert(std::make_pair("fort_human_normal", dfort2));
+	m_SpriteResourceMap.insert(std::make_pair("fort_human_big", dfort3));
+	m_SpriteResourceMap.insert(std::make_pair("fort_human_huge", dfort4));
+
 
 
 
@@ -1331,12 +1347,18 @@ bool Game::OnUserCreate() {
 	// Testing creation of player.
 	Player* player = new Player("Bogdan", "blue");
 	Player* player2 = new Player("AI", "red");
+	Player* player3 = new Player("Katharina", "magenta");
+
 	storage->AddPlayer(player);
 	storage->AddPlayer(player2);
+	storage->AddPlayer(player3);
+
 
 
 	City* city2 = MakeNewCity(true, "Stormhaven", CMPEntityRace::Race::RACE_HUMAN, player, 5, 3, 3);
 	City* city3 = MakeNewCity(true, "Under Stormhaven", CMPEntityRace::Race::RACE_ORC, player2, 8, 4, 3);
+	City* city4 = MakeNewCity(false, "Stargrad", CMPEntityRace::Race::RACE_HUMAN, player3, 3, 10, 3);
+
 	//City* city4 = MakeNewCity(true, "Faerograd", CMPEntityRace::Race::RACE_HUMAN, player, 13, 6, 32);
 
 	//City *city = MakeNewCity(true, "Gnarmol", CMPEntityRace::Race::RACE_ORC, player2, 6, 12, 32);
@@ -1345,7 +1367,7 @@ bool Game::OnUserCreate() {
 
 	storage->AddGameEntitie(city2);
 	storage->AddGameEntitie(city3);
-	//storage->AddGameEntitie(city4);
+	storage->AddGameEntitie(city4);
 
 	//storage->AddGameEntitie(city);
 	//storage->AddGameEntitie(city5);
