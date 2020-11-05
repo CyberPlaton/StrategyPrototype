@@ -234,7 +234,8 @@ public:
 	CityType m_CityType = CityType::CITY_TYPE_INVALID;
 	CitySpritesHolder* m_CitySpritesStorage = nullptr;
 	CityLandscapeType* m_CityLandscapeType = nullptr;
-	bool m_RiverPresentInCity = false;
+	bool m_RiverPresentInCity = false; // Defines the cityview, is set on initialization.
+	bool m_CoastalCity = false; // Defines the layout in cityview, and is set at initialization.
 
 	std::map<std::string, CityRessource*> m_CityRessourcesMap;
 	std::map<std::string, GameEntity*> m_PresentUnitsMap;

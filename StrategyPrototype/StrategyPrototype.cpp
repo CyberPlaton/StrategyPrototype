@@ -249,42 +249,6 @@ std::string MapTileTypeToString(MapTile* tile) {
 
 bool MapTileAppropriteForForest(MapTile* tile, Forest* forest) {
 
-	/*
-	switch (tile->m_MapTileType) {
-	case MapTile::MapTileType::MAPTILE_TYPE_ICE:
-		return false;
-		break;
-	case  MapTile::MapTileType::MAPTILE_TYPE_SAND:
-		return false;
-		break;
-	case MapTile::MapTileType::MAPTILE_TYPE_SAVANNAH:
-		if (forest->m_ForestClass == Forest::ForestClass::FOREST_CLASS_SAVANNAH) return true;
-		else return false;
-		break;
-	case  MapTile::MapTileType::MAPTILE_TYPE_SNOW:
-		return false;
-		break;
-	case MapTile::MapTileType::MAPTILE_TYPE_TEMPERATE:
-		if (forest->m_ForestClass == Forest::ForestClass::FOREST_CLASS_TEMPERATE) return true;
-		else return false;
-		break;
-	case MapTile::MapTileType::MAPTILE_TYPE_JUNGLE:
-		if (forest->m_ForestClass == Forest::ForestClass::FOREST_CLASS_JUNGLE) return true;
-		else return false;
-		break;
-	case  MapTile::MapTileType::MAPTILE_TYPE_TUNDRA:
-		if (forest->m_ForestClass == Forest::ForestClass::FOREST_CLASS_TUNDRA) return true;
-		else return false;
-		break;
-	case MapTile::MapTileType::MAPTILE_TYPE_WATER_DEEP:
-		return false;
-		break;
-	case  MapTile::MapTileType::MAPTILE_TYPE_WATER_SHALLOW:
-		return false;
-		break;
-
-	}
-	*/
 	bool tile_type_ok = false;
 	bool tile_free = true;
 
@@ -752,6 +716,8 @@ void CMPCameraInput::_handleCityViewKeyboard(Camera* cam) {
 	if (context->GetKey(olc::Key::ESCAPE).bReleased) {
 
 		context->m_Renderer->ChangeRenderMode();
+		context->m_Renderer->SetCurrentViewedCity(nullptr); // Reset city which we now view.
+
 	}
 
 }
@@ -780,6 +746,7 @@ void CMPCameraInput::_handleMapViewMouse(Camera* cam) {
 	}
 	
 	MapTile* tile = nullptr;
+	City* city = nullptr;
 	if (context->GetMouse(0).bPressed) {
 
 		tile = GetMaptileAtMousePosition(context->GetMouseX(), context->GetMouseY());
@@ -788,7 +755,10 @@ void CMPCameraInput::_handleMapViewMouse(Camera* cam) {
 
 			if (COMPARE_STRINGS(it->m_IDCmp->m_DynamicTypeName, "City") == 0) {
 
+				city = reinterpret_cast<City*>(it);
+
 				context->m_Renderer->ChangeRenderMode();
+				context->m_Renderer->SetCurrentViewedCity(city); // Set city which we now view.
 
 			}
 		}
@@ -1368,8 +1338,8 @@ bool Game::OnUserCreate() {
 
 
 
-	City* city2 = MakeNewCity(true, "Rom", CMPEntityRace::Race::RACE_HUMAN, player, 5, 3, 1);
-	City* city3 = MakeNewCity(true, "Glum", CMPEntityRace::Race::RACE_ORC, player2, 8, 5, 5);
+	City* city2 = MakeNewCity(true, "Rom", CMPEntityRace::Race::RACE_HUMAN, player, 5, 3, 33);
+	//City* city3 = MakeNewCity(true, "Glum", CMPEntityRace::Race::RACE_ORC, player2, 8, 5, 5);
 	City* fort = MakeNewCity(false, "Glum-Lon", CMPEntityRace::Race::RACE_ORC, player2, 12, 7, 8);
 	City* city4 = MakeNewCity(false, "Vaengir", CMPEntityRace::Race::RACE_HUMAN, player3, 3, 9, 2);
 
@@ -1380,7 +1350,7 @@ bool Game::OnUserCreate() {
 
 
 	storage->AddGameEntitie(city2);
-	storage->AddGameEntitie(city3);
+	//storage->AddGameEntitie(city3);
 	storage->AddGameEntitie(city4);
 	storage->AddGameEntitie(fort);
 
@@ -1508,9 +1478,147 @@ void Renderer::RenderCityLayer3() {
 
 void Renderer::RenderCityLayer4() {
 
+	using namespace olc;
+
 	m_Game->SetDrawTarget(m_Layer4);
 	m_Game->Clear(olc::BLANK);
 
+	GameEntity* entity = nullptr;
+	MapTile* maptile = nullptr;
+	GameEntity* maptile_entt = nullptr;
+	MapTileRegion* region = nullptr;
+	City* city = nullptr;
+
+
+	if (m_CurrentViewedCity == nullptr) return;
+	for (auto it = m_CurrentViewedCity->m_ClaimedRegions.begin(); it != m_CurrentViewedCity->m_ClaimedRegions.end(); ++it) {
+
+		region = reinterpret_cast<MapTileRegion*>(*it);
+
+		for (auto iter = region->m_MapTileRegionTiles.begin(); iter != region->m_MapTileRegionTiles.end(); ++iter) {
+
+			entity = *iter;
+
+			// Layer4. Maptiles.
+			if (COMPARE_STRINGS(entity->m_IDCmp->m_DynamicTypeName, "MapTile") == 0) {
+
+				// Render map tile.
+
+				// Draw appropriate loaded sprite on position specified.
+				m_Game->DrawDecal(vi2d(entity->m_TransformCmp->m_PosX, entity->m_TransformCmp->m_PosY),
+					m_Game->m_SpriteResourceMap.at(entity->m_GraphicsCmp->m_SpriteName));
+
+			}
+
+		}
+	}
+
+
+
+	for (auto it = m_CurrentViewedCity->m_ClaimedRegions.begin(); it != m_CurrentViewedCity->m_ClaimedRegions.end(); ++it) {
+
+		region = reinterpret_cast<MapTileRegion*>(*it);
+
+		for (auto iter = region->m_MapTileRegionTiles.begin(); iter != region->m_MapTileRegionTiles.end(); ++iter) {
+
+			entity = *iter;
+			// Layer 3. Hills, Forests, Mountains, Rivers.
+			maptile = reinterpret_cast<MapTile*>(entity);
+			for (auto itr = maptile->m_MapTileEntities->begin(); itr != maptile->m_MapTileEntities->end(); ++itr) {
+
+				maptile_entt = *itr;
+
+				if (COMPARE_STRINGS(maptile_entt->m_IDCmp->m_DynamicTypeName, "Mountains") == 0) {
+
+					// Render...
+					// Draw appropriate loaded sprite on position specified.
+					m_Game->DrawDecal(vi2d(maptile_entt->m_TransformCmp->m_PosX, maptile_entt->m_TransformCmp->m_PosY),
+						m_Game->m_SpriteResourceMap.at(maptile_entt->m_GraphicsCmp->m_SpriteName));
+				}
+				if (COMPARE_STRINGS(maptile_entt->m_IDCmp->m_DynamicTypeName, "Hills") == 0) {
+
+					// Render...
+					// Draw appropriate loaded sprite on position specified.
+					m_Game->DrawDecal(vi2d(maptile_entt->m_TransformCmp->m_PosX, maptile_entt->m_TransformCmp->m_PosY),
+						m_Game->m_SpriteResourceMap.at(maptile_entt->m_GraphicsCmp->m_SpriteName));
+				}
+				if (COMPARE_STRINGS(maptile_entt->m_IDCmp->m_DynamicTypeName, "Forest") == 0) {
+
+					// Render...
+					// Draw appropriate loaded sprite on position specified.
+					m_Game->DrawDecal(vi2d(maptile_entt->m_TransformCmp->m_PosX, maptile_entt->m_TransformCmp->m_PosY),
+						m_Game->m_SpriteResourceMap.at(maptile_entt->m_GraphicsCmp->m_SpriteName));
+				}
+				if (COMPARE_STRINGS(maptile_entt->m_IDCmp->m_DynamicTypeName, "River") == 0) {
+
+					// Render...
+					// Draw appropriate loaded sprite on position specified.
+					m_Game->DrawDecal(vi2d(maptile_entt->m_TransformCmp->m_PosX, maptile_entt->m_TransformCmp->m_PosY),
+						m_Game->m_SpriteResourceMap.at(maptile_entt->m_GraphicsCmp->m_SpriteName));
+				}
+
+			}
+
+		}
+
+	}
+
+	/*
+	City* city = nullptr;
+	for (auto it = m_CurrentViewedCity->m_ClaimedRegions.begin(); it != m_CurrentViewedCity->m_ClaimedRegions.end(); ++it) {
+
+		region = reinterpret_cast<MapTileRegion*>(*it);
+
+		for (auto iter = region->m_MapTileRegionTiles.begin(); iter != region->m_MapTileRegionTiles.end(); ++iter) {
+
+			// Layer2. Cities and Improvements.
+
+			entity = *iter;
+			if (COMPARE_STRINGS(entity->m_IDCmp->m_DynamicTypeName, "City") == 0) {
+
+				city = reinterpret_cast<City*>(entity);
+
+				// Render...
+				m_Game->DrawDecal(vi2d(city->m_TransformCmp->m_PosX, city->m_TransformCmp->m_PosY),
+					m_Game->m_SpriteResourceMap.at(city->GetCurrentCitySprite()));
+			}
+
+
+		}
+	}
+	*/
+
+	for (auto it = m_CurrentViewedCity->m_ClaimedRegions.begin(); it != m_CurrentViewedCity->m_ClaimedRegions.end(); ++it) {
+
+		region = reinterpret_cast<MapTileRegion*>(*it);
+
+		for (auto iter = region->m_MapTileRegionTiles.begin(); iter != region->m_MapTileRegionTiles.end(); ++iter) {
+
+			entity = *iter;
+			// Layer2. Cities and Improvements.
+			maptile = reinterpret_cast<MapTile*>(entity);
+			for (auto itr = maptile->m_MapTileEntities->begin(); itr != maptile->m_MapTileEntities->end(); ++itr) {
+
+				maptile_entt = *itr;
+
+				if (COMPARE_STRINGS(maptile_entt->m_IDCmp->m_DynamicTypeName, "City") == 0) {
+
+					city = reinterpret_cast<City*>(maptile_entt);
+
+					// Render...
+					m_Game->DrawDecal(vi2d(city->m_TransformCmp->m_PosX, city->m_TransformCmp->m_PosY),
+						m_Game->m_SpriteResourceMap.at(city->GetCurrentCitySprite()));
+				}
+
+			}
+
+		}
+
+	}
+
+
+
+	// Later render cities citizens and other units ...
 
 
 

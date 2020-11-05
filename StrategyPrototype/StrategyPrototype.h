@@ -76,7 +76,13 @@ public:
 	Renderer(Game* g, Camera* cam) { m_Game = g; m_MainCam = cam; m_RenderMode = RenderMode::RENDERMODE_MAPVIEW; }
 
 
-	void ChangeRenderMode() { m_RenderMode = (m_RenderMode == RenderMode::RENDERMODE_CITYVIEW) ? RenderMode::RENDERMODE_MAPVIEW : RenderMode::RENDERMODE_CITYVIEW; }
+	void ChangeRenderMode() {
+		m_RenderMode = (m_RenderMode == RenderMode::RENDERMODE_CITYVIEW) ? RenderMode::RENDERMODE_MAPVIEW : RenderMode::RENDERMODE_CITYVIEW;
+	}
+
+	void SetCurrentViewedCity(City* opened_city){
+		m_CurrentViewedCity = opened_city;
+	}
 
 	// Should be the only public method for rendering.
 	void Render();
@@ -132,6 +138,8 @@ public:
 	int m_Layer1;
 
 	RenderMode m_RenderMode = RenderMode::RENDERMODE_INVALID;
+
+	City* m_CurrentViewedCity = nullptr;
 
 private:
 

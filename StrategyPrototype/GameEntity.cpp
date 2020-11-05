@@ -1417,6 +1417,39 @@ void City::_deriveCityLandscapeType() {
 	else {
 		m_CityLandscapeType = new CityLandscapeType(CityLandscapeType::CITY_LANDSCAPE_PLAIN);
 	}
+
+
+
+	// Check whether coastal city.
+	MapTile* m1, *m2, *m3, *m4;
+
+	m1 = GetMapTileAtWorldPosition(m_TransformCmp->m_GameWorldSpaceCell[0]+1, m_TransformCmp->m_GameWorldSpaceCell[1]);
+	m2 = GetMapTileAtWorldPosition(m_TransformCmp->m_GameWorldSpaceCell[0]-1, m_TransformCmp->m_GameWorldSpaceCell[1]);
+	m3 = GetMapTileAtWorldPosition(m_TransformCmp->m_GameWorldSpaceCell[0], m_TransformCmp->m_GameWorldSpaceCell[1]+1);
+	m4 = GetMapTileAtWorldPosition(m_TransformCmp->m_GameWorldSpaceCell[0], m_TransformCmp->m_GameWorldSpaceCell[1]-1);
+
+
+	if (m1) {
+		if (m1->m_MapTileType == MapTile::MapTileType::MAPTILE_TYPE_WATER_SHALLOW) {
+			m_CoastalCity = true;
+		}
+	}
+	if (m2) {
+		if (m2->m_MapTileType == MapTile::MapTileType::MAPTILE_TYPE_WATER_SHALLOW) {
+			m_CoastalCity = true;
+		}
+	}
+	if (m3) {
+		if (m3->m_MapTileType == MapTile::MapTileType::MAPTILE_TYPE_WATER_SHALLOW) {
+			m_CoastalCity = true;
+		}
+	}
+	if (m4) {
+		if (m4->m_MapTileType == MapTile::MapTileType::MAPTILE_TYPE_WATER_SHALLOW) {
+			m_CoastalCity = true;
+		}
+	}
+
 }
 
 
@@ -1479,7 +1512,7 @@ void City::_claimRegions() {
 			break;
 		}
 		break;
-	case CityType::CITY_TYPE_FORT:
+	case CityType::CITY_TYPE_FORT:// Test for castles, they claim only half of cities max regions. Till secondary...
 		switch (m_CitySizeClass) {
 		case CitySizeClass::CITY_SIZE_CLASS_SMALL:
 			_claimPrimaryRegions();
@@ -1491,12 +1524,12 @@ void City::_claimRegions() {
 		case CitySizeClass::CITY_SIZE_CLASS_BIG:
 			_claimPrimaryRegions();
 			_claimSecondaryRegions();
-			_claimTertiaryReions();
+			//_claimTertiaryReions();
 			break;
 		case CitySizeClass::CITY_SIZE_CLASS_HUGE:
 			_claimPrimaryRegions();
 			_claimSecondaryRegions();
-			_claimTertiaryReions();
+			//_claimTertiaryReions(); 
 			// Fort does not claim quartary tiles.
 			break;
 		default:
