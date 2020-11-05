@@ -1233,6 +1233,32 @@ void Game::_loadSpriteResources() {
 	m_SpriteResourceMap.insert(std::make_pair("city_human_normal_cityview", dcityview1));
 	*/
 
+
+
+	// Cityview Backgrounds.
+	Sprite* back1 = new Sprite("assets/background/city/background_city_forest_temperate.png");
+	Sprite* back2 = new Sprite("assets/background/city/background_city_orc_normal.png");
+	Sprite* back3 = new Sprite("assets/background/city/background_city_human_normal.png");
+	Sprite* back4 = new Sprite("assets/background/city/background_city_hills.png");
+
+
+
+	m_SpriteStorage.push_back(back1);
+	m_SpriteStorage.push_back(back2);
+	m_SpriteStorage.push_back(back3);
+	m_SpriteStorage.push_back(back4);
+
+	Decal* d_back1 = new Decal(back1);
+	Decal* d_back2 = new Decal(back2);
+	Decal* d_back3 = new Decal(back3);
+	Decal* d_back4 = new Decal(back4);
+
+	m_SpriteResourceMap.insert(std::make_pair("background_city_forest_temperate", d_back1));
+	m_SpriteResourceMap.insert(std::make_pair("background_city_orc_normal", d_back2));
+	m_SpriteResourceMap.insert(std::make_pair("background_city_human_normal", d_back3));
+	m_SpriteResourceMap.insert(std::make_pair("background_city_hills", d_back4));
+
+
 }
 
 
@@ -1468,21 +1494,6 @@ void Renderer::RenderCityLayer3() {
 
 	using namespace olc;
 
-
-
-
-	m_Game->EnableLayer(m_Layer3, true);
-	m_Game->SetDrawTarget(nullptr);
-}
-
-
-void Renderer::RenderCityLayer4() {
-
-	using namespace olc;
-
-	m_Game->SetDrawTarget(m_Layer4);
-	m_Game->Clear(olc::BLANK);
-
 	GameEntity* entity = nullptr;
 	MapTile* maptile = nullptr;
 	GameEntity* maptile_entt = nullptr;
@@ -1563,30 +1574,6 @@ void Renderer::RenderCityLayer4() {
 
 	}
 
-	/*
-	City* city = nullptr;
-	for (auto it = m_CurrentViewedCity->m_ClaimedRegions.begin(); it != m_CurrentViewedCity->m_ClaimedRegions.end(); ++it) {
-
-		region = reinterpret_cast<MapTileRegion*>(*it);
-
-		for (auto iter = region->m_MapTileRegionTiles.begin(); iter != region->m_MapTileRegionTiles.end(); ++iter) {
-
-			// Layer2. Cities and Improvements.
-
-			entity = *iter;
-			if (COMPARE_STRINGS(entity->m_IDCmp->m_DynamicTypeName, "City") == 0) {
-
-				city = reinterpret_cast<City*>(entity);
-
-				// Render...
-				m_Game->DrawDecal(vi2d(city->m_TransformCmp->m_PosX, city->m_TransformCmp->m_PosY),
-					m_Game->m_SpriteResourceMap.at(city->GetCurrentCitySprite()));
-			}
-
-
-		}
-	}
-	*/
 
 	for (auto it = m_CurrentViewedCity->m_ClaimedRegions.begin(); it != m_CurrentViewedCity->m_ClaimedRegions.end(); ++it) {
 
@@ -1622,6 +1609,34 @@ void Renderer::RenderCityLayer4() {
 
 
 
+	m_Game->EnableLayer(m_Layer3, true);
+	m_Game->SetDrawTarget(nullptr);
+}
+
+
+void Renderer::RenderCityLayer4() {
+
+	using namespace olc;
+
+	m_Game->SetDrawTarget(m_Layer4);
+	m_Game->Clear(olc::BLANK);
+
+
+	m_Game->FillRect(vi2d(2, 2), vi2d(700, 200), olc::DARK_CYAN);
+
+	m_Game->FillRect(vi2d(2, 202), vi2d(700, m_Game->ScreenHeight() - 6), olc::VERY_DARK_MAGENTA);
+
+	if (m_CurrentViewedCity->GetCityLandscapeType() == City::CityLandscapeType::CITY_LANDSCAPE_FOREST) {
+		m_Game->DrawDecal(vf2d(2, 2), m_Game->m_SpriteResourceMap.at("background_city_forest_temperate"));
+	}
+
+	if (m_CurrentViewedCity->GetCityLandscapeType() == City::CityLandscapeType::CITY_LANDSCAPE_HILLS) {
+		m_Game->DrawDecal(vf2d(2, 2), m_Game->m_SpriteResourceMap.at("background_city_hills"));
+	}
+
+	m_Game->DrawDecal(vf2d(2, 2), m_Game->m_SpriteResourceMap.at("background_city_orc_normal"));
+
+	m_Game->FillRect(vi2d(704, 2), vi2d(m_Game->ScreenWidth() - 700 - 6, m_Game->ScreenHeight() - 6), olc::VERY_DARK_GREEN);
 
 	m_Game->EnableLayer(m_Layer4, true);
 	m_Game->SetDrawTarget(nullptr);
