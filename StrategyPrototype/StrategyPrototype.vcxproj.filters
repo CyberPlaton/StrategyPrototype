@@ -28,12 +28,15 @@
     <ClCompile Include="Resources.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="GUI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OLCGameEngineInterface.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ColorConsole.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="OLCGameEngineInterface.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="olcPixelGameEngine.h">
@@ -59,6 +62,9 @@
     </ClInclude>
     <ClInclude Include="resource.h">
       <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

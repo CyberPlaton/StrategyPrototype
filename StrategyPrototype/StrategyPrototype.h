@@ -1,9 +1,10 @@
 #pragma once
-#include"OLCGameEngineInterface.h"
+#include"olcPixelGameEngine.h"
 #include"Platform.h"
 #include"ColorConsole.h"
 #include"GameEntity.h"
 #include"Resources.h"
+#include"GUI.h"
 
 
 
@@ -155,6 +156,17 @@ class Game : public olc::PixelGameEngine {
 public:
 	Game() {
 		sAppName = "StrategyPrototype";
+		m_Game = this;
+	}
+
+	static Game* Get() {
+		if (m_Game) {
+			return m_Game;
+		}
+		else {
+			m_Game = new Game();
+			return m_Game;
+		}
 	}
 
 	bool OnUserCreate() override;
@@ -190,6 +202,9 @@ public:
 	int m_TurnCount = 1;
 
 	TimeCounter* m_TimeCounter = nullptr;
+private:
+	static Game* m_Game;
+
 private:
 
 	void _initialize();

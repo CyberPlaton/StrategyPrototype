@@ -1,7 +1,18 @@
 #include"StrategyPrototype.h"
 
+Game* Game::m_Game = nullptr;
 static olc::vf2d g_vi2dCameraPosition = olc::vf2d(0.0f, 0.0f);
 static int ColorValue = 0;
+
+
+int helper::CurrentMousePosX() {
+	return Game::Get()->GetMouseX();
+}
+
+
+int helper::CurrentMousePosY() {
+	return Game::Get()->GetMouseY();
+}
 
 
 River* MakeNewRiver(std::string spritename, int x_cell_pos, int y_cell_pos) {
