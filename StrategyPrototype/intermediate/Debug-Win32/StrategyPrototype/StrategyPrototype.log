@@ -1,3 +1,36 @@
 ﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(476,5): warning MSB8004: Intermediate Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Intermediate Directory.
 C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(477,5): warning MSB8004: Output Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Output Directory.
+  StrategyPrototype.cpp
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\GameEntity.h(104,21): warning C4099: 'MapRessource': type name first seen using 'class' now seen using 'struct'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\GameEntity.h(104): message : see declaration of 'MapRessource'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(1657,55): warning C4244: 'argument': conversion from 'float' to 'uint32_t', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(1662,59): warning C4244: 'argument': conversion from 'float' to 'uint32_t', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(1675,46): warning C4244: 'argument': conversion from 'float' to 'uint32_t', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(1678,53): warning C4244: 'argument': conversion from 'float' to 'uint32_t', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(1682,53): warning C4244: 'argument': conversion from 'float' to 'uint32_t', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(1686,58): warning C4244: 'argument': conversion from 'float' to 'uint32_t', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(1690,57): warning C4244: 'argument': conversion from 'float' to 'uint32_t', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(1700,58): warning C4244: 'argument': conversion from 'float' to 'uint32_t', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(1711,58): warning C4244: 'argument': conversion from 'float' to 'uint32_t', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(1729,96): warning C4244: 'argument': conversion from 'float' to 'uint32_t', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(1733,106): warning C4244: 'argument': conversion from 'float' to 'uint32_t', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(1737,108): warning C4244: 'argument': conversion from 'float' to 'uint32_t', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(1745,110): warning C4244: 'argument': conversion from 'float' to 'uint32_t', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(1755,55): warning C4244: 'argument': conversion from 'float' to 'uint32_t', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(2304,16): warning C4101: 'err': unreferenced local variable
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(85): warning C4715: 'GetPlayer': not all control paths return a value
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(231): warning C4715: 'Game::RandomColor': not all control paths return a value
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(211): warning C4172: returning address of local variable or temporary
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(214): warning C4172: returning address of local variable or temporary
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(217): warning C4172: returning address of local variable or temporary
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(220): warning C4172: returning address of local variable or temporary
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(223): warning C4172: returning address of local variable or temporary
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(226): warning C4172: returning address of local variable or temporary
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\Components.h(162): warning C4715: 'CMPArtificialIntelligence::TryExecuteStateLogic': not all control paths return a value
+  LINK : C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\\StrategyPrototype\bin\Debug-Win32\StrategyPrototype\StrategyPrototype.exe not found or not built by the last incremental link; performing full link
+Resources.obj : warning LNK4099: PDB 'vc142.pdb' was not found with 'Resources.obj' or at 'C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\bin\Debug-Win32\StrategyPrototype\vc142.pdb'; linking object as if no debug info
+Platform.obj : warning LNK4099: PDB 'vc142.pdb' was not found with 'Platform.obj' or at 'C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\bin\Debug-Win32\StrategyPrototype\vc142.pdb'; linking object as if no debug info
+GameEntity.obj : warning LNK4099: PDB 'vc142.pdb' was not found with 'GameEntity.obj' or at 'C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\bin\Debug-Win32\StrategyPrototype\vc142.pdb'; linking object as if no debug info
+FiniteStateMachine.obj : warning LNK4099: PDB 'vc142.pdb' was not found with 'FiniteStateMachine.obj' or at 'C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\bin\Debug-Win32\StrategyPrototype\vc142.pdb'; linking object as if no debug info
+Components.obj : warning LNK4099: PDB 'vc142.pdb' was not found with 'Components.obj' or at 'C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\bin\Debug-Win32\StrategyPrototype\vc142.pdb'; linking object as if no debug info
   StrategyPrototype.vcxproj -> C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\\StrategyPrototype\bin\Debug-Win32\StrategyPrototype\StrategyPrototype.exe

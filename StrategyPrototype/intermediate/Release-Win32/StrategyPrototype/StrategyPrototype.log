@@ -1,18 +1,905 @@
 ﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(476,5): warning MSB8004: Intermediate Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Intermediate Directory.
 C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(477,5): warning MSB8004: Output Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Output Directory.
   Components.cpp
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(749,63): warning C4838: conversion from 'int' to 'float' requires a narrowing conversion
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(749,63): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(750,75): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(816,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(817,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(874,31): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(874,29): warning C4244: 'initializing': conversion from 'float' to 'const int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(876,29): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(876,27): warning C4244: 'initializing': conversion from 'float' to 'const int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(907,53): warning C4244: '=': conversion from 'const int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(908,53): warning C4244: '=': conversion from 'const int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(909,51): warning C4244: '=': conversion from 'const int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(910,51): warning C4244: '=': conversion from 'const int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(924,146): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(925,58): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(925,23): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(932,150): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(933,56): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(933,23): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(940,162): warning C4838: conversion from 'int' to 'float' requires a narrowing conversion
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(940,162): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(940,190): warning C4838: conversion from 'int' to 'float' requires a narrowing conversion
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(940,190): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(945,116): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1011,94): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1011,61): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1011,19): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1012,50): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1163,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1164,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1403,40): warning C4838: conversion from 'int' to 'float' requires a narrowing conversion
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1403,40): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1423,30): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1515,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1516,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1593,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1594,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1619,30): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1713,67): warning C4838: conversion from 'int' to 'float' requires a narrowing conversion
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1713,67): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1735,109): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1735,76): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1829,92): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1829,59): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1849,24): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1854,24): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1873,59): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1906,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1907,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1917,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1918,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1952,88): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1967,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1968,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1978,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1979,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2040,40): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2040,27): warning C4244: 'initializing': conversion from 'float' to 'const int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2066,34): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2073,34): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2088,23): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2103,177): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2108,180): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2198,36): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2202,22): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2240,31): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2309,52): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2390,179): warning C4838: conversion from 'int' to 'float' requires a narrowing conversion
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2390,179): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2390,226): warning C4838: conversion from 'int' to 'float' requires a narrowing conversion
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2390,226): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2448,21): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2449,21): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2520,175): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2520,106): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2520,41): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2521,198): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2521,129): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2521,41): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2522,202): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2522,133): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2522,41): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2523,202): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2523,133): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2523,41): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2524,202): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2524,133): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2524,41): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2525,202): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2525,133): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2525,41): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2527,73): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2527,59): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2527,49): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2527,39): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2580,67): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2635,28): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2640,71): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2709,60): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2710,60): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3196,126): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3196,93): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3328,89): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3328,56): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3339,51): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3339,40): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3339,33): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3339,26): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3345,40): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3345,33): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3345,26): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3346,75): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3346,36): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3346,26): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3347,101): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3347,62): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3347,41): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3348,67): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3348,49): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3348,26): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3363,107): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3363,74): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\um\winuser.h(4511,1): error C2733: 'UnhideWindow': you cannot overload a function with 'extern "C"' linkage
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raylib-master\raylib-master\src\raylib.h(896,12): message : see declaration of 'UnhideWindow'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\um\winuser.h(4709,1): error C2733: 'CloseWindow': you cannot overload a function with 'extern "C"' linkage
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raylib-master\raylib-master\src\raylib.h(887,12): message : see declaration of 'CloseWindow'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\um\winuser.h(9301,1): error C2733: 'ShowCursor': you cannot overload a function with 'extern "C"' linkage
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raylib-master\raylib-master\src\raylib.h(925,12): message : see declaration of 'ShowCursor'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(28,9): error C2143: syntax error: missing '}' before '{'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(28,9): error C2059: syntax error: '{'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(28,9): error C2143: syntax error: missing ';' before '{'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(28,9): error C2447: '{': missing function header (old-style formal list?)
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(28,15): error C2059: syntax error: '='
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(29,9): error C2143: syntax error: missing ';' before '{'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(29,9): error C2447: '{': missing function header (old-style formal list?)
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(29,18): error C2059: syntax error: '='
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(30,9): error C2143: syntax error: missing ';' before '{'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(30,9): error C2447: '{': missing function header (old-style formal list?)
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(30,19): error C2059: syntax error: '='
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(35,9): error C2143: syntax error: missing ';' before '{'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(35,9): error C2447: '{': missing function header (old-style formal list?)
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(35,18): error C2059: syntax error: '='
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(36,9): error C2143: syntax error: missing ';' before '{'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(36,9): error C2447: '{': missing function header (old-style formal list?)
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(36,14): error C2059: syntax error: '='
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(37,9): error C2143: syntax error: missing ';' before '{'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(37,9): error C2447: '{': missing function header (old-style formal list?)
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(37,14): error C2059: syntax error: '='
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(38,9): error C2143: syntax error: missing ';' before '{'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(38,9): error C2447: '{': missing function header (old-style formal list?)
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(38,15): error C2059: syntax error: '='
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(40,9): error C2143: syntax error: missing ';' before '{'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(40,9): error C2447: '{': missing function header (old-style formal list?)
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(40,13): error C2059: syntax error: '='
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(41,9): error C2143: syntax error: missing ';' before '{'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(41,9): error C2447: '{': missing function header (old-style formal list?)
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(41,17): error C2059: syntax error: '='
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(42,9): error C2143: syntax error: missing ';' before '{'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(42,9): error C2447: '{': missing function header (old-style formal list?)
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(42,16): error C2059: syntax error: '='
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(43,9): error C2143: syntax error: missing ';' before '{'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(43,9): error C2447: '{': missing function header (old-style formal list?)
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(43,15): error C2059: syntax error: '='
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(44,5): error C2143: syntax error: missing ';' before '}'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(45,1): error C2059: syntax error: '}'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(45,1): error C2143: syntax error: missing ';' before '}'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(49,1): error C2143: syntax error: missing ';' before '{'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(49,1): error C2447: '{': missing function header (old-style formal list?)
   FiniteStateMachine.cpp
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(749,63): warning C4838: conversion from 'int' to 'float' requires a narrowing conversion
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(749,63): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(750,75): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(816,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(817,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(874,31): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(874,29): warning C4244: 'initializing': conversion from 'float' to 'const int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(876,29): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(876,27): warning C4244: 'initializing': conversion from 'float' to 'const int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(907,53): warning C4244: '=': conversion from 'const int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(908,53): warning C4244: '=': conversion from 'const int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(909,51): warning C4244: '=': conversion from 'const int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(910,51): warning C4244: '=': conversion from 'const int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(924,146): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(925,58): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(925,23): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(932,150): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(933,56): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(933,23): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(940,162): warning C4838: conversion from 'int' to 'float' requires a narrowing conversion
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(940,162): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(940,190): warning C4838: conversion from 'int' to 'float' requires a narrowing conversion
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(940,190): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(945,116): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1011,94): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1011,61): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1011,19): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1012,50): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1163,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1164,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1403,40): warning C4838: conversion from 'int' to 'float' requires a narrowing conversion
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1403,40): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1423,30): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1515,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1516,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1593,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1594,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1619,30): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1713,67): warning C4838: conversion from 'int' to 'float' requires a narrowing conversion
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1713,67): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1735,109): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1735,76): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1829,92): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1829,59): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1849,24): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1854,24): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1873,59): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1906,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1907,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1917,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1918,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1952,88): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1967,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1968,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1978,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1979,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2040,40): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2040,27): warning C4244: 'initializing': conversion from 'float' to 'const int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2066,34): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2073,34): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2088,23): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2103,177): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2108,180): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2198,36): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2202,22): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2240,31): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2309,52): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2390,179): warning C4838: conversion from 'int' to 'float' requires a narrowing conversion
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2390,179): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2390,226): warning C4838: conversion from 'int' to 'float' requires a narrowing conversion
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2390,226): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2448,21): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2449,21): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2520,175): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2520,106): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2520,41): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2521,198): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2521,129): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2521,41): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2522,202): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2522,133): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2522,41): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2523,202): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2523,133): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2523,41): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2524,202): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2524,133): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2524,41): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2525,202): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2525,133): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2525,41): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2527,73): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2527,59): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2527,49): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2527,39): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2580,67): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2635,28): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2640,71): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2709,60): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2710,60): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3196,126): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3196,93): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3328,89): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3328,56): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3339,51): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3339,40): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3339,33): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3339,26): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3345,40): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3345,33): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3345,26): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3346,75): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3346,36): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3346,26): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3347,101): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3347,62): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3347,41): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3348,67): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3348,49): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3348,26): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3363,107): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3363,74): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   GameEntity.cpp
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(749,63): warning C4838: conversion from 'int' to 'float' requires a narrowing conversion
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(749,63): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(750,75): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(816,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(817,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(874,31): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(874,29): warning C4244: 'initializing': conversion from 'float' to 'const int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(876,29): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(876,27): warning C4244: 'initializing': conversion from 'float' to 'const int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(907,53): warning C4244: '=': conversion from 'const int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(908,53): warning C4244: '=': conversion from 'const int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(909,51): warning C4244: '=': conversion from 'const int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(910,51): warning C4244: '=': conversion from 'const int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(924,146): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(925,58): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(925,23): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(932,150): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(933,56): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(933,23): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(940,162): warning C4838: conversion from 'int' to 'float' requires a narrowing conversion
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(940,162): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(940,190): warning C4838: conversion from 'int' to 'float' requires a narrowing conversion
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(940,190): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(945,116): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1011,94): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1011,61): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1011,19): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1012,50): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1163,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1164,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1403,40): warning C4838: conversion from 'int' to 'float' requires a narrowing conversion
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1403,40): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1423,30): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1515,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1516,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1593,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1594,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1619,30): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1713,67): warning C4838: conversion from 'int' to 'float' requires a narrowing conversion
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1713,67): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1735,109): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1735,76): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1829,92): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1829,59): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1849,24): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1854,24): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1873,59): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1906,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1907,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1917,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1918,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1952,88): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1967,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1968,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1978,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1979,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2040,40): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2040,27): warning C4244: 'initializing': conversion from 'float' to 'const int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2066,34): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2073,34): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2088,23): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2103,177): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2108,180): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2198,36): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2202,22): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2240,31): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2309,52): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2390,179): warning C4838: conversion from 'int' to 'float' requires a narrowing conversion
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2390,179): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2390,226): warning C4838: conversion from 'int' to 'float' requires a narrowing conversion
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2390,226): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2448,21): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2449,21): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2520,175): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2520,106): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2520,41): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2521,198): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2521,129): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2521,41): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2522,202): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2522,133): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2522,41): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2523,202): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2523,133): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2523,41): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2524,202): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2524,133): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2524,41): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2525,202): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2525,133): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2525,41): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2527,73): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2527,59): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2527,49): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2527,39): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2580,67): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2635,28): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2640,71): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2709,60): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2710,60): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3196,126): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3196,93): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3328,89): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3328,56): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3339,51): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3339,40): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3339,33): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3339,26): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3345,40): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3345,33): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3345,26): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3346,75): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3346,36): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3346,26): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3347,101): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3347,62): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3347,41): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3348,67): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3348,49): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3348,26): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3363,107): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3363,74): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\um\winuser.h(4511,1): error C2733: 'UnhideWindow': you cannot overload a function with 'extern "C"' linkage
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raylib-master\raylib-master\src\raylib.h(896,12): message : see declaration of 'UnhideWindow'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\um\winuser.h(4709,1): error C2733: 'CloseWindow': you cannot overload a function with 'extern "C"' linkage
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raylib-master\raylib-master\src\raylib.h(887,12): message : see declaration of 'CloseWindow'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\um\winuser.h(9301,1): error C2733: 'ShowCursor': you cannot overload a function with 'extern "C"' linkage
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raylib-master\raylib-master\src\raylib.h(925,12): message : see declaration of 'ShowCursor'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(28,9): error C2143: syntax error: missing '}' before '{'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(28,9): error C2059: syntax error: '{'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(28,9): error C2143: syntax error: missing ';' before '{'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(28,9): error C2447: '{': missing function header (old-style formal list?)
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(28,15): error C2059: syntax error: '='
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(29,9): error C2143: syntax error: missing ';' before '{'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(29,9): error C2447: '{': missing function header (old-style formal list?)
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(29,18): error C2059: syntax error: '='
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(30,9): error C2143: syntax error: missing ';' before '{'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(30,9): error C2447: '{': missing function header (old-style formal list?)
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(30,19): error C2059: syntax error: '='
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(35,9): error C2143: syntax error: missing ';' before '{'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(35,9): error C2447: '{': missing function header (old-style formal list?)
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(35,18): error C2059: syntax error: '='
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(36,9): error C2143: syntax error: missing ';' before '{'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(36,9): error C2447: '{': missing function header (old-style formal list?)
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(36,14): error C2059: syntax error: '='
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(37,9): error C2143: syntax error: missing ';' before '{'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(37,9): error C2447: '{': missing function header (old-style formal list?)
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(37,14): error C2059: syntax error: '='
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(38,9): error C2143: syntax error: missing ';' before '{'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(38,9): error C2447: '{': missing function header (old-style formal list?)
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(38,15): error C2059: syntax error: '='
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(40,9): error C2143: syntax error: missing ';' before '{'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(40,9): error C2447: '{': missing function header (old-style formal list?)
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(40,13): error C2059: syntax error: '='
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(41,9): error C2143: syntax error: missing ';' before '{'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(41,9): error C2447: '{': missing function header (old-style formal list?)
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(41,17): error C2059: syntax error: '='
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(42,9): error C2143: syntax error: missing ';' before '{'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(42,9): error C2447: '{': missing function header (old-style formal list?)
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(42,16): error C2059: syntax error: '='
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(43,9): error C2143: syntax error: missing ';' before '{'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(43,9): error C2447: '{': missing function header (old-style formal list?)
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(43,15): error C2059: syntax error: '='
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(44,5): error C2143: syntax error: missing ';' before '}'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(45,1): error C2059: syntax error: '}'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(45,1): error C2143: syntax error: missing ';' before '}'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(49,1): error C2143: syntax error: missing ';' before '{'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(49,1): error C2447: '{': missing function header (old-style formal list?)
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\GameEntity.h(104,21): warning C4099: 'MapRessource': type name first seen using 'class' now seen using 'struct'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\GameEntity.h(104): message : see declaration of 'MapRessource'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\GameEntity.cpp(257,28): error C2064: term does not evaluate to a function taking 1 arguments
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\GameEntity.cpp(257,35): error C2512: 'color': no appropriate default constructor available
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\GameEntity.cpp(257,35): message : No constructor could take the source type, or constructor overload resolution was ambiguous
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\GameEntity.cpp(276,28): error C2064: term does not evaluate to a function taking 1 arguments
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\GameEntity.cpp(276,35): error C2512: 'color': no appropriate default constructor available
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\GameEntity.cpp(276,35): message : No constructor could take the source type, or constructor overload resolution was ambiguous
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\GameEntity.cpp(338,29): error C2064: term does not evaluate to a function taking 1 arguments
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\GameEntity.cpp(338,36): error C2512: 'color': no appropriate default constructor available
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\GameEntity.cpp(338,36): message : No constructor could take the source type, or constructor overload resolution was ambiguous
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\GameEntity.cpp(357,29): error C2064: term does not evaluate to a function taking 1 arguments
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\GameEntity.cpp(357,36): error C2512: 'color': no appropriate default constructor available
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\GameEntity.cpp(357,36): message : No constructor could take the source type, or constructor overload resolution was ambiguous
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\GameEntity.cpp(359,29): error C2039: 'CYAN': is not a member of 'colors'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(26): message : see declaration of 'colors'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\GameEntity.cpp(359,33): error C2065: 'CYAN': undeclared identifier
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\GameEntity.cpp(377,29): error C2064: term does not evaluate to a function taking 1 arguments
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\GameEntity.cpp(377,36): error C2512: 'color': no appropriate default constructor available
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\GameEntity.cpp(377,36): message : No constructor could take the source type, or constructor overload resolution was ambiguous
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\GameEntity.cpp(396,29): error C2064: term does not evaluate to a function taking 1 arguments
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\GameEntity.cpp(396,36): error C2512: 'color': no appropriate default constructor available
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\GameEntity.cpp(396,36): message : No constructor could take the source type, or constructor overload resolution was ambiguous
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\GameEntity.cpp(399,29): error C2039: 'CYAN': is not a member of 'colors'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(26): message : see declaration of 'colors'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\GameEntity.cpp(399,33): error C2065: 'CYAN': undeclared identifier
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\GameEntity.cpp(417,29): error C2064: term does not evaluate to a function taking 1 arguments
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\GameEntity.cpp(417,36): error C2512: 'color': no appropriate default constructor available
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\GameEntity.cpp(417,36): message : No constructor could take the source type, or constructor overload resolution was ambiguous
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\GameEntity.cpp(436,29): error C2064: term does not evaluate to a function taking 1 arguments
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\GameEntity.cpp(436,36): error C2512: 'color': no appropriate default constructor available
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\GameEntity.cpp(436,36): message : No constructor could take the source type, or constructor overload resolution was ambiguous
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\GameEntity.cpp(439,29): error C2039: 'CYAN': is not a member of 'colors'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(26): message : see declaration of 'colors'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\GameEntity.cpp(439,33): error C2065: 'CYAN': undeclared identifier
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\GameEntity.cpp(457,29): error C2064: term does not evaluate to a function taking 1 arguments
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\GameEntity.cpp(457,36): error C2512: 'color': no appropriate default constructor available
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\GameEntity.cpp(457,36): message : No constructor could take the source type, or constructor overload resolution was ambiguous
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\GameEntity.cpp(476,29): error C2064: term does not evaluate to a function taking 1 arguments
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\GameEntity.cpp(476,36): error C2512: 'color': no appropriate default constructor available
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\GameEntity.cpp(476,36): message : No constructor could take the source type, or constructor overload resolution was ambiguous
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\GameEntity.cpp(479,29): error C2039: 'CYAN': is not a member of 'colors'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(26): message : see declaration of 'colors'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\GameEntity.cpp(479,33): error C2065: 'CYAN': undeclared identifier
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\GameEntity.cpp(495,29): error C2064: term does not evaluate to a function taking 1 arguments
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\GameEntity.cpp(495,36): error C2512: 'color': no appropriate default constructor available
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\GameEntity.cpp(495,36): message : No constructor could take the source type, or constructor overload resolution was ambiguous
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\GameEntity.cpp(514,29): error C2064: term does not evaluate to a function taking 1 arguments
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\GameEntity.cpp(514,36): error C2512: 'color': no appropriate default constructor available
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\GameEntity.cpp(514,36): message : No constructor could take the source type, or constructor overload resolution was ambiguous
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\GameEntity.cpp(517,29): error C2039: 'CYAN': is not a member of 'colors'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(26): message : see declaration of 'colors'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\GameEntity.cpp(517,33): error C2065: 'CYAN': undeclared identifier
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\GameEntity.cpp(534,29): error C2064: term does not evaluate to a function taking 1 arguments
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\GameEntity.cpp(534,36): error C2512: 'color': no appropriate default constructor available
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\GameEntity.cpp(534,36): message : No constructor could take the source type, or constructor overload resolution was ambiguous
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\GameEntity.cpp(553,29): error C2064: term does not evaluate to a function taking 1 arguments
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\GameEntity.cpp(553,36): error C2512: 'color': no appropriate default constructor available
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\GameEntity.cpp(553,36): message : No constructor could take the source type, or constructor overload resolution was ambiguous
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\GameEntity.cpp(556,29): error C2039: 'CYAN': is not a member of 'colors'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(26): message : see declaration of 'colors'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\GameEntity.cpp(556,33): error C2065: 'CYAN': undeclared identifier
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\GameEntity.cpp(570,29): error C2064: term does not evaluate to a function taking 1 arguments
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\GameEntity.cpp(570,36): error C2512: 'color': no appropriate default constructor available
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\GameEntity.cpp(570,36): message : No constructor could take the source type, or constructor overload resolution was ambiguous
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\GameEntity.cpp(589,29): error C2064: term does not evaluate to a function taking 1 arguments
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\GameEntity.cpp(589,36): error C2512: 'color': no appropriate default constructor available
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\GameEntity.cpp(589,36): message : No constructor could take the source type, or constructor overload resolution was ambiguous
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\GameEntity.cpp(592,29): error C2039: 'CYAN': is not a member of 'colors'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ColorConsole.h(26): message : see declaration of 'colors'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\GameEntity.cpp(592,33): error C2065: 'CYAN': undeclared identifier
   Platform.cpp
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(749,63): warning C4838: conversion from 'int' to 'float' requires a narrowing conversion
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(749,63): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(750,75): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(816,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(817,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(874,31): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(874,29): warning C4244: 'initializing': conversion from 'float' to 'const int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(876,29): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(876,27): warning C4244: 'initializing': conversion from 'float' to 'const int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(907,53): warning C4244: '=': conversion from 'const int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(908,53): warning C4244: '=': conversion from 'const int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(909,51): warning C4244: '=': conversion from 'const int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(910,51): warning C4244: '=': conversion from 'const int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(924,146): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(925,58): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(925,23): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(932,150): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(933,56): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(933,23): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(940,162): warning C4838: conversion from 'int' to 'float' requires a narrowing conversion
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(940,162): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(940,190): warning C4838: conversion from 'int' to 'float' requires a narrowing conversion
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(940,190): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(945,116): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1011,94): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1011,61): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1011,19): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1012,50): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1163,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1164,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1403,40): warning C4838: conversion from 'int' to 'float' requires a narrowing conversion
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1403,40): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1423,30): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1515,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1516,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1593,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1594,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1619,30): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1713,67): warning C4838: conversion from 'int' to 'float' requires a narrowing conversion
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1713,67): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1735,109): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1735,76): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1829,92): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1829,59): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1849,24): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1854,24): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1873,59): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1906,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1907,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1917,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1918,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1952,88): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1967,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1968,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1978,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1979,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2040,40): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2040,27): warning C4244: 'initializing': conversion from 'float' to 'const int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2066,34): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2073,34): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2088,23): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2103,177): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2108,180): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2198,36): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2202,22): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2240,31): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2309,52): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2390,179): warning C4838: conversion from 'int' to 'float' requires a narrowing conversion
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2390,179): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2390,226): warning C4838: conversion from 'int' to 'float' requires a narrowing conversion
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2390,226): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2448,21): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2449,21): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2520,175): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2520,106): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2520,41): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2521,198): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2521,129): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2521,41): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2522,202): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2522,133): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2522,41): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2523,202): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2523,133): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2523,41): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2524,202): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2524,133): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2524,41): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2525,202): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2525,133): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2525,41): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2527,73): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2527,59): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2527,49): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2527,39): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2580,67): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2635,28): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2640,71): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2709,60): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2710,60): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3196,126): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3196,93): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3328,89): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3328,56): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3339,51): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3339,40): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3339,33): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3339,26): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3345,40): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3345,33): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3345,26): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3346,75): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3346,36): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3346,26): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3347,101): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3347,62): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3347,41): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3348,67): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3348,49): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3348,26): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3363,107): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3363,74): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   Resources.cpp
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(749,63): warning C4838: conversion from 'int' to 'float' requires a narrowing conversion
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(749,63): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(750,75): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(816,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(817,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(874,31): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(874,29): warning C4244: 'initializing': conversion from 'float' to 'const int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(876,29): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(876,27): warning C4244: 'initializing': conversion from 'float' to 'const int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(907,53): warning C4244: '=': conversion from 'const int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(908,53): warning C4244: '=': conversion from 'const int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(909,51): warning C4244: '=': conversion from 'const int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(910,51): warning C4244: '=': conversion from 'const int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(924,146): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(925,58): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(925,23): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(932,150): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(933,56): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(933,23): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(940,162): warning C4838: conversion from 'int' to 'float' requires a narrowing conversion
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(940,162): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(940,190): warning C4838: conversion from 'int' to 'float' requires a narrowing conversion
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(940,190): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(945,116): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1011,94): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1011,61): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1011,19): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1012,50): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1163,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1164,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1403,40): warning C4838: conversion from 'int' to 'float' requires a narrowing conversion
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1403,40): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1423,30): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1515,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1516,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1593,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1594,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1619,30): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1713,67): warning C4838: conversion from 'int' to 'float' requires a narrowing conversion
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1713,67): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1735,109): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1735,76): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1829,92): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1829,59): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1849,24): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1854,24): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1873,59): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1906,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1907,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1917,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1918,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1952,88): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1967,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1968,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1978,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(1979,40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2040,40): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2040,27): warning C4244: 'initializing': conversion from 'float' to 'const int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2066,34): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2073,34): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2088,23): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2103,177): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2108,180): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2198,36): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2202,22): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2240,31): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2309,52): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2390,179): warning C4838: conversion from 'int' to 'float' requires a narrowing conversion
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2390,179): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2390,226): warning C4838: conversion from 'int' to 'float' requires a narrowing conversion
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2390,226): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2448,21): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2449,21): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2520,175): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2520,106): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2520,41): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2521,198): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2521,129): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2521,41): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2522,202): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2522,133): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2522,41): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2523,202): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2523,133): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2523,41): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2524,202): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2524,133): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2524,41): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2525,202): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2525,133): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2525,41): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2527,73): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2527,59): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2527,49): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2527,39): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2580,67): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2635,28): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2640,71): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2709,60): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(2710,60): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3196,126): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3196,93): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3328,89): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3328,56): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3339,51): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3339,40): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3339,33): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3339,26): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3345,40): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3345,33): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3345,26): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3346,75): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3346,36): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3346,26): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3347,101): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3347,62): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3347,41): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3348,67): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3348,49): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3348,26): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3363,107): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(3363,74): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   StrategyPrototype.cpp
-C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(274,45): warning C4244: 'argument': conversion from 'float' to 'uint32_t', possible loss of data
-C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(286,96): warning C4244: 'argument': conversion from 'float' to 'uint32_t', possible loss of data
-C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(290,104): warning C4244: 'argument': conversion from 'float' to 'uint32_t', possible loss of data
-  Generating code
-C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\Components.h(131): warning C4715: 'CMPArtificialIntelligence::TryExecuteStateLogic': not all control paths return a value
-  433 of 1471 functions (29.4%) were compiled, the rest were copied from previous compilation.
-    190 functions were new in current compilation
-    146 functions had inline decision re-evaluated but remain unchanged
-  Finished generating code
-  StrategyPrototype.vcxproj -> C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\\StrategyPrototype\bin\Release-Win32\StrategyPrototype\StrategyPrototype.exe
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raylib-master\raylib-master\src\raylib.h(219,3): error C2365: 'Rectangle': redefinition; previous definition was 'function'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\um\wingdi.h(4515): message : see declaration of 'Rectangle'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raylib-master\raylib-master\src\raylib.h(259,24): error C3646: 'sourceRec': unknown override specifier
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raylib-master\raylib-master\src\raylib.h(259,24): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raylib-master\raylib-master\src\raylib.h(281,15): error C2143: syntax error: missing ';' before '*'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raylib-master\raylib-master\src\raylib.h(281,15): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raylib-master\raylib-master\src\raylib.h(281,20): error C2238: unexpected token(s) preceding ';'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raylib-master\raylib-master\src\raylib.h(887,12): error C2733: 'CloseWindow': you cannot overload a function with 'extern "C"' linkage
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\um\winuser.h(4709,1): message : see declaration of 'CloseWindow'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raylib-master\raylib-master\src\raylib.h(925,12): error C2733: 'ShowCursor': you cannot overload a function with 'extern "C"' linkage
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\um\winuser.h(9301,1): message : see declaration of 'ShowCursor'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raylib-master\raylib-master\src\raylib.h(1094,39): error C2146: syntax error: missing ')' before identifier 'rec'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raylib-master\raylib-master\src\raylib.h(1095,39): error C2146: syntax error: missing ')' before identifier 'rec'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raylib-master\raylib-master\src\raylib.h(1098,46): error C2146: syntax error: missing ')' before identifier 'rec'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raylib-master\raylib-master\src\raylib.h(1100,43): error C2146: syntax error: missing ')' before identifier 'rec'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raylib-master\raylib-master\src\raylib.h(1101,43): error C2146: syntax error: missing ')' before identifier 'rec'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raylib-master\raylib-master\src\raylib.h(1102,48): error C2146: syntax error: missing ')' before identifier 'rec'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raylib-master\raylib-master\src\raylib.h(1111,41): error C2146: syntax error: missing ')' before identifier 'rec1'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raylib-master\raylib-master\src\raylib.h(1113,76): error C2061: syntax error: identifier 'Rectangle'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raylib-master\raylib-master\src\raylib.h(1114,32): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raylib-master\raylib-master\src\raylib.h(1114,7): error C2365: 'Rectangle': redefinition; previous definition was 'function'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\um\wingdi.h(4515): message : see declaration of 'Rectangle'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raylib-master\raylib-master\src\raylib.h(1114,17): error C2146: syntax error: missing ';' before identifier 'GetCollisionRec'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raylib-master\raylib-master\src\raylib.h(1115,60): error C2061: syntax error: identifier 'Rectangle'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raylib-master\raylib-master\src\raylib.h(1125,13): error C2733: 'LoadImageW': you cannot overload a function with 'extern "C"' linkage
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\um\winuser.h(10815,1): message : see declaration of 'LoadImageW'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raylib-master\raylib-master\src\raylib.h(1145,51): error C2061: syntax error: identifier 'Rectangle'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raylib-master\raylib-master\src\raylib.h(1150,46): error C2061: syntax error: identifier 'Rectangle'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raylib-master\raylib-master\src\raylib.h(1174,36): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raylib-master\raylib-master\src\raylib.h(1174,7): error C2365: 'Rectangle': redefinition; previous definition was 'function'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\um\wingdi.h(4515): message : see declaration of 'Rectangle'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raylib-master\raylib-master\src\raylib.h(1174,17): error C2146: syntax error: missing ';' before identifier 'GetImageAlphaBorder'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raylib-master\raylib-master\src\raylib.h(1187,56): error C2061: syntax error: identifier 'Rectangle'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raylib-master\raylib-master\src\raylib.h(1188,58): error C2061: syntax error: identifier 'Rectangle'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raylib-master\raylib-master\src\raylib.h(1189,55): error C2061: syntax error: identifier 'Rectangle'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raylib-master\raylib-master\src\raylib.h(1202,58): error C2061: syntax error: identifier 'Rectangle'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raylib-master\raylib-master\src\raylib.h(1215,56): error C2061: syntax error: identifier 'Rectangle'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raylib-master\raylib-master\src\raylib.h(1216,89): error C2061: syntax error: identifier 'Rectangle'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raylib-master\raylib-master\src\raylib.h(1217,58): error C2061: syntax error: identifier 'Rectangle'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raylib-master\raylib-master\src\raylib.h(1218,56): error C2061: syntax error: identifier 'Rectangle'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raylib-master\raylib-master\src\raylib.h(1219,82): error C2061: syntax error: identifier 'Rectangle'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raylib-master\raylib-master\src\raylib.h(1246,64): error C2061: syntax error: identifier 'Rectangle'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raylib-master\raylib-master\src\raylib.h(1251,12): error C2733: 'DrawTextW': you cannot overload a function with 'extern "C"' linkage
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\um\winuser.h(8175,1): message : see declaration of 'DrawTextW'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raylib-master\raylib-master\src\raylib.h(1252,12): error C2733: 'DrawTextExW': you cannot overload a function with 'extern "C"' linkage
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\um\winuser.h(8235,1): message : see declaration of 'DrawTextExW'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raylib-master\raylib-master\src\raylib.h(1253,63): error C2061: syntax error: identifier 'Rectangle'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raylib-master\raylib-master\src\raylib.h(1254,65): error C2061: syntax error: identifier 'Rectangle'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raylib-master\raylib-master\src\raylib.h(1365,73): error C2061: syntax error: identifier 'Rectangle'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raylib-master\raylib-master\src\raylib.h(1391,36): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raylib-master\raylib-master\src\raylib.h(1391,7): error C2365: 'Rectangle': redefinition; previous definition was 'function'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\um\wingdi.h(4515): message : see declaration of 'Rectangle'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raylib-master\raylib-master\src\raylib.h(1391,17): error C2146: syntax error: missing ';' before identifier 'GetShapesTextureRec'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raylib-master\raylib-master\src\raylib.h(1392,58): error C2061: syntax error: identifier 'Rectangle'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raylib-master\raylib-master\src\raylib.h(1451,12): error C2733: 'PlaySoundW': you cannot overload a function with 'extern "C"' linkage
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\um\playsoundapi.h(114,1): message : see declaration of 'PlaySoundW'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(441,39): error C2146: syntax error: missing ')' before identifier 'bounds'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(442,38): error C2146: syntax error: missing ')' before identifier 'bounds'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(443,34): error C2146: syntax error: missing ')' before identifier 'bounds'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(444,35): error C2146: syntax error: missing ')' before identifier 'bounds'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(445,35): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(445,11): error C2365: 'Rectangle': redefinition; previous definition was 'function'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\um\wingdi.h(4515): message : see declaration of 'Rectangle'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(445,21): error C2146: syntax error: missing ';' before identifier 'GuiScrollPanel'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(448,35): error C2146: syntax error: missing ')' before identifier 'bounds'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(449,36): error C2146: syntax error: missing ')' before identifier 'bounds'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(450,41): error C2146: syntax error: missing ')' before identifier 'bounds'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(451,41): error C2146: syntax error: missing ')' before identifier 'bounds'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(452,43): error C2146: syntax error: missing ')' before identifier 'bounds'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(453,36): error C2146: syntax error: missing ')' before identifier 'bounds'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(454,40): error C2146: syntax error: missing ')' before identifier 'bounds'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(455,38): error C2146: syntax error: missing ')' before identifier 'bounds'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(456,37): error C2146: syntax error: missing ')' before identifier 'bounds'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(457,41): error C2146: syntax error: missing ')' before identifier 'bounds'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(458,37): error C2146: syntax error: missing ')' before identifier 'bounds'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(459,38): error C2146: syntax error: missing ')' before identifier 'bounds'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(460,37): error C2146: syntax error: missing ')' before identifier 'bounds'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(461,42): error C2146: syntax error: missing ')' before identifier 'bounds'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(462,37): error C2146: syntax error: missing ')' before identifier 'bounds'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(463,40): error C2146: syntax error: missing ')' before identifier 'bounds'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(464,42): error C2146: syntax error: missing ')' before identifier 'bounds'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(465,39): error C2146: syntax error: missing ')' before identifier 'bounds'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(466,38): error C2146: syntax error: missing ')' before identifier 'bounds'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(467,38): error C2146: syntax error: missing ')' before identifier 'bounds'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(468,37): error C2146: syntax error: missing ')' before identifier 'bounds'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(471,37): error C2146: syntax error: missing ')' before identifier 'bounds'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(472,39): error C2146: syntax error: missing ')' before identifier 'bounds'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(473,39): error C2146: syntax error: missing ')' before identifier 'bounds'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(474,41): error C2146: syntax error: missing ')' before identifier 'bounds'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(475,42): error C2146: syntax error: missing ')' before identifier 'bounds'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(476,41): error C2146: syntax error: missing ')' before identifier 'bounds'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(477,44): error C2146: syntax error: missing ')' before identifier 'bounds'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(478,42): error C2146: syntax error: missing ')' before identifier 'bounds'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(637,31): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(637,8): error C2365: 'Rectangle': redefinition; previous definition was 'function'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\um\wingdi.h(4515): message : see declaration of 'Rectangle'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(637,18): error C2146: syntax error: missing ';' before identifier 'GetTextBounds'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(637,55): error C2061: syntax error: identifier 'Rectangle'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(637,62): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(640,53): error C2061: syntax error: identifier 'Rectangle'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(641,40): error C2146: syntax error: missing ')' before identifier 'rec'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(642,38): error C2146: syntax error: missing ')' before identifier 'bounds'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(738,29): error C2146: syntax error: missing ')' before identifier 'bounds'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(739,1): error C2143: syntax error: missing ';' before '{'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(739,1): error C2447: '{': missing function header (old-style formal list?)
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(784,28): error C2146: syntax error: missing ')' before identifier 'bounds'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(785,1): error C2143: syntax error: missing ';' before '{'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(785,1): error C2447: '{': missing function header (old-style formal list?)
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(802,24): error C2146: syntax error: missing ')' before identifier 'bounds'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(803,1): error C2143: syntax error: missing ';' before '{'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(803,1): error C2447: '{': missing function header (old-style formal list?)
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(830,25): error C2146: syntax error: missing ')' before identifier 'bounds'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(831,1): error C2143: syntax error: missing ';' before '{'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(831,1): error C2447: '{': missing function header (old-style formal list?)
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(844,25): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(844,1): error C2365: 'Rectangle': redefinition; previous definition was 'function'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\um\wingdi.h(4515): message : see declaration of 'Rectangle'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(844,11): error C2146: syntax error: missing ';' before identifier 'GuiScrollPanel'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(845,1): error C2143: syntax error: missing ';' before '{'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(845,1): error C2447: '{': missing function header (old-style formal list?)
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(957,25): error C2146: syntax error: missing ')' before identifier 'bounds'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(958,1): error C2143: syntax error: missing ';' before '{'
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(958,1): error C2447: '{': missing function header (old-style formal list?)
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\ThirdParty\raygui-master\raygui-master\src\raygui.h(958,1): fatal error C1003: error count exceeds 100; stopping compilation
