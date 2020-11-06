@@ -225,10 +225,18 @@ private:
 
 struct UIState {
 
-	// Gives the ID of item currently being interacted.
-	int m_HotItem = -1;
-	int m_ActiveItem = -1;
+	float m_MouseX;
+	float m_MouseY;
+
+	// -1 means no valid mouse button was pressed.
+	// It is the only plausible choise.
+	int m_MouseDown = -1;
+
+	// Hovered and active items are ID´s from  1..n
+	int m_HoveredItem = 0;
+	int m_ActiveItem = 0;
 };
+
 
 // Intermediate mode graphical user interface implementation.
 struct IMGUI {
@@ -238,7 +246,7 @@ struct IMGUI {
 		STYLE_COLOR_DARK_BLUE = 0
 	};
 
-
+	// Receive Mouse and Keyboard input.
 	void PrepareIMGUI();
 	void FinishIMGUI();
 
@@ -246,38 +254,42 @@ struct IMGUI {
 	int Button(int id, int xpos, int ypos);
 
 
+
 	// Check whether mouse is hovered over a widget.
 	// Can also be used to see whether a specific region was "hit".
 	static bool IsHovered(int xpos, int ypos, int width, int height);
+	static UIState* GetUIState();
+	static void UpdateUISTate();
+
 
 	// Utility.
 	static IMGUI* Get() {
 
-		if (g_pWidgetStorage) {
-			return g_pWidgetStorage;
+		if (m_IMGUI) {
+			return m_IMGUI;
 		}
 		else {
-			g_pWidgetStorage = new IMGUI();
-			return g_pWidgetStorage;
+			m_IMGUI = new IMGUI();
+			return m_IMGUI;
 		}
 	}
 
 	static void Del() {
-		if (g_pWidgetStorage) {
-			delete g_pWidgetStorage;
+		if (m_IMGUI) {
+			delete m_IMGUI;
 		}
 	}
 
 private:
 	static int m_WidgetID;
 
-	static IMGUI* g_pWidgetStorage;
+	static IMGUI* m_IMGUI;
 
 	UIState* m_UIState = nullptr;
 private:
 	IMGUI() {
 		m_UIState = new UIState();
-		m_UIState->m_HotItem = -1; // Reset.
+		m_UIState->m_HoveredItem = 0; // Reset.
 	}
 
 };

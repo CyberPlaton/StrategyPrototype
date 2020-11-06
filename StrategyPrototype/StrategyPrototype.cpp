@@ -5,9 +5,21 @@ static olc::vf2d g_vi2dCameraPosition = olc::vf2d(0.0f, 0.0f);
 static int ColorValue = 0;
 
 
+IMGUI* IMGUI::m_IMGUI = nullptr;
+int IMGUI::m_WidgetID = 0; // A valid ID is greater 0.
 
-IMGUI* IMGUI::g_pWidgetStorage = nullptr;
-int IMGUI::m_WidgetID = -1;
+UIState* IMGUI::GetUIState() {
+	return IMGUI::Get()->m_UIState;
+}
+
+
+void IMGUI::UpdateUISTate() {
+
+	IMGUI::Get()->m_UIState->m_MouseX = Game::Get()->GetMouseX();
+	IMGUI::Get()->m_UIState->m_MouseY = Game::Get()->GetMouseY();
+
+
+}
 
 bool IMGUI::IsHovered(int xpos, int ypos, int width, int height) {
 
@@ -42,66 +54,78 @@ bool IMGUI::IsHovered(int xpos, int ypos, int width, int height) {
 
 void IMGUI::PrepareIMGUI() {
 
-	m_UIState->m_HotItem = -1; // Reset on each frame beginning.
+	// Reset on each frame beginning.
+	m_UIState->m_HoveredItem = 0;
 }
 
 void IMGUI::FinishIMGUI() {
 
-
+	if (m_UIState->m_MouseDown == -1) { // No mousebutton down...
+		m_UIState->m_ActiveItem = 0; // .. thus reset the active item.
+	}
+	else {
+		// do nothing, as everything works good for now.
+	}
 
 }
+
 
 int IMGUI::Button(int id, int xpos, int ypos) {
 
 
 	if (IsHovered(xpos, ypos, 64, 48)) {
 
-		// This rendered Button is "Hot".
-		m_UIState->m_HotItem = id;
+		// Set this button as the hovered item.
+		m_UIState->m_HoveredItem = id;
+
 
 		// Check whether no active item and mouse was pressed over this one.
-		if (m_UIState->m_ActiveItem == -1 &&
-			Game::Get()->GetMouse(0).bPressed) { // Means left mouse button pressed.
+		if (m_UIState->m_ActiveItem == 0 &&
+			m_UIState->m_MouseDown == 0) { // Means left mouse button pressed.
 
+			// No active item and mouse pressed means,
+			// this part. item is an active one.
 			m_UIState->m_ActiveItem = id;
 		}
 	}
 
 
-	// Rendering button.
+	// Rendering button. Basic.
 	using namespace olc;
-	Game::Get()->FillRect(vi2d(xpos, ypos), vi2d(64, 48), olc::CYAN);
+	Game::Get()->FillRect(vi2d(xpos, ypos), vi2d(64, 48), olc::VERY_DARK_MAGENTA);
 
 
-	if (m_UIState->m_HotItem == id) {
+	// Rendering button based on its "state".
+	if (m_UIState->m_HoveredItem == id) {
 		if (m_UIState->m_ActiveItem == id) {
 
-			// If both "hot" and "active",
-			// give it a new color.
-
-			Game::Get()->FillRect(vi2d(xpos - 2, ypos - 2), vi2d(64, 48), olc::VERY_DARK_CYAN);
+			// If we hover over this button...
+			// .. and we click on it...
+			// ...give it a new color.
+			Game::Get()->FillRect(vi2d(xpos, ypos), vi2d(64, 48), olc::RED); // Make it "Burn".
 		}
-		else { // Button is just "hot".
+		else {
 
-			Game::Get()->FillRect(vi2d(xpos + 2, ypos + 2), vi2d(64, 48), olc::DARK_CYAN);
+			// ... Button is just hovered upon.
+			Game::Get()->FillRect(vi2d(xpos - 2, ypos - 2), vi2d(68, 52), olc::DARK_RED);
 
 		}
 	}
-	else { // Not "hot", but maybe "active".
+	else {
 
-		Game::Get()->FillRect(vi2d(xpos, ypos), vi2d(64, 48), olc::VERY_DARK_RED);
+		//Game::Get()->FillRect(vi2d(xpos, ypos), vi2d(64, 48), olc::VERY_DARK_RED);
 	}
 
 
-	if (Game::Get()->GetMouse(0).bPressed &&
-		m_UIState->m_HotItem == id &&
+	// Means button is activated, e.g. clicked.
+	if (m_UIState->m_MouseDown == 0 &&
+		m_UIState->m_HoveredItem == id &&
 		m_UIState->m_ActiveItem == id) {
-
 
 		return 1;
 	}
 
-
+	// .. else nothing happend.
 	return 0;
 }
 
@@ -853,7 +877,7 @@ void CMPCameraInput::_handleMapViewMouse(Camera* cam) {
 	
 	MapTile* tile = nullptr;
 	City* city = nullptr;
-	if (context->GetMouse(0).bPressed) {
+	if (context->GetMouse(2).bPressed) {
 
 		tile = GetMaptileAtMousePosition(context->GetMouseX(), context->GetMouseY());
 
@@ -870,6 +894,15 @@ void CMPCameraInput::_handleMapViewMouse(Camera* cam) {
 		}
 	}
 	
+	if (context->GetMouse(0).bPressed) {
+		IMGUI::Get()->GetUIState()->m_MouseDown = 0;
+	}
+
+	// Reset the mousedown state to non-down...
+	if (context->GetMouse(0).bReleased) {
+		IMGUI::Get()->GetUIState()->m_MouseDown = -1;
+	}
+
 
 }
 
@@ -1533,13 +1566,22 @@ bool Game::OnUserUpdate(float fElapsedTime) {
 
 
 	// IMGUI Testing.
+	IMGUI::Get()->PrepareIMGUI();
+
 
 	if (IMGUI::Get()->Button(1, ScreenWidth() - 200, 2)) {
 
 		IMGUI::Get()->Button(2, ScreenWidth() - 200, 100);
+		IMGUI::Get()->Button(3, ScreenWidth() - 200, 150);
+		IMGUI::Get()->Button(4, ScreenWidth() - 200, 200);
+		IMGUI::Get()->Button(5, ScreenWidth() - 200, 250);
+		IMGUI::Get()->Button(6, ScreenWidth() - 200, 300);
+
 	}
 
 
+
+	IMGUI::Get()->FinishIMGUI();
 
 	return true;
 }
