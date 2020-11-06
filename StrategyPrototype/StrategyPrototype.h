@@ -4,7 +4,6 @@
 #include"ColorConsole.h"
 #include"GameEntity.h"
 #include"Resources.h"
-#include"GUI.h"
 
 
 
@@ -218,6 +217,74 @@ private:
 
 	void _updateAI2();
 };
+
+
+
+
+
+
+struct UIState {
+
+	// Gives the ID of item currently being interacted.
+	int m_HotItem = -1;
+	int m_ActiveItem = -1;
+};
+
+// Intermediate mode graphical user interface implementation.
+struct IMGUI {
+
+	enum class StyleColor {
+		STYLE_COLOR_INVALID = -1,
+		STYLE_COLOR_DARK_BLUE = 0
+	};
+
+
+	void PrepareIMGUI();
+	void FinishIMGUI();
+
+	// Returns 0 if not clicked, returns 1 if clicked...
+	int Button(int id, int xpos, int ypos);
+
+
+	// Check whether mouse is hovered over a widget.
+	// Can also be used to see whether a specific region was "hit".
+	static bool IsHovered(int xpos, int ypos, int width, int height);
+
+	// Utility.
+	static IMGUI* Get() {
+
+		if (g_pWidgetStorage) {
+			return g_pWidgetStorage;
+		}
+		else {
+			g_pWidgetStorage = new IMGUI();
+			return g_pWidgetStorage;
+		}
+	}
+
+	static void Del() {
+		if (g_pWidgetStorage) {
+			delete g_pWidgetStorage;
+		}
+	}
+
+private:
+	static int m_WidgetID;
+
+	static IMGUI* g_pWidgetStorage;
+
+	UIState* m_UIState = nullptr;
+private:
+	IMGUI() {
+		m_UIState = new UIState();
+		m_UIState->m_HotItem = -1; // Reset.
+	}
+
+};
+
+
+
+
 
 
 

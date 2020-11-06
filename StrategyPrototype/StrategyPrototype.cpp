@@ -5,14 +5,109 @@ static olc::vf2d g_vi2dCameraPosition = olc::vf2d(0.0f, 0.0f);
 static int ColorValue = 0;
 
 
-int helper::CurrentMousePosX() {
-	return Game::Get()->GetMouseX();
+
+IMGUI* IMGUI::g_pWidgetStorage = nullptr;
+int IMGUI::m_WidgetID = -1;
+
+bool IMGUI::IsHovered(int xpos, int ypos, int width, int height) {
+
+	// Is mouse position in borders of widget.
+
+	bool collision = false;
+
+	float own_x_pos = xpos;
+	float own_y_pos = ypos;
+	int own_size[2];
+	own_size[0] = width;
+	own_size[1] = height;
+
+
+	float mouseX = Game::Get()->GetMouseX();
+	float mouseY = Game::Get()->GetMouseY();
+
+
+
+	if (own_x_pos < (mouseX) &&
+		(own_x_pos + own_size[0]) > mouseX &&
+		own_y_pos < (mouseY) &&
+		(own_y_pos + own_size[1]) > mouseY) {
+
+		collision = true;
+	}
+
+	return (collision);
 }
 
 
-int helper::CurrentMousePosY() {
-	return Game::Get()->GetMouseY();
+
+void IMGUI::PrepareIMGUI() {
+
+	m_UIState->m_HotItem = -1; // Reset on each frame beginning.
 }
+
+void IMGUI::FinishIMGUI() {
+
+
+
+}
+
+int IMGUI::Button(int id, int xpos, int ypos) {
+
+
+	if (IsHovered(xpos, ypos, 64, 48)) {
+
+		// This rendered Button is "Hot".
+		m_UIState->m_HotItem = id;
+
+		// Check whether no active item and mouse was pressed over this one.
+		if (m_UIState->m_ActiveItem == -1 &&
+			Game::Get()->GetMouse(0).bPressed) { // Means left mouse button pressed.
+
+			m_UIState->m_ActiveItem = id;
+		}
+	}
+
+
+	// Rendering button.
+	using namespace olc;
+	Game::Get()->FillRect(vi2d(xpos, ypos), vi2d(64, 48), olc::CYAN);
+
+
+	if (m_UIState->m_HotItem == id) {
+		if (m_UIState->m_ActiveItem == id) {
+
+			// If both "hot" and "active",
+			// give it a new color.
+
+			Game::Get()->FillRect(vi2d(xpos - 2, ypos - 2), vi2d(64, 48), olc::VERY_DARK_CYAN);
+		}
+		else { // Button is just "hot".
+
+			Game::Get()->FillRect(vi2d(xpos + 2, ypos + 2), vi2d(64, 48), olc::DARK_CYAN);
+
+		}
+	}
+	else { // Not "hot", but maybe "active".
+
+		Game::Get()->FillRect(vi2d(xpos, ypos), vi2d(64, 48), olc::VERY_DARK_RED);
+	}
+
+
+	if (Game::Get()->GetMouse(0).bPressed &&
+		m_UIState->m_HotItem == id &&
+		m_UIState->m_ActiveItem == id) {
+
+
+		return 1;
+	}
+
+
+	return 0;
+}
+
+
+
+
 
 
 River* MakeNewRiver(std::string spritename, int x_cell_pos, int y_cell_pos) {
@@ -1400,6 +1495,12 @@ bool Game::OnUserCreate() {
 	m_TimeCounter->SetTimerForSeconds(1);
 	m_TimeCounter->Start();
 
+
+
+	// IMGUI Testing.
+	IMGUI* gui = IMGUI::Get();
+	
+
 	return true;
 }
 
@@ -1429,6 +1530,15 @@ bool Game::OnUserUpdate(float fElapsedTime) {
 
 
 	m_Renderer->Render();
+
+
+	// IMGUI Testing.
+
+	if (IMGUI::Get()->Button(1, ScreenWidth() - 200, 2)) {
+
+		IMGUI::Get()->Button(2, ScreenWidth() - 200, 100);
+	}
+
 
 
 	return true;
