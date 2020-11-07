@@ -226,6 +226,7 @@ private:
 
 struct UIState {
 
+	// Mouse handling.
 	float m_MouseX;
 	float m_MouseY;
 
@@ -236,6 +237,16 @@ struct UIState {
 	// Hovered and active items are ID´s from  1..n
 	int m_HoveredItem = 0;
 	int m_ActiveItem = 0;
+
+
+	// Keyboard handling.
+	int m_KeyboardItem;
+	int m_KeyEntered;
+	int m_KeyMode;
+
+	// Store ID of widget with keyboard focus.
+	int m_LastFocusedWidget;
+
 };
 
 
@@ -254,8 +265,11 @@ struct IMGUI {
 	// Returns 0 if not clicked, returns 1 if clicked...
 	int Button(int id, int xpos, int ypos);
 
+	// Slider with value input.
 	int Slider(int id, int xpos, int ypos, int max_value, int &value);
 
+	// Textinput 
+	int Textfield(int id, int xpos, int ypos, std::string* buffer);
 
 	// Check whether mouse is hovered over a widget.
 	// Can also be used to see whether a specific region was "hit".
@@ -292,19 +306,23 @@ private:
 	olc::Pixel* m_DefaultWidgetColor;
 	olc::Pixel* m_DefaultHoveredWidgetColor;
 	olc::Pixel* m_DefaultActiveWidgetColor;
+	olc::Pixel* m_DefaultWidgetElementColor;
+
 
 private:
 	IMGUI() {
 		m_UIState = new UIState();
 		m_UIState->m_HoveredItem = 0; // Reset.
 
-
-
-		m_DefaultWidgetColor = new olc::Pixel(75, 0, 130, 225);
-		m_DefaultHoveredWidgetColor = new olc::Pixel(65, 105, 225, 200);
-		m_DefaultActiveWidgetColor = new olc::Pixel(135, 206, 250, 200);
+		m_DefaultWidgetElementColor = new olc::Pixel(53, 48, 38, 255); // Very dark brown.
+		m_DefaultWidgetColor = new olc::Pixel(83, 61, 53, 225); // Default brown.
+		m_DefaultHoveredWidgetColor = new olc::Pixel(106, 78, 56, 225); // Bit lighter brown.
+		m_DefaultActiveWidgetColor = new olc::Pixel(151, 121, 97, 225); // Very light brown.
 	}
 
+
+
+	std::string _getLastHitButton();
 };
 
 
