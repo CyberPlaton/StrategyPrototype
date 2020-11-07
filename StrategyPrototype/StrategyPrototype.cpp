@@ -159,15 +159,20 @@ void IMGUI::PrepareIMGUI() {
 
 void IMGUI::FinishIMGUI() {
 
+	
 	if (m_UIState->m_MouseDown == -1) { // No mousebutton down...
 		m_UIState->m_ActiveItem = 0; // .. thus reset the active item.
 	}
 	else {
-		// do nothing, as everything works good for now.
 		if (m_UIState->m_MouseDown == 0 && m_UIState->m_ActiveItem == 0) {
 			m_UIState->m_LastFocusedWidget = 0;
+			m_UIState->m_KeyboardItem = 0;
 		}
-
+		if (m_UIState->m_HoveredItem == 0 && m_UIState->m_MouseDown == 0) {
+			m_UIState->m_KeyboardItem = 0;
+			m_UIState->m_LastFocusedWidget = 0;
+		}
+		
 	}
 
 }
@@ -267,6 +272,7 @@ int IMGUI::Textfield(int id, int xpos, int ypos, std::string* buffer) {
 	// Present that we have keyboard focus.
 	if (m_UIState->m_KeyboardItem == id && m_UIState->m_LastFocusedWidget == id) {
 
+		m_UIState->m_ActiveItem = id;
 		Game::Get()->DrawRect(vi2d(xpos - 4, ypos - 4), vi2d(256 + 8, 25 + 8), olc::RED);
 	}
 
@@ -283,12 +289,12 @@ int IMGUI::Textfield(int id, int xpos, int ypos, std::string* buffer) {
 	}
 
 	// Draw input string over textfield.
-	Game::Get()->DrawString(vi2d(xpos, ypos), *buffer, olc::BLACK);
+	Game::Get()->DrawString(vi2d(xpos, ypos), *buffer, *m_DefaultWidgetTextColor);
 
 
 	// Render a cursos if we have keyboard focus.
-	if (m_UIState->m_ActiveItem == id && Game::Get()->GetFPS()%2 == 0) {
-		Game::Get()->DrawString(vi2d(xpos + buffer->length(), ypos), "_", olc::BLACK);
+	if (m_UIState->m_ActiveItem == id) {
+		Game::Get()->DrawString(vi2d(xpos + buffer->length()*8, ypos), "_", *m_DefaultWidgetTextColor);
 	}
 
 
@@ -316,18 +322,18 @@ int IMGUI::Textfield(int id, int xpos, int ypos, std::string* buffer) {
 		}
 	}
 
-
+	
 	// Check states...
 	if (m_UIState->m_MouseDown == 0 &&
 		m_UIState->m_HoveredItem == id &&
 		m_UIState->m_ActiveItem == id) {
 
 		m_UIState->m_KeyboardItem = id;
-		m_UIState->m_LastFocusedWidget = id;
 	}
 	else if (m_UIState->m_LastFocusedWidget != id) {
 		m_UIState->m_KeyboardItem = 0;
 	}
+	
 
 	return changed;
 }
@@ -357,7 +363,7 @@ int IMGUI::TextButton(int id, int xpos, int ypos, std::string text) {
 	// Rendering button. Basic.
 	using namespace olc;
 	Game::Get()->FillRect(vi2d(xpos, ypos), vi2d(74, 28), *m_DefaultWidgetColor);
-	Game::Get()->DrawString(vi2d(xpos + 2, ypos + 2), text, olc::BLACK);
+	Game::Get()->DrawString(vi2d(xpos + 2, ypos + 2), text, *m_DefaultWidgetTextColor);
 
 	// Rendering button based on its "state".
 	if (m_UIState->m_HoveredItem == id) {
@@ -373,7 +379,7 @@ int IMGUI::TextButton(int id, int xpos, int ypos, std::string text) {
 
 			// ... Button is just hovered upon.
 			Game::Get()->FillRect(vi2d(xpos - 2, ypos - 2), vi2d(74, 28), *m_DefaultHoveredWidgetColor);
-			Game::Get()->DrawString(vi2d(xpos + 2, ypos + 2), text, olc::BLACK);
+			Game::Get()->DrawString(vi2d(xpos + 2, ypos + 2), text, *m_DefaultWidgetTextColor);
 
 		}
 	}
@@ -937,6 +943,10 @@ void CMPCameraInput::_handleMapViewKeyBoard(Camera* cam) {
 	}
 	*/
 
+	if (context->GetKey(olc::Key::ESCAPE).bReleased) {
+		exit(0);
+	}
+
 	if (context->GetKey(olc::Key::CTRL).bHeld) {
 
 		if (context->GetKey(olc::Key::G).bPressed) {
@@ -1164,12 +1174,6 @@ void CMPCameraInput::_handleMapViewKeyBoard(Camera* cam) {
 				}
 			}
 		}
-	}
-
-
-	if (context->GetKey(olc::Key::ESCAPE).bReleased) {
-
-		exit(0);
 	}
 }
 
@@ -1828,7 +1832,6 @@ bool Game::OnUserCreate() {
 	*/	
 
 
-	// Testing creation of player.
 	Player* player = new Player("Bogdan", "blue");
 	Player* player2 = new Player("AI", "red");
 	Player* player3 = new Player("Katharina", "magenta");
@@ -1908,9 +1911,9 @@ bool Game::OnUserUpdate(float fElapsedTime) {
 	IMGUI::Get()->UpdateUISTate();
 
 	static std::string some_text = "";
+	static bool input_allowed = false;
 
-
-	if (IMGUI::Get()->TextButton(GEN_ID, ScreenWidth() - 200, 2, "Click Me!")) {
+	if (IMGUI::Get()->TextButton(GEN_ID, ScreenWidth() - 200, 2, "Menu")) {
 
 		if (IMGUI::Get()->TextButton(GEN_ID, ScreenWidth() - 200, 100, "Exit")) {
 			exit(0);
@@ -1923,15 +1926,19 @@ bool Game::OnUserUpdate(float fElapsedTime) {
 		std::cout << "Value:" << some_const_value << std::endl;
 	}
 
-
-	if (IMGUI::Get()->Textfield(GEN_ID, 10, 10, &some_text)) {
+	if (IMGUI::Get()->Textfield(GEN_ID, ScreenWidth() - 300, 25, &some_text)) {
 		std::cout << "Input:" << some_text << std::endl;
 	}
 
 
 	IMGUI::Get()->FinishIMGUI();
 
-	cout << "Last active widget ID " << IMGUI::Get()->GetUIState()->m_LastFocusedWidget << endl;
+	system("CLS");
+	cout << "Last focused widget ID		" << IMGUI::Get()->GetUIState()->m_LastFocusedWidget << endl;
+	cout << "Active widget ID		" << IMGUI::Get()->GetUIState()->m_ActiveItem << endl;
+	cout << "Hovered widget ID		" << IMGUI::Get()->GetUIState()->m_HoveredItem << endl;
+	cout << "Keyboard Item widget ID		" << IMGUI::Get()->GetUIState()->m_KeyboardItem<< endl;
+
 
 	return true;
 }
