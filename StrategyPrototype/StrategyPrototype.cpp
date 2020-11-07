@@ -339,8 +339,11 @@ int IMGUI::Textfield(int id, int xpos, int ypos, std::string* buffer) {
 }
 
 
+int IMGUI::ToolTipButton(int id, int xpos, int ypos, std::string text, std::string tooltiptext){
 
-int IMGUI::TextButton(int id, int xpos, int ypos, std::string text) {
+	int tooltip_xpos = 0;
+	int tooltip_ypos = 0;
+
 
 	if (IsHovered(xpos, ypos, 74, 28)) {
 
@@ -357,6 +360,24 @@ int IMGUI::TextButton(int id, int xpos, int ypos, std::string text) {
 			m_UIState->m_ActiveItem = id;
 			m_UIState->m_LastFocusedWidget = id;
 		}
+
+
+		// As we hover, draw the tooltip around widget.
+		if (Game::Get()->ScreenWidth() + text.length() * 8 > Game::Get()->ScreenWidth()) {
+			tooltip_xpos -= 100;
+		}
+		if (Game::Get()->ScreenHeight() + text.length() * 8 > Game::Get()->ScreenHeight()) {
+			tooltip_ypos -= 100;
+		}
+		if (xpos - 100 < 0) {
+			tooltip_xpos += 100;
+		}
+		if (ypos - 100 < 0) {
+			tooltip_ypos += 100;
+		}
+
+
+		TextButton(GEN_ID, tooltip_xpos, tooltip_ypos, tooltiptext);
 	}
 
 
@@ -402,6 +423,230 @@ int IMGUI::TextButton(int id, int xpos, int ypos, std::string text) {
 	return 0;
 }
 
+
+
+int IMGUI::ToolTipSpriteButton(int id, int xpos, int ypos, std::string spritename, std::string tooltiptext) {
+
+	using namespace olc;
+
+	Decal* decal = this->m_IMGUISpriteResourceMap.at(spritename);
+	int w = decal->sprite->width;
+	int h = decal->sprite->height;
+
+
+	int tooltip_xpos = 0;
+	int tooltip_ypos = 0;
+
+	if (IsHovered(xpos, ypos, w, h)) {
+
+		// Set this button as the hovered item.
+		m_UIState->m_HoveredItem = id;
+
+
+		// Check whether no active item and mouse was pressed over this one.
+		if (m_UIState->m_ActiveItem == 0 &&
+			m_UIState->m_MouseDown == 0) { // Means left mouse button pressed.
+
+			// No active item and mouse pressed means,
+			// this part. item is an active one.
+			m_UIState->m_ActiveItem = id;
+			m_UIState->m_LastFocusedWidget = id;
+		}
+
+
+		// As we hover, draw the tooltip around widget.
+		if (Game::Get()->ScreenWidth() + tooltiptext.length() * 8 > Game::Get()->ScreenWidth()) {
+			tooltip_xpos = xpos - 100;
+		}
+		if (Game::Get()->ScreenHeight() + tooltiptext.length() * 8 > Game::Get()->ScreenHeight()) {
+			tooltip_ypos = ypos - 100;
+		}
+		if (xpos - 100 < 0) {
+			tooltip_xpos += w + 100;
+		}
+		if (ypos - 100 < 0) {
+			tooltip_ypos += h + 100;
+		}
+		TextButton(GEN_ID, tooltip_xpos, tooltip_ypos, tooltiptext);
+	}
+
+
+	// Rendering button. Basic.
+	using namespace olc;
+	//Game::Get()->FillRect(vi2d(xpos, ypos), vi2d(74, 28), *m_DefaultWidgetColor);
+	Game::Get()->DrawDecal(vf2d(xpos, ypos), decal);
+
+
+	// Rendering button based on its "state".
+	if (m_UIState->m_HoveredItem == id) {
+		if (m_UIState->m_ActiveItem == id) {
+
+			// If we hover over this button...
+			// .. and we click on it...
+			// ...give it a new color.
+			//Game::Get()->FillRect(vi2d(xpos, ypos), vi2d(74, 28), *m_DefaultActiveWidgetColor); // Make it "Burn".
+			Game::Get()->DrawDecal(vf2d(xpos, ypos), decal, vf2d(1.0f, 1.0f), olc::YELLOW);
+		}
+		else {
+
+			// ... Button is just hovered upon.
+			//Game::Get()->FillRect(vi2d(xpos - 2, ypos - 2), vi2d(74, 28), *m_DefaultHoveredWidgetColor);
+			Game::Get()->DrawDecal(vf2d(xpos, ypos), decal, vf2d(1.0f, 1.0f), olc::DARK_YELLOW);
+		}
+	}
+	else { // We do not hover over this button, so the normal button exprience...
+
+		//Game::Get()->FillRect(vi2d(xpos, ypos), vi2d(64, 48), *m_DefaultWidgetColor);
+	}
+
+
+	// Means button is activated, e.g. clicked.
+	if (m_UIState->m_MouseDown == 0 &&
+		m_UIState->m_HoveredItem == id &&
+		m_UIState->m_ActiveItem == id ||
+		m_UIState->m_LastFocusedWidget == id) { // 
+
+		return 1;
+	}
+
+	// .. else nothing happend.
+	return 0;
+}
+
+
+
+int IMGUI::TextButton(int id, int xpos, int ypos, std::string text) {
+
+	int width = text.length() * 8 + 2;
+	int height = (width / 8 < 10) ? 12 : width / 8;
+
+	if (IsHovered(xpos, ypos, width, height)) {
+
+		// Set this button as the hovered item.
+		m_UIState->m_HoveredItem = id;
+
+
+		// Check whether no active item and mouse was pressed over this one.
+		if (m_UIState->m_ActiveItem == 0 &&
+			m_UIState->m_MouseDown == 0) { // Means left mouse button pressed.
+
+			// No active item and mouse pressed means,
+			// this part. item is an active one.
+			m_UIState->m_ActiveItem = id;
+			m_UIState->m_LastFocusedWidget = id;
+		}
+	}
+
+
+	// Rendering button. Basic.
+	using namespace olc;
+	Game::Get()->FillRect(vi2d(xpos, ypos), vi2d(width, height), *m_DefaultWidgetColor);
+	Game::Get()->DrawString(vi2d(xpos + 2, ypos + 2), text, *m_DefaultWidgetTextColor);
+
+	// Rendering button based on its "state".
+	if (m_UIState->m_HoveredItem == id) {
+		if (m_UIState->m_ActiveItem == id) {
+
+			// If we hover over this button...
+			// .. and we click on it...
+			// ...give it a new color.
+			Game::Get()->FillRect(vi2d(xpos, ypos), vi2d(width, height), *m_DefaultActiveWidgetColor); // Make it "Burn".
+			Game::Get()->DrawString(vi2d(xpos + 2, ypos + 2), text, olc::BLACK);
+		}
+		else {
+
+			// ... Button is just hovered upon.
+			Game::Get()->FillRect(vi2d(xpos - 2, ypos - 2), vi2d(width, height), *m_DefaultHoveredWidgetColor);
+			Game::Get()->DrawString(vi2d(xpos + 2, ypos + 2), text, *m_DefaultWidgetTextColor);
+
+		}
+	}
+	else { // We do not hover over this button, so the normal button exprience...
+
+		//Game::Get()->FillRect(vi2d(xpos, ypos), vi2d(64, 48), *m_DefaultWidgetColor);
+	}
+
+
+	// Means button is activated, e.g. clicked.
+	if (m_UIState->m_MouseDown == 0 &&
+		m_UIState->m_HoveredItem == id &&
+		m_UIState->m_ActiveItem == id ||
+		m_UIState->m_LastFocusedWidget == id) { // 
+
+		return 1;
+	}
+
+	// .. else nothing happend.
+	return 0;
+}
+
+int IMGUI::SpriteButton(int id, int xpos, int ypos, std::string spritename) {
+
+	using namespace olc;
+
+	Decal* decal = this->m_IMGUISpriteResourceMap.at(spritename);
+	int w = decal->sprite->width;
+	int h = decal->sprite->height;
+
+	if (IsHovered(xpos, ypos, w, h)) {
+
+		// Set this button as the hovered item.
+		m_UIState->m_HoveredItem = id;
+
+
+		// Check whether no active item and mouse was pressed over this one.
+		if (m_UIState->m_ActiveItem == 0 &&
+			m_UIState->m_MouseDown == 0) { // Means left mouse button pressed.
+
+			// No active item and mouse pressed means,
+			// this part. item is an active one.
+			m_UIState->m_ActiveItem = id;
+			m_UIState->m_LastFocusedWidget = id;
+		}
+	}
+
+
+	// Rendering button. Basic.
+	using namespace olc;
+	//Game::Get()->FillRect(vi2d(xpos, ypos), vi2d(74, 28), *m_DefaultWidgetColor);
+	Game::Get()->DrawDecal(vf2d(xpos, ypos), decal);
+
+
+	// Rendering button based on its "state".
+	if (m_UIState->m_HoveredItem == id) {
+		if (m_UIState->m_ActiveItem == id) {
+
+			// If we hover over this button...
+			// .. and we click on it...
+			// ...give it a new color.
+			//Game::Get()->FillRect(vi2d(xpos, ypos), vi2d(74, 28), *m_DefaultActiveWidgetColor); // Make it "Burn".
+			Game::Get()->DrawDecal(vf2d(xpos, ypos), decal, vf2d(1.0f, 1.0f), olc::YELLOW);
+		}
+		else {
+
+			// ... Button is just hovered upon.
+			//Game::Get()->FillRect(vi2d(xpos - 2, ypos - 2), vi2d(74, 28), *m_DefaultHoveredWidgetColor);
+			Game::Get()->DrawDecal(vf2d(xpos, ypos), decal, vf2d(1.0f, 1.0f), olc::DARK_YELLOW);
+		}
+	}
+	else { // We do not hover over this button, so the normal button exprience...
+
+		//Game::Get()->FillRect(vi2d(xpos, ypos), vi2d(64, 48), *m_DefaultWidgetColor);
+	}
+
+
+	// Means button is activated, e.g. clicked.
+	if (m_UIState->m_MouseDown == 0 &&
+		m_UIState->m_HoveredItem == id &&
+		m_UIState->m_ActiveItem == id ||
+		m_UIState->m_LastFocusedWidget == id) { // 
+
+		return 1;
+	}
+
+	// .. else nothing happend.
+	return 0;
+}
 
 
 int IMGUI::Button(int id, int xpos, int ypos) {
@@ -1741,6 +1986,21 @@ void Game::_loadSpriteResources() {
 }
 
 
+bool IMGUI::AddSprite(std::string path, std::string spritename) {
+
+	using namespace olc;
+
+	Sprite* s = new Sprite(path);
+	if (s == nullptr) return false;
+
+	IMGUI::Get()->m_IMGUISpriteStorage.push_back(s);
+
+	Decal* d = new Decal(s);
+
+	IMGUI::Get()->m_IMGUISpriteResourceMap.insert(std::make_pair(spritename, d));
+}
+
+
 void Game::_initializeMap() {
 
 	m_WorldMap = WorldMap::Get();
@@ -1872,6 +2132,10 @@ bool Game::OnUserCreate() {
 	// IMGUI Testing.
 	IMGUI* gui = IMGUI::Get();
 	
+	// Testing sprite buttons.
+	// First add ressources.
+	gui->AddSprite("assets/button_exit.png", "button_exit");
+
 
 	return true;
 }
@@ -1904,42 +2168,24 @@ bool Game::OnUserUpdate(float fElapsedTime) {
 
 	m_Renderer->Render();
 
-
+	
 	// IMGUI Testing.
 	using namespace std;
 	IMGUI::Get()->PrepareIMGUI();
 	IMGUI::Get()->UpdateUISTate();
 
-	static std::string some_text = "";
-	static bool input_allowed = false;
+	IMGUI* gui = IMGUI::Get();
 
-	if (IMGUI::Get()->TextButton(GEN_ID, ScreenWidth() - 200, 2, "Menu")) {
+	if (gui->TextButton(GEN_ID, ScreenWidth() - 50, 2, "Menu")) {
 
-		if (IMGUI::Get()->TextButton(GEN_ID, ScreenWidth() - 200, 100, "Exit")) {
+		if (gui->SpriteButton(GEN_ID, ScreenWidth() - 150, ScreenHeight() - 75, "button_exit")) {
 			exit(0);
 		}
-
-		IMGUI::Get()->Button(GEN_ID, ScreenWidth() - 200, 150);
 	}
 
-	if (IMGUI::Get()->Slider(GEN_ID, ScreenWidth() - 300, 2, 100, some_const_value)) {
-		std::cout << "Value:" << some_const_value << std::endl;
-	}
-
-	if (IMGUI::Get()->Textfield(GEN_ID, ScreenWidth() - 300, 25, &some_text)) {
-		std::cout << "Input:" << some_text << std::endl;
-	}
 
 
 	IMGUI::Get()->FinishIMGUI();
-
-	system("CLS");
-	cout << "Last focused widget ID		" << IMGUI::Get()->GetUIState()->m_LastFocusedWidget << endl;
-	cout << "Active widget ID		" << IMGUI::Get()->GetUIState()->m_ActiveItem << endl;
-	cout << "Hovered widget ID		" << IMGUI::Get()->GetUIState()->m_HoveredItem << endl;
-	cout << "Keyboard Item widget ID		" << IMGUI::Get()->GetUIState()->m_KeyboardItem<< endl;
-
-
 	return true;
 }
 

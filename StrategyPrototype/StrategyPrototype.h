@@ -266,6 +266,16 @@ struct IMGUI {
 	int Button(int id, int xpos, int ypos);
 	int TextButton(int id, int xpos, int ypos, std::string text);
 
+	// Usage: Display some text if we hover over a widget, e.g. Button.
+	int ToolTipButton(int id, int xpos, int ypos, std::string text, std::string tooltiptext);
+
+	// Spritebutton that displays a tooltip on hovering.
+	int ToolTipSpriteButton(int id, int xpos, int ypos, std::string spritename, std::string tooltiptext);
+
+
+	// The sprite is stored in struct
+	int SpriteButton(int id, int xpos, int ypos, std::string spritename);
+
 	// Slider with value input.
 	int Slider(int id, int xpos, int ypos, int max_value, int &value);
 
@@ -278,6 +288,7 @@ struct IMGUI {
 	static UIState* GetUIState();
 	static void UpdateUISTate();
 
+	static bool AddSprite(std::string path, std::string spritename);
 
 	// Utility.
 	static IMGUI* Get() {
@@ -311,6 +322,9 @@ private:
 	olc::Pixel* m_DefaultWidgetTextColor;
 
 
+	// Same as in Game, but here we re sotring explicitlly GUI sprites and decals.
+	std::map<std::string, olc::Decal*> m_IMGUISpriteResourceMap;
+	std::vector<olc::Sprite*> m_IMGUISpriteStorage;
 
 private:
 	IMGUI() {
