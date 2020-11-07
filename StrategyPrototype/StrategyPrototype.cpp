@@ -12,11 +12,12 @@ int IMGUI::m_WidgetID = 0; // A valid ID is greater 0.
 
 std::string IMGUI::_getLastHitButton() {
 
-
+	if (Game::Get()->GetKey(olc::Key::SPACE).bPressed) {
+		return " ";
+	}
 	if (Game::Get()->GetKey(olc::Key::ENTER).bPressed) {
 		return "enter";
 	}
-
 	if (Game::Get()->GetKey(olc::Key::BACK).bPressed) {
 		return "back";
 	}
@@ -163,6 +164,9 @@ void IMGUI::FinishIMGUI() {
 	}
 	else {
 		// do nothing, as everything works good for now.
+		if (m_UIState->m_MouseDown == 0 && m_UIState->m_ActiveItem == 0) {
+			m_UIState->m_LastFocusedWidget = 0;
+		}
 
 	}
 
@@ -185,6 +189,7 @@ int IMGUI::Slider(int id, int xpos, int ypos, int max_value, int& value) {
 		if(m_UIState->m_ActiveItem == 0 && m_UIState->m_MouseDown == 0) {
 
 			m_UIState->m_ActiveItem = id;
+			m_UIState->m_LastFocusedWidget = id;
 		}
 	}
 
@@ -221,6 +226,10 @@ int IMGUI::Slider(int id, int xpos, int ypos, int max_value, int& value) {
 			return 1;
 		}
 	}
+	else if (m_UIState->m_LastFocusedWidget == id) {
+		return 1;
+	}
+
 
 	return 0;
 }
@@ -244,6 +253,7 @@ int IMGUI::Textfield(int id, int xpos, int ypos, std::string* buffer) {
 		// Mouse button pressed over textfield.
 		if (m_UIState->m_ActiveItem == 0 && m_UIState->m_MouseDown == 0) {
 			m_UIState->m_ActiveItem = id;
+			m_UIState->m_LastFocusedWidget = id;
 		}
 	}
 
@@ -255,14 +265,14 @@ int IMGUI::Textfield(int id, int xpos, int ypos, std::string* buffer) {
 	*/
 
 	// Present that we have keyboard focus.
-	if (m_UIState->m_KeyboardItem == id) {
+	if (m_UIState->m_KeyboardItem == id && m_UIState->m_LastFocusedWidget == id) {
 
 		Game::Get()->DrawRect(vi2d(xpos - 4, ypos - 4), vi2d(256 + 8, 25 + 8), olc::RED);
 	}
 
 
 	// Draw Textfield.
-	if (m_UIState->m_ActiveItem == id || m_UIState->m_HoveredItem == id) {
+	if (m_UIState->m_ActiveItem == id || m_UIState->m_HoveredItem == id || m_UIState->m_LastFocusedWidget == id) {
 
 		// .. has some interaction.
 		Game::Get()->FillRect(vi2d(xpos, ypos), vi2d(256, 25), *m_DefaultHoveredWidgetColor);
@@ -294,8 +304,10 @@ int IMGUI::Textfield(int id, int xpos, int ypos, std::string* buffer) {
 			}
 			else if (COMPARE_STRINGS(s, "back") == 0) { // Delete last character.
 
-				buffer->pop_back();
-				changed = 1;
+				if (buffer->length() > 0) {
+					buffer->pop_back();
+					changed = 1;
+				}
 			}
 			else {
 				buffer->append(s);
@@ -305,26 +317,26 @@ int IMGUI::Textfield(int id, int xpos, int ypos, std::string* buffer) {
 	}
 
 
-	//
+	// Check states...
 	if (m_UIState->m_MouseDown == 0 &&
 		m_UIState->m_HoveredItem == id &&
 		m_UIState->m_ActiveItem == id) {
 
 		m_UIState->m_KeyboardItem = id;
-
 		m_UIState->m_LastFocusedWidget = id;
 	}
-
-
+	else if (m_UIState->m_LastFocusedWidget != id) {
+		m_UIState->m_KeyboardItem = 0;
+	}
 
 	return changed;
 }
 
 
-int IMGUI::Button(int id, int xpos, int ypos) {
 
+int IMGUI::TextButton(int id, int xpos, int ypos, std::string text) {
 
-	if (IsHovered(xpos, ypos, 64, 48)) {
+	if (IsHovered(xpos, ypos, 74, 28)) {
 
 		// Set this button as the hovered item.
 		m_UIState->m_HoveredItem = id;
@@ -337,14 +349,15 @@ int IMGUI::Button(int id, int xpos, int ypos) {
 			// No active item and mouse pressed means,
 			// this part. item is an active one.
 			m_UIState->m_ActiveItem = id;
+			m_UIState->m_LastFocusedWidget = id;
 		}
 	}
 
 
 	// Rendering button. Basic.
 	using namespace olc;
-	Game::Get()->FillRect(vi2d(xpos, ypos), vi2d(64, 48), *m_DefaultWidgetColor);
-
+	Game::Get()->FillRect(vi2d(xpos, ypos), vi2d(74, 28), *m_DefaultWidgetColor);
+	Game::Get()->DrawString(vi2d(xpos + 2, ypos + 2), text, olc::BLACK);
 
 	// Rendering button based on its "state".
 	if (m_UIState->m_HoveredItem == id) {
@@ -353,12 +366,14 @@ int IMGUI::Button(int id, int xpos, int ypos) {
 			// If we hover over this button...
 			// .. and we click on it...
 			// ...give it a new color.
-			Game::Get()->FillRect(vi2d(xpos, ypos), vi2d(64, 48), *m_DefaultActiveWidgetColor); // Make it "Burn".
+			Game::Get()->FillRect(vi2d(xpos, ypos), vi2d(74, 28), *m_DefaultActiveWidgetColor); // Make it "Burn".
+			Game::Get()->DrawString(vi2d(xpos + 2, ypos + 2), text, olc::BLACK);
 		}
 		else {
 
 			// ... Button is just hovered upon.
-			Game::Get()->FillRect(vi2d(xpos - 2, ypos - 2), vi2d(68, 52), *m_DefaultHoveredWidgetColor);
+			Game::Get()->FillRect(vi2d(xpos - 2, ypos - 2), vi2d(74, 28), *m_DefaultHoveredWidgetColor);
+			Game::Get()->DrawString(vi2d(xpos + 2, ypos + 2), text, olc::BLACK);
 
 		}
 	}
@@ -371,7 +386,71 @@ int IMGUI::Button(int id, int xpos, int ypos) {
 	// Means button is activated, e.g. clicked.
 	if (m_UIState->m_MouseDown == 0 &&
 		m_UIState->m_HoveredItem == id &&
-		m_UIState->m_ActiveItem == id) { // 
+		m_UIState->m_ActiveItem == id ||
+		m_UIState->m_LastFocusedWidget == id) { // 
+
+		return 1;
+	}
+
+	// .. else nothing happend.
+	return 0;
+}
+
+
+
+int IMGUI::Button(int id, int xpos, int ypos) {
+
+
+	if (IsHovered(xpos, ypos, 74, 28)) {
+
+		// Set this button as the hovered item.
+		m_UIState->m_HoveredItem = id;
+
+
+		// Check whether no active item and mouse was pressed over this one.
+		if (m_UIState->m_ActiveItem == 0 &&
+			m_UIState->m_MouseDown == 0) { // Means left mouse button pressed.
+
+			// No active item and mouse pressed means,
+			// this part. item is an active one.
+			m_UIState->m_ActiveItem = id;
+			m_UIState->m_LastFocusedWidget = id;
+		}
+	}
+
+
+	// Rendering button. Basic.
+	using namespace olc;
+	Game::Get()->FillRect(vi2d(xpos, ypos), vi2d(74, 28), *m_DefaultWidgetColor);
+
+
+	// Rendering button based on its "state".
+	if (m_UIState->m_HoveredItem == id) {
+		if (m_UIState->m_ActiveItem == id) {
+
+			// If we hover over this button...
+			// .. and we click on it...
+			// ...give it a new color.
+			Game::Get()->FillRect(vi2d(xpos, ypos), vi2d(74, 28), *m_DefaultActiveWidgetColor); // Make it "Burn".
+		}
+		else {
+
+			// ... Button is just hovered upon.
+			Game::Get()->FillRect(vi2d(xpos - 2, ypos - 2), vi2d(74, 28), *m_DefaultHoveredWidgetColor);
+
+		}
+	}
+	else { // We do not hover over this button, so the normal button exprience...
+
+		//Game::Get()->FillRect(vi2d(xpos, ypos), vi2d(64, 48), *m_DefaultWidgetColor);
+	}
+
+
+	// Means button is activated, e.g. clicked.
+	if (m_UIState->m_MouseDown == 0 &&
+		m_UIState->m_HoveredItem == id &&
+		m_UIState->m_ActiveItem == id ||
+		m_UIState->m_LastFocusedWidget == id) { // 
 
 		return 1;
 	}
@@ -1831,19 +1910,24 @@ bool Game::OnUserUpdate(float fElapsedTime) {
 	static std::string some_text = "";
 
 
-	if (IMGUI::Get()->Button(GEN_ID, ScreenWidth() - 200, 2)) {
+	if (IMGUI::Get()->TextButton(GEN_ID, ScreenWidth() - 200, 2, "Click Me!")) {
 
-		if (IMGUI::Get()->Textfield(GEN_ID, 10, 10, &some_text)) {
-			std::cout << "Input:" << some_text << std::endl;
+		if (IMGUI::Get()->TextButton(GEN_ID, ScreenWidth() - 200, 100, "Exit")) {
+			exit(0);
 		}
 
-		IMGUI::Get()->Button(GEN_ID, ScreenWidth() - 200, 100);
 		IMGUI::Get()->Button(GEN_ID, ScreenWidth() - 200, 150);
 	}
 
 	if (IMGUI::Get()->Slider(GEN_ID, ScreenWidth() - 300, 2, 100, some_const_value)) {
 		std::cout << "Value:" << some_const_value << std::endl;
 	}
+
+
+	if (IMGUI::Get()->Textfield(GEN_ID, 10, 10, &some_text)) {
+		std::cout << "Input:" << some_text << std::endl;
+	}
+
 
 	IMGUI::Get()->FinishIMGUI();
 

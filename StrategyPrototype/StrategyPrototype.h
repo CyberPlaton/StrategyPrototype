@@ -264,6 +264,7 @@ struct IMGUI {
 
 	// Returns 0 if not clicked, returns 1 if clicked...
 	int Button(int id, int xpos, int ypos);
+	int TextButton(int id, int xpos, int ypos, std::string text);
 
 	// Slider with value input.
 	int Slider(int id, int xpos, int ypos, int max_value, int &value);
