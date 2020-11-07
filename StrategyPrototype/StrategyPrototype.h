@@ -221,7 +221,8 @@ private:
 
 
 
-
+// Macro for ID creation of a widget.
+#define GEN_ID (__LINE__)
 
 struct UIState {
 
@@ -253,6 +254,7 @@ struct IMGUI {
 	// Returns 0 if not clicked, returns 1 if clicked...
 	int Button(int id, int xpos, int ypos);
 
+	int Slider(int id, int xpos, int ypos, int max_value, int &value);
 
 
 	// Check whether mouse is hovered over a widget.
@@ -286,10 +288,21 @@ private:
 	static IMGUI* m_IMGUI;
 
 	UIState* m_UIState = nullptr;
+
+	olc::Pixel* m_DefaultWidgetColor;
+	olc::Pixel* m_DefaultHoveredWidgetColor;
+	olc::Pixel* m_DefaultActiveWidgetColor;
+
 private:
 	IMGUI() {
 		m_UIState = new UIState();
 		m_UIState->m_HoveredItem = 0; // Reset.
+
+
+
+		m_DefaultWidgetColor = new olc::Pixel(75, 0, 130, 225);
+		m_DefaultHoveredWidgetColor = new olc::Pixel(65, 105, 225, 200);
+		m_DefaultActiveWidgetColor = new olc::Pixel(135, 206, 250, 200);
 	}
 
 };

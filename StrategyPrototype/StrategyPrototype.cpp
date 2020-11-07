@@ -70,6 +70,64 @@ void IMGUI::FinishIMGUI() {
 }
 
 
+
+int IMGUI::Slider(int id, int xpos, int ypos, int max_value, int& value) {
+
+	// Calculate mouse Y offset relatiev to widget.
+	int widget_width = 16;
+	int widget_height = 256;
+
+	int rel_mouse_y_pos = ((256 - 16) * value) / max_value;
+
+	// Check for hovering and activation.
+	if (IsHovered(xpos, ypos, widget_width, widget_height)) {
+
+		m_UIState->m_HoveredItem = id;
+		if(m_UIState->m_ActiveItem == 0 && m_UIState->m_MouseDown == 0) {
+
+			m_UIState->m_ActiveItem = id;
+		}
+	}
+
+
+	// Rendering button. Basic. The slider underground.
+	using namespace olc;
+	Game::Get()->FillRect(vi2d(xpos, ypos), vi2d(widget_width, widget_height), *m_DefaultWidgetColor);
+
+
+	// Slider is being interacted with... So render the sliding object.
+	if (m_UIState->m_ActiveItem == id || m_UIState->m_HoveredItem == id) {
+
+		Game::Get()->FillRect(vi2d(xpos, ypos + rel_mouse_y_pos), vi2d(16, 16), *m_DefaultActiveWidgetColor);
+	}
+	else {
+
+		Game::Get()->FillRect(vi2d(xpos, ypos + rel_mouse_y_pos), vi2d(16, 16), *m_DefaultHoveredWidgetColor);
+	}
+
+
+
+	// Update widget value.
+	if (m_UIState->m_ActiveItem == id)
+	{
+		int mousepos = m_UIState->m_MouseY - (ypos);
+		if (mousepos < 0) mousepos = 0;
+		if (mousepos > 255) mousepos = 255;
+
+		int v = (mousepos * max_value) / 255;
+
+		if (v != value)
+		{
+			value = v;
+			return 1;
+		}
+	}
+
+	return 0;
+}
+
+
+
 int IMGUI::Button(int id, int xpos, int ypos) {
 
 
@@ -92,7 +150,7 @@ int IMGUI::Button(int id, int xpos, int ypos) {
 
 	// Rendering button. Basic.
 	using namespace olc;
-	Game::Get()->FillRect(vi2d(xpos, ypos), vi2d(64, 48), olc::VERY_DARK_MAGENTA);
+	Game::Get()->FillRect(vi2d(xpos, ypos), vi2d(64, 48), *m_DefaultWidgetColor);
 
 
 	// Rendering button based on its "state".
@@ -102,18 +160,18 @@ int IMGUI::Button(int id, int xpos, int ypos) {
 			// If we hover over this button...
 			// .. and we click on it...
 			// ...give it a new color.
-			Game::Get()->FillRect(vi2d(xpos, ypos), vi2d(64, 48), olc::RED); // Make it "Burn".
+			Game::Get()->FillRect(vi2d(xpos, ypos), vi2d(64, 48), *m_DefaultActiveWidgetColor); // Make it "Burn".
 		}
 		else {
 
 			// ... Button is just hovered upon.
-			Game::Get()->FillRect(vi2d(xpos - 2, ypos - 2), vi2d(68, 52), olc::DARK_RED);
+			Game::Get()->FillRect(vi2d(xpos - 2, ypos - 2), vi2d(68, 52), *m_DefaultHoveredWidgetColor);
 
 		}
 	}
-	else {
+	else { // We do not hover over this button, so the normal button exprience...
 
-		//Game::Get()->FillRect(vi2d(xpos, ypos), vi2d(64, 48), olc::VERY_DARK_RED);
+		//Game::Get()->FillRect(vi2d(xpos, ypos), vi2d(64, 48), *m_DefaultWidgetColor);
 	}
 
 
@@ -1537,6 +1595,7 @@ bool Game::OnUserCreate() {
 	return true;
 }
 
+static int some_const_value = 0;
 
 bool Game::OnUserUpdate(float fElapsedTime) {
 
@@ -1567,16 +1626,19 @@ bool Game::OnUserUpdate(float fElapsedTime) {
 
 	// IMGUI Testing.
 	IMGUI::Get()->PrepareIMGUI();
+	IMGUI::Get()->UpdateUISTate();
 
 
-	if (IMGUI::Get()->Button(1, ScreenWidth() - 200, 2)) {
+	if (IMGUI::Get()->Button(GEN_ID, ScreenWidth() - 200, 2)) {
 
-		IMGUI::Get()->Button(2, ScreenWidth() - 200, 100);
-		IMGUI::Get()->Button(3, ScreenWidth() - 200, 150);
-		IMGUI::Get()->Button(4, ScreenWidth() - 200, 200);
-		IMGUI::Get()->Button(5, ScreenWidth() - 200, 250);
-		IMGUI::Get()->Button(6, ScreenWidth() - 200, 300);
+		IMGUI::Get()->Button(GEN_ID, ScreenWidth() - 200, 100);
+		IMGUI::Get()->Button(GEN_ID, ScreenWidth() - 200, 150);
+	}
 
+
+
+	if (IMGUI::Get()->Slider(GEN_ID, 256, 256, 100, some_const_value)) {
+		std::cout << "Value:" << some_const_value << std::endl;
 	}
 
 
