@@ -244,7 +244,7 @@ struct UIState {
 	int m_KeyEntered;
 	int m_KeyMode;
 
-	// Store ID of widget with keyboard focus.
+	// 
 	int m_LastFocusedWidget;
 
 };
