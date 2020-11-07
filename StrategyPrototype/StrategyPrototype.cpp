@@ -429,7 +429,16 @@ int IMGUI::ToolTipSpriteButton(int id, int xpos, int ypos, std::string spritenam
 
 	using namespace olc;
 
-	Decal* decal = this->m_IMGUISpriteResourceMap.at(spritename);
+	Decal* decal = nullptr;
+
+	for (auto it : this->m_IMGUISpriteResourceMap) {
+
+		if (COMPARE_STRINGS_2(it.first, spritename) == 0) {
+
+			decal = new Decal(it.second); // Create dynamically new decal for rendering...
+		}
+	}
+
 	int w = decal->sprite->width;
 	int h = decal->sprite->height;
 
@@ -583,8 +592,16 @@ int IMGUI::TextButton(int id, int xpos, int ypos, std::string text) {
 int IMGUI::SpriteButton(int id, int xpos, int ypos, std::string spritename) {
 
 	using namespace olc;
+	Decal* decal = nullptr;
 
-	Decal* decal = this->m_IMGUISpriteResourceMap.at(spritename);
+	for (auto it : this->m_IMGUISpriteResourceMap) {
+
+		if (COMPARE_STRINGS_2(it.first, spritename) == 0) {
+
+			decal = new Decal(it.second); // Create dynamically new decal for rendering...
+		}
+	}
+
 	int w = decal->sprite->width;
 	int h = decal->sprite->height;
 
@@ -1287,11 +1304,7 @@ void CMPCameraInput::_handleMapViewKeyBoard(Camera* cam) {
 
 	}
 
-	if (context->GetKey(olc::Key::M).bPressed) {
-
-		context->m_PoliticalMap = (context->m_PoliticalMap == false) ? true : false;
-	}
-
+	/*
 	if (context->GetKey(olc::Key::SPACE).bReleased) {
 
 		if (context->m_TimeModeTurnBased == false) return;
@@ -1309,6 +1322,7 @@ void CMPCameraInput::_handleMapViewKeyBoard(Camera* cam) {
 		cout << "EXECUTED TURN " << turn << " AI LOGIC." << white << endl << endl << endl;
 
 	}
+	*/
 
 	if (context->GetKey(olc::Key::SHIFT).bHeld) {
 		speed = 4;
@@ -1462,7 +1476,7 @@ void CMPCameraInput::_handleMapViewMouse(Camera* cam) {
 	
 	MapTile* tile = nullptr;
 	City* city = nullptr;
-	if (context->GetMouse(2).bPressed) {
+	if (context->GetMouse(1).bPressed) {
 
 		tile = GetMaptileAtMousePosition(context->GetMouseX(), context->GetMouseY());
 
@@ -1993,11 +2007,11 @@ bool IMGUI::AddSprite(std::string path, std::string spritename) {
 	Sprite* s = new Sprite(path);
 	if (s == nullptr) return false;
 
-	IMGUI::Get()->m_IMGUISpriteStorage.push_back(s);
-
+	IMGUI::Get()->m_IMGUISpriteResourceMap.insert(std::make_pair(spritename, s));
+	/*
 	Decal* d = new Decal(s);
-
 	IMGUI::Get()->m_IMGUISpriteResourceMap.insert(std::make_pair(spritename, d));
+	*/
 }
 
 
@@ -2135,6 +2149,7 @@ bool Game::OnUserCreate() {
 	// Testing sprite buttons.
 	// First add ressources.
 	gui->AddSprite("assets/button_exit.png", "button_exit");
+	gui->AddSprite("assets/city_panel.png", "city_panel");
 
 
 	return true;
@@ -2156,11 +2171,6 @@ bool Game::OnUserUpdate(float fElapsedTime) {
 	// Update Entities MapCell
 	_updateLocalMapTileCellCoords();
 
-
-	// Do we need this every loop? The gameworld cells are to be defined once,
-	// and always updated for entities which move, like units...
-	//_updateEntitiesMapTileCoords(); // This will be very inefficient for looping every turn.
-
 	// Input handling.
 	m_Renderer->m_MainCam->m_CamInput->HandleKeyboard(m_Renderer->m_MainCam);
 	m_Renderer->m_MainCam->m_CamInput->HandleMouse(m_Renderer->m_MainCam);
@@ -2175,19 +2185,72 @@ bool Game::OnUserUpdate(float fElapsedTime) {
 	IMGUI::Get()->UpdateUISTate();
 
 	IMGUI* gui = IMGUI::Get();
+	static std::string city_panel = "City Panel";
+	static std::string political_map = "Political Map";
+	static std::string turn;
+
+
 
 	if (gui->TextButton(GEN_ID, ScreenWidth() - 50, 2, "Menu")) {
+
+
+		if (gui->TextButton(GEN_ID, ScreenWidth() - 20 - city_panel.length()*8, 20, city_panel)) {
+			Game::Get()->m_ShowCityPanel = (Game::Get()->m_ShowCityPanel == true) ? false : true;
+		}
+
+		if (gui->TextButton(GEN_ID, ScreenWidth() - 20 - political_map.length()*8, 40, political_map)) {
+			Game::Get()->m_PoliticalMap = (Game::Get()->m_PoliticalMap == true) ? false : true;
+		}
+
 
 		if (gui->SpriteButton(GEN_ID, ScreenWidth() - 150, ScreenHeight() - 75, "button_exit")) {
 			exit(0);
 		}
 	}
 
+	if (gui->SpriteButton(GEN_ID, 2, 2, "city_panel")) {
+
+		if (gui->TextButton(GEN_ID, 20, 40, "End Turn")) {
+			m_Game->m_AdvanceOneTurn = true;
+			m_Game->AdvanceOneTurn();
+		}
+	}
+
+	turn = "Turn " + std::to_string(m_Game->m_TurnCount);
+	m_Game->DrawStringDecal(olc::vf2d(16, 16), turn, olc::BLACK);
 
 
 	IMGUI::Get()->FinishIMGUI();
+
 	return true;
 }
+
+
+void Renderer::DrawCityPanels() {
+
+	City* city = nullptr;
+
+	for (auto it : *EntitiesStorage::Get()->GetCitiesVec()) {
+
+		city = reinterpret_cast<City*>(it);
+
+		std::string cityname = city->m_CityName;
+		std::string citysize = std::to_string(city->m_CitySize);
+
+		
+		IMGUI::Get()->ToolTipSpriteButton(GEN_ID, city->m_TransformCmp->m_PosX - SPRITES_WIDTH_AND_HEIGHT / 2,
+			city->m_TransformCmp->m_PosY + SPRITES_WIDTH_AND_HEIGHT - 16, "city_panel", city->GetCityLandscapeTypeString());
+		
+
+		Game::Get()->DrawStringDecal(olc::vi2d(city->m_TransformCmp->m_PosX, city->m_TransformCmp->m_PosY + SPRITES_WIDTH_AND_HEIGHT),
+			cityname, olc::BLACK);
+
+
+		Game::Get()->DrawStringDecal(olc::vi2d(city->m_TransformCmp->m_PosX + SPRITES_WIDTH_AND_HEIGHT, city->m_TransformCmp->m_PosY + SPRITES_WIDTH_AND_HEIGHT),
+			citysize, olc::BLACK);
+	}
+}
+
 
 void Renderer::Render() {
 	switch (m_RenderMode) {
@@ -2419,14 +2482,16 @@ void Game::DebugDrawStats() {
 
 	if (!m_DebugDrawGeneralOptions) {
 
+		/*
 		std::string turncount = "Turn " + std::to_string(m_TurnCount);
 		DrawString(olc::vi2d(2, 10), turncount, olc::BLACK, 1.0f);
-
+		*/
+		/*
 		std::string political_map, political_map_on_off;
 		political_map_on_off = (m_PoliticalMap == true) ? "On" : "Off";
 		political_map = "Political Map ( M ): " + political_map_on_off;
 		DrawString(olc::vi2d(2, 20), political_map, olc::BLACK, 1.0f);
-
+		*/
 
 	}
 
@@ -2718,21 +2783,6 @@ void Renderer::Render2Layer2() {
 		// Draw appropriate loaded sprite on position specified.
 		m_Game->DrawDecal(vi2d(city->m_TransformCmp->m_PosX, city->m_TransformCmp->m_PosY),
 			m_Game->m_SpriteResourceMap.at(city->GetCurrentCitySprite()));
-
-		std::string cityname = city->m_CityName;
-		std::string citysize = std::to_string(city->m_CitySize);
-		std::string citylandscape = city->GetCityLandscapeTypeString();
-
-
-		m_Game->DrawString(vi2d(city->m_TransformCmp->m_PosX, city->m_TransformCmp->m_PosY),
-			cityname, olc::BLACK);
-		m_Game->DrawString(vi2d(city->m_TransformCmp->m_PosX + SPRITES_WIDTH_AND_HEIGHT, city->m_TransformCmp->m_PosY),
-			citysize, olc::BLACK);
-		m_Game->DrawString(vi2d(city->m_TransformCmp->m_PosX, city->m_TransformCmp->m_PosY + 10),
-			citylandscape, olc::BLACK);
-
-
-
 	}
 
 
@@ -3030,6 +3080,11 @@ void Renderer::RenderLayer0() {
 	using namespace olc;
 
 	m_Game->Clear(olc::BLANK);
+
+
+	if (Game::Get()->m_ShowCityPanel) {
+		DrawCityPanels();
+	}
 	
 }
 
@@ -3254,12 +3309,14 @@ void ForestSearch::executeStateLogic() {
 
 void Game::AdvanceOneTurn() {
 
-	_updateAI2();
+	if (m_AdvanceOneTurn) {
 
-	// Random city spawning.
-	//SpawnRandomCity();
+		_updateAI2();
 
-	m_TurnCount++;
+		m_TurnCount++;
+
+		m_AdvanceOneTurn = false;
+	}
 }
 
 

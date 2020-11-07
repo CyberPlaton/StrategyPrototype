@@ -87,6 +87,9 @@ public:
 	// Should be the only public method for rendering.
 	void Render();
 
+	void DrawCityPanels();
+
+
 	/*
 	NOTE FOR DRAWING LAYERS.
 
@@ -193,7 +196,6 @@ public:
 	bool m_DebugDrawGeneralOptions = false;
 
 	bool m_TimeModeTurnBased = true;
-	bool m_PoliticalMap = false;
 
 	bool m_DebugDrawRegions = false;
 	std::string m_DebugDrawRegionsCount = "-1";
@@ -201,6 +203,14 @@ public:
 	int m_TurnCount = 1;
 
 	TimeCounter* m_TimeCounter = nullptr;
+
+
+
+	// Game GUI specific flags.
+	bool m_ShowCityPanel = false;
+	bool m_PoliticalMap = false;
+	bool m_AdvanceOneTurn = false;
+
 private:
 	static Game* m_Game;
 
@@ -322,9 +332,8 @@ private:
 	olc::Pixel* m_DefaultWidgetTextColor;
 
 
-	// Same as in Game, but here we re sotring explicitlly GUI sprites and decals.
-	std::map<std::string, olc::Decal*> m_IMGUISpriteResourceMap;
-	std::vector<olc::Sprite*> m_IMGUISpriteStorage;
+	// Same as in Game, but here we re sotring explicitlly GUI sprites for loading everytime...
+	std::map<std::string, olc::Sprite*> m_IMGUISpriteResourceMap;
 
 private:
 	IMGUI() {
