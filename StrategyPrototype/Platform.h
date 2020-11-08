@@ -23,8 +23,8 @@
 #define SPRITES_WIDTH_AND_HEIGHT 64
 #define MAP_SIZE 20 // Defines the size of the map. Would be convenient to set it dynamically.
 
-#define VISIBLE_MAP_WIDTH 13
-#define VISIBLE_MAP_HEIGHT 10
+#define VISIBLE_MAP_WIDTH 14
+#define VISIBLE_MAP_HEIGHT 11
 
 
 #define COMPARE_STRINGS(x, y) strcmp(x.c_str(), y) // Utility.

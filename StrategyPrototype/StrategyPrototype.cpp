@@ -1997,6 +1997,16 @@ void Game::_loadSpriteResources() {
 	m_SpriteResourceMap.insert(std::make_pair("background_city_hills", d_back4));
 
 
+
+
+	// static gui sprite.
+	Sprite* sidepanel = new Sprite("assets/sidepanel.png");
+	m_SpriteStorage.push_back(sidepanel);
+	Decal* dside = new Decal(sidepanel);
+	m_SpriteResourceMap.insert(std::make_pair("sidepanel", dside));
+
+
+
 }
 
 
@@ -2138,8 +2148,12 @@ bool Game::OnUserCreate() {
 	
 	// Testing sprite buttons.
 	// First add ressources.
-	gui->AddSprite("assets/button_exit.png", "button_exit");
+	gui->AddSprite("assets/button_menu.png", "button_menu");
+	gui->AddSprite("assets/button_city_panel.png", "button_city_panel");
+	gui->AddSprite("assets/button_political_map.png", "button_political_map");
+
 	gui->AddSprite("assets/city_panel.png", "city_panel");
+
 
 
 	return true;
@@ -2180,7 +2194,7 @@ bool Game::OnUserUpdate(float fElapsedTime) {
 	static std::string turn;
 
 
-
+	/*
 	if (gui->TextButton(GEN_ID, ScreenWidth() - 50, 2, "Menu")) {
 
 
@@ -2193,11 +2207,11 @@ bool Game::OnUserUpdate(float fElapsedTime) {
 		}
 
 
-		if (gui->SpriteButton(GEN_ID, ScreenWidth() - 150, ScreenHeight() - 75, "button_exit")) {
+		if (gui->SpriteButton(GEN_ID, ScreenWidth() - 150, ScreenHeight() - 75, "button")) {
 			exit(0);
 		}
 	}
-
+	*/
 	if (gui->SpriteButton(GEN_ID, 2, 2, "city_panel")) {
 
 		if (gui->TextButton(GEN_ID, 20, 40, "End Turn")) {
@@ -2205,6 +2219,23 @@ bool Game::OnUserUpdate(float fElapsedTime) {
 			m_Game->AdvanceOneTurn();
 		}
 	}
+
+	if (gui->SpriteButton(GEN_ID, ScreenWidth() - 64 - 32, 20, "button_menu")) {
+
+		if (gui->SpriteButton(GEN_ID, ScreenWidth() - 64 - 32, 60, "button_city_panel")) {
+			Game::Get()->m_ShowCityPanel = (Game::Get()->m_ShowCityPanel == true) ? false : true;
+
+		}
+
+
+		if (gui->SpriteButton(GEN_ID, ScreenWidth() - 64 - 32, 80, "button_political_map")) {
+			Game::Get()->m_PoliticalMap = (Game::Get()->m_PoliticalMap == true) ? false : true;
+
+		}
+
+	}
+
+
 
 	turn = "Turn " + std::to_string(m_Game->m_TurnCount);
 	m_Game->DrawStringDecal(olc::vf2d(16, 16), turn, olc::BLACK);
@@ -3075,7 +3106,12 @@ void Renderer::RenderLayer0() {
 
 	m_Game->Clear(olc::BLANK);
 
+	// Draw gui sidepanel. It is non-interactive.
+	m_Game->DrawDecal(vf2d(m_Game->ScreenWidth() - 384, 0), m_Game->m_SpriteResourceMap.at("sidepanel"));
 
+
+	// Interactive citypanels.
+	// They show stats of city and give short info
 	if (Game::Get()->m_ShowCityPanel) {
 		DrawCityPanels();
 	}
