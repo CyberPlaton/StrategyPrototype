@@ -2028,6 +2028,23 @@ void Game::_loadSpriteResources() {
 
 
 
+
+	// Units.
+	Sprite* gnome = new Sprite("assets/gnome_mechafighter.png");
+	Sprite* troll = new Sprite("assets/troll_raptor_rider.png");
+
+
+	m_SpriteStorage.push_back(gnome);
+	m_SpriteStorage.push_back(troll);
+
+
+	Decal* d_gnome = new Decal(gnome);
+	Decal* d_troll = new Decal(troll);
+
+
+	m_SpriteResourceMap.insert(std::make_pair("gnome_mechafighter", d_gnome));
+	m_SpriteResourceMap.insert(std::make_pair("troll_raptor_rider", d_troll));
+
 }
 
 
@@ -2927,6 +2944,13 @@ void Renderer::Render2Layer1() {
 
 	m_Game->SetDrawTarget(m_Layer1);
 	m_Game->Clear(olc::BLANK);
+
+
+
+	m_Game->DrawDecal(vi2d(320, 256), m_Game->m_SpriteResourceMap.at("gnome_mechafighter"));
+	m_Game->DrawDecal(vi2d(384, 256), m_Game->m_SpriteResourceMap.at("troll_raptor_rider"));
+
+
 
 
 	m_Game->EnableLayer(m_Layer1, true);
