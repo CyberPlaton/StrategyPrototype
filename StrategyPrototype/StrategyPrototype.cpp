@@ -2115,26 +2115,16 @@ bool Game::OnUserCreate() {
 	storage->AddPlayer(player3);
 
 
-
-	City* city2 = MakeNewCity(true, "Rom", CMPEntityRace::Race::RACE_HUMAN, player, 5, 3, 33);
-	//City* city3 = MakeNewCity(true, "Glum", CMPEntityRace::Race::RACE_ORC, player2, 8, 5, 5);
-	City* fort = MakeNewCity(false, "Glum-Lon", CMPEntityRace::Race::RACE_ORC, player2, 12, 7, 8);
-	City* city4 = MakeNewCity(false, "Vaengir", CMPEntityRace::Race::RACE_HUMAN, player3, 3, 9, 2);
-
-	//City* city4 = MakeNewCity(true, "Faerograd", CMPEntityRace::Race::RACE_HUMAN, player, 13, 6, 32);
-
-	//City *city = MakeNewCity(true, "Gnarmol", CMPEntityRace::Race::RACE_ORC, player2, 6, 12, 32);
-	//City* city5 = MakeNewCity(true, "Gundrassil", CMPEntityRace::Race::RACE_HIGHELF, player2, 15, 2, 5);
+	// Cityname should be max 11. chars...
+	City* city2 = MakeNewCity(true, "Stormhaven", CMPEntityRace::Race::RACE_HUMAN, player, 5, 3, 33);
+	City* fort = MakeNewCity(false, "Durotar", CMPEntityRace::Race::RACE_ORC, player2, 12, 7, 8);
+	City* city4 = MakeNewCity(false, "Lorderon", CMPEntityRace::Race::RACE_HUMAN, player3, 3, 9, 2);
 
 
 	storage->AddGameEntitie(city2);
-	//storage->AddGameEntitie(city3);
 	storage->AddGameEntitie(city4);
 	storage->AddGameEntitie(fort);
 
-
-	//storage->AddGameEntitie(city);
-	//storage->AddGameEntitie(city5);
 
 
 	// TimeCounter
@@ -2226,9 +2216,11 @@ bool Game::OnUserUpdate(float fElapsedTime) {
 }
 
 
+static int m_IDHelper = 0;
 void Renderer::DrawCityPanels() {
 
 	City* city = nullptr;
+	int id;
 
 	for (auto it : *EntitiesStorage::Get()->GetCitiesVec()) {
 
@@ -2237,12 +2229,14 @@ void Renderer::DrawCityPanels() {
 		std::string cityname = city->m_CityName;
 		std::string citysize = std::to_string(city->m_CitySize);
 
-		
-		IMGUI::Get()->ToolTipSpriteButton(GEN_ID, city->m_TransformCmp->m_PosX - SPRITES_WIDTH_AND_HEIGHT / 2,
+
+		// By creating gui widget in a loop make sure to define an ID that changes with every loop, or else
+		// we will register input on all loop-widgets at the same time.
+		IMGUI::Get()->ToolTipSpriteButton(++m_IDHelper + GEN_ID, city->m_TransformCmp->m_PosX - SPRITES_WIDTH_AND_HEIGHT / 2,
 			city->m_TransformCmp->m_PosY + SPRITES_WIDTH_AND_HEIGHT - 16, "city_panel", city->GetCityLandscapeTypeString());
 		
 
-		Game::Get()->DrawStringDecal(olc::vi2d(city->m_TransformCmp->m_PosX, city->m_TransformCmp->m_PosY + SPRITES_WIDTH_AND_HEIGHT),
+		Game::Get()->DrawStringDecal(olc::vi2d(city->m_TransformCmp->m_PosX - 16, city->m_TransformCmp->m_PosY + SPRITES_WIDTH_AND_HEIGHT),
 			cityname, olc::BLACK);
 
 
