@@ -150,6 +150,8 @@ private:
 	void _drawGrid();
 
 	void _drawMapTileRegionRect(MapTileRegion* region);
+
+	void _drawCityviewGroundBasedOnCityMaptileType(MapTile* maptile);
 };
 
 

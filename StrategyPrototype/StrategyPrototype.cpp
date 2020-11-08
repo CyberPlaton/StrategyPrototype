@@ -2001,9 +2001,22 @@ void Game::_loadSpriteResources() {
 
 	// static gui sprite.
 	Sprite* sidepanel = new Sprite("assets/sidepanel.png");
+	Sprite* panel = new Sprite("assets/cityview_sidepanel.png");
+	Sprite* panel2 = new Sprite("assets/cityview_upper_panel.png");
+
 	m_SpriteStorage.push_back(sidepanel);
+	m_SpriteStorage.push_back(panel);
+	m_SpriteStorage.push_back(panel2);
+
 	Decal* dside = new Decal(sidepanel);
+	Decal* dside2 = new Decal(panel);
+	Decal* dside3 = new Decal(panel2);
+
+
 	m_SpriteResourceMap.insert(std::make_pair("sidepanel", dside));
+	m_SpriteResourceMap.insert(std::make_pair("cityview_sidepanel", dside2));
+	m_SpriteResourceMap.insert(std::make_pair("cityview_upper_panel", dside3));
+
 
 
 
@@ -2163,6 +2176,12 @@ static int some_const_value = 0;
 
 bool Game::OnUserUpdate(float fElapsedTime) {
 
+	// IMGUI Testing.
+	using namespace std;
+	IMGUI::Get()->PrepareIMGUI();
+	IMGUI::Get()->UpdateUISTate();
+	IMGUI* gui = IMGUI::Get();
+
 
 	if (m_TimeModeTurnBased == false) {
 		
@@ -2181,66 +2200,6 @@ bool Game::OnUserUpdate(float fElapsedTime) {
 
 
 	m_Renderer->Render();
-
-	
-	// IMGUI Testing.
-	using namespace std;
-	IMGUI::Get()->PrepareIMGUI();
-	IMGUI::Get()->UpdateUISTate();
-
-	IMGUI* gui = IMGUI::Get();
-	static std::string city_panel = "City Panel";
-	static std::string political_map = "Political Map";
-	static std::string turn;
-
-
-	/*
-	if (gui->TextButton(GEN_ID, ScreenWidth() - 50, 2, "Menu")) {
-
-
-		if (gui->TextButton(GEN_ID, ScreenWidth() - 20 - city_panel.length()*8, 20, city_panel)) {
-			Game::Get()->m_ShowCityPanel = (Game::Get()->m_ShowCityPanel == true) ? false : true;
-		}
-
-		if (gui->TextButton(GEN_ID, ScreenWidth() - 20 - political_map.length()*8, 40, political_map)) {
-			Game::Get()->m_PoliticalMap = (Game::Get()->m_PoliticalMap == true) ? false : true;
-		}
-
-
-		if (gui->SpriteButton(GEN_ID, ScreenWidth() - 150, ScreenHeight() - 75, "button")) {
-			exit(0);
-		}
-	}
-	*/
-	if (gui->SpriteButton(GEN_ID, 2, 2, "city_panel")) {
-
-		if (gui->TextButton(GEN_ID, 20, 40, "End Turn")) {
-			m_Game->m_AdvanceOneTurn = true;
-			m_Game->AdvanceOneTurn();
-		}
-	}
-
-	if (gui->SpriteButton(GEN_ID, ScreenWidth() - 64 - 32, 20, "button_menu")) {
-
-		if (gui->SpriteButton(GEN_ID, ScreenWidth() - 64 - 32, 60, "button_city_panel")) {
-			Game::Get()->m_ShowCityPanel = (Game::Get()->m_ShowCityPanel == true) ? false : true;
-
-		}
-
-
-		if (gui->SpriteButton(GEN_ID, ScreenWidth() - 64 - 32, 80, "button_political_map")) {
-			Game::Get()->m_PoliticalMap = (Game::Get()->m_PoliticalMap == true) ? false : true;
-
-		}
-
-	}
-
-
-
-	turn = "Turn " + std::to_string(m_Game->m_TurnCount);
-	m_Game->DrawStringDecal(olc::vf2d(16, 16), turn, olc::BLACK);
-
-
 	IMGUI::Get()->FinishIMGUI();
 
 	return true;
@@ -2309,8 +2268,9 @@ void Renderer::Render() {
 
 void Renderer::RenderCityLayer0() {
 
-	m_Game->Clear(olc::BLANK);
+	using namespace olc;
 
+	m_Game->Clear(olc::BLANK);
 
 
 }
@@ -2468,6 +2428,37 @@ void Renderer::RenderCityLayer3() {
 }
 
 
+void Renderer::_drawCityviewGroundBasedOnCityMaptileType(MapTile* maptile) {
+
+	using namespace olc;
+
+	Pixel* tundra = new Pixel(60, 81, 72, 255);
+	Pixel* savannah = new Pixel(184, 174, 118, 255);
+	Pixel* jungle = new Pixel(88, 66, 124, 255);
+	Pixel* temperate = new Pixel(107, 142, 78);
+
+
+
+	switch (maptile->m_MapTileType) {
+	case MapTile::MapTileType::MAPTILE_TYPE_TUNDRA:
+		m_Game->FillRect(vi2d(2, 202), vi2d(700, 520), *tundra);
+		break;
+	case MapTile::MapTileType::MAPTILE_TYPE_SAVANNAH:
+		m_Game->FillRect(vi2d(2, 202), vi2d(700, 520), *savannah);
+		break;
+	case MapTile::MapTileType::MAPTILE_TYPE_TEMPERATE:
+		m_Game->FillRect(vi2d(2, 202), vi2d(700, 520), *temperate);
+		break;
+	case MapTile::MapTileType::MAPTILE_TYPE_JUNGLE:
+		m_Game->FillRect(vi2d(2, 202), vi2d(700, 520), *jungle);
+		break;
+	default:
+		m_Game->FillRect(vi2d(2, 202), vi2d(700, 520), olc::RED);
+		break;
+	}
+}
+
+
 void Renderer::RenderCityLayer4() {
 
 	using namespace olc;
@@ -2476,9 +2467,14 @@ void Renderer::RenderCityLayer4() {
 	m_Game->Clear(olc::BLANK);
 
 
-	m_Game->FillRect(vi2d(2, 2), vi2d(700, 200), olc::DARK_CYAN);
+	//m_Game->FillRect(vi2d(2, 2), vi2d(700, 200), olc::DARK_CYAN);
+	m_Game->DrawDecal(vi2d(2, 2), m_Game->m_SpriteResourceMap.at("cityview_upper_panel"));
 
-	m_Game->FillRect(vi2d(2, 202), vi2d(700, m_Game->ScreenHeight() - 6), olc::VERY_DARK_MAGENTA);
+
+	//m_Game->FillRect(vi2d(2, 202), vi2d(700, m_Game->ScreenHeight() - 6), olc::VERY_DARK_MAGENTA);
+	// Here, draw a color of underground based on the cities Maptile MapTileType...
+	_drawCityviewGroundBasedOnCityMaptileType(GetMapTileAtWorldPosition(m_CurrentViewedCity->m_TransformCmp->m_GameWorldSpaceCell[0], m_CurrentViewedCity->m_TransformCmp->m_GameWorldSpaceCell[1]));
+
 
 	if (m_CurrentViewedCity->GetCityLandscapeType() == City::CityLandscapeType::CITY_LANDSCAPE_FOREST) {
 		m_Game->DrawDecal(vf2d(2, 2), m_Game->m_SpriteResourceMap.at("background_city_forest_temperate"));
@@ -2490,7 +2486,11 @@ void Renderer::RenderCityLayer4() {
 
 	m_Game->DrawDecal(vf2d(2, 2), m_Game->m_SpriteResourceMap.at("background_city_orc_normal"));
 
-	m_Game->FillRect(vi2d(704, 2), vi2d(m_Game->ScreenWidth() - 700 - 6, m_Game->ScreenHeight() - 6), olc::VERY_DARK_GREEN);
+	//m_Game->FillRect(vi2d(704, 2), vi2d(m_Game->ScreenWidth() - 700 - 6, m_Game->ScreenHeight() - 6), olc::VERY_DARK_GREEN);
+	//m_Game->FillRect(vi2d(704, 2), vi2d(574, m_Game->ScreenHeight() - 6), olc::VERY_DARK_GREEN);
+	m_Game->DrawDecal(vi2d(704, 2), m_Game->m_SpriteResourceMap.at("cityview_sidepanel"));
+
+
 
 	m_Game->EnableLayer(m_Layer4, true);
 	m_Game->SetDrawTarget(nullptr);
@@ -3108,6 +3108,37 @@ void Renderer::RenderLayer0() {
 
 	// Draw gui sidepanel. It is non-interactive.
 	m_Game->DrawDecal(vf2d(m_Game->ScreenWidth() - 384, 0), m_Game->m_SpriteResourceMap.at("sidepanel"));
+
+	IMGUI* gui = IMGUI::Get();
+
+	if (gui->SpriteButton(GEN_ID, 2, 2, "city_panel")) {
+
+		if (gui->TextButton(GEN_ID, 20, 40, "End Turn")) {
+			m_Game->m_AdvanceOneTurn = true;
+			m_Game->AdvanceOneTurn();
+		}
+	}
+
+	if (gui->SpriteButton(GEN_ID, m_Game->ScreenWidth() - 64 - 32, 20, "button_menu")) {
+
+		if (gui->SpriteButton(GEN_ID, m_Game->ScreenWidth() - 64 - 32, 60, "button_city_panel")) {
+			Game::Get()->m_ShowCityPanel = (Game::Get()->m_ShowCityPanel == true) ? false : true;
+
+		}
+
+
+		if (gui->SpriteButton(GEN_ID, m_Game->ScreenWidth() - 64 - 32, 80, "button_political_map")) {
+			Game::Get()->m_PoliticalMap = (Game::Get()->m_PoliticalMap == true) ? false : true;
+
+		}
+
+	}
+
+
+	std::string turn;
+	turn = "Turn " + std::to_string(m_Game->m_TurnCount);
+	m_Game->DrawStringDecal(olc::vf2d(16, 16), turn, olc::BLACK);
+
 
 
 	// Interactive citypanels.
