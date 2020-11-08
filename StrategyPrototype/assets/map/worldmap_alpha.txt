@@ -1,4 +1,4 @@
-maptiles;
+fmaptiles;
 water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,jungle,water_shallow,water_shallow,water_shallow,;
 
 maptiles;
@@ -259,7 +259,9 @@ region;
 region;
 19:6, 19:7,;
 region;
-14:7, 15:7, 16:7,;
+14:7, 15:7,;
+region;
+16:7,;
 
 region;
 3:7, 4:7,;
@@ -268,7 +270,9 @@ region;
 region;
 6:7, 6:8, 7:8,;
 region;
-7:7, 8:7, 9:7,;
+8:7, 9:7,;
+region;
+7:7,;
 region;
 10:7,;
 

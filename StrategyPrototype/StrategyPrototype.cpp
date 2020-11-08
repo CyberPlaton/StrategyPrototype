@@ -1978,6 +1978,8 @@ void Game::_loadSpriteResources() {
 	Sprite* back2 = new Sprite("assets/background/city/background_city_orc_normal.png");
 	Sprite* back3 = new Sprite("assets/background/city/background_city_human_normal.png");
 	Sprite* back4 = new Sprite("assets/background/city/background_city_hills.png");
+	Sprite* back5 = new Sprite("assets/background/city/background_city_human_river.png");
+
 
 
 
@@ -1985,16 +1987,22 @@ void Game::_loadSpriteResources() {
 	m_SpriteStorage.push_back(back2);
 	m_SpriteStorage.push_back(back3);
 	m_SpriteStorage.push_back(back4);
+	m_SpriteStorage.push_back(back5);
+
 
 	Decal* d_back1 = new Decal(back1);
 	Decal* d_back2 = new Decal(back2);
 	Decal* d_back3 = new Decal(back3);
 	Decal* d_back4 = new Decal(back4);
+	Decal* d_back5 = new Decal(back5);
+
 
 	m_SpriteResourceMap.insert(std::make_pair("background_city_forest_temperate", d_back1));
 	m_SpriteResourceMap.insert(std::make_pair("background_city_orc_normal", d_back2));
 	m_SpriteResourceMap.insert(std::make_pair("background_city_human_normal", d_back3));
 	m_SpriteResourceMap.insert(std::make_pair("background_city_hills", d_back4));
+	m_SpriteResourceMap.insert(std::make_pair("background_city_human_river", d_back5));
+
 
 
 
@@ -2139,9 +2147,9 @@ bool Game::OnUserCreate() {
 
 
 	// Cityname should be max 11. chars...
-	City* city2 = MakeNewCity(true, "Stormhaven", CMPEntityRace::Race::RACE_HUMAN, player, 5, 3, 33);
-	City* fort = MakeNewCity(false, "Durotar", CMPEntityRace::Race::RACE_ORC, player2, 12, 7, 8);
-	City* city4 = MakeNewCity(false, "Lorderon", CMPEntityRace::Race::RACE_HUMAN, player3, 3, 9, 2);
+	City* city2 = MakeNewCity(true, "Stormhaven", CMPEntityRace::Race::RACE_HUMAN, player, 6, 2, 33);
+	City* fort = MakeNewCity(true, "Durotar", CMPEntityRace::Race::RACE_ORC, player2, 12, 6, 8);
+	City* city4 = MakeNewCity(false, "Lorderon", CMPEntityRace::Race::RACE_HUMAN, player3, 3, 8, 2);
 
 
 	storage->AddGameEntitie(city2);
@@ -2314,7 +2322,126 @@ void Renderer::RenderCityLayer3() {
 	MapTileRegion* region = nullptr;
 	City* city = nullptr;
 
+	// TODO:
 
+	// 1)
+	// Give the right panel center as city center:
+	// Draw the city at this position.
+	int cx = 992 - 32;
+	int cy = 360 - 32;
+
+	// 2)
+	// Add the difference ( := offset  ) of center position and city mapview position 
+	// to all to be drawn tiles etc.
+	int offsetx = cx - m_CurrentViewedCity->m_TransformCmp->m_PosX;
+	int offsety = cy - m_CurrentViewedCity->m_TransformCmp->m_PosY;
+
+
+	// Render the city and surroundings.
+	if (m_CurrentViewedCity == nullptr) return;
+	for (auto it = m_CurrentViewedCity->m_ClaimedRegions.begin(); it != m_CurrentViewedCity->m_ClaimedRegions.end(); ++it) {
+
+		region = reinterpret_cast<MapTileRegion*>(*it);
+
+		for (auto iter = region->m_MapTileRegionTiles.begin(); iter != region->m_MapTileRegionTiles.end(); ++iter) {
+
+			entity = *iter;
+
+			// Layer4. Maptiles.
+			if (COMPARE_STRINGS(entity->m_IDCmp->m_DynamicTypeName, "MapTile") == 0) {
+
+				// Render map tile.
+
+				// Draw appropriate loaded sprite on position specified.
+				m_Game->DrawDecal(vi2d(entity->m_TransformCmp->m_PosX + offsetx, entity->m_TransformCmp->m_PosY + offsety),
+					m_Game->m_SpriteResourceMap.at(entity->m_GraphicsCmp->m_SpriteName));
+
+			}
+
+		}
+	}
+
+
+
+	for (auto it = m_CurrentViewedCity->m_ClaimedRegions.begin(); it != m_CurrentViewedCity->m_ClaimedRegions.end(); ++it) {
+
+		region = reinterpret_cast<MapTileRegion*>(*it);
+
+		for (auto iter = region->m_MapTileRegionTiles.begin(); iter != region->m_MapTileRegionTiles.end(); ++iter) {
+
+			entity = *iter;
+			// Layer 3. Hills, Forests, Mountains, Rivers.
+			maptile = reinterpret_cast<MapTile*>(entity);
+			for (auto itr = maptile->m_MapTileEntities->begin(); itr != maptile->m_MapTileEntities->end(); ++itr) {
+
+				maptile_entt = *itr;
+
+				if (COMPARE_STRINGS(maptile_entt->m_IDCmp->m_DynamicTypeName, "Mountains") == 0) {
+
+					// Render...
+					// Draw appropriate loaded sprite on position specified.
+					m_Game->DrawDecal(vi2d(maptile_entt->m_TransformCmp->m_PosX + offsetx, maptile_entt->m_TransformCmp->m_PosY + offsety),
+						m_Game->m_SpriteResourceMap.at(maptile_entt->m_GraphicsCmp->m_SpriteName));
+				}
+				if (COMPARE_STRINGS(maptile_entt->m_IDCmp->m_DynamicTypeName, "Hills") == 0) {
+
+					// Render...
+					// Draw appropriate loaded sprite on position specified.
+					m_Game->DrawDecal(vi2d(maptile_entt->m_TransformCmp->m_PosX + offsetx, maptile_entt->m_TransformCmp->m_PosY + offsety),
+						m_Game->m_SpriteResourceMap.at(maptile_entt->m_GraphicsCmp->m_SpriteName));
+				}
+				if (COMPARE_STRINGS(maptile_entt->m_IDCmp->m_DynamicTypeName, "Forest") == 0) {
+
+					// Render...
+					// Draw appropriate loaded sprite on position specified.
+					m_Game->DrawDecal(vi2d(maptile_entt->m_TransformCmp->m_PosX + offsetx, maptile_entt->m_TransformCmp->m_PosY + offsety),
+						m_Game->m_SpriteResourceMap.at(maptile_entt->m_GraphicsCmp->m_SpriteName));
+				}
+				if (COMPARE_STRINGS(maptile_entt->m_IDCmp->m_DynamicTypeName, "River") == 0) {
+
+					// Render...
+					// Draw appropriate loaded sprite on position specified.
+					m_Game->DrawDecal(vi2d(maptile_entt->m_TransformCmp->m_PosX + offsetx, maptile_entt->m_TransformCmp->m_PosY + offsety),
+						m_Game->m_SpriteResourceMap.at(maptile_entt->m_GraphicsCmp->m_SpriteName));
+				}
+
+			}
+
+		}
+
+	}
+
+
+	for (auto it = m_CurrentViewedCity->m_ClaimedRegions.begin(); it != m_CurrentViewedCity->m_ClaimedRegions.end(); ++it) {
+
+		region = reinterpret_cast<MapTileRegion*>(*it);
+
+		for (auto iter = region->m_MapTileRegionTiles.begin(); iter != region->m_MapTileRegionTiles.end(); ++iter) {
+
+			entity = *iter;
+			// Layer2. Cities and Improvements.
+			maptile = reinterpret_cast<MapTile*>(entity);
+			for (auto itr = maptile->m_MapTileEntities->begin(); itr != maptile->m_MapTileEntities->end(); ++itr) {
+
+				maptile_entt = *itr;
+
+				if (COMPARE_STRINGS(maptile_entt->m_IDCmp->m_DynamicTypeName, "City") == 0) {
+
+					city = reinterpret_cast<City*>(maptile_entt);
+
+					// Render...
+					m_Game->DrawDecal(vi2d(cx, cy),
+						m_Game->m_SpriteResourceMap.at(city->GetCurrentCitySprite()));
+				}
+
+			}
+
+		}
+
+	}
+
+
+	/*
 	if (m_CurrentViewedCity == nullptr) return;
 	for (auto it = m_CurrentViewedCity->m_ClaimedRegions.begin(); it != m_CurrentViewedCity->m_ClaimedRegions.end(); ++it) {
 
@@ -2416,7 +2543,7 @@ void Renderer::RenderCityLayer3() {
 		}
 
 	}
-
+	*/
 
 
 	// Later render cities citizens and other units ...
@@ -2433,7 +2560,7 @@ void Renderer::_drawCityviewGroundBasedOnCityMaptileType(MapTile* maptile) {
 	using namespace olc;
 
 	Pixel* tundra = new Pixel(60, 81, 72, 255);
-	Pixel* savannah = new Pixel(184, 174, 118, 255);
+	Pixel* savannah = new Pixel(187, 161, 80, 255);
 	Pixel* jungle = new Pixel(88, 66, 124, 255);
 	Pixel* temperate = new Pixel(107, 142, 78);
 
@@ -2466,7 +2593,7 @@ void Renderer::RenderCityLayer4() {
 	m_Game->SetDrawTarget(m_Layer4);
 	m_Game->Clear(olc::BLANK);
 
-
+	/*
 	//m_Game->FillRect(vi2d(2, 2), vi2d(700, 200), olc::DARK_CYAN);
 	m_Game->DrawDecal(vi2d(2, 2), m_Game->m_SpriteResourceMap.at("cityview_upper_panel"));
 
@@ -2489,7 +2616,73 @@ void Renderer::RenderCityLayer4() {
 	//m_Game->FillRect(vi2d(704, 2), vi2d(m_Game->ScreenWidth() - 700 - 6, m_Game->ScreenHeight() - 6), olc::VERY_DARK_GREEN);
 	//m_Game->FillRect(vi2d(704, 2), vi2d(574, m_Game->ScreenHeight() - 6), olc::VERY_DARK_GREEN);
 	m_Game->DrawDecal(vi2d(704, 2), m_Game->m_SpriteResourceMap.at("cityview_sidepanel"));
+	*/
 
+
+	// Version 2.0.
+	m_Game->DrawDecal(vi2d(2, 2), m_Game->m_SpriteResourceMap.at("cityview_upper_panel"));
+
+
+	// Here, draw a color of underground based on the cities Maptile MapTileType...
+	_drawCityviewGroundBasedOnCityMaptileType(GetMapTileAtWorldPosition(m_CurrentViewedCity->m_TransformCmp->m_GameWorldSpaceCell[0], m_CurrentViewedCity->m_TransformCmp->m_GameWorldSpaceCell[1]));
+
+
+	// Draw a background based on the citylandscape, e.g. forest, hills, mountains ...
+	// .. and based on its race, whether theres a river or watertile nearby etc.
+	
+	switch (m_CurrentViewedCity->m_CityRaceCmp->m_EntityRace) { // .. cities race..
+		case CMPEntityRace::Race::RACE_HUMAN:
+
+			// ... landscape ...
+			if (m_CurrentViewedCity->GetCityLandscapeType() == City::CityLandscapeType::CITY_LANDSCAPE_FOREST) {
+				m_Game->DrawDecal(vf2d(2, 2), m_Game->m_SpriteResourceMap.at("background_city_forest_temperate"));
+			}
+			else if (m_CurrentViewedCity->GetCityLandscapeType() == City::CityLandscapeType::CITY_LANDSCAPE_HILLS) {
+				m_Game->DrawDecal(vf2d(2, 2), m_Game->m_SpriteResourceMap.at("background_city_hills"));
+			}
+
+			// ... river or not, mountain or not, hills or not ...
+			if (m_CurrentViewedCity->m_RiverPresentInCity) {
+				m_Game->DrawDecal(vf2d(2, 2), m_Game->m_SpriteResourceMap.at("background_city_human_river"));
+
+			}
+
+			else { // ... standard city without everything ...
+				m_Game->DrawDecal(vf2d(2, 2), m_Game->m_SpriteResourceMap.at("background_city_human_normal"));
+
+			}
+
+			break;
+		case CMPEntityRace::Race::RACE_ORC:
+
+			// ... landscape ...
+			if (m_CurrentViewedCity->GetCityLandscapeType() == City::CityLandscapeType::CITY_LANDSCAPE_FOREST) {
+				m_Game->DrawDecal(vf2d(2, 2), m_Game->m_SpriteResourceMap.at("background_city_forest_temperate"));
+			}
+			else if (m_CurrentViewedCity->GetCityLandscapeType() == City::CityLandscapeType::CITY_LANDSCAPE_HILLS) {
+				m_Game->DrawDecal(vf2d(2, 2), m_Game->m_SpriteResourceMap.at("background_city_hills"));
+			}
+
+			// ... river or not, mountain or not, hills or not ...
+			if (m_CurrentViewedCity->m_RiverPresentInCity) {
+				m_Game->DrawDecal(vf2d(2, 2), m_Game->m_SpriteResourceMap.at("background_city_orc_river"));
+
+			}
+
+			else { // ... standard city without everything ...
+				m_Game->DrawDecal(vf2d(2, 2), m_Game->m_SpriteResourceMap.at("background_city_orc_normal"));
+
+			}
+			break;
+
+		default:
+			break;
+	}
+
+
+
+
+	m_Game->DrawDecal(vi2d(704, 2), m_Game->m_SpriteResourceMap.at("cityview_sidepanel"));
 
 
 	m_Game->EnableLayer(m_Layer4, true);
@@ -3127,7 +3320,7 @@ void Renderer::RenderLayer0() {
 		}
 
 
-		if (gui->SpriteButton(GEN_ID, m_Game->ScreenWidth() - 64 - 32, 80, "button_political_map")) {
+		if (gui->SpriteButton(GEN_ID, m_Game->ScreenWidth() - 64 - 32, 100, "button_political_map")) {
 			Game::Get()->m_PoliticalMap = (Game::Get()->m_PoliticalMap == true) ? false : true;
 
 		}

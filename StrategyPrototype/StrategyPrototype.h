@@ -209,8 +209,8 @@ public:
 
 
 	// Game GUI specific flags.
-	bool m_ShowCityPanel = false;
-	bool m_PoliticalMap = false;
+	bool m_ShowCityPanel = true;
+	bool m_PoliticalMap = true;
 	bool m_AdvanceOneTurn = false;
 
 private:
