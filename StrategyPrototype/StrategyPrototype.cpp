@@ -2032,14 +2032,50 @@ void Game::_loadSpriteResources() {
 	// Units.
 	Sprite* gnome = new Sprite("assets/gnome_mechafighter.png");
 	Sprite* troll = new Sprite("assets/troll_raptor_rider.png");
+	Sprite* gnome1 = new Sprite("assets/gnome_citizen.png");
+	Sprite* gnome2 = new Sprite("assets/gnome_worker.png");
+	Sprite* gnome3 = new Sprite("assets/gnome_noble.png");
+	Sprite* gnome4 = new Sprite("assets/gnome_priest.png");
+	Sprite* gnome5 = new Sprite("assets/gnome_fisher.png");
+	Sprite* gnome6 = new Sprite("assets/gnome_hunter.png");
+	Sprite* gnome7 = new Sprite("assets/gnome_miner.png");
+	Sprite* gnome8 = new Sprite("assets/gnome_farmer.png");
+
+
+
+	m_SpriteStorage.push_back(gnome1);
+	m_SpriteStorage.push_back(gnome2);
+	m_SpriteStorage.push_back(gnome3);
+	m_SpriteStorage.push_back(gnome4);
+	m_SpriteStorage.push_back(gnome5);
+	m_SpriteStorage.push_back(gnome6);
+	m_SpriteStorage.push_back(gnome7);
+	m_SpriteStorage.push_back(gnome8);
 
 
 	m_SpriteStorage.push_back(gnome);
 	m_SpriteStorage.push_back(troll);
 
+	Decal* d_gnome1 = new Decal(gnome1);
+	Decal* d_gnome2 = new Decal(gnome2);
+	Decal* d_gnome3 = new Decal(gnome3);
+	Decal* d_gnome4 = new Decal(gnome4);
+	Decal* d_gnome5 = new Decal(gnome5);
+	Decal* d_gnome6 = new Decal(gnome6);
+	Decal* d_gnome7 = new Decal(gnome7);
+	Decal* d_gnome8 = new Decal(gnome8);
 
 	Decal* d_gnome = new Decal(gnome);
 	Decal* d_troll = new Decal(troll);
+
+	m_SpriteResourceMap.insert(std::make_pair("gnome_citizen", d_gnome1));
+	m_SpriteResourceMap.insert(std::make_pair("gnome_worker", d_gnome2));
+	m_SpriteResourceMap.insert(std::make_pair("gnome_noble", d_gnome3));
+	m_SpriteResourceMap.insert(std::make_pair("gnome_priest", d_gnome4));
+	m_SpriteResourceMap.insert(std::make_pair("gnome_fisher", d_gnome5));
+	m_SpriteResourceMap.insert(std::make_pair("gnome_hunter", d_gnome6));
+	m_SpriteResourceMap.insert(std::make_pair("gnome_miner", d_gnome7));
+	m_SpriteResourceMap.insert(std::make_pair("gnome_farmer", d_gnome8));
 
 
 	m_SpriteResourceMap.insert(std::make_pair("gnome_mechafighter", d_gnome));
@@ -2303,11 +2339,22 @@ void Renderer::RenderCityLayer0() {
 
 void Renderer::RenderCityLayer1() {
 
+	using namespace olc;
+
 	m_Game->SetDrawTarget(m_Layer1);
 	m_Game->Clear(olc::BLANK);
 
 
-
+	/*
+	m_Game->DrawDecal(vi2d(128, 128), m_Game->m_SpriteResourceMap.at("gnome_worker"));
+	m_Game->DrawDecal(vi2d(256, 128), m_Game->m_SpriteResourceMap.at("gnome_citizen"));
+	m_Game->DrawDecal(vi2d(320, 128), m_Game->m_SpriteResourceMap.at("gnome_noble"));
+	m_Game->DrawDecal(vi2d(384, 128), m_Game->m_SpriteResourceMap.at("gnome_farmer"));
+	m_Game->DrawDecal(vi2d(512, 128), m_Game->m_SpriteResourceMap.at("gnome_fisher"));
+	m_Game->DrawDecal(vi2d(512, 256), m_Game->m_SpriteResourceMap.at("gnome_hunter"));
+	m_Game->DrawDecal(vi2d(512, 320), m_Game->m_SpriteResourceMap.at("gnome_priest"));
+	m_Game->DrawDecal(vi2d(512, 384), m_Game->m_SpriteResourceMap.at("gnome_miner"));
+	*/
 
 
 	m_Game->EnableLayer(m_Layer1, true);
@@ -2946,11 +2993,19 @@ void Renderer::Render2Layer1() {
 	m_Game->Clear(olc::BLANK);
 
 
-
+	/*
 	m_Game->DrawDecal(vi2d(320, 256), m_Game->m_SpriteResourceMap.at("gnome_mechafighter"));
 	m_Game->DrawDecal(vi2d(384, 256), m_Game->m_SpriteResourceMap.at("troll_raptor_rider"));
 
-
+	m_Game->DrawDecal(vi2d(128, 128), m_Game->m_SpriteResourceMap.at("gnome_worker"));
+	m_Game->DrawDecal(vi2d(256, 128), m_Game->m_SpriteResourceMap.at("gnome_citizen"));
+	m_Game->DrawDecal(vi2d(320, 128), m_Game->m_SpriteResourceMap.at("gnome_noble"));
+	m_Game->DrawDecal(vi2d(384, 128), m_Game->m_SpriteResourceMap.at("gnome_farmer"));
+	m_Game->DrawDecal(vi2d(512, 128), m_Game->m_SpriteResourceMap.at("gnome_fisher"));
+	m_Game->DrawDecal(vi2d(512, 256), m_Game->m_SpriteResourceMap.at("gnome_hunter"));
+	m_Game->DrawDecal(vi2d(512, 320), m_Game->m_SpriteResourceMap.at("gnome_priest"));
+	m_Game->DrawDecal(vi2d(512, 384), m_Game->m_SpriteResourceMap.at("gnome_miner"));
+	*/
 
 
 	m_Game->EnableLayer(m_Layer1, true);
