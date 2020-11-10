@@ -1237,22 +1237,6 @@ void CMPCameraInput::_handleMapViewKeyBoard(Camera* cam) {
 		}
 
 
-		if (context->GetKey(olc::Key::P).bPressed) {
-
-			using namespace std;
-			cout << APP_COLOR;
-			cout << "Players in game: " << endl;
-
-			for (auto it : *EntitiesStorage::Get()->GetPlayersVec()) {
-
-				cout << "NAME: " << it->m_PlayerName << endl;
-				cout << "COLOR: " << it->m_PlayerColor << endl;
-				cout << "CITIES: " << it->m_PlayerCities.size() << endl;
-
-			}
-
-
-		}
 
 
 		if (context->GetKey(olc::Key::SPACE).bPressed) {
@@ -3649,6 +3633,13 @@ void Game::AdvanceOneTurn() {
 		m_TurnCount++;
 
 		m_AdvanceOneTurn = false;
+	}
+	else if (m_TimeModeTurnBased == false) {
+
+		_updateAI2();
+
+
+		m_TurnCount++;
 	}
 }
 
