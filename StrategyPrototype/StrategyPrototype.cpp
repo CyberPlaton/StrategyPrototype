@@ -427,6 +427,7 @@ int IMGUI::ToolTipButton(int id, int xpos, int ypos, std::string text, std::stri
 
 int IMGUI::ToolTipSpriteButton(int id, int xpos, int ypos, std::string spritename, std::string tooltiptext) {
 
+	/*
 	using namespace olc;
 
 	Decal* decal = nullptr;
@@ -520,6 +521,9 @@ int IMGUI::ToolTipSpriteButton(int id, int xpos, int ypos, std::string spritenam
 
 	// .. else nothing happend.
 	return 0;
+	*/
+
+	return 0;
 }
 
 
@@ -591,6 +595,7 @@ int IMGUI::TextButton(int id, int xpos, int ypos, std::string text) {
 
 int IMGUI::SpriteButton(int id, int xpos, int ypos, std::string spritename) {
 
+	/*
 	using namespace olc;
 	Decal* decal = nullptr;
 
@@ -663,12 +668,15 @@ int IMGUI::SpriteButton(int id, int xpos, int ypos, std::string spritename) {
 
 	// .. else nothing happend.
 	return 0;
+	*/
+	return 0;
+
 }
 
 
 int IMGUI::Button(int id, int xpos, int ypos) {
 
-
+	
 	if (IsHovered(xpos, ypos, 74, 28)) {
 
 		// Set this button as the hovered item.
@@ -2269,7 +2277,7 @@ bool Game::OnUserUpdate(float fElapsedTime) {
 
 static int m_IDHelper = 0;
 void Renderer::DrawCityPanels() {
-
+	/*
 	City* city = nullptr;
 	int id;
 
@@ -2294,6 +2302,7 @@ void Renderer::DrawCityPanels() {
 		Game::Get()->DrawStringDecal(olc::vi2d(city->m_TransformCmp->m_PosX + SPRITES_WIDTH_AND_HEIGHT, city->m_TransformCmp->m_PosY + SPRITES_WIDTH_AND_HEIGHT),
 			citysize, olc::BLACK);
 	}
+	*/
 }
 
 
