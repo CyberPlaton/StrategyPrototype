@@ -839,11 +839,27 @@ MapTileRegion* GetRegionAtWorldPosition(int x, int y) {
 	return nullptr;
 }
 
-
 bool RaiseDeepForestRandomly() {
 
-	int r = Random() % 999;
-	return ((r == 0) ? true : false);
+	int probability_factor = 0;
+	int forests_count = GetTotalForestsCount();
+	if (forests_count < 10) {
+		probability_factor = -999;
+	}
+	else if (forests_count < 50) {
+		probability_factor = -997;
+	}
+	else if (forests_count < 100) {
+		probability_factor = 1;
+	}
+
+	// Every uneven turn, execute the testing.
+	if (Game::Get()->m_TurnCount % 3 == 0) {
+
+		int r = Random() % (999 + probability_factor);
+		return ((r == 0) ? true : false);
+	}
+	else return false;
 }
 
 
@@ -3601,7 +3617,7 @@ void ForestSearch::executeStateLogic() {
 				m_ManagedForest->m_ForestType = Forest::ForestType::FOREST_DEEP;
 				m_ManagedForest->m_ForestLifetime = 200 * TURN_TIME_MODIFIER;
 
-				cout << color(colors::WHITE);
+				cout << color(colors::MAGENTA);
 				cout << "Randomly raised DeepForest " << m_ManagedForest->m_IDCmp->m_ID << " at position " << m_ManagedForest->m_TransformCmp->m_GameWorldSpaceCell[0] << " : " << m_ManagedForest->m_TransformCmp->m_GameWorldSpaceCell[1] << white << endl;
 
 			}

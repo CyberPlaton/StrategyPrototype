@@ -384,7 +384,6 @@ public:
 
 private:
 
-
 private:
 
 	bool _surroundedByForestNormalOrDeep(Forest* forest);
