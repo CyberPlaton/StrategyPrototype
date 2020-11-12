@@ -337,6 +337,9 @@ private:
 	// Same as in Game, but here we re sotring explicitlly GUI sprites for loading everytime...
 	std::map<std::string, olc::Sprite*> m_IMGUISpriteResourceMap;
 
+	// Holds currently used decals.
+	std::map<std::string, olc::Decal*> m_IMGUIDecalMap;
+
 private:
 	IMGUI() {
 		m_UIState = new UIState();

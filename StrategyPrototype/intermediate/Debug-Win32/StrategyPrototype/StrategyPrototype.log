@@ -12,32 +12,95 @@ C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPr
 C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(222,16): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
 C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(366,54): warning C4018: '>': signed/unsigned mismatch
 C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(369,55): warning C4018: '>': signed/unsigned mismatch
-C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(2797,46): warning C4244: 'argument': conversion from 'float' to 'uint32_t', possible loss of data
-C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(2800,53): warning C4244: 'argument': conversion from 'float' to 'uint32_t', possible loss of data
-C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(2804,53): warning C4244: 'argument': conversion from 'float' to 'uint32_t', possible loss of data
-C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(2808,58): warning C4244: 'argument': conversion from 'float' to 'uint32_t', possible loss of data
-C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(2812,57): warning C4244: 'argument': conversion from 'float' to 'uint32_t', possible loss of data
-C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(2822,58): warning C4244: 'argument': conversion from 'float' to 'uint32_t', possible loss of data
-C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(2833,58): warning C4244: 'argument': conversion from 'float' to 'uint32_t', possible loss of data
-C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(2851,96): warning C4244: 'argument': conversion from 'float' to 'uint32_t', possible loss of data
-C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(2855,106): warning C4244: 'argument': conversion from 'float' to 'uint32_t', possible loss of data
-C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(2859,108): warning C4244: 'argument': conversion from 'float' to 'uint32_t', possible loss of data
-C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(2867,110): warning C4244: 'argument': conversion from 'float' to 'uint32_t', possible loss of data
-C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(2877,55): warning C4244: 'argument': conversion from 'float' to 'uint32_t', possible loss of data
-C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(3391,47): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(475,61): warning C4018: '>': signed/unsigned mismatch
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(478,62): warning C4018: '>': signed/unsigned mismatch
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(494,36): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
           with
           [
               T=float
           ]
-C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(3467,16): warning C4101: 'err': unreferenced local variable
-C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(821): warning C4715: 'GetPlayer': not all control paths return a value
-C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(983): warning C4715: 'Game::RandomColor': not all control paths return a value
-C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(963): warning C4172: returning address of local variable or temporary
-C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(966): warning C4172: returning address of local variable or temporary
-C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(969): warning C4172: returning address of local variable or temporary
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(494,30): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(505,38): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(505,32): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(511,38): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(511,32): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(646,36): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(646,30): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(657,38): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(657,32): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(663,38): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(663,32): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(2291,6): warning C4101: 'id': unreferenced local variable
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(2806,46): warning C4244: 'argument': conversion from 'float' to 'uint32_t', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(2809,53): warning C4244: 'argument': conversion from 'float' to 'uint32_t', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(2813,53): warning C4244: 'argument': conversion from 'float' to 'uint32_t', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(2817,58): warning C4244: 'argument': conversion from 'float' to 'uint32_t', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(2821,57): warning C4244: 'argument': conversion from 'float' to 'uint32_t', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(2831,58): warning C4244: 'argument': conversion from 'float' to 'uint32_t', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(2842,58): warning C4244: 'argument': conversion from 'float' to 'uint32_t', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(2860,96): warning C4244: 'argument': conversion from 'float' to 'uint32_t', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(2864,106): warning C4244: 'argument': conversion from 'float' to 'uint32_t', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(2868,108): warning C4244: 'argument': conversion from 'float' to 'uint32_t', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(2876,110): warning C4244: 'argument': conversion from 'float' to 'uint32_t', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(2886,55): warning C4244: 'argument': conversion from 'float' to 'uint32_t', possible loss of data
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(3400,47): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(3476,16): warning C4101: 'err': unreferenced local variable
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(830): warning C4715: 'GetPlayer': not all control paths return a value
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(992): warning C4715: 'Game::RandomColor': not all control paths return a value
 C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(972): warning C4172: returning address of local variable or temporary
 C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(975): warning C4172: returning address of local variable or temporary
 C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(978): warning C4172: returning address of local variable or temporary
-C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(2107): warning C4715: 'IMGUI::AddSprite': not all control paths return a value
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(981): warning C4172: returning address of local variable or temporary
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(984): warning C4172: returning address of local variable or temporary
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(987): warning C4172: returning address of local variable or temporary
+C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(2116): warning C4715: 'IMGUI::AddSprite': not all control paths return a value
 C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\Components.h(162): warning C4715: 'CMPArtificialIntelligence::TryExecuteStateLogic': not all control paths return a value
   StrategyPrototype.vcxproj -> C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\\StrategyPrototype\bin\Debug-Win32\StrategyPrototype\StrategyPrototype.exe

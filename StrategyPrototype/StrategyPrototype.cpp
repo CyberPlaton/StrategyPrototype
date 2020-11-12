@@ -427,17 +427,24 @@ int IMGUI::ToolTipButton(int id, int xpos, int ypos, std::string text, std::stri
 
 int IMGUI::ToolTipSpriteButton(int id, int xpos, int ypos, std::string spritename, std::string tooltiptext) {
 
-	/*
+	
 	using namespace olc;
 
 	Decal* decal = nullptr;
 
-	for (auto it : this->m_IMGUISpriteResourceMap) {
+	if (m_IMGUIDecalMap.at(spritename) == nullptr) {
 
-		if (COMPARE_STRINGS_2(it.first, spritename) == 0) {
+		for (auto it : this->m_IMGUISpriteResourceMap) {
 
-			decal = new Decal(it.second); // Create dynamically new decal for rendering...
+			if (COMPARE_STRINGS_2(it.first, spritename) == 0) {
+
+				decal = new Decal(it.second); // Create dynamically new decal for rendering...
+				m_IMGUIDecalMap.insert(std::make_pair(spritename, decal));
+			}
 		}
+	}
+	else {
+		decal = m_IMGUIDecalMap.at(spritename);
 	}
 
 	int w = decal->sprite->width;
@@ -521,9 +528,6 @@ int IMGUI::ToolTipSpriteButton(int id, int xpos, int ypos, std::string spritenam
 
 	// .. else nothing happend.
 	return 0;
-	*/
-
-	return 0;
 }
 
 
@@ -595,17 +599,25 @@ int IMGUI::TextButton(int id, int xpos, int ypos, std::string text) {
 
 int IMGUI::SpriteButton(int id, int xpos, int ypos, std::string spritename) {
 
-	/*
+	
 	using namespace olc;
 	Decal* decal = nullptr;
 
-	for (auto it : this->m_IMGUISpriteResourceMap) {
+	if (m_IMGUIDecalMap.at(spritename) == nullptr) {
 
-		if (COMPARE_STRINGS_2(it.first, spritename) == 0) {
+		for (auto it : this->m_IMGUISpriteResourceMap) {
 
-			decal = new Decal(it.second); // Create dynamically new decal for rendering...
+			if (COMPARE_STRINGS_2(it.first, spritename) == 0) {
+
+				decal = new Decal(it.second); // Create dynamically new decal for rendering...
+				m_IMGUIDecalMap.insert(std::make_pair(spritename, decal));
+			}
 		}
 	}
+	else {
+		decal = m_IMGUIDecalMap.at(spritename);
+	}
+
 
 	int w = decal->sprite->width;
 	int h = decal->sprite->height;
@@ -668,9 +680,6 @@ int IMGUI::SpriteButton(int id, int xpos, int ypos, std::string spritename) {
 
 	// .. else nothing happend.
 	return 0;
-	*/
-	return 0;
-
 }
 
 
@@ -2100,10 +2109,10 @@ bool IMGUI::AddSprite(std::string path, std::string spritename) {
 	if (s == nullptr) return false;
 
 	IMGUI::Get()->m_IMGUISpriteResourceMap.insert(std::make_pair(spritename, s));
-	/*
+	
 	Decal* d = new Decal(s);
-	IMGUI::Get()->m_IMGUISpriteResourceMap.insert(std::make_pair(spritename, d));
-	*/
+	IMGUI::Get()->m_IMGUIDecalMap.insert(std::make_pair(spritename, d));
+	
 }
 
 
@@ -2277,7 +2286,7 @@ bool Game::OnUserUpdate(float fElapsedTime) {
 
 static int m_IDHelper = 0;
 void Renderer::DrawCityPanels() {
-	/*
+	
 	City* city = nullptr;
 	int id;
 
@@ -2302,7 +2311,7 @@ void Renderer::DrawCityPanels() {
 		Game::Get()->DrawStringDecal(olc::vi2d(city->m_TransformCmp->m_PosX + SPRITES_WIDTH_AND_HEIGHT, city->m_TransformCmp->m_PosY + SPRITES_WIDTH_AND_HEIGHT),
 			citysize, olc::BLACK);
 	}
-	*/
+	
 }
 
 
