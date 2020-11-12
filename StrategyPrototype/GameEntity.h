@@ -62,6 +62,16 @@ public:
 		m_TransformCmp = new CMPTransform();
 	}
 
+	~GameEntity() {
+		delete m_IDCmp; m_IDCmp = nullptr;
+		delete m_TransformCmp; m_TransformCmp = nullptr;
+		delete m_PhysicsCmp; m_PhysicsCmp = nullptr;
+		delete m_GraphicsCmp; m_GraphicsCmp = nullptr;
+		delete m_FSM; m_FSM = nullptr;
+		delete m_MovementCostCmp; m_MovementCostCmp = nullptr;
+		delete m_EntityRaceCmp; m_EntityRaceCmp = nullptr;
+	}
+
 	// Basic components for an Entity.
 	CMPIdentifier* m_IDCmp = nullptr;
 	CMPTransform* m_TransformCmp = nullptr;

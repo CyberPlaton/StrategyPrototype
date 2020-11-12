@@ -3,6 +3,8 @@
 #include"ColorConsole.h"
 #include"FiniteStateMachine.h"
 
+class MapTile;
+
 struct TimeCounter {
 
 	void Start() {
@@ -30,9 +32,6 @@ struct TimeCounter {
 };
 
 
-
-class MapTile;
-
 struct CMPIdentifier {
 	CMPIdentifier() {
 
@@ -43,6 +42,11 @@ struct CMPIdentifier {
 
 	}
 
+	~CMPIdentifier() {
+		m_ID.erase();
+		m_DynamicTypeName.erase();
+	}
+
 	std::string m_ID;
 	std::string m_DynamicTypeName;
 };
@@ -51,15 +55,22 @@ struct CMPIdentifier {
 struct CMPGraphics{
 
 
+	~CMPGraphics() {
+		m_DrawingLayer.erase();
+		m_SpriteName.erase();
+	}
 
 	std::string m_DrawingLayer;
-
 	std::string m_SpriteName;
 };
 
 
 struct CMPTransform {
 
+	~CMPTransform() {
+		m_Height = m_Width = m_PosX = m_PosY = 0;
+		m_Cell[0] = m_Cell[1] = m_GameWorldSpaceCell[0] = m_GameWorldSpaceCell[1] = 0;
+	}
 
 
 	int m_PosX;
@@ -162,6 +173,12 @@ struct CMPArtificialIntelligence {
 	}
 
 
+	~CMPArtificialIntelligence() {
+		m_StateLogicMap.clear();
+		m_ManagedObject = nullptr;
+		m_StateMachine = nullptr;
+	}
+
 	std::map<std::string, IStateLogic*> m_StateLogicMap;
 	GameEntity* m_ManagedObject = nullptr;;
 	FiniteStateMachine* m_StateMachine = nullptr;;
@@ -222,6 +239,11 @@ struct CMPEntityRace {
 		default:
 			break;
 		}
+	}
+
+	~CMPEntityRace() {
+		m_EntityRace = Race::RACE_INVALID;
+		m_EntityRaceString.clear();
 	}
 
 	Race m_EntityRace = Race::RACE_INVALID;
@@ -298,6 +320,17 @@ struct CMPMovementCostModifier {
 
 	void SetBaseMovementCost(unsigned int n) { m_BaseMovementCost = n; }
 	int GetBaseMovementCost() { return m_BaseMovementCost; }
+
+	~CMPMovementCostModifier() {
+		m_BaseMovementCost = 0;
+		m_RaceModifierDarkElf = 0;
+		m_RaceModifierHuman = 0;
+		m_RaceModifierHighElf = 0;
+		m_RaceModifierTroll = 0;
+		m_RaceModifierGnome = 0;
+		m_RaceModifierGoblin = 0;
+		m_RaceModifierDwarf = 0;
+	}
 
 	int m_BaseMovementCost = -1;
 
