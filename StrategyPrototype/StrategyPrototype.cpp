@@ -858,8 +858,13 @@ MapTileRegion* GetRegionAtWorldPosition(int x, int y) {
 
 bool RaiseDeepForestRandomly() {
 
+	using namespace std;
+
 	int probability_factor = 0;
 	int forests_count = GetTotalForestsCount();
+	int coefficient = 0;
+	
+	/*
 	if (forests_count < 10) {
 		probability_factor = -999;
 	}
@@ -868,6 +873,31 @@ bool RaiseDeepForestRandomly() {
 	}
 	else if (forests_count < 100) {
 		probability_factor = 1;
+	}
+	*/
+
+	coefficient = 0.5f + int((MAP_SIZE * MAP_SIZE) / forests_count);
+	if (coefficient >= 8) { // .. enter preservation mode.
+		// Interpretation of coefficient:
+		// Every "coefficient" maptiles we can see a forest.
+
+		probability_factor = -997; // 50% probablity...
+
+		cout << APP_ERROR_COLOR;
+		cout << "ENTERED FOREST-SELF-PRESERVATION MODE: coefficient < 8" << endl;
+		cout << "Formula: 0.5f + (20*20)/" << forests_count << " = " << coefficient << white << endl << endl;
+
+	}
+	/*
+	else if ((MAP_SIZE * MAP_SIZE) / forests_count < 9) {// .. pre-preseration mode.
+		probability_factor = -996; // 50% probablity... either r is even or uneven.
+
+		cout << APP_ERROR_COLOR;
+		cout << "ENTERED FOREST-SELF-PRESERVATION MODE:  < 9" << white << endl << endl;
+	}
+	*/
+	else {
+		// .. do nothin for now.
 	}
 
 	// Every uneven turn, execute the testing.
