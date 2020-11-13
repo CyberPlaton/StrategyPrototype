@@ -2227,9 +2227,9 @@ bool Game::OnUserCreate() {
 
 
 	// Cityname should be max 11. chars...
-	City* city2 = MakeNewCity(true, "Stormhaven", CMPEntityRace::Race::RACE_HUMAN, player, 6, 2, 33);
-	City* fort = MakeNewCity(true, "Durotar", CMPEntityRace::Race::RACE_ORC, player2, 12, 6, 8);
-	City* city4 = MakeNewCity(false, "Lorderon", CMPEntityRace::Race::RACE_HUMAN, player3, 3, 8, 2);
+	City* city2 = MakeNewCity(true, "Stormhaven", CMPEntityRace::Race::RACE_HUMAN, player, 7, 6, 33);
+	City* fort = MakeNewCity(true, "Durotar", CMPEntityRace::Race::RACE_ORC, player2, 16, 9, 8);
+	City* city4 = MakeNewCity(false, "Lorderon", CMPEntityRace::Race::RACE_HUMAN, player3, 4, 11, 2);
 
 
 	storage->AddGameEntitie(city2);
