@@ -1,4 +1,4 @@
-fmaptiles;
+maptiles;
 water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,water_shallow,jungle,water_shallow,water_shallow,water_shallow,;
 
 maptiles;
