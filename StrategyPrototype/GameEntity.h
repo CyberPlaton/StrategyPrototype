@@ -84,6 +84,23 @@ public:
 };
 
 
+class Unit : public GameEntity {
+public:
+	Unit() {
+
+	}
+	~Unit() = default;
+
+
+
+private:
+
+
+private:
+
+};
+
+
 struct CityRessource : public GameEntity {
 	CityRessource(std::string name, std::string spritename, int xpos, int ypos) {
 
