@@ -95,6 +95,10 @@ public:
 
 
 
+	unsigned int m_Age = 0;
+	std::string m_Name;
+	std::string m_Birthsign; // Defined by year-quartal in which unit was "born".
+
 private:
 
 
