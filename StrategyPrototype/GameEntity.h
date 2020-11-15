@@ -1,6 +1,7 @@
 #pragma once
 #include"Components.h"
 #include"FiniteStateMachine.h"
+#include"YearCounter.h"
 
 class MapTile;
 class MapRessource;
@@ -84,6 +85,7 @@ public:
 };
 
 
+
 class Unit : public GameEntity {
 public:
 	Unit() {
@@ -99,6 +101,7 @@ private:
 private:
 
 };
+
 
 
 struct CityRessource : public GameEntity {

@@ -88,6 +88,7 @@ public:
 	void Render();
 
 	void DrawCityPanels();
+	void DrawYearQuartalPanel();
 
 
 	/*

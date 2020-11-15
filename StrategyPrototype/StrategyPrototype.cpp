@@ -2256,6 +2256,8 @@ bool Game::OnUserCreate() {
 	gui->AddSprite("assets/city_panel.png", "city_panel");
 
 
+	// Astrology and birthsigns. YearCounter.
+	YearCounter::Get(); // .. = construction.
 
 	return true;
 }
@@ -2323,6 +2325,23 @@ void Renderer::DrawCityPanels() {
 	}
 	
 }
+
+
+
+void Renderer::DrawYearQuartalPanel() {
+
+	YearCounter* counter = YearCounter::Get();
+
+	std::string year_quartal = "Y. " + std::to_string(counter->m_CurrentYear) + "	Q. " + std::to_string(counter->m_CurrentQuartal + 1);
+	std::string tooltip = counter->GetCurrentBirthsign();
+
+	// The tooltip will show current birtsign.
+	IMGUI::Get()->ToolTipSpriteButton(GEN_ID, 764, 2, "city_panel", tooltip);
+
+	// Draw current year...
+	Game::Get()->DrawStringDecal(olc::vi2d(764 + 16, 16), year_quartal, olc::BLACK);
+}
+
 
 
 void Renderer::Render() {
@@ -2780,9 +2799,6 @@ void Renderer::RenderCityLayer4() {
 	m_Game->EnableLayer(m_Layer4, true);
 	m_Game->SetDrawTarget(nullptr);
 }
-
-
-
 
 
 
@@ -3440,6 +3456,7 @@ void Renderer::RenderLayer0() {
 	m_Game->DrawStringDecal(olc::vf2d(16, 16), turn, olc::BLACK);
 
 
+	DrawYearQuartalPanel();
 
 	// Interactive citypanels.
 	// They show stats of city and give short info
@@ -3677,6 +3694,8 @@ void Game::AdvanceOneTurn() {
 		m_TurnCount++;
 
 		m_AdvanceOneTurn = false;
+
+		YearCounter::Get()->AdvanceOneTurn();
 	}
 	else if (m_TimeModeTurnBased == false) {
 
@@ -3684,6 +3703,8 @@ void Game::AdvanceOneTurn() {
 
 
 		m_TurnCount++;
+
+		YearCounter::Get()->AdvanceOneTurn();
 	}
 }
 
