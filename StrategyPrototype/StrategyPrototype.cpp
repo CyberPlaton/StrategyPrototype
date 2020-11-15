@@ -10,6 +10,17 @@ int IMGUI::m_WidgetID = 0; // A valid ID is greater 0.
 
 
 
+Unit* MakeNewUnitAtPos(std::string unit_class, std::string spritename, int xpos, int ypos, int x_cell, int y_cell) {
+
+	Unit* u = new Unit(spritename, xpos, ypos, x_cell, y_cell);
+
+	u->SetBirthsign();
+
+	u->SetClass(unit_class);
+
+	return u;
+}
+
 std::string IMGUI::_getLastHitButton() {
 
 	if (Game::Get()->GetKey(olc::Key::SPACE).bPressed) {
@@ -1522,6 +1533,20 @@ void CMPCameraInput::_handleMapViewMouse(Camera* cam) {
 	
 	if (context->GetMouse(0).bPressed) {
 		IMGUI::Get()->GetUIState()->m_MouseDown = 0;
+
+
+		// TESTING: Make archer at pos.
+		int x = context->GetMouseX();
+		int y = context->GetMouseY();
+		int x_cell = GetMaptileAtMousePosition(x, y)->m_TransformCmp->m_GameWorldSpaceCell[0];
+		int y_cell = GetMaptileAtMousePosition(x, y)->m_TransformCmp->m_GameWorldSpaceCell[1];
+
+		Unit* unit = MakeNewUnitAtPos("Archer", "gnome_mechafighter", x, y, x_cell, y_cell);
+
+		if (unit) {
+			// Print debugg stats.
+
+		}
 	}
 
 	// Reset the mousedown state to non-down...
@@ -3036,6 +3061,22 @@ void Renderer::Render2Layer1() {
 	m_Game->SetDrawTarget(m_Layer1);
 	m_Game->Clear(olc::BLANK);
 
+	std::vector<GameEntity*> vec = *EntitiesStorage::Get()->GetUnitsVec();
+
+	Unit* unit = nullptr;
+
+	for (auto it = vec.begin(); it != vec.end(); ++it) {
+
+		unit = reinterpret_cast<Unit*>(*it);
+
+		// For now, do not check for out of screen..
+
+		// Draw unit.
+		m_Game->DrawDecal(vf2d(unit->m_TransformCmp->m_PosX, unit->m_TransformCmp->m_PosY), 
+						m_Game->m_SpriteResourceMap.at(unit->m_GraphicsCmp->m_SpriteName));
+	}
+
+
 
 	/*
 	m_Game->DrawDecal(vi2d(320, 256), m_Game->m_SpriteResourceMap.at("gnome_mechafighter"));
@@ -3050,6 +3091,9 @@ void Renderer::Render2Layer1() {
 	m_Game->DrawDecal(vi2d(512, 320), m_Game->m_SpriteResourceMap.at("gnome_priest"));
 	m_Game->DrawDecal(vi2d(512, 384), m_Game->m_SpriteResourceMap.at("gnome_miner"));
 	*/
+
+	
+
 
 
 	m_Game->EnableLayer(m_Layer1, true);

@@ -3,6 +3,25 @@
 EntitiesStorage* EntitiesStorage::m_EntitiesStorage = nullptr;
 WorldMap* WorldMap::m_WorldMapInstance = nullptr;
 
+bool Unit::SetClass(std::string c) {
+
+	// First, make sure we reset the class setting.
+	if (m_UnitClass) {
+		delete m_UnitClass;
+	}
+
+
+	// Second, make new class definitions.
+	if (COMPARE_STRINGS(c, "Archer") == 0) {
+		m_UnitClass = new UnitClassArcher();
+	}
+
+
+
+	if (m_UnitClass != nullptr) return true;
+	else return false;
+}
+
 
 bool Forest::IsCityOnForest() {
 

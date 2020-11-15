@@ -14,6 +14,7 @@ class Hills;
 class City;
 class Player;
 class River;
+class Unit;
 typedef std::array<std::array<MapTile*, 20>, 20> MapTileArray;
 
 
@@ -43,6 +44,7 @@ Player* GetPlayer(std::string name);
 bool HasMapTileRiver(MapTile* maptile);
 River* MakeNewRiver(std::string spritename, int x_cell_pos, int y_cell_pos);
 
+Unit* MakeNewUnitAtPos(std::string unit_class, std::string spritename, int xpos, int ypos, int x_cell, int y_cell);
 
 
 enum class TileImprovementLevel {
@@ -89,16 +91,39 @@ public:
 
 class Unit : public GameEntity {
 public:
-	Unit() {
+	Unit(std::string spritename, int xpos, int ypos, int set_x_cell, int set_y_cell) {
 
+		m_IDCmp->m_DynamicTypeName = "Unit";
+	
+
+		m_TransformCmp->m_PosX = xpos;
+		m_TransformCmp->m_PosY = ypos;
+
+
+		m_GraphicsCmp = new CMPGraphics();
+		m_GraphicsCmp->m_DrawingLayer = "layer1";
+
+		// As we do not dynamically create rivers, we dont have to update theyre sprite based
+		// on other rivers around. But we need to set it correctly at the beginning.
+		m_GraphicsCmp->m_SpriteName = spritename;
 	}
+
 	~Unit() = default;
 
+
+	bool SetClass(std::string c);
+	bool SetBirthsign() {
+		m_Birthsign = YearCounter::Get()->GetCurrentBirthsign();
+
+		return (COMPARE_STRINGS(m_Birthsign, "") == 0) ? false : true;
+	}
 
 
 	unsigned int m_Age = 0;
 	std::string m_Name;
-	std::string m_Birthsign; // Defined by year-quartal in which unit was "born".
+	std::string m_Birthsign = ""; // Defined by year-quartal in which unit was "born".
+
+	UnitClass* m_UnitClass = nullptr;
 
 private:
 
@@ -616,6 +641,7 @@ public:
 		m_TransformCmp->m_PosX = xpos;
 		m_TransformCmp->m_PosY = ypos;
 
+		// This looks like a bug. Check later. Now no errors occuring.
 		m_TransformCmp->m_GameWorldSpaceCell[0] = xpos;
 		m_TransformCmp->m_GameWorldSpaceCell[1] = ypos;
 
@@ -1023,6 +1049,7 @@ struct EntitiesStorage {
 	std::vector<GameEntity*>* GetMapTileRegions() { return m_MapTileRegionsVec; }
 	std::vector<GameEntity*>* GetRiversVec() { return m_Riversvec; }
 	std::vector<Player*>* GetPlayersVec() { return m_PlayersVec; }
+	std::vector<GameEntity*>* GetUnitsVec() { return m_UnitsVec; }
 
 
 
@@ -1087,6 +1114,11 @@ struct EntitiesStorage {
 			// Is it a river?
 			if (_isRiver(e)) {
 				_addRiver(e);
+			}
+
+			// Is it a unit?
+			if (_isUnit(e)) {
+				_addUnit(e);
 			}
 		}
 			
@@ -1199,6 +1231,16 @@ struct EntitiesStorage {
 				m_Riversvec->erase(it);
 			}
 		}
+
+		// Delete units
+		if (_isUnit(e)) {
+
+			std::vector< GameEntity* >::iterator it = std::find(m_UnitsVec->begin(), m_UnitsVec->end(), e);
+
+			if (it != m_UnitsVec->end()) {
+				m_UnitsVec->erase(it);
+			}
+		}
 		
 	}
 
@@ -1245,6 +1287,8 @@ private:
 	std::vector<GameEntity*>* m_MapTileRegionsVec; // Holds all regions defined in game.
 	std::vector<GameEntity*>* m_MountainsHillsVec; // Holds all hills and mountains in game.
 	std::vector<Player*>* m_PlayersVec; // Holds all player of the game.
+	std::vector<GameEntity*>* m_UnitsVec; // Holds all units ingame.
+
 
 private:
 	EntitiesStorage() = default;
@@ -1262,8 +1306,18 @@ private:
 		m_MapTileRegionsVec = new std::vector<GameEntity*>();
 		m_MountainsHillsVec = new std::vector<GameEntity*>();
 		m_Riversvec = new std::vector<GameEntity*>();
+		m_UnitsVec = new std::vector<GameEntity*>();
 
 		m_PlayersVec = new std::vector<Player*>();
+	}
+
+	bool _isUnit(GameEntity* e) {
+		if (COMPARE_STRINGS(e->m_IDCmp->m_DynamicTypeName, "Unit") == 0) {
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 
 	bool _isRiver(GameEntity* e) {
@@ -1273,6 +1327,10 @@ private:
 		else {
 			return false;
 		}
+	}
+
+	void _addUnit(GameEntity* e) {
+		m_UnitsVec->push_back(e);
 	}
 
 	void _addRiver(GameEntity* e) {

@@ -55,6 +55,17 @@ enum class UnitAttributesEnum {
 
 struct UnitSkills {
 
+	void UnsetSkill(std::string skill, int num) {
+
+		UnitSkillsEnum s = SkillStringtoEnum(skill);
+
+		for (auto it : m_UnitSkillsMap) {
+			if (it.first == s) {
+				m_UnitSkillsMap.at(it.first) -= num;
+			}
+		}
+	}
+
 	void SetSkill(std::string skill, int num) {
 
 		UnitSkillsEnum s = SkillStringtoEnum(skill);
@@ -71,6 +82,19 @@ struct UnitSkills {
 
 
 struct UnitAttributes {
+
+
+	void UnsetAttribute(std::string attr, int num) {
+
+		UnitAttributesEnum a = AttributeStringtoEnum(attr);
+
+		for (auto it : m_UnitAttributesMap) {
+			if (it.first == a) {
+				m_UnitAttributesMap.at(it.first) -= num;
+			}
+		}
+	}
+
 
 	void SetAttribute(std::string attr, int num) {
 
@@ -111,6 +135,15 @@ struct UnitClassArcher : public UnitClass {
 
 			it.second = 0;
 		}
+
+
+		_defineStats();
+	}
+
+
+	~UnitClassArcher() {
+
+		_undefStats();
 	}
 
 
@@ -156,5 +189,44 @@ private:
 		m_UnitSkills->SetSkill("Destruction", 1);
 		m_UnitSkills->SetSkill("Restoration", 10);
 
+	}
+
+
+	void _undefStats() {
+
+		// Attributes.
+		m_UnitAttributes->UnsetAttribute("Strength", 30);
+		m_UnitAttributes->UnsetAttribute("Agility", 30);
+		m_UnitAttributes->UnsetAttribute("Intelligence", 10);
+		m_UnitAttributes->UnsetAttribute("Willpower", 10);
+		m_UnitAttributes->UnsetAttribute("Agility", 10);
+		m_UnitAttributes->UnsetAttribute("Speed", 10);
+		m_UnitAttributes->UnsetAttribute("Endurance", 10);
+		m_UnitAttributes->UnsetAttribute("Personality", 10);
+
+		// Skills.
+		m_UnitSkills->UnsetSkill("Heavy Armor", 1);
+		m_UnitSkills->UnsetSkill("Light Armor", 20);
+		m_UnitSkills->UnsetSkill("Medium Armor", 10);
+		m_UnitSkills->UnsetSkill("Spear", 10);
+		m_UnitSkills->UnsetSkill("Axe", 1);
+		m_UnitSkills->UnsetSkill("Blunt Weapon", 1);
+		m_UnitSkills->UnsetSkill("Long Blade", 20);
+		m_UnitSkills->UnsetSkill("Short Blade", 1);
+		m_UnitSkills->UnsetSkill("Block", 20);
+		m_UnitSkills->UnsetSkill("Marksman", 20);
+		m_UnitSkills->UnsetSkill("Acrobatics", 1);
+		m_UnitSkills->UnsetSkill("Athletics", 20);
+		m_UnitSkills->UnsetSkill("Sneak", 1);
+		m_UnitSkills->UnsetSkill("Unarmored", 10);
+		m_UnitSkills->UnsetSkill("Illusion", 1);
+		m_UnitSkills->UnsetSkill("Mercantile", 1);
+		m_UnitSkills->UnsetSkill("Speechcraft", 1);
+		m_UnitSkills->UnsetSkill("Alchemy", 1);
+		m_UnitSkills->UnsetSkill("Conjuration", 1);
+		m_UnitSkills->UnsetSkill("Enchant", 1);
+		m_UnitSkills->UnsetSkill("Alteration", 1);
+		m_UnitSkills->UnsetSkill("Destruction", 1);
+		m_UnitSkills->UnsetSkill("Restoration", 10);
 	}
 };
