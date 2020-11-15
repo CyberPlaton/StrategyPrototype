@@ -34,6 +34,9 @@
     <ClCompile Include="YearCounter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="UnitDefs.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ColorConsole.h">
@@ -64,6 +67,9 @@
       <Filter>Resources</Filter>
     </ClInclude>
     <ClInclude Include="YearCounter.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UnitDefs.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

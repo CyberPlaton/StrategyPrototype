@@ -158,6 +158,7 @@
     <ClCompile Include="Platform.cpp" />
     <ClCompile Include="Resources.cpp" />
     <ClCompile Include="StrategyPrototype.cpp" />
+    <ClCompile Include="UnitDefs.cpp" />
     <ClCompile Include="YearCounter.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -170,6 +171,7 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="Resources.h" />
     <ClInclude Include="StrategyPrototype.h" />
+    <ClInclude Include="UnitDefs.h" />
     <ClInclude Include="YearCounter.h" />
   </ItemGroup>
   <ItemGroup>

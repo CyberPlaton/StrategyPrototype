@@ -2,6 +2,7 @@
 #include"Components.h"
 #include"FiniteStateMachine.h"
 #include"YearCounter.h"
+#include"UnitDefs.h"
 
 class MapTile;
 class MapRessource;
