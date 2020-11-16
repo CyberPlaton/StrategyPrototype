@@ -4,12 +4,13 @@
 enum class UnitSkillsEnum;
 enum class UnitAttributesEnum;
 
+
 std::string SkillToString(UnitSkillsEnum skill);
 std::string AttributeToString(UnitAttributesEnum attr);
 
+
 UnitSkillsEnum SkillStringtoEnum(std::string skill);
 UnitAttributesEnum AttributeStringtoEnum(std::string attr);
-
 
 
 enum class UnitSkillsEnum {
@@ -39,6 +40,7 @@ enum class UnitSkillsEnum {
 	UNIT_SKILL_MYSTICISM = 22,
 	UNIT_SKILL_RESTORATION = 23
 };
+
 
 enum class UnitAttributesEnum {
 
@@ -111,11 +113,13 @@ struct UnitAttributes {
 };
 
 
-
 struct UnitClass {
 
 	UnitAttributes* m_UnitAttributes = nullptr;
 	UnitSkills* m_UnitSkills = nullptr;
+
+	std::string m_UnitClassSpritename = "NULL";
+	std::string m_UnitClassName = "NULL";
 };
 
 
@@ -124,6 +128,10 @@ struct UnitClassArcher : public UnitClass {
 
 		m_UnitAttributes = new UnitAttributes();
 		m_UnitSkills = new UnitSkills();
+
+		// For drawing class ribbon.
+		m_UnitClassSpritename = "unit_class_archer";
+		m_UnitClassName = "Archer";
 
 		// Zero out stats.
 		for(auto it: m_UnitAttributes->m_UnitAttributesMap){

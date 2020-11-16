@@ -89,6 +89,7 @@ public:
 
 	void DrawCityPanels();
 	void DrawYearQuartalPanel();
+	void DrawUnitPanels();
 
 
 	/*
@@ -280,10 +281,13 @@ struct IMGUI {
 	int TextButton(int id, int xpos, int ypos, std::string text);
 
 	// Usage: Display some text if we hover over a widget, e.g. Button.
+	// NOTE:
+	// Currently not working. Use ToolTipSpriteButton() instead!
 	int ToolTipButton(int id, int xpos, int ypos, std::string text, std::string tooltiptext);
 
 	// Spritebutton that displays a tooltip on hovering.
 	int ToolTipSpriteButton(int id, int xpos, int ypos, std::string spritename, std::string tooltiptext);
+	int ToolTipSpriteButton(int id, int xpos, int ypos, std::string spritename, std::string tooltiptext, olc::Pixel teint_color);
 
 
 	// The sprite is stored in struct

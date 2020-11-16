@@ -10,13 +10,15 @@ int IMGUI::m_WidgetID = 0; // A valid ID is greater 0.
 
 
 
-Unit* MakeNewUnitAtPos(std::string unit_class, std::string spritename, int xpos, int ypos, int x_cell, int y_cell) {
+Unit* MakeNewUnitAtPos(Player* p, std::string unit_class, std::string spritename, int xpos, int ypos, int x_cell, int y_cell) {
 
 	Unit* u = new Unit(spritename, xpos, ypos, x_cell, y_cell);
 
 	u->SetBirthsign();
 
 	u->SetClass(unit_class);
+
+	u->SetPlayer(p);
 
 	return u;
 }
@@ -352,11 +354,14 @@ int IMGUI::Textfield(int id, int xpos, int ypos, std::string* buffer) {
 
 int IMGUI::ToolTipButton(int id, int xpos, int ypos, std::string text, std::string tooltiptext){
 
+
+	int w = text.size() * 8;
+	int h = text.size() * 2;
+
 	int tooltip_xpos = 0;
 	int tooltip_ypos = 0;
 
-
-	if (IsHovered(xpos, ypos, 74, 28)) {
+	if (IsHovered(xpos, ypos, w, h)) {
 
 		// Set this button as the hovered item.
 		m_UIState->m_HoveredItem = id;
@@ -394,7 +399,7 @@ int IMGUI::ToolTipButton(int id, int xpos, int ypos, std::string text, std::stri
 
 	// Rendering button. Basic.
 	using namespace olc;
-	Game::Get()->FillRect(vi2d(xpos, ypos), vi2d(74, 28), *m_DefaultWidgetColor);
+	Game::Get()->FillRect(vi2d(xpos, ypos), vi2d(w, h), *m_DefaultWidgetColor);
 	Game::Get()->DrawString(vi2d(xpos + 2, ypos + 2), text, *m_DefaultWidgetTextColor);
 
 	// Rendering button based on its "state".
@@ -404,13 +409,13 @@ int IMGUI::ToolTipButton(int id, int xpos, int ypos, std::string text, std::stri
 			// If we hover over this button...
 			// .. and we click on it...
 			// ...give it a new color.
-			Game::Get()->FillRect(vi2d(xpos, ypos), vi2d(74, 28), *m_DefaultActiveWidgetColor); // Make it "Burn".
+			Game::Get()->FillRect(vi2d(xpos, ypos), vi2d(w, h), *m_DefaultActiveWidgetColor); // Make it "Burn".
 			Game::Get()->DrawString(vi2d(xpos + 2, ypos + 2), text, olc::BLACK);
 		}
 		else {
 
 			// ... Button is just hovered upon.
-			Game::Get()->FillRect(vi2d(xpos - 2, ypos - 2), vi2d(74, 28), *m_DefaultHoveredWidgetColor);
+			Game::Get()->FillRect(vi2d(xpos - 2, ypos - 2), vi2d(w, h), *m_DefaultHoveredWidgetColor);
 			Game::Get()->DrawString(vi2d(xpos + 2, ypos + 2), text, *m_DefaultWidgetTextColor);
 
 		}
@@ -503,6 +508,112 @@ int IMGUI::ToolTipSpriteButton(int id, int xpos, int ypos, std::string spritenam
 	using namespace olc;
 	//Game::Get()->FillRect(vi2d(xpos, ypos), vi2d(74, 28), *m_DefaultWidgetColor);
 	Game::Get()->DrawDecal(vf2d(xpos, ypos), decal);
+
+
+	// Rendering button based on its "state".
+	if (m_UIState->m_HoveredItem == id) {
+		if (m_UIState->m_ActiveItem == id) {
+
+			// If we hover over this button...
+			// .. and we click on it...
+			// ...give it a new color.
+			//Game::Get()->FillRect(vi2d(xpos, ypos), vi2d(74, 28), *m_DefaultActiveWidgetColor); // Make it "Burn".
+			Game::Get()->DrawDecal(vf2d(xpos, ypos), decal, vf2d(1.0f, 1.0f), olc::YELLOW);
+		}
+		else {
+
+			// ... Button is just hovered upon.
+			//Game::Get()->FillRect(vi2d(xpos - 2, ypos - 2), vi2d(74, 28), *m_DefaultHoveredWidgetColor);
+			Game::Get()->DrawDecal(vf2d(xpos, ypos), decal, vf2d(1.0f, 1.0f), olc::DARK_YELLOW);
+		}
+	}
+	else { // We do not hover over this button, so the normal button exprience...
+
+		//Game::Get()->FillRect(vi2d(xpos, ypos), vi2d(64, 48), *m_DefaultWidgetColor);
+	}
+
+
+	// Means button is activated, e.g. clicked.
+	if (m_UIState->m_MouseDown == 0 &&
+		m_UIState->m_HoveredItem == id &&
+		m_UIState->m_ActiveItem == id ||
+		m_UIState->m_LastFocusedWidget == id) { // 
+
+		return 1;
+	}
+
+	// .. else nothing happend.
+	return 0;
+}
+
+
+
+int  IMGUI::ToolTipSpriteButton(int id, int xpos, int ypos, std::string spritename, std::string tooltiptext, olc::Pixel teint_color) {
+
+
+	using namespace olc;
+
+	Decal* decal = nullptr;
+
+	if (m_IMGUIDecalMap.at(spritename) == nullptr) {
+
+		for (auto it : this->m_IMGUISpriteResourceMap) {
+
+			if (COMPARE_STRINGS_2(it.first, spritename) == 0) {
+
+				decal = new Decal(it.second); // Create dynamically new decal for rendering...
+				m_IMGUIDecalMap.insert(std::make_pair(spritename, decal));
+			}
+		}
+	}
+	else {
+		decal = m_IMGUIDecalMap.at(spritename);
+	}
+
+	int w = decal->sprite->width;
+	int h = decal->sprite->height;
+
+
+	int tooltip_xpos = 0;
+	int tooltip_ypos = 0;
+
+	if (IsHovered(xpos, ypos, w, h)) {
+
+		// Set this button as the hovered item.
+		m_UIState->m_HoveredItem = id;
+
+
+		// Check whether no active item and mouse was pressed over this one.
+		if (m_UIState->m_ActiveItem == 0 &&
+			m_UIState->m_MouseDown == 0) { // Means left mouse button pressed.
+
+			// No active item and mouse pressed means,
+			// this part. item is an active one.
+			m_UIState->m_ActiveItem = id;
+			m_UIState->m_LastFocusedWidget = id;
+		}
+
+
+		// As we hover, draw the tooltip around widget.
+		if (Game::Get()->ScreenWidth() + tooltiptext.length() * 8 > Game::Get()->ScreenWidth()) {
+			tooltip_xpos = xpos - 100;
+		}
+		if (Game::Get()->ScreenHeight() + tooltiptext.length() * 8 > Game::Get()->ScreenHeight()) {
+			tooltip_ypos = ypos - 100;
+		}
+		if (xpos - 100 < 0) {
+			tooltip_xpos += w + 100;
+		}
+		if (ypos - 100 < 0) {
+			tooltip_ypos += h + 100;
+		}
+		TextButton(GEN_ID, tooltip_xpos, tooltip_ypos, tooltiptext);
+	}
+
+
+	// Rendering button. Basic.
+	using namespace olc;
+	Game::Get()->DrawDecal(vf2d(xpos, ypos), decal, vf2d(1.0f, 1.0f), teint_color);
 
 
 	// Rendering button based on its "state".
@@ -1533,20 +1644,6 @@ void CMPCameraInput::_handleMapViewMouse(Camera* cam) {
 	
 	if (context->GetMouse(0).bPressed) {
 		IMGUI::Get()->GetUIState()->m_MouseDown = 0;
-
-
-		// TESTING: Make archer at pos.
-		int x = context->GetMouseX();
-		int y = context->GetMouseY();
-		int x_cell = GetMaptileAtMousePosition(x, y)->m_TransformCmp->m_GameWorldSpaceCell[0];
-		int y_cell = GetMaptileAtMousePosition(x, y)->m_TransformCmp->m_GameWorldSpaceCell[1];
-
-		Unit* unit = MakeNewUnitAtPos("Archer", "gnome_mechafighter", x, y, x_cell, y_cell);
-
-		if (unit) {
-			// Print debugg stats.
-
-		}
 	}
 
 	// Reset the mousedown state to non-down...
@@ -2082,16 +2179,16 @@ void Game::_loadSpriteResources() {
 
 
 	// Units.
-	Sprite* gnome = new Sprite("assets/gnome_mechafighter.png");
-	Sprite* troll = new Sprite("assets/troll_raptor_rider.png");
-	Sprite* gnome1 = new Sprite("assets/gnome_citizen.png");
-	Sprite* gnome2 = new Sprite("assets/gnome_worker.png");
-	Sprite* gnome3 = new Sprite("assets/gnome_noble.png");
-	Sprite* gnome4 = new Sprite("assets/gnome_priest.png");
-	Sprite* gnome5 = new Sprite("assets/gnome_fisher.png");
-	Sprite* gnome6 = new Sprite("assets/gnome_hunter.png");
-	Sprite* gnome7 = new Sprite("assets/gnome_miner.png");
-	Sprite* gnome8 = new Sprite("assets/gnome_farmer.png");
+	Sprite* gnome = new Sprite("assets/unit/gnome/gnome_mechafighter.png");
+	Sprite* troll = new Sprite("assets/unit/troll/troll_raptor_rider.png");
+	Sprite* gnome1 = new Sprite("assets/unit/gnome/gnome_citizen.png");
+	Sprite* gnome2 = new Sprite("assets/unit/gnome/gnome_worker.png");
+	Sprite* gnome3 = new Sprite("assets/unit/gnome/gnome_noble.png");
+	Sprite* gnome4 = new Sprite("assets/unit/gnome/gnome_priest.png");
+	Sprite* gnome5 = new Sprite("assets/unit/gnome/gnome_fisher.png");
+	Sprite* gnome6 = new Sprite("assets/unit/gnome/gnome_hunter.png");
+	Sprite* gnome7 = new Sprite("assets/unit/gnome/gnome_miner.png");
+	Sprite* gnome8 = new Sprite("assets/unit/gnome/gnome_farmer.png");
 
 
 
@@ -2128,11 +2225,34 @@ void Game::_loadSpriteResources() {
 	m_SpriteResourceMap.insert(std::make_pair("gnome_hunter", d_gnome6));
 	m_SpriteResourceMap.insert(std::make_pair("gnome_miner", d_gnome7));
 	m_SpriteResourceMap.insert(std::make_pair("gnome_farmer", d_gnome8));
-
-
 	m_SpriteResourceMap.insert(std::make_pair("gnome_mechafighter", d_gnome));
+	
 	m_SpriteResourceMap.insert(std::make_pair("troll_raptor_rider", d_troll));
 
+	/*
+	// Unit ribbons and player color thingies and classes...
+	Sprite* player_color1 = new Sprite("assets/unit/unit_player_color_red.png");
+	Sprite* player_color2 = new Sprite("assets/unit/unit_player_color_blue.png");
+	Sprite* player_color3 = new Sprite("assets/unit/unit_player_color_magenta.png");
+
+	Sprite* class1 = new Sprite("assets/unit/unit_class_archer.png");
+
+
+
+	Decal* d_player_color1 = new Decal(player_color1);
+	Decal* d_player_color2 = new Decal(player_color2);
+	Decal* d_player_color3 = new Decal(player_color3);
+
+	Decal* dclass1 = new Decal(class1);
+
+
+
+	m_SpriteResourceMap.insert(std::make_pair("unit_player_color_red", d_player_color1));
+	m_SpriteResourceMap.insert(std::make_pair("unit_player_color_blue", d_player_color2));
+	m_SpriteResourceMap.insert(std::make_pair("unit_player_color_magenta", d_player_color3));
+
+	m_SpriteResourceMap.insert(std::make_pair("unit_class_archer", dclass1));
+	*/
 }
 
 
@@ -2280,9 +2400,21 @@ bool Game::OnUserCreate() {
 
 	gui->AddSprite("assets/city_panel.png", "city_panel");
 
+	gui->AddSprite("assets/unit/unit_player_color_red.png", "unit_player_color_red");
+	gui->AddSprite("assets/unit/unit_player_color_blue.png", "unit_player_color_blue");
+	gui->AddSprite("assets/unit/unit_player_color_magenta.png", "unit_player_color_magenta");
+
+	gui->AddSprite("assets/unit/unit_class_archer.png", "unit_class_archer");
+
 
 	// Astrology and birthsigns. YearCounter.
 	YearCounter::Get(); // .. = construction.
+
+
+
+	// Make testing unit.
+	Unit* unit = MakeNewUnitAtPos(player2, "Archer", "gnome_mechafighter", 64 * 5, 64 * 2, 5, 2);
+	EntitiesStorage::Get()->AddGameEntitie(unit);
 
 	return true;
 }
@@ -3507,7 +3639,46 @@ void Renderer::RenderLayer0() {
 	if (Game::Get()->m_ShowCityPanel) {
 		DrawCityPanels();
 	}
+
+
+
+
+	// Show unit panels and general unit information.
+	DrawUnitPanels();
 	
+}
+
+
+
+void Renderer::DrawUnitPanels() {
+
+	using namespace olc;
+
+	std::vector<GameEntity*> vec = *EntitiesStorage::Get()->GetUnitsVec();
+
+	Unit* unit = nullptr;
+	IMGUI* gui = IMGUI::Get();
+
+	for (auto it = vec.begin(); it != vec.end(); ++it) {
+
+		unit = reinterpret_cast<Unit*>(*it);
+
+
+		//if (gui->ToolTipSpriteButton(++m_IDHelper + GEN_ID, unit->m_TransformCmp->m_PosX, unit->m_TransformCmp->m_PosY + 64, "city_panel", "UNIT CLASS", olc::Pixel(255, 0, 0, 255)));
+
+		// New buttons.
+		// Player unit color.
+		std::string player_string = "Belongs to " + unit->m_AssociatedPlayer->m_PlayerName;
+		if (gui->ToolTipSpriteButton(++m_IDHelper + GEN_ID, unit->m_TransformCmp->m_PosX, unit->m_TransformCmp->m_PosY, unit->m_UnitPlayerColor, player_string, olc::WHITE));
+
+		// Unit ribbon.
+		std::string unit_ribbon = unit->m_UnitClass->m_UnitClassName;
+		if (gui->ToolTipSpriteButton(++m_IDHelper + GEN_ID, unit->m_TransformCmp->m_PosX + 64 - 16, unit->m_TransformCmp->m_PosY, unit->m_UnitClass->m_UnitClassSpritename, unit_ribbon, olc::WHITE));
+
+		std::string age = "Age: " + std::to_string(unit->m_Age) + " MaxAge: " + std::to_string(unit->m_MaxAge);
+		gui->TextButton(++m_IDHelper + GEN_ID, unit->m_TransformCmp->m_PosX+16, unit->m_TransformCmp->m_PosY+64, age);
+		
+	}
 }
 
 
@@ -3740,6 +3911,14 @@ void Game::AdvanceOneTurn() {
 		m_AdvanceOneTurn = false;
 
 		YearCounter::Get()->AdvanceOneTurn();
+
+
+		Unit* unit = nullptr;
+		for (auto it : *EntitiesStorage::Get()->GetUnitsVec()) {
+
+			unit = reinterpret_cast<Unit*>(it);
+			unit->Update();
+		}
 	}
 	else if (m_TimeModeTurnBased == false) {
 
@@ -3749,6 +3928,13 @@ void Game::AdvanceOneTurn() {
 		m_TurnCount++;
 
 		YearCounter::Get()->AdvanceOneTurn();
+
+		Unit* unit = nullptr;
+		for (auto it : *EntitiesStorage::Get()->GetUnitsVec()) {
+			
+			unit = reinterpret_cast<Unit*>(it);
+			unit->Update();
+		}
 	}
 }
 

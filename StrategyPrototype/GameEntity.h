@@ -44,7 +44,7 @@ Player* GetPlayer(std::string name);
 bool HasMapTileRiver(MapTile* maptile);
 River* MakeNewRiver(std::string spritename, int x_cell_pos, int y_cell_pos);
 
-Unit* MakeNewUnitAtPos(std::string unit_class, std::string spritename, int xpos, int ypos, int x_cell, int y_cell);
+Unit* MakeNewUnitAtPos(Player* p, std::string unit_class, std::string spritename, int xpos, int ypos, int x_cell, int y_cell);
 
 
 enum class TileImprovementLevel {
@@ -66,15 +66,7 @@ public:
 		m_TransformCmp = new CMPTransform();
 	}
 
-	~GameEntity() {
-		delete m_IDCmp; m_IDCmp = nullptr;
-		delete m_TransformCmp; m_TransformCmp = nullptr;
-		delete m_PhysicsCmp; m_PhysicsCmp = nullptr;
-		delete m_GraphicsCmp; m_GraphicsCmp = nullptr;
-		delete m_FSM; m_FSM = nullptr;
-		delete m_MovementCostCmp; m_MovementCostCmp = nullptr;
-		delete m_EntityRaceCmp; m_EntityRaceCmp = nullptr;
-	}
+	~GameEntity();
 
 	// Basic components for an Entity.
 	CMPIdentifier* m_IDCmp = nullptr;
@@ -102,13 +94,15 @@ public:
 
 		m_GraphicsCmp = new CMPGraphics();
 		m_GraphicsCmp->m_DrawingLayer = "layer1";
-
-		// As we do not dynamically create rivers, we dont have to update theyre sprite based
-		// on other rivers around. But we need to set it correctly at the beginning.
 		m_GraphicsCmp->m_SpriteName = spritename;
+
+
+		_defineMaxAge();
 	}
 
 	~Unit() = default;
+
+	void Update();
 
 
 	bool SetClass(std::string c);
@@ -118,17 +112,34 @@ public:
 		return (COMPARE_STRINGS(m_Birthsign, "") == 0) ? false : true;
 	}
 
+	bool SetPlayer(Player* p) {
+		m_AssociatedPlayer = p;
+		if (m_AssociatedPlayer) _determineUnitRibbonColor();
 
-	unsigned int m_Age = 0;
+		return (m_AssociatedPlayer == nullptr) ? false : true;
+	}
+
+
+
+	// All units are at least 14 Years old.
+	unsigned int m_Age = 14;
+	// Defines the max age to which this unit will live.
+	unsigned int m_MaxAge = -1;
+
+
 	std::string m_Name;
 	std::string m_Birthsign = ""; // Defined by year-quartal in which unit was "born".
 
 	UnitClass* m_UnitClass = nullptr;
+	Player* m_AssociatedPlayer = nullptr;
+	std::string m_UnitPlayerColor = "NULL";
+private:
+	int m_AgeInternal = -1;
+
 
 private:
-
-
-private:
+	void _determineUnitRibbonColor();
+	void _defineMaxAge();
 
 };
 

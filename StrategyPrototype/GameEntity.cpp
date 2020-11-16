@@ -3,6 +3,63 @@
 EntitiesStorage* EntitiesStorage::m_EntitiesStorage = nullptr;
 WorldMap* WorldMap::m_WorldMapInstance = nullptr;
 
+GameEntity::~GameEntity() {
+
+	delete m_IDCmp; m_IDCmp = nullptr;
+	delete m_TransformCmp; m_TransformCmp = nullptr;
+	delete m_PhysicsCmp; m_PhysicsCmp = nullptr;
+	delete m_GraphicsCmp; m_GraphicsCmp = nullptr;
+	delete m_FSM; m_FSM = nullptr;
+	delete m_MovementCostCmp; m_MovementCostCmp = nullptr;
+	delete m_EntityRaceCmp; m_EntityRaceCmp = nullptr;
+}
+
+
+void Unit::_defineMaxAge() {
+
+	int r = Random() % 10;
+	int r2 = Random() % 2;
+
+	if (r2 == 0) {
+		m_MaxAge = 70 + r;
+	}
+	else {
+		m_MaxAge = 70 - r;
+
+	}
+
+	m_MaxAge = 20;
+}
+
+void Unit::Update() {
+
+	int x = m_AgeInternal; // Flag.
+	m_AgeInternal = (m_AgeInternal + 1) % 4;
+
+	// One year lived...
+	if (x == 3 && m_AgeInternal == 0) {
+		m_Age++;
+	}
+
+	if (m_Age > m_MaxAge) {
+
+		EntitiesStorage::Get()->DeleteGameEntitie(this);
+	}
+
+}
+
+void Unit::_determineUnitRibbonColor() {
+	if (COMPARE_STRINGS(m_AssociatedPlayer->m_PlayerColor, "red") == 0) {
+		m_UnitPlayerColor = "unit_player_color_red";
+	}
+	else if (COMPARE_STRINGS(m_AssociatedPlayer->m_PlayerColor, "blue") == 0) {
+		m_UnitPlayerColor = "unit_player_color_blue";
+	}
+	else if (COMPARE_STRINGS(m_AssociatedPlayer->m_PlayerColor, "magenta") == 0) {
+		m_UnitPlayerColor = "unit_player_color_magenta";
+	}
+}
+
 bool Unit::SetClass(std::string c) {
 
 	// First, make sure we reset the class setting.
