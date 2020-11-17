@@ -637,6 +637,30 @@ private:
 			m_CityBorderColor = CityBorderColor::CITY_BORDERCOLOR_MAGENTA;
 		}
 
+		if (COMPARE_STRINGS(color, "yellow") == 0) {
+			m_ClaimedRegionsSpriteName = "map_cell_yellow";
+			m_CityBorderColor = CityBorderColor::CITY_BORDERCOLOR_YELLOW;
+		}
+
+		if (COMPARE_STRINGS(color, "green") == 0) {
+			m_ClaimedRegionsSpriteName = "map_cell_green";
+			m_CityBorderColor = CityBorderColor::CITY_BORDERCOLOR_GREEN;
+		}
+
+		if (COMPARE_STRINGS(color, "brown") == 0) {
+			m_ClaimedRegionsSpriteName = "map_cell_brown";
+			m_CityBorderColor = CityBorderColor::CITY_BORDERCOLOR_BROWN;
+		}
+
+		if (COMPARE_STRINGS(color, "orange") == 0) {
+			m_ClaimedRegionsSpriteName = "map_cell_orange";
+			m_CityBorderColor = CityBorderColor::CITY_BORDERCOLOR_ORANGE;
+		}
+
+		if (COMPARE_STRINGS(color, "black") == 0) {
+			m_ClaimedRegionsSpriteName = "map_cell_black";
+			m_CityBorderColor = CityBorderColor::CITY_BORDERCOLOR_BLACK;
+		}
 	}
 };
 

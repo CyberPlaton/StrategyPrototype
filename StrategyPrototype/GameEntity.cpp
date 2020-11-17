@@ -27,8 +27,6 @@ void Unit::_defineMaxAge() {
 		m_MaxAge = 70 - r;
 
 	}
-
-	m_MaxAge = 20;
 }
 
 void Unit::Update() {
@@ -57,6 +55,24 @@ void Unit::_determineUnitRibbonColor() {
 	}
 	else if (COMPARE_STRINGS(m_AssociatedPlayer->m_PlayerColor, "magenta") == 0) {
 		m_UnitPlayerColor = "unit_player_color_magenta";
+	}
+	else if (COMPARE_STRINGS(m_AssociatedPlayer->m_PlayerColor, "green") == 0) {
+		m_UnitPlayerColor = "unit_player_color_green";
+	}
+	else if (COMPARE_STRINGS(m_AssociatedPlayer->m_PlayerColor, "brown") == 0) {
+		m_UnitPlayerColor = "unit_player_color_brown";
+	}
+	else if (COMPARE_STRINGS(m_AssociatedPlayer->m_PlayerColor, "black") == 0) {
+		m_UnitPlayerColor = "unit_player_color_black";
+	}
+	else if (COMPARE_STRINGS(m_AssociatedPlayer->m_PlayerColor, "orange") == 0) {
+		m_UnitPlayerColor = "unit_player_color_orange";
+	}
+	else if (COMPARE_STRINGS(m_AssociatedPlayer->m_PlayerColor, "yellow") == 0) {
+		m_UnitPlayerColor = "unit_player_color_yellow";
+	}
+	else {
+		m_UnitPlayerColor = "NULL"; // Indicates an error.
 	}
 }
 

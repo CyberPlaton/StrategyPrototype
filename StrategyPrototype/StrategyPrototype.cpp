@@ -2363,23 +2363,47 @@ bool Game::OnUserCreate() {
 
 
 	Player* player = new Player("Bogdan", "blue");
-	Player* player2 = new Player("AI", "red");
+	Player* player2 = new Player("Peter", "red");
 	Player* player3 = new Player("Katharina", "magenta");
+	Player* player4 = new Player("Walter", "black");
+	Player* player5 = new Player("Fred", "orange");
+	Player* player6 = new Player("Hans", "green");
+	Player* player7 = new Player("Hans Hans", "yellow");
+	Player* player8 = new Player("Javid", "brown");
+
 
 	storage->AddPlayer(player);
 	storage->AddPlayer(player2);
 	storage->AddPlayer(player3);
+	storage->AddPlayer(player4);
+	storage->AddPlayer(player5);
+	storage->AddPlayer(player6);
+	storage->AddPlayer(player7);
+	storage->AddPlayer(player8);
 
 
 	// Cityname should be max 11. chars...
-	City* city2 = MakeNewCity(true, "Stormhaven", CMPEntityRace::Race::RACE_HUMAN, player, 7, 6, 33);
-	City* fort = MakeNewCity(true, "Durotar", CMPEntityRace::Race::RACE_ORC, player2, 16, 9, 8);
+	City* city2 = MakeNewCity(true, "Stormhaven", CMPEntityRace::Race::RACE_HUMAN, player, 7, 6, 5);
+	City* fort = MakeNewCity(true, "Durotar", CMPEntityRace::Race::RACE_ORC, player2, 15, 8, 8);
 	City* city4 = MakeNewCity(false, "Lorderon", CMPEntityRace::Race::RACE_HUMAN, player3, 4, 11, 2);
+
+	City* city3 = MakeNewCity(true, "Orgrimmar", CMPEntityRace::Race::RACE_ORC, player4, 18, 5, 2);
+	City* fort2 = MakeNewCity(false, "Razor Hill", CMPEntityRace::Race::RACE_ORC, player5, 13, 3, 4);
+
+	City* city5 = MakeNewCity(true, "Iceveil", CMPEntityRace::Race::RACE_HUMAN, player6, 2, 2, 1);
+	City* city6 = MakeNewCity(false, "Lower Orgrimmar", CMPEntityRace::Race::RACE_ORC, player7, 18, 12, 1);
+	City* fort3 = MakeNewCity(false, "Upper Razor Hill", CMPEntityRace::Race::RACE_HUMAN, player8, 8, 2, 1);
 
 
 	storage->AddGameEntitie(city2);
 	storage->AddGameEntitie(city4);
 	storage->AddGameEntitie(fort);
+
+	storage->AddGameEntitie(city3);
+	storage->AddGameEntitie(fort2);
+	storage->AddGameEntitie(city5);
+	storage->AddGameEntitie(city6);
+	storage->AddGameEntitie(fort3);
 
 
 
@@ -2413,7 +2437,7 @@ bool Game::OnUserCreate() {
 
 
 	// Make testing unit.
-	Unit* unit = MakeNewUnitAtPos(player2, "Archer", "gnome_mechafighter", 64 * 5, 64 * 2, 5, 2);
+	Unit* unit = MakeNewUnitAtPos(player3, "Archer", "gnome_mechafighter", 64 * 5, 64 * 2, 5, 2);
 	EntitiesStorage::Get()->AddGameEntitie(unit);
 
 	return true;
