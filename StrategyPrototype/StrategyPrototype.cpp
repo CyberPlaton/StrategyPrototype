@@ -1405,7 +1405,10 @@ void CMPCameraInput::_handleMapViewKeyBoard(Camera* cam) {
 
 
 		if (context->GetKey(olc::Key::SPACE).bPressed) {
-			Player* p = GetPlayer("Bogdan");
+			Player* p = nullptr;
+			p = GetPlayer("Bogdan");
+
+			if (!p) return;
 
 			for (auto it : p->m_PlayerCities) {
 				ColorValue = (ColorValue + 1) % 8;
@@ -1422,18 +1425,6 @@ void CMPCameraInput::_handleMapViewKeyBoard(Camera* cam) {
 			
 			city = reinterpret_cast<City*>(it);
 
-			/*
-			if (COMPARE_STRINGS(city->m_CityName, "Stormhaven") == 0) {
-
-				city->m_CitySize--;
-				city->Update();
-			}
-			else {
-
-				city->m_CitySize++;
-				city->Update();
-			}
-			*/
 			city->m_CitySize++;
 			city->Update();
 		}
