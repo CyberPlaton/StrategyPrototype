@@ -57,60 +57,63 @@ enum class UnitAttributesEnum {
 
 struct UnitSkills {
 
-	void UnsetSkill(std::string skill, int num) {
+	void UnsetSkill(std::map<UnitSkillsEnum, int>* skillsmap, std::string skill, int num) {
 
 		UnitSkillsEnum s = SkillStringtoEnum(skill);
 
-		for (auto it : m_UnitSkillsMap) {
+		for (auto it : *skillsmap) {
 			if (it.first == s) {
-				m_UnitSkillsMap.at(it.first) -= num;
+				skillsmap->at(it.first) -= num;
 			}
 		}
 	}
 
-	void SetSkill(std::string skill, int num) {
+	void SetSkill(std::map<UnitSkillsEnum, int>* skillsmap, std::string skill, int num) {
 
 		UnitSkillsEnum s = SkillStringtoEnum(skill);
 
-		for (auto it : m_UnitSkillsMap) {
+		for (auto it : *skillsmap) {
 			if (it.first == s) {
-				m_UnitSkillsMap.at(it.first) += num;
+				skillsmap->at(it.first) += num;
 			}
 		}
 	}
 
-	std::map<UnitSkillsEnum, int> m_UnitSkillsMap;
+	//std::map<UnitSkillsEnum, int> m_UnitSkillsMap;
 };
+
 
 
 struct UnitAttributes {
 
 
-	void UnsetAttribute(std::string attr, int num) {
+	void UnsetAttribute(std::map<UnitAttributesEnum, int>* attrmap, std::string attr, int num) {
 
 		UnitAttributesEnum a = AttributeStringtoEnum(attr);
 
-		for (auto it : m_UnitAttributesMap) {
+		for (auto it : *attrmap) {
 			if (it.first == a) {
-				m_UnitAttributesMap.at(it.first) -= num;
+				attrmap->at(it.first) -= num;
 			}
 		}
 	}
 
 
-	void SetAttribute(std::string attr, int num) {
+	void SetAttribute(std::map<UnitAttributesEnum, int>* attrmap, std::string attr, int num) {
 
 		UnitAttributesEnum a = AttributeStringtoEnum(attr);
 				
-		for (auto it : m_UnitAttributesMap) {
+		for (auto it : *attrmap) {
 			if (it.first == a) {
-				m_UnitAttributesMap.at(it.first) += num;
+				attrmap->at(it.first) += num;
 			}
 		}
 	}
 
-	std::map<UnitAttributesEnum, int> m_UnitAttributesMap;
+	//std::map<UnitAttributesEnum, int> m_UnitAttributesMap;
 };
+
+
 
 /*
 NOTE: 
@@ -127,8 +130,9 @@ Major and minor attributes do the same.
 */
 struct UnitClass {
 
-	UnitAttributes* m_UnitAttributes = nullptr;
-	UnitSkills* m_UnitSkills = nullptr;
+
+	//UnitAttributes* m_UnitAttributes = nullptr;
+	//UnitSkills* m_UnitSkills = nullptr;
 
 	std::string m_UnitClassSpritename = "NULL";
 	std::string m_UnitClassName = "NULL";
@@ -141,18 +145,20 @@ struct UnitClass {
 // CLASSES DEFINITIONS
 // 1.) Support classes.
 struct UnitClassArcher : public UnitClass {
-	UnitClassArcher() {
+	UnitClassArcher(std::map<UnitSkillsEnum, int>* skillsmap,
+		std::map<UnitAttributesEnum, int>* attrmap) {
 
 		m_ZoneOfControl = true;
 		m_IgnoresZoneOfControl = false;
 
-		m_UnitAttributes = new UnitAttributes();
-		m_UnitSkills = new UnitSkills();
+		m_AttrMap = attrmap;
+		m_SkillsMap = skillsmap;
 
 		// For drawing class ribbon.
 		m_UnitClassSpritename = "unit_class_archer";
 		m_UnitClassName = "Archer";
 
+		/*
 		// Zero out stats.
 		for(auto it: m_UnitAttributes->m_UnitAttributesMap){
 			
@@ -163,7 +169,7 @@ struct UnitClassArcher : public UnitClass {
 
 			it.second = 0;
 		}
-
+		*/
 
 		_defineStats();
 	}
@@ -177,6 +183,9 @@ struct UnitClassArcher : public UnitClass {
 
 private:
 
+	// Pointers to units skills and attributes map.
+	std::map<UnitSkillsEnum, int>* m_SkillsMap = nullptr;
+	std::map<UnitAttributesEnum, int>* m_AttrMap= nullptr;
 
 private:
 	void _defineStats();
@@ -186,20 +195,22 @@ private:
 
 
 struct UnitClassSpy : public UnitClass {
-	UnitClassSpy() {
+	UnitClassSpy(std::map<UnitSkillsEnum, int>* skillsmap,
+		std::map<UnitAttributesEnum, int>* attrmap) {
 
 		m_ZoneOfControl = false;
 		m_IgnoresZoneOfControl = true;
 
-		m_UnitAttributes = new UnitAttributes();
-		m_UnitSkills = new UnitSkills();
+		m_AttrMap = attrmap;
+		m_SkillsMap = skillsmap;
 
 		// For drawing class ribbon.
 		m_UnitClassSpritename = "unit_class_spy";
 		m_UnitClassName = "Spy";
 
+		/*
 		// Zero out stats.
-		for (auto it : m_UnitAttributes->m_UnitAttributesMap) {
+		for(auto it: m_UnitAttributes->m_UnitAttributesMap){
 
 			it.second = 0;
 		}
@@ -208,6 +219,7 @@ struct UnitClassSpy : public UnitClass {
 
 			it.second = 0;
 		}
+		*/
 
 
 		_defineStats();
@@ -222,6 +234,9 @@ struct UnitClassSpy : public UnitClass {
 
 private:
 
+	// Pointers to units skills and attributes map.
+	std::map<UnitSkillsEnum, int>* m_SkillsMap = nullptr;
+	std::map<UnitAttributesEnum, int>* m_AttrMap = nullptr;
 
 private:
 	void _defineStats();
@@ -231,20 +246,22 @@ private:
 
 
 struct UnitClassAssassin : public UnitClass {
-	UnitClassAssassin() {
+	UnitClassAssassin(std::map<UnitSkillsEnum, int>* skillsmap,
+		std::map<UnitAttributesEnum, int>* attrmap) {
 
 		m_ZoneOfControl = false;
 		m_IgnoresZoneOfControl = true;
 
-		m_UnitAttributes = new UnitAttributes();
-		m_UnitSkills = new UnitSkills();
+		m_AttrMap = attrmap;
+		m_SkillsMap = skillsmap;
 
 		// For drawing class ribbon.
 		m_UnitClassSpritename = "unit_class_assassin";
 		m_UnitClassName = "Assassin";
 
+		/*
 		// Zero out stats.
-		for (auto it : m_UnitAttributes->m_UnitAttributesMap) {
+		for(auto it: m_UnitAttributes->m_UnitAttributesMap){
 
 			it.second = 0;
 		}
@@ -253,6 +270,7 @@ struct UnitClassAssassin : public UnitClass {
 
 			it.second = 0;
 		}
+		*/
 
 
 		_defineStats();
@@ -267,6 +285,9 @@ struct UnitClassAssassin : public UnitClass {
 
 private:
 
+	// Pointers to units skills and attributes map.
+	std::map<UnitSkillsEnum, int>* m_SkillsMap = nullptr;
+	std::map<UnitAttributesEnum, int>* m_AttrMap = nullptr;
 
 private:
 	void _defineStats();
@@ -276,20 +297,22 @@ private:
 
 
 struct UnitClassRogue : public UnitClass {
-	UnitClassRogue() {
+	UnitClassRogue(std::map<UnitSkillsEnum, int>* skillsmap,
+		std::map<UnitAttributesEnum, int>* attrmap) {
 
 		m_ZoneOfControl = false;
 		m_IgnoresZoneOfControl = true;
 
-		m_UnitAttributes = new UnitAttributes();
-		m_UnitSkills = new UnitSkills();
+		m_AttrMap = attrmap;
+		m_SkillsMap = skillsmap;
 
 		// For drawing class ribbon.
 		m_UnitClassSpritename = "unit_class_rogue";
 		m_UnitClassName = "Rogue";
 
+		/*
 		// Zero out stats.
-		for (auto it : m_UnitAttributes->m_UnitAttributesMap) {
+		for(auto it: m_UnitAttributes->m_UnitAttributesMap){
 
 			it.second = 0;
 		}
@@ -298,6 +321,7 @@ struct UnitClassRogue : public UnitClass {
 
 			it.second = 0;
 		}
+		*/
 
 
 		_defineStats();
@@ -312,6 +336,10 @@ struct UnitClassRogue : public UnitClass {
 
 private:
 
+	// Pointers to units skills and attributes map.
+	std::map<UnitSkillsEnum, int>* m_SkillsMap = nullptr;
+	std::map<UnitAttributesEnum, int>* m_AttrMap = nullptr;
+
 
 private:
 	void _defineStats();
@@ -321,20 +349,22 @@ private:
 
 
 struct UnitClassScout : public UnitClass {
-	UnitClassScout() {
+	UnitClassScout(std::map<UnitSkillsEnum, int>* skillsmap,
+		std::map<UnitAttributesEnum, int>* attrmap) {
 
 		m_ZoneOfControl = false;
 		m_IgnoresZoneOfControl = true;
 
-		m_UnitAttributes = new UnitAttributes();
-		m_UnitSkills = new UnitSkills();
+		m_AttrMap = attrmap;
+		m_SkillsMap = skillsmap;
 
 		// For drawing class ribbon.
 		m_UnitClassSpritename = "unit_class_scout";
 		m_UnitClassName = "Scout";
 
+		/*
 		// Zero out stats.
-		for (auto it : m_UnitAttributes->m_UnitAttributesMap) {
+		for(auto it: m_UnitAttributes->m_UnitAttributesMap){
 
 			it.second = 0;
 		}
@@ -343,6 +373,7 @@ struct UnitClassScout : public UnitClass {
 
 			it.second = 0;
 		}
+		*/
 
 
 		_defineStats();
@@ -357,6 +388,9 @@ struct UnitClassScout : public UnitClass {
 
 private:
 
+	// Pointers to units skills and attributes map.
+	std::map<UnitSkillsEnum, int>* m_SkillsMap = nullptr;
+	std::map<UnitAttributesEnum, int>* m_AttrMap = nullptr;
 
 private:
 	void _defineStats();
@@ -367,20 +401,22 @@ private:
 // 2.) Fighters - Melee.
 
 struct UnitClassBarbarian : public UnitClass {
-	UnitClassBarbarian() {
+	UnitClassBarbarian(std::map<UnitSkillsEnum, int>* skillsmap,
+		std::map<UnitAttributesEnum, int>* attrmap) {
 
 		m_ZoneOfControl = false;
 		m_IgnoresZoneOfControl = false;
 
-		m_UnitAttributes = new UnitAttributes();
-		m_UnitSkills = new UnitSkills();
+		m_AttrMap = attrmap;
+		m_SkillsMap = skillsmap;
 
 		// For drawing class ribbon.
 		m_UnitClassSpritename = "unit_class_barbarian";
 		m_UnitClassName = "Barbarian";
 
+		/*
 		// Zero out stats.
-		for (auto it : m_UnitAttributes->m_UnitAttributesMap) {
+		for(auto it: m_UnitAttributes->m_UnitAttributesMap){
 
 			it.second = 0;
 		}
@@ -389,6 +425,7 @@ struct UnitClassBarbarian : public UnitClass {
 
 			it.second = 0;
 		}
+		*/
 
 
 		_defineStats();
@@ -403,6 +440,9 @@ struct UnitClassBarbarian : public UnitClass {
 
 private:
 
+	// Pointers to units skills and attributes map.
+	std::map<UnitSkillsEnum, int>* m_SkillsMap = nullptr;
+	std::map<UnitAttributesEnum, int>* m_AttrMap = nullptr;
 
 private:
 	void _defineStats();
@@ -412,20 +452,22 @@ private:
 
 
 struct UnitClassWarrior : public UnitClass {
-	UnitClassWarrior() {
+	UnitClassWarrior(std::map<UnitSkillsEnum, int>* skillsmap,
+		std::map<UnitAttributesEnum, int>* attrmap) {
 
 		m_ZoneOfControl = true;
 		m_IgnoresZoneOfControl = false;
 
-		m_UnitAttributes = new UnitAttributes();
-		m_UnitSkills = new UnitSkills();
+		m_AttrMap = attrmap;
+		m_SkillsMap = skillsmap;
 
 		// For drawing class ribbon.
 		m_UnitClassSpritename = "unit_class_warrior";
 		m_UnitClassName = "Warrior";
 
+		/*
 		// Zero out stats.
-		for (auto it : m_UnitAttributes->m_UnitAttributesMap) {
+		for(auto it: m_UnitAttributes->m_UnitAttributesMap){
 
 			it.second = 0;
 		}
@@ -434,6 +476,7 @@ struct UnitClassWarrior : public UnitClass {
 
 			it.second = 0;
 		}
+		*/
 
 
 		_defineStats();
@@ -448,6 +491,9 @@ struct UnitClassWarrior : public UnitClass {
 
 private:
 
+	// Pointers to units skills and attributes map.
+	std::map<UnitSkillsEnum, int>* m_SkillsMap = nullptr;
+	std::map<UnitAttributesEnum, int>* m_AttrMap = nullptr;
 
 private:
 	void _defineStats();
@@ -456,20 +502,22 @@ private:
 
 
 struct UnitClassKnight : public UnitClass {
-	UnitClassKnight() {
+	UnitClassKnight(std::map<UnitSkillsEnum, int>* skillsmap,
+		std::map<UnitAttributesEnum, int>* attrmap) {
 
 		m_ZoneOfControl = true;
 		m_IgnoresZoneOfControl = false;
 
-		m_UnitAttributes = new UnitAttributes();
-		m_UnitSkills = new UnitSkills();
+		m_AttrMap = attrmap;
+		m_SkillsMap = skillsmap;
 
 		// For drawing class ribbon.
 		m_UnitClassSpritename = "unit_class_knight";
 		m_UnitClassName = "Knight";
 
+		/*
 		// Zero out stats.
-		for (auto it : m_UnitAttributes->m_UnitAttributesMap) {
+		for(auto it: m_UnitAttributes->m_UnitAttributesMap){
 
 			it.second = 0;
 		}
@@ -478,6 +526,7 @@ struct UnitClassKnight : public UnitClass {
 
 			it.second = 0;
 		}
+		*/
 
 
 		_defineStats();
@@ -492,6 +541,9 @@ struct UnitClassKnight : public UnitClass {
 
 private:
 
+	// Pointers to units skills and attributes map.
+	std::map<UnitSkillsEnum, int>* m_SkillsMap = nullptr;
+	std::map<UnitAttributesEnum, int>* m_AttrMap = nullptr;
 
 private:
 	void _defineStats();
@@ -500,20 +552,22 @@ private:
 
 
 struct UnitClassPaladin : public UnitClass {
-	UnitClassPaladin() {
+	UnitClassPaladin(std::map<UnitSkillsEnum, int>* skillsmap,
+		std::map<UnitAttributesEnum, int>* attrmap) {
 
 		m_ZoneOfControl = true;
 		m_IgnoresZoneOfControl = false;
 
-		m_UnitAttributes = new UnitAttributes();
-		m_UnitSkills = new UnitSkills();
+		m_AttrMap = attrmap;
+		m_SkillsMap = skillsmap;
 
 		// For drawing class ribbon.
 		m_UnitClassSpritename = "unit_class_paladin";
 		m_UnitClassName = "Paladin";
 
+		/*
 		// Zero out stats.
-		for (auto it : m_UnitAttributes->m_UnitAttributesMap) {
+		for(auto it: m_UnitAttributes->m_UnitAttributesMap){
 
 			it.second = 0;
 		}
@@ -522,6 +576,7 @@ struct UnitClassPaladin : public UnitClass {
 
 			it.second = 0;
 		}
+		*/
 
 
 		_defineStats();
@@ -536,6 +591,9 @@ struct UnitClassPaladin : public UnitClass {
 
 private:
 
+	// Pointers to units skills and attributes map.
+	std::map<UnitSkillsEnum, int>* m_SkillsMap = nullptr;
+	std::map<UnitAttributesEnum, int>* m_AttrMap = nullptr;
 
 private:
 	void _defineStats();
@@ -547,20 +605,22 @@ private:
 // 3.) Battlemages.
 
 struct UnitClassSpellsword : public UnitClass {
-	UnitClassSpellsword() {
+	UnitClassSpellsword(std::map<UnitSkillsEnum, int>* skillsmap,
+		std::map<UnitAttributesEnum, int>* attrmap) {
 
 		m_ZoneOfControl = true;
 		m_IgnoresZoneOfControl = false;
 
-		m_UnitAttributes = new UnitAttributes();
-		m_UnitSkills = new UnitSkills();
+		m_AttrMap = attrmap;
+		m_SkillsMap = skillsmap;
 
 		// For drawing class ribbon.
 		m_UnitClassSpritename = "unit_class_spellsword";
 		m_UnitClassName = "Spellsword";
 
+		/*
 		// Zero out stats.
-		for (auto it : m_UnitAttributes->m_UnitAttributesMap) {
+		for(auto it: m_UnitAttributes->m_UnitAttributesMap){
 
 			it.second = 0;
 		}
@@ -569,6 +629,7 @@ struct UnitClassSpellsword : public UnitClass {
 
 			it.second = 0;
 		}
+		*/
 
 
 		_defineStats();
@@ -583,6 +644,9 @@ struct UnitClassSpellsword : public UnitClass {
 
 private:
 
+	// Pointers to units skills and attributes map.
+	std::map<UnitSkillsEnum, int>* m_SkillsMap = nullptr;
+	std::map<UnitAttributesEnum, int>* m_AttrMap = nullptr;
 
 private:
 	void _defineStats();
@@ -592,20 +656,22 @@ private:
 
 
 struct UnitClassBattlemage : public UnitClass {
-	UnitClassBattlemage() {
+	UnitClassBattlemage(std::map<UnitSkillsEnum, int>* skillsmap,
+		std::map<UnitAttributesEnum, int>* attrmap) {
 
 		m_ZoneOfControl = true;
 		m_IgnoresZoneOfControl = false;
 
-		m_UnitAttributes = new UnitAttributes();
-		m_UnitSkills = new UnitSkills();
+		m_AttrMap = attrmap;
+		m_SkillsMap = skillsmap;
 
 		// For drawing class ribbon.
 		m_UnitClassSpritename = "unit_class_battlemage";
 		m_UnitClassName = "Battlemage";
 
+		/*
 		// Zero out stats.
-		for (auto it : m_UnitAttributes->m_UnitAttributesMap) {
+		for(auto it: m_UnitAttributes->m_UnitAttributesMap){
 
 			it.second = 0;
 		}
@@ -614,6 +680,7 @@ struct UnitClassBattlemage : public UnitClass {
 
 			it.second = 0;
 		}
+		*/
 
 
 		_defineStats();
@@ -628,6 +695,9 @@ struct UnitClassBattlemage : public UnitClass {
 
 private:
 
+	// Pointers to units skills and attributes map.
+	std::map<UnitSkillsEnum, int>* m_SkillsMap = nullptr;
+	std::map<UnitAttributesEnum, int>* m_AttrMap = nullptr;
 
 private:
 	void _defineStats();
@@ -637,20 +707,22 @@ private:
 
 
 struct UnitClassNightblade : public UnitClass {
-	UnitClassNightblade() {
+	UnitClassNightblade(std::map<UnitSkillsEnum, int>* skillsmap,
+		std::map<UnitAttributesEnum, int>* attrmap) {
 
 		m_ZoneOfControl = false;
 		m_IgnoresZoneOfControl = true;
 
-		m_UnitAttributes = new UnitAttributes();
-		m_UnitSkills = new UnitSkills();
+		m_AttrMap = attrmap;
+		m_SkillsMap = skillsmap;
 
 		// For drawing class ribbon.
 		m_UnitClassSpritename = "unit_class_nightblade";
 		m_UnitClassName = "Nightblade";
 
+		/*
 		// Zero out stats.
-		for (auto it : m_UnitAttributes->m_UnitAttributesMap) {
+		for(auto it: m_UnitAttributes->m_UnitAttributesMap){
 
 			it.second = 0;
 		}
@@ -659,6 +731,7 @@ struct UnitClassNightblade : public UnitClass {
 
 			it.second = 0;
 		}
+		*/
 
 
 		_defineStats();
@@ -673,6 +746,9 @@ struct UnitClassNightblade : public UnitClass {
 
 private:
 
+	// Pointers to units skills and attributes map.
+	std::map<UnitSkillsEnum, int>* m_SkillsMap = nullptr;
+	std::map<UnitAttributesEnum, int>* m_AttrMap = nullptr;
 
 private:
 	void _defineStats();
@@ -681,20 +757,22 @@ private:
 
 
 struct UnitClassInquisitor : public UnitClass {
-	UnitClassInquisitor() {
+	UnitClassInquisitor(std::map<UnitSkillsEnum, int>* skillsmap,
+		std::map<UnitAttributesEnum, int>* attrmap) {
 
 		m_ZoneOfControl = false;
 		m_IgnoresZoneOfControl = true;
 
-		m_UnitAttributes = new UnitAttributes();
-		m_UnitSkills = new UnitSkills();
+		m_AttrMap = attrmap;
+		m_SkillsMap = skillsmap;
 
 		// For drawing class ribbon.
 		m_UnitClassSpritename = "unit_class_inquisitor";
 		m_UnitClassName = "Inquisitor";
 
+		/*
 		// Zero out stats.
-		for (auto it : m_UnitAttributes->m_UnitAttributesMap) {
+		for(auto it: m_UnitAttributes->m_UnitAttributesMap){
 
 			it.second = 0;
 		}
@@ -703,6 +781,7 @@ struct UnitClassInquisitor : public UnitClass {
 
 			it.second = 0;
 		}
+		*/
 
 
 		_defineStats();
@@ -717,6 +796,9 @@ struct UnitClassInquisitor : public UnitClass {
 
 private:
 
+	// Pointers to units skills and attributes map.
+	std::map<UnitSkillsEnum, int>* m_SkillsMap = nullptr;
+	std::map<UnitAttributesEnum, int>* m_AttrMap = nullptr;
 
 private:
 	void _defineStats();
@@ -727,20 +809,22 @@ private:
 // 4.) Mages.
 
 struct UnitClassMage : public UnitClass {
-	UnitClassMage() {
+	UnitClassMage(std::map<UnitSkillsEnum, int>* skillsmap,
+		std::map<UnitAttributesEnum, int>* attrmap) {
 
 		m_ZoneOfControl = false;
 		m_IgnoresZoneOfControl = false;
 
-		m_UnitAttributes = new UnitAttributes();
-		m_UnitSkills = new UnitSkills();
+		m_AttrMap = attrmap;
+		m_SkillsMap = skillsmap;
 
 		// For drawing class ribbon.
 		m_UnitClassSpritename = "unit_class_mage";
 		m_UnitClassName = "Mage";
 
+		/*
 		// Zero out stats.
-		for (auto it : m_UnitAttributes->m_UnitAttributesMap) {
+		for(auto it: m_UnitAttributes->m_UnitAttributesMap){
 
 			it.second = 0;
 		}
@@ -749,6 +833,7 @@ struct UnitClassMage : public UnitClass {
 
 			it.second = 0;
 		}
+		*/
 
 
 		_defineStats();
@@ -763,6 +848,9 @@ struct UnitClassMage : public UnitClass {
 
 private:
 
+	// Pointers to units skills and attributes map.
+	std::map<UnitSkillsEnum, int>* m_SkillsMap = nullptr;
+	std::map<UnitAttributesEnum, int>* m_AttrMap = nullptr;
 
 private:
 	void _defineStats();
@@ -771,20 +859,22 @@ private:
 
 
 struct UnitClassSorcerer : public UnitClass {
-	UnitClassSorcerer() {
+	UnitClassSorcerer(std::map<UnitSkillsEnum, int>* skillsmap,
+		std::map<UnitAttributesEnum, int>* attrmap) {
 
 		m_ZoneOfControl = false;
 		m_IgnoresZoneOfControl = false;
 
-		m_UnitAttributes = new UnitAttributes();
-		m_UnitSkills = new UnitSkills();
+		m_AttrMap = attrmap;
+		m_SkillsMap = skillsmap;
 
 		// For drawing class ribbon.
 		m_UnitClassSpritename = "unit_class_sorcerer";
 		m_UnitClassName = "Sorcerer";
 
+		/*
 		// Zero out stats.
-		for (auto it : m_UnitAttributes->m_UnitAttributesMap) {
+		for(auto it: m_UnitAttributes->m_UnitAttributesMap){
 
 			it.second = 0;
 		}
@@ -793,6 +883,7 @@ struct UnitClassSorcerer : public UnitClass {
 
 			it.second = 0;
 		}
+		*/
 
 
 		_defineStats();
@@ -807,6 +898,9 @@ struct UnitClassSorcerer : public UnitClass {
 
 private:
 
+	// Pointers to units skills and attributes map.
+	std::map<UnitSkillsEnum, int>* m_SkillsMap = nullptr;
+	std::map<UnitAttributesEnum, int>* m_AttrMap = nullptr;
 
 private:
 	void _defineStats();
@@ -815,20 +909,22 @@ private:
 
 
 struct UnitClassHealer : public UnitClass {
-	UnitClassHealer() {
+	UnitClassHealer(std::map<UnitSkillsEnum, int>* skillsmap,
+		std::map<UnitAttributesEnum, int>* attrmap) {
 
 		m_ZoneOfControl = false;
 		m_IgnoresZoneOfControl = false;
 
-		m_UnitAttributes = new UnitAttributes();
-		m_UnitSkills = new UnitSkills();
+		m_AttrMap = attrmap;
+		m_SkillsMap = skillsmap;
 
 		// For drawing class ribbon.
 		m_UnitClassSpritename = "unit_class_healer";
 		m_UnitClassName = "Healer";
 
+		/*
 		// Zero out stats.
-		for (auto it : m_UnitAttributes->m_UnitAttributesMap) {
+		for(auto it: m_UnitAttributes->m_UnitAttributesMap){
 
 			it.second = 0;
 		}
@@ -837,6 +933,7 @@ struct UnitClassHealer : public UnitClass {
 
 			it.second = 0;
 		}
+		*/
 
 
 		_defineStats();
@@ -851,6 +948,9 @@ struct UnitClassHealer : public UnitClass {
 
 private:
 
+	// Pointers to units skills and attributes map.
+	std::map<UnitSkillsEnum, int>* m_SkillsMap = nullptr;
+	std::map<UnitAttributesEnum, int>* m_AttrMap = nullptr;
 
 private:
 	void _defineStats();

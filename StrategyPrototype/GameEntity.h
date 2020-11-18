@@ -44,7 +44,7 @@ Player* GetPlayer(std::string name);
 bool HasMapTileRiver(MapTile* maptile);
 River* MakeNewRiver(std::string spritename, int x_cell_pos, int y_cell_pos);
 
-Unit* MakeNewUnitAtPos(Player* p, std::string unit_class, std::string spritename, int xpos, int ypos, int x_cell, int y_cell);
+Unit* MakeNewUnitAtPos(CMPEntityRace::Race race, Player* p, std::string unit_class, std::string spritename, int xpos, int ypos, int x_cell, int y_cell);
 
 
 enum class TileImprovementLevel {
@@ -83,7 +83,7 @@ public:
 
 class Unit : public GameEntity {
 public:
-	Unit(std::string spritename, int xpos, int ypos, int set_x_cell, int set_y_cell) {
+	Unit(CMPEntityRace::Race race, std::string spritename, int xpos, int ypos, int set_x_cell, int set_y_cell) {
 
 		m_IDCmp->m_DynamicTypeName = "Unit";
 	
@@ -97,7 +97,13 @@ public:
 		m_GraphicsCmp->m_SpriteName = spritename;
 
 
+		m_EntityRaceCmp = new CMPEntityRace(race);
+
 		_defineMaxAge();
+
+		// Stats and Skills.
+		_defineStandardBeginningStats();
+		_defineStatsBasedOnUnitRace();
 	}
 
 	~Unit() = default;
@@ -120,6 +126,15 @@ public:
 
 
 
+	std::map<UnitSkillsEnum, int>* GetUnitSkills() {
+		return &m_UnitSkillsMap;
+	}
+
+	std::map<UnitAttributesEnum, int>* GetUnitAttributes() {
+		return &m_UnitAttributesMap;
+	}
+
+
 	// All units are at least 14 Years old.
 	unsigned int m_Age = 14;
 	// Defines the max age to which this unit will live.
@@ -136,9 +151,16 @@ private:
 	int m_AgeInternal = -1;
 
 
+	// Units skills and attributes.
+	std::map<UnitSkillsEnum, int> m_UnitSkillsMap;
+	std::map<UnitAttributesEnum, int> m_UnitAttributesMap;
+
 private:
 	void _determineUnitRibbonColor();
 	void _defineMaxAge();
+
+	void _defineStandardBeginningStats(); // All skills and attributes start at 5.
+	void _defineStatsBasedOnUnitRace(); // Based on race give bonuses or minuses to stats or skills.
 
 };
 

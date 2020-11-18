@@ -10,9 +10,9 @@ int IMGUI::m_WidgetID = 0; // A valid ID is greater 0.
 
 
 
-Unit* MakeNewUnitAtPos(Player* p, std::string unit_class, std::string spritename, int xpos, int ypos, int x_cell, int y_cell) {
+Unit* MakeNewUnitAtPos(CMPEntityRace::Race race, Player* p, std::string unit_class, std::string spritename, int xpos, int ypos, int x_cell, int y_cell) {
 
-	Unit* u = new Unit(spritename, xpos, ypos, x_cell, y_cell);
+	Unit* u = new Unit(race, spritename, xpos, ypos, x_cell, y_cell);
 
 	u->SetBirthsign();
 
@@ -2352,8 +2352,11 @@ bool Game::OnUserCreate() {
 	storage->AddGameEntitie(r6);
 	*/	
 
-	/*
+	
 	Player* player = new Player("Bogdan", "blue");
+	storage->AddPlayer(player);
+
+	/*
 	Player* player2 = new Player("Peter", "red");
 	Player* player3 = new Player("Katharina", "magenta");
 	Player* player4 = new Player("Walter", "black");
@@ -2363,7 +2366,6 @@ bool Game::OnUserCreate() {
 	Player* player8 = new Player("Javid", "brown");
 
 
-	storage->AddPlayer(player);
 	storage->AddPlayer(player2);
 	storage->AddPlayer(player3);
 	storage->AddPlayer(player4);
@@ -2426,11 +2428,12 @@ bool Game::OnUserCreate() {
 	YearCounter::Get(); // .. = construction.
 
 
-	/*
+	
 	// Make testing unit.
-	Unit* unit = MakeNewUnitAtPos(player3, "Archer", "gnome_mechafighter", 64 * 5, 64 * 2, 5, 2);
+	// A gnome archer...
+	Unit* unit = MakeNewUnitAtPos(CMPEntityRace::Race::RACE_GNOME, player, "Archer", "gnome_mechafighter", 64 * 5, 64 * 2, 5, 2);
 	EntitiesStorage::Get()->AddGameEntitie(unit);
-	*/
+	
 
 	return true;
 }
@@ -3918,6 +3921,8 @@ void ForestSearch::executeStateLogic() {
 
 void Game::AdvanceOneTurn() {
 
+	using namespace std;
+
 	if (m_AdvanceOneTurn) {
 
 		_updateAI2();
@@ -3934,6 +3939,20 @@ void Game::AdvanceOneTurn() {
 
 			unit = reinterpret_cast<Unit*>(it);
 			unit->Update();
+
+			cout << APP_SUCCESS_COLOR;
+			cout << "Unit name: " << unit->m_Name << endl;
+			cout << "Unit class: " << unit->m_UnitClass->m_UnitClassName << endl;
+			cout << "Unit stats: " << endl;
+
+			for (auto it : *unit->GetUnitSkills()) {
+				cout << "Skill \"" << SkillToString(it.first) << "\" ::= " << it.second << endl;
+			}
+
+			for (auto it : *unit->GetUnitAttributes()) {
+				cout << "Attribute \"" << AttributeToString(it.first) << "\" ::= " << it.second << endl;
+			}
+
 		}
 	}
 	else if (m_TimeModeTurnBased == false) {

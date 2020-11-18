@@ -16,6 +16,198 @@ GameEntity::~GameEntity() {
 }
 
 
+void Unit::_defineStandardBeginningStats() {
+
+	m_UnitSkillsMap.insert(std::make_pair(UnitSkillsEnum::UNIT_SKILL_HEAVY_ARMOR, 8));
+	m_UnitSkillsMap.insert(std::make_pair(UnitSkillsEnum::UNIT_SKILL_MEDIUM_ARMOR, 8));
+	m_UnitSkillsMap.insert(std::make_pair(UnitSkillsEnum::UNIT_SKILL_LIGHT_ARMOR, 8));
+	m_UnitSkillsMap.insert(std::make_pair(UnitSkillsEnum::UNIT_SKILL_SPEAR, 8));
+	m_UnitSkillsMap.insert(std::make_pair(UnitSkillsEnum::UNIT_SKILL_AXE, 8));
+	m_UnitSkillsMap.insert(std::make_pair(UnitSkillsEnum::UNIT_SKILL_BLUNT_WEAPON, 8));
+	m_UnitSkillsMap.insert(std::make_pair(UnitSkillsEnum::UNIT_SKILL_LONG_BLADE, 8));
+	m_UnitSkillsMap.insert(std::make_pair(UnitSkillsEnum::UNIT_SKILL_SHORT_BLADE, 8));
+	m_UnitSkillsMap.insert(std::make_pair(UnitSkillsEnum::UNIT_SKILL_BLOCK, 8));
+	m_UnitSkillsMap.insert(std::make_pair(UnitSkillsEnum::UNIT_SKILL_MARKSMAN, 8));
+	m_UnitSkillsMap.insert(std::make_pair(UnitSkillsEnum::UNIT_SKILL_ACROBATICS, 8));
+	m_UnitSkillsMap.insert(std::make_pair(UnitSkillsEnum::UNIT_SKILL_ATHLETICS, 8));
+	m_UnitSkillsMap.insert(std::make_pair(UnitSkillsEnum::UNIT_SKILL_SNEAK, 8));
+	m_UnitSkillsMap.insert(std::make_pair(UnitSkillsEnum::UNIT_SKILL_UNARMORED, 8));
+	m_UnitSkillsMap.insert(std::make_pair(UnitSkillsEnum::UNIT_SKILL_ILLUSION, 8));
+	m_UnitSkillsMap.insert(std::make_pair(UnitSkillsEnum::UNIT_SKILL_MERCANTILE, 8));
+	m_UnitSkillsMap.insert(std::make_pair(UnitSkillsEnum::UNIT_SKILL_SPEECHCRAFT, 8));
+	m_UnitSkillsMap.insert(std::make_pair(UnitSkillsEnum::UNIT_SKILL_ALCHEMY, 8));
+	m_UnitSkillsMap.insert(std::make_pair(UnitSkillsEnum::UNIT_SKILL_CONJURATION, 8));
+	m_UnitSkillsMap.insert(std::make_pair(UnitSkillsEnum::UNIT_SKILL_ENCHANT, 8));
+	m_UnitSkillsMap.insert(std::make_pair(UnitSkillsEnum::UNIT_SKILL_ALTERATION, 8));
+	m_UnitSkillsMap.insert(std::make_pair(UnitSkillsEnum::UNIT_SKILL_DESTRUCTION, 8));
+	m_UnitSkillsMap.insert(std::make_pair(UnitSkillsEnum::UNIT_SKILL_MYSTICISM, 8));
+	m_UnitSkillsMap.insert(std::make_pair(UnitSkillsEnum::UNIT_SKILL_RESTORATION, 8));
+
+
+	m_UnitAttributesMap.insert(std::make_pair(UnitAttributesEnum::UNIT_ATTRIBUTE_STRENGTH, 8));
+	m_UnitAttributesMap.insert(std::make_pair(UnitAttributesEnum::UNIT_ATTRIBUTE_INTELLIGENCE, 8));
+	m_UnitAttributesMap.insert(std::make_pair(UnitAttributesEnum::UNIT_ATTRIBUTE_WILLPOWER, 8));
+	m_UnitAttributesMap.insert(std::make_pair(UnitAttributesEnum::UNIT_ATTRIBUTE_AGILITY, 8));
+	m_UnitAttributesMap.insert(std::make_pair(UnitAttributesEnum::UNIT_ATTRIBUTE_SPEED, 8));
+	m_UnitAttributesMap.insert(std::make_pair(UnitAttributesEnum::UNIT_ATTRIBUTE_ENDURANCE, 8));
+	m_UnitAttributesMap.insert(std::make_pair(UnitAttributesEnum::UNIT_ATTRIBUTE_PERSONALITY, 8));
+}
+
+void Unit::_defineStatsBasedOnUnitRace() {
+
+	UnitAttributes* attr = new UnitAttributes();
+	UnitSkills* skills = new UnitSkills();
+
+
+	if (m_EntityRaceCmp == nullptr) return;
+
+
+
+	switch (m_EntityRaceCmp->m_EntityRace) {
+		{
+	case CMPEntityRace::Race::RACE_INVALID:
+		break;
+	case CMPEntityRace::Race::RACE_HUMAN:
+		// Bonuses
+		attr->SetAttribute(&m_UnitAttributesMap, "Strength", 2);
+		attr->SetAttribute(&m_UnitAttributesMap, "Intelligence", 5);
+		attr->SetAttribute(&m_UnitAttributesMap, "Personality", 5);
+
+		// Minuses
+		attr->UnsetAttribute(&m_UnitAttributesMap, "Endurance", 3);
+
+
+
+
+		skills->SetSkill(&m_UnitSkillsMap, "Light Armor", 10);
+		skills->SetSkill(&m_UnitSkillsMap, "Long Blade", 10);
+		skills->SetSkill(&m_UnitSkillsMap, "Restoration", 5);
+		skills->SetSkill(&m_UnitSkillsMap, "Destruction", 5);
+		skills->SetSkill(&m_UnitSkillsMap, "Medium Armor", 5);
+
+
+		break;
+	case CMPEntityRace::Race::RACE_TROLL:
+		// Bonuses
+		attr->SetAttribute(&m_UnitAttributesMap, "Strength", 5);
+		attr->SetAttribute(&m_UnitAttributesMap, "Agility", 5);
+
+		// Minuses
+		// none.
+
+
+		skills->SetSkill(&m_UnitSkillsMap, "Unarmored", 10);
+		skills->SetSkill(&m_UnitSkillsMap, "Short Blade", 5);
+		skills->SetSkill(&m_UnitSkillsMap, "Mercantile", 10);
+		skills->SetSkill(&m_UnitSkillsMap, "Speechcraft", 5);
+		skills->SetSkill(&m_UnitSkillsMap, "Acrobatics", 5);
+
+		break;
+	case CMPEntityRace::Race::RACE_DWARF:
+		// Bonuses
+		attr->SetAttribute(&m_UnitAttributesMap, "Endurance", 5);
+		attr->SetAttribute(&m_UnitAttributesMap, "Strength", 5);
+		attr->SetAttribute(&m_UnitAttributesMap, "Personality", 5);
+
+		// Minuses
+		attr->UnsetAttribute(&m_UnitAttributesMap, "Agility", 5);
+
+
+		skills->SetSkill(&m_UnitSkillsMap, "Mercantile", 10);
+		skills->SetSkill(&m_UnitSkillsMap, "Blunt Weapon", 10);
+		skills->SetSkill(&m_UnitSkillsMap, "Heavy Armor", 10);
+		skills->SetSkill(&m_UnitSkillsMap, "Athletics", 5);
+		skills->SetSkill(&m_UnitSkillsMap, "Axe", 5);
+
+		break;
+	case CMPEntityRace::Race::RACE_ORC:
+		// Bonuses
+		attr->SetAttribute(&m_UnitAttributesMap, "Strength", 10);
+		attr->SetAttribute(&m_UnitAttributesMap, "Endurance", 7);
+
+		// Minuses
+		attr->UnsetAttribute(&m_UnitAttributesMap, "Intelligence", 4);
+
+
+		skills->SetSkill(&m_UnitSkillsMap, "Medium Armor", 10);
+		skills->SetSkill(&m_UnitSkillsMap, "Axe", 10);
+		skills->SetSkill(&m_UnitSkillsMap, "Heavy Armor", 10);
+		skills->SetSkill(&m_UnitSkillsMap, "Block", 5);
+		skills->SetSkill(&m_UnitSkillsMap, "Mysticism", 5);
+
+		break;
+	case CMPEntityRace::Race::RACE_HIGHELF:
+		// Bonuses
+		attr->SetAttribute(&m_UnitAttributesMap, "Intelligence", 10);
+		attr->SetAttribute(&m_UnitAttributesMap, "Agility", 3);
+
+		// Minuses
+		attr->UnsetAttribute(&m_UnitAttributesMap, "Strength", 3);
+
+
+		skills->SetSkill(&m_UnitSkillsMap, "Medium Armor", 5);
+		skills->SetSkill(&m_UnitSkillsMap, "Restoration", 10);
+		skills->SetSkill(&m_UnitSkillsMap, "Illusion", 5);
+		skills->SetSkill(&m_UnitSkillsMap, "Conjuration", 10);
+		skills->SetSkill(&m_UnitSkillsMap, "Enchant", 5);
+
+		break;
+	case CMPEntityRace::Race::RACE_DARKELF:
+		// Bonuses
+		attr->SetAttribute(&m_UnitAttributesMap, "Speed", 7);
+		attr->SetAttribute(&m_UnitAttributesMap, "Agility", 10);
+
+		// Minuses
+		attr->UnsetAttribute(&m_UnitAttributesMap, "Personality", 2);
+
+
+		skills->SetSkill(&m_UnitSkillsMap, "Light Armor", 5);
+		skills->SetSkill(&m_UnitSkillsMap, "Destruction", 10);
+		skills->SetSkill(&m_UnitSkillsMap, "Mysticism", 10);
+		skills->SetSkill(&m_UnitSkillsMap, "Conjuration", 5);
+		skills->SetSkill(&m_UnitSkillsMap, "Short Blade", 5);
+
+		break;
+	case CMPEntityRace::Race::RACE_GOBLIN:
+		// Bonuses
+		attr->SetAttribute(&m_UnitAttributesMap, "Intelligence", 10);
+		attr->SetAttribute(&m_UnitAttributesMap, "Personality", 4);
+
+		// Minuses
+		attr->UnsetAttribute(&m_UnitAttributesMap, "Strength", 5);
+
+
+		skills->SetSkill(&m_UnitSkillsMap, "Light Armor", 5);
+		skills->SetSkill(&m_UnitSkillsMap, "Illusion", 10);
+		skills->SetSkill(&m_UnitSkillsMap, "Speechcraft", 5);
+		skills->SetSkill(&m_UnitSkillsMap, "Alteration", 10);
+		skills->SetSkill(&m_UnitSkillsMap, "Conjuration", 5);
+
+		break;
+	case CMPEntityRace::Race::RACE_GNOME:
+		// Bonuses
+		attr->SetAttribute(&m_UnitAttributesMap, "Intelligence", 10);
+		attr->SetAttribute(&m_UnitAttributesMap, "Agility", 5);
+		attr->SetAttribute(&m_UnitAttributesMap, "Speed", 3);
+
+		// Minuses
+		attr->UnsetAttribute(&m_UnitAttributesMap, "Strength", 5);
+
+
+		skills->SetSkill(&m_UnitSkillsMap, "Unarmored", 10);
+		skills->SetSkill(&m_UnitSkillsMap, "Illusion", 5);
+		skills->SetSkill(&m_UnitSkillsMap, "Mysticism", 5);
+		skills->SetSkill(&m_UnitSkillsMap, "Alteration", 10);
+		skills->SetSkill(&m_UnitSkillsMap, "Short Blade", 5);
+
+		break;
+	default:
+		break;
+		}
+	}
+}
+
+
 void Unit::_defineMaxAge() {
 
 	int r = Random() % 10;
@@ -87,7 +279,7 @@ bool Unit::SetClass(std::string c) {
 
 	// Second, make new class definitions.
 	if (COMPARE_STRINGS(c, "Archer") == 0) {
-		m_UnitClass = new UnitClassArcher();
+		m_UnitClass = new UnitClassArcher(&m_UnitSkillsMap, &m_UnitAttributesMap);
 	}
 
 
