@@ -104,7 +104,6 @@ public:
 
 	void Update();
 
-
 	bool SetClass(std::string c);
 	bool SetBirthsign() {
 		m_Birthsign = YearCounter::Get()->GetCurrentBirthsign();

@@ -3,6 +3,7 @@
 EntitiesStorage* EntitiesStorage::m_EntitiesStorage = nullptr;
 WorldMap* WorldMap::m_WorldMapInstance = nullptr;
 
+
 GameEntity::~GameEntity() {
 
 	delete m_IDCmp; m_IDCmp = nullptr;

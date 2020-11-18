@@ -112,7 +112,19 @@ struct UnitAttributes {
 	std::map<UnitAttributesEnum, int> m_UnitAttributesMap;
 };
 
+/*
+NOTE: 
 
+On definition we add to unit skills a defined amount of classskills value,
+same with attributes.
+
+On class change the unit looses same amount of value as we set it.
+
+Major skills, like the primary ones, give a bonus of 10 to skills.
+Minor skills, like the secondary ones, give a bonus of 5 to skills.
+
+Major and minor attributes do the same.
+*/
 struct UnitClass {
 
 	UnitAttributes* m_UnitAttributes = nullptr;
@@ -120,11 +132,19 @@ struct UnitClass {
 
 	std::string m_UnitClassSpritename = "NULL";
 	std::string m_UnitClassName = "NULL";
+
+	bool m_ZoneOfControl = false; // Whether this class-unit has a zoc.
+	bool m_IgnoresZoneOfControl = false; // Whether this class-unit ignores another units zoc.
 };
 
 
+// CLASSES DEFINITIONS
+// 1.) Support classes.
 struct UnitClassArcher : public UnitClass {
 	UnitClassArcher() {
+
+		m_ZoneOfControl = true;
+		m_IgnoresZoneOfControl = false;
 
 		m_UnitAttributes = new UnitAttributes();
 		m_UnitSkills = new UnitSkills();
@@ -159,82 +179,680 @@ private:
 
 
 private:
-	void _defineStats() {
+	void _defineStats();
+	void _undefStats();
+};
 
 
-		// Attributes.
-		m_UnitAttributes->SetAttribute("Strength", 30);
-		m_UnitAttributes->SetAttribute("Agility", 30);
-		m_UnitAttributes->SetAttribute("Intelligence", 10);
-		m_UnitAttributes->SetAttribute("Willpower", 10);
-		m_UnitAttributes->SetAttribute("Agility", 10);
-		m_UnitAttributes->SetAttribute("Speed", 10);
-		m_UnitAttributes->SetAttribute("Endurance", 10);
-		m_UnitAttributes->SetAttribute("Personality", 10);
 
-		// Skills.
-		m_UnitSkills->SetSkill("Heavy Armor", 1);
-		m_UnitSkills->SetSkill("Light Armor", 20);
-		m_UnitSkills->SetSkill("Medium Armor", 10);
-		m_UnitSkills->SetSkill("Spear", 10);
-		m_UnitSkills->SetSkill("Axe", 1);
-		m_UnitSkills->SetSkill("Blunt Weapon", 1);
-		m_UnitSkills->SetSkill("Long Blade", 20);
-		m_UnitSkills->SetSkill("Short Blade", 1);
-		m_UnitSkills->SetSkill("Block", 20);
-		m_UnitSkills->SetSkill("Marksman", 20);
-		m_UnitSkills->SetSkill("Acrobatics", 1);
-		m_UnitSkills->SetSkill("Athletics", 20);
-		m_UnitSkills->SetSkill("Sneak", 1);
-		m_UnitSkills->SetSkill("Unarmored", 10);
-		m_UnitSkills->SetSkill("Illusion", 1);
-		m_UnitSkills->SetSkill("Mercantile", 1);
-		m_UnitSkills->SetSkill("Speechcraft", 1);
-		m_UnitSkills->SetSkill("Alchemy", 1);
-		m_UnitSkills->SetSkill("Conjuration", 1);
-		m_UnitSkills->SetSkill("Enchant", 1);
-		m_UnitSkills->SetSkill("Alteration", 1);
-		m_UnitSkills->SetSkill("Destruction", 1);
-		m_UnitSkills->SetSkill("Restoration", 10);
+struct UnitClassSpy : public UnitClass {
+	UnitClassSpy() {
 
+		m_ZoneOfControl = false;
+		m_IgnoresZoneOfControl = true;
+
+		m_UnitAttributes = new UnitAttributes();
+		m_UnitSkills = new UnitSkills();
+
+		// For drawing class ribbon.
+		m_UnitClassSpritename = "unit_class_spy";
+		m_UnitClassName = "Spy";
+
+		// Zero out stats.
+		for (auto it : m_UnitAttributes->m_UnitAttributesMap) {
+
+			it.second = 0;
+		}
+
+		for (auto it : m_UnitSkills->m_UnitSkillsMap) {
+
+			it.second = 0;
+		}
+
+
+		_defineStats();
 	}
 
 
-	void _undefStats() {
+	~UnitClassSpy() {
 
-		// Attributes.
-		m_UnitAttributes->UnsetAttribute("Strength", 30);
-		m_UnitAttributes->UnsetAttribute("Agility", 30);
-		m_UnitAttributes->UnsetAttribute("Intelligence", 10);
-		m_UnitAttributes->UnsetAttribute("Willpower", 10);
-		m_UnitAttributes->UnsetAttribute("Agility", 10);
-		m_UnitAttributes->UnsetAttribute("Speed", 10);
-		m_UnitAttributes->UnsetAttribute("Endurance", 10);
-		m_UnitAttributes->UnsetAttribute("Personality", 10);
-
-		// Skills.
-		m_UnitSkills->UnsetSkill("Heavy Armor", 1);
-		m_UnitSkills->UnsetSkill("Light Armor", 20);
-		m_UnitSkills->UnsetSkill("Medium Armor", 10);
-		m_UnitSkills->UnsetSkill("Spear", 10);
-		m_UnitSkills->UnsetSkill("Axe", 1);
-		m_UnitSkills->UnsetSkill("Blunt Weapon", 1);
-		m_UnitSkills->UnsetSkill("Long Blade", 20);
-		m_UnitSkills->UnsetSkill("Short Blade", 1);
-		m_UnitSkills->UnsetSkill("Block", 20);
-		m_UnitSkills->UnsetSkill("Marksman", 20);
-		m_UnitSkills->UnsetSkill("Acrobatics", 1);
-		m_UnitSkills->UnsetSkill("Athletics", 20);
-		m_UnitSkills->UnsetSkill("Sneak", 1);
-		m_UnitSkills->UnsetSkill("Unarmored", 10);
-		m_UnitSkills->UnsetSkill("Illusion", 1);
-		m_UnitSkills->UnsetSkill("Mercantile", 1);
-		m_UnitSkills->UnsetSkill("Speechcraft", 1);
-		m_UnitSkills->UnsetSkill("Alchemy", 1);
-		m_UnitSkills->UnsetSkill("Conjuration", 1);
-		m_UnitSkills->UnsetSkill("Enchant", 1);
-		m_UnitSkills->UnsetSkill("Alteration", 1);
-		m_UnitSkills->UnsetSkill("Destruction", 1);
-		m_UnitSkills->UnsetSkill("Restoration", 10);
+		_undefStats();
 	}
+
+
+private:
+
+
+private:
+	void _defineStats();
+	void _undefStats();
+};
+
+
+
+struct UnitClassAssassin : public UnitClass {
+	UnitClassAssassin() {
+
+		m_ZoneOfControl = false;
+		m_IgnoresZoneOfControl = true;
+
+		m_UnitAttributes = new UnitAttributes();
+		m_UnitSkills = new UnitSkills();
+
+		// For drawing class ribbon.
+		m_UnitClassSpritename = "unit_class_assassin";
+		m_UnitClassName = "Assassin";
+
+		// Zero out stats.
+		for (auto it : m_UnitAttributes->m_UnitAttributesMap) {
+
+			it.second = 0;
+		}
+
+		for (auto it : m_UnitSkills->m_UnitSkillsMap) {
+
+			it.second = 0;
+		}
+
+
+		_defineStats();
+	}
+
+
+	~UnitClassAssassin() {
+
+		_undefStats();
+	}
+
+
+private:
+
+
+private:
+	void _defineStats();
+	void _undefStats();
+};
+
+
+
+struct UnitClassRogue : public UnitClass {
+	UnitClassRogue() {
+
+		m_ZoneOfControl = false;
+		m_IgnoresZoneOfControl = true;
+
+		m_UnitAttributes = new UnitAttributes();
+		m_UnitSkills = new UnitSkills();
+
+		// For drawing class ribbon.
+		m_UnitClassSpritename = "unit_class_rogue";
+		m_UnitClassName = "Rogue";
+
+		// Zero out stats.
+		for (auto it : m_UnitAttributes->m_UnitAttributesMap) {
+
+			it.second = 0;
+		}
+
+		for (auto it : m_UnitSkills->m_UnitSkillsMap) {
+
+			it.second = 0;
+		}
+
+
+		_defineStats();
+	}
+
+
+	~UnitClassRogue() {
+
+		_undefStats();
+	}
+
+
+private:
+
+
+private:
+	void _defineStats();
+	void _undefStats();
+};
+
+
+
+struct UnitClassScout : public UnitClass {
+	UnitClassScout() {
+
+		m_ZoneOfControl = false;
+		m_IgnoresZoneOfControl = true;
+
+		m_UnitAttributes = new UnitAttributes();
+		m_UnitSkills = new UnitSkills();
+
+		// For drawing class ribbon.
+		m_UnitClassSpritename = "unit_class_scout";
+		m_UnitClassName = "Scout";
+
+		// Zero out stats.
+		for (auto it : m_UnitAttributes->m_UnitAttributesMap) {
+
+			it.second = 0;
+		}
+
+		for (auto it : m_UnitSkills->m_UnitSkillsMap) {
+
+			it.second = 0;
+		}
+
+
+		_defineStats();
+	}
+
+
+	~UnitClassScout() {
+
+		_undefStats();
+	}
+
+
+private:
+
+
+private:
+	void _defineStats();
+	void _undefStats();
+};
+
+
+// 2.) Fighters - Melee.
+
+struct UnitClassBarbarian : public UnitClass {
+	UnitClassBarbarian() {
+
+		m_ZoneOfControl = false;
+		m_IgnoresZoneOfControl = false;
+
+		m_UnitAttributes = new UnitAttributes();
+		m_UnitSkills = new UnitSkills();
+
+		// For drawing class ribbon.
+		m_UnitClassSpritename = "unit_class_barbarian";
+		m_UnitClassName = "Barbarian";
+
+		// Zero out stats.
+		for (auto it : m_UnitAttributes->m_UnitAttributesMap) {
+
+			it.second = 0;
+		}
+
+		for (auto it : m_UnitSkills->m_UnitSkillsMap) {
+
+			it.second = 0;
+		}
+
+
+		_defineStats();
+	}
+
+
+	~UnitClassBarbarian() {
+
+		_undefStats();
+	}
+
+
+private:
+
+
+private:
+	void _defineStats();
+	void _undefStats();
+};
+
+
+
+struct UnitClassWarrior : public UnitClass {
+	UnitClassWarrior() {
+
+		m_ZoneOfControl = true;
+		m_IgnoresZoneOfControl = false;
+
+		m_UnitAttributes = new UnitAttributes();
+		m_UnitSkills = new UnitSkills();
+
+		// For drawing class ribbon.
+		m_UnitClassSpritename = "unit_class_warrior";
+		m_UnitClassName = "Warrior";
+
+		// Zero out stats.
+		for (auto it : m_UnitAttributes->m_UnitAttributesMap) {
+
+			it.second = 0;
+		}
+
+		for (auto it : m_UnitSkills->m_UnitSkillsMap) {
+
+			it.second = 0;
+		}
+
+
+		_defineStats();
+	}
+
+
+	~UnitClassWarrior() {
+
+		_undefStats();
+	}
+
+
+private:
+
+
+private:
+	void _defineStats();
+	void _undefStats();
+};
+
+
+struct UnitClassKnight : public UnitClass {
+	UnitClassKnight() {
+
+		m_ZoneOfControl = true;
+		m_IgnoresZoneOfControl = false;
+
+		m_UnitAttributes = new UnitAttributes();
+		m_UnitSkills = new UnitSkills();
+
+		// For drawing class ribbon.
+		m_UnitClassSpritename = "unit_class_knight";
+		m_UnitClassName = "Knight";
+
+		// Zero out stats.
+		for (auto it : m_UnitAttributes->m_UnitAttributesMap) {
+
+			it.second = 0;
+		}
+
+		for (auto it : m_UnitSkills->m_UnitSkillsMap) {
+
+			it.second = 0;
+		}
+
+
+		_defineStats();
+	}
+
+
+	~UnitClassKnight() {
+
+		_undefStats();
+	}
+
+
+private:
+
+
+private:
+	void _defineStats();
+	void _undefStats();
+};
+
+
+struct UnitClassPaladin : public UnitClass {
+	UnitClassPaladin() {
+
+		m_ZoneOfControl = true;
+		m_IgnoresZoneOfControl = false;
+
+		m_UnitAttributes = new UnitAttributes();
+		m_UnitSkills = new UnitSkills();
+
+		// For drawing class ribbon.
+		m_UnitClassSpritename = "unit_class_paladin";
+		m_UnitClassName = "Paladin";
+
+		// Zero out stats.
+		for (auto it : m_UnitAttributes->m_UnitAttributesMap) {
+
+			it.second = 0;
+		}
+
+		for (auto it : m_UnitSkills->m_UnitSkillsMap) {
+
+			it.second = 0;
+		}
+
+
+		_defineStats();
+	}
+
+
+	~UnitClassPaladin() {
+
+		_undefStats();
+	}
+
+
+private:
+
+
+private:
+	void _defineStats();
+	void _undefStats();
+};
+
+
+
+// 3.) Battlemages.
+
+struct UnitClassSpellsword : public UnitClass {
+	UnitClassSpellsword() {
+
+		m_ZoneOfControl = true;
+		m_IgnoresZoneOfControl = false;
+
+		m_UnitAttributes = new UnitAttributes();
+		m_UnitSkills = new UnitSkills();
+
+		// For drawing class ribbon.
+		m_UnitClassSpritename = "unit_class_spellsword";
+		m_UnitClassName = "Spellsword";
+
+		// Zero out stats.
+		for (auto it : m_UnitAttributes->m_UnitAttributesMap) {
+
+			it.second = 0;
+		}
+
+		for (auto it : m_UnitSkills->m_UnitSkillsMap) {
+
+			it.second = 0;
+		}
+
+
+		_defineStats();
+	}
+
+
+	~UnitClassSpellsword() {
+
+		_undefStats();
+	}
+
+
+private:
+
+
+private:
+	void _defineStats();
+	void _undefStats();
+};
+
+
+
+struct UnitClassBattlemage : public UnitClass {
+	UnitClassBattlemage() {
+
+		m_ZoneOfControl = true;
+		m_IgnoresZoneOfControl = false;
+
+		m_UnitAttributes = new UnitAttributes();
+		m_UnitSkills = new UnitSkills();
+
+		// For drawing class ribbon.
+		m_UnitClassSpritename = "unit_class_battlemage";
+		m_UnitClassName = "Battlemage";
+
+		// Zero out stats.
+		for (auto it : m_UnitAttributes->m_UnitAttributesMap) {
+
+			it.second = 0;
+		}
+
+		for (auto it : m_UnitSkills->m_UnitSkillsMap) {
+
+			it.second = 0;
+		}
+
+
+		_defineStats();
+	}
+
+
+	~UnitClassBattlemage() {
+
+		_undefStats();
+	}
+
+
+private:
+
+
+private:
+	void _defineStats();
+	void _undefStats();
+};
+
+
+
+struct UnitClassNightblade : public UnitClass {
+	UnitClassNightblade() {
+
+		m_ZoneOfControl = false;
+		m_IgnoresZoneOfControl = true;
+
+		m_UnitAttributes = new UnitAttributes();
+		m_UnitSkills = new UnitSkills();
+
+		// For drawing class ribbon.
+		m_UnitClassSpritename = "unit_class_nightblade";
+		m_UnitClassName = "Nightblade";
+
+		// Zero out stats.
+		for (auto it : m_UnitAttributes->m_UnitAttributesMap) {
+
+			it.second = 0;
+		}
+
+		for (auto it : m_UnitSkills->m_UnitSkillsMap) {
+
+			it.second = 0;
+		}
+
+
+		_defineStats();
+	}
+
+
+	~UnitClassNightblade() {
+
+		_undefStats();
+	}
+
+
+private:
+
+
+private:
+	void _defineStats();
+	void _undefStats();
+};
+
+
+struct UnitClassInquisitor : public UnitClass {
+	UnitClassInquisitor() {
+
+		m_ZoneOfControl = false;
+		m_IgnoresZoneOfControl = true;
+
+		m_UnitAttributes = new UnitAttributes();
+		m_UnitSkills = new UnitSkills();
+
+		// For drawing class ribbon.
+		m_UnitClassSpritename = "unit_class_inquisitor";
+		m_UnitClassName = "Inquisitor";
+
+		// Zero out stats.
+		for (auto it : m_UnitAttributes->m_UnitAttributesMap) {
+
+			it.second = 0;
+		}
+
+		for (auto it : m_UnitSkills->m_UnitSkillsMap) {
+
+			it.second = 0;
+		}
+
+
+		_defineStats();
+	}
+
+
+	~UnitClassInquisitor() {
+
+		_undefStats();
+	}
+
+
+private:
+
+
+private:
+	void _defineStats();
+	void _undefStats();
+};
+
+
+// 4.) Mages.
+
+struct UnitClassMage : public UnitClass {
+	UnitClassMage() {
+
+		m_ZoneOfControl = false;
+		m_IgnoresZoneOfControl = false;
+
+		m_UnitAttributes = new UnitAttributes();
+		m_UnitSkills = new UnitSkills();
+
+		// For drawing class ribbon.
+		m_UnitClassSpritename = "unit_class_mage";
+		m_UnitClassName = "Mage";
+
+		// Zero out stats.
+		for (auto it : m_UnitAttributes->m_UnitAttributesMap) {
+
+			it.second = 0;
+		}
+
+		for (auto it : m_UnitSkills->m_UnitSkillsMap) {
+
+			it.second = 0;
+		}
+
+
+		_defineStats();
+	}
+
+
+	~UnitClassMage() {
+
+		_undefStats();
+	}
+
+
+private:
+
+
+private:
+	void _defineStats();
+	void _undefStats();
+};
+
+
+struct UnitClassSorcerer : public UnitClass {
+	UnitClassSorcerer() {
+
+		m_ZoneOfControl = false;
+		m_IgnoresZoneOfControl = false;
+
+		m_UnitAttributes = new UnitAttributes();
+		m_UnitSkills = new UnitSkills();
+
+		// For drawing class ribbon.
+		m_UnitClassSpritename = "unit_class_sorcerer";
+		m_UnitClassName = "Sorcerer";
+
+		// Zero out stats.
+		for (auto it : m_UnitAttributes->m_UnitAttributesMap) {
+
+			it.second = 0;
+		}
+
+		for (auto it : m_UnitSkills->m_UnitSkillsMap) {
+
+			it.second = 0;
+		}
+
+
+		_defineStats();
+	}
+
+
+	~UnitClassSorcerer() {
+
+		_undefStats();
+	}
+
+
+private:
+
+
+private:
+	void _defineStats();
+	void _undefStats();
+};
+
+
+struct UnitClassHealer : public UnitClass {
+	UnitClassHealer() {
+
+		m_ZoneOfControl = false;
+		m_IgnoresZoneOfControl = false;
+
+		m_UnitAttributes = new UnitAttributes();
+		m_UnitSkills = new UnitSkills();
+
+		// For drawing class ribbon.
+		m_UnitClassSpritename = "unit_class_healer";
+		m_UnitClassName = "Healer";
+
+		// Zero out stats.
+		for (auto it : m_UnitAttributes->m_UnitAttributesMap) {
+
+			it.second = 0;
+		}
+
+		for (auto it : m_UnitSkills->m_UnitSkillsMap) {
+
+			it.second = 0;
+		}
+
+
+		_defineStats();
+	}
+
+
+	~UnitClassHealer() {
+
+		_undefStats();
+	}
+
+
+private:
+
+
+private:
+	void _defineStats();
+	void _undefStats();
 };

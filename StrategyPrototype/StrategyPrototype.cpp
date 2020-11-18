@@ -2352,7 +2352,7 @@ bool Game::OnUserCreate() {
 	storage->AddGameEntitie(r6);
 	*/	
 
-
+	/*
 	Player* player = new Player("Bogdan", "blue");
 	Player* player2 = new Player("Peter", "red");
 	Player* player3 = new Player("Katharina", "magenta");
@@ -2395,7 +2395,7 @@ bool Game::OnUserCreate() {
 	storage->AddGameEntitie(city5);
 	storage->AddGameEntitie(city6);
 	storage->AddGameEntitie(fort3);
-
+	*/
 
 
 	// TimeCounter
@@ -2426,10 +2426,11 @@ bool Game::OnUserCreate() {
 	YearCounter::Get(); // .. = construction.
 
 
-
+	/*
 	// Make testing unit.
 	Unit* unit = MakeNewUnitAtPos(player3, "Archer", "gnome_mechafighter", 64 * 5, 64 * 2, 5, 2);
 	EntitiesStorage::Get()->AddGameEntitie(unit);
+	*/
 
 	return true;
 }
