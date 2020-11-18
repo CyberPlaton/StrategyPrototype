@@ -2431,7 +2431,7 @@ bool Game::OnUserCreate() {
 	
 	// Make testing unit.
 	// A gnome archer...
-	Unit* unit = MakeNewUnitAtPos(CMPEntityRace::Race::RACE_GNOME, player, "Archer", "gnome_mechafighter", 64 * 5, 64 * 2, 5, 2);
+	Unit* unit = MakeNewUnitAtPos(CMPEntityRace::Race::RACE_ORC, player, "Archer", "gnome_mechafighter", 64 * 5, 64 * 2, 5, 2);
 	EntitiesStorage::Get()->AddGameEntitie(unit);
 	
 
@@ -3942,12 +3942,16 @@ void Game::AdvanceOneTurn() {
 
 			cout << APP_SUCCESS_COLOR;
 			cout << "Unit name: " << unit->m_Name << endl;
+			cout << "Unit race: " << unit->m_EntityRaceCmp->m_EntityRaceString << endl;
 			cout << "Unit class: " << unit->m_UnitClass->m_UnitClassName << endl;
 			cout << "Unit stats: " << endl;
+			cout << endl;
 
 			for (auto it : *unit->GetUnitSkills()) {
 				cout << "Skill \"" << SkillToString(it.first) << "\" ::= " << it.second << endl;
 			}
+
+			cout << endl;
 
 			for (auto it : *unit->GetUnitAttributes()) {
 				cout << "Attribute \"" << AttributeToString(it.first) << "\" ::= " << it.second << endl;
