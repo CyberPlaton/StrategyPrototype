@@ -18,10 +18,14 @@ Unit* MakeNewUnitAtPos(CMPEntityRace::Race race, Player* p, std::string unit_cla
 
 	u->SetClass(unit_class);
 
+	u->SetDerivedStats();
+
 	u->SetPlayer(p);
 
 	return u;
 }
+
+
 
 std::string IMGUI::_getLastHitButton() {
 
@@ -1591,6 +1595,23 @@ void CMPCameraInput::_handleCityViewKeyboard(Camera* cam) {
 
 }
 
+static int g_iUnitClassIndex = 0;
+static int g_iUnitRaceIndex = 0;
+static std::string g_sUnitClasses[5] = {
+	"Assassin", "Spy", "Warrior", "Sorcerer", "Paladin"
+};
+
+static CMPEntityRace::Race g_rUnitRaces[8] = {
+	CMPEntityRace::Race::RACE_DARKELF,
+	CMPEntityRace::Race::RACE_HIGHELF,
+	CMPEntityRace::Race::RACE_HUMAN,
+	CMPEntityRace::Race::RACE_ORC,
+	CMPEntityRace::Race::RACE_GNOME,
+	CMPEntityRace::Race::RACE_TROLL,
+	CMPEntityRace::Race::RACE_GOBLIN,
+	CMPEntityRace::Race::RACE_DWARF
+};
+
 
 void CMPCameraInput::_handleMapViewMouse(Camera* cam) {
 
@@ -1642,6 +1663,21 @@ void CMPCameraInput::_handleMapViewMouse(Camera* cam) {
 		IMGUI::Get()->GetUIState()->m_MouseDown = -1;
 	}
 
+
+	if (context->GetKey(olc::Key::CTRL).bHeld) {
+
+		if (context->GetMouse(0).bPressed) {
+
+			tile = GetMaptileAtMousePosition(context->GetMouseX(), context->GetMouseY());
+			Unit* unit = MakeNewUnitAtPos(g_rUnitRaces[++g_iUnitRaceIndex%8], EntitiesStorage::Get()->GetPlayersVec()->at(0),
+				g_sUnitClasses[++g_iUnitClassIndex % 5], "gnome_mechafighter",
+				tile->m_TransformCmp->m_PosX, tile->m_TransformCmp->m_PosY,
+				tile->m_TransformCmp->m_GameWorldSpaceCell[0], tile->m_TransformCmp->m_GameWorldSpaceCell[1]);
+
+			EntitiesStorage::Get()->AddGameEntitie(unit);
+
+		}
+	}
 
 }
 
@@ -2444,63 +2480,6 @@ bool Game::OnUserCreate() {
 
 	// Astrology and birthsigns. YearCounter.
 	YearCounter::Get(); // .. = construction.
-
-
-	
-	// Make testing unit.
-	// A gnome archer...
-	Unit* unit = MakeNewUnitAtPos(CMPEntityRace::Race::RACE_ORC, player, "Archer", "gnome_mechafighter", 64 * 1, 64 * 2, 1, 2);
-
-	Unit* unit2 = MakeNewUnitAtPos(CMPEntityRace::Race::RACE_ORC, player, "Assassin", "gnome_mechafighter", 64 * 2, 64 * 2, 2, 2);
-
-	Unit* unit3 = MakeNewUnitAtPos(CMPEntityRace::Race::RACE_ORC, player, "Barbarian", "gnome_mechafighter", 64 * 3, 64 * 2, 3, 2);
-
-	Unit* unit4 = MakeNewUnitAtPos(CMPEntityRace::Race::RACE_ORC, player, "Battlemage", "gnome_mechafighter", 64 * 4, 64 * 2, 4, 2);
-
-	Unit* unit5 = MakeNewUnitAtPos(CMPEntityRace::Race::RACE_ORC, player, "Healer", "gnome_mechafighter", 64 * 5, 64 * 2, 5, 2);
-
-	Unit* unit6 = MakeNewUnitAtPos(CMPEntityRace::Race::RACE_ORC, player, "Inquisitor", "gnome_mechafighter", 64 * 6, 64 * 2, 6, 2);
-
-	Unit* unit7 = MakeNewUnitAtPos(CMPEntityRace::Race::RACE_ORC, player, "Knight", "gnome_mechafighter", 64 * 7, 64 * 2, 7, 2);
-
-	Unit* unit8 = MakeNewUnitAtPos(CMPEntityRace::Race::RACE_ORC, player, "Mage", "gnome_mechafighter", 64 * 8, 64 * 2, 8, 2);
-
-	Unit* unit9 = MakeNewUnitAtPos(CMPEntityRace::Race::RACE_ORC, player, "Nightblade", "gnome_mechafighter", 64 * 9, 64 * 2, 9, 2);
-
-	Unit* unit10 = MakeNewUnitAtPos(CMPEntityRace::Race::RACE_ORC, player, "Paladin", "gnome_mechafighter", 64 * 10, 64 * 2, 10, 2);
-
-	Unit* unit11 = MakeNewUnitAtPos(CMPEntityRace::Race::RACE_ORC, player, "Rogue", "gnome_mechafighter", 64 * 11, 64 * 2, 11, 2);
-
-	Unit* unit12 = MakeNewUnitAtPos(CMPEntityRace::Race::RACE_ORC, player, "Scout", "gnome_mechafighter", 64 * 12, 64 * 2, 12, 2);
-
-	Unit* unit13 = MakeNewUnitAtPos(CMPEntityRace::Race::RACE_ORC, player, "Sorcerer", "gnome_mechafighter", 64 * 13, 64 * 2, 13, 2);
-
-	Unit* unit14 = MakeNewUnitAtPos(CMPEntityRace::Race::RACE_ORC, player, "Spellsword", "gnome_mechafighter", 64 * 14, 64 * 2, 14, 2);
-
-	Unit* unit15 = MakeNewUnitAtPos(CMPEntityRace::Race::RACE_ORC, player, "Spy", "gnome_mechafighter", 64 * 15, 64 * 2, 15, 2);
-
-	Unit* unit16 = MakeNewUnitAtPos(CMPEntityRace::Race::RACE_ORC, player, "Warrior", "gnome_mechafighter", 64 * 16, 64 * 2, 16, 2);
-	
-
-
-	EntitiesStorage::Get()->AddGameEntitie(unit);
-	EntitiesStorage::Get()->AddGameEntitie(unit2);
-	EntitiesStorage::Get()->AddGameEntitie(unit3);
-	EntitiesStorage::Get()->AddGameEntitie(unit4);
-	EntitiesStorage::Get()->AddGameEntitie(unit5);
-	EntitiesStorage::Get()->AddGameEntitie(unit6);
-	EntitiesStorage::Get()->AddGameEntitie(unit7);
-	EntitiesStorage::Get()->AddGameEntitie(unit8);
-	EntitiesStorage::Get()->AddGameEntitie(unit9);
-	EntitiesStorage::Get()->AddGameEntitie(unit10);
-	EntitiesStorage::Get()->AddGameEntitie(unit11);
-	EntitiesStorage::Get()->AddGameEntitie(unit12);
-	EntitiesStorage::Get()->AddGameEntitie(unit13);
-	EntitiesStorage::Get()->AddGameEntitie(unit14);
-	EntitiesStorage::Get()->AddGameEntitie(unit15);
-	EntitiesStorage::Get()->AddGameEntitie(unit16);
-
-	
 
 	return true;
 }
@@ -4008,9 +3987,11 @@ void Game::AdvanceOneTurn() {
 			unit->Update();
 
 			cout << APP_SUCCESS_COLOR;
+			cout << endl;
 			cout << "Unit name: " << unit->m_Name << endl;
 			cout << "Unit race: " << unit->m_EntityRaceCmp->m_EntityRaceString << endl;
 			cout << "Unit class: " << unit->m_UnitClass->m_UnitClassName << endl;
+			cout << "Unit birthsign: " << unit->m_Birthsign << endl;
 			cout << "Unit stats: " << endl;
 			cout << endl;
 

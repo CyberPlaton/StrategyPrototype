@@ -101,15 +101,19 @@ public:
 
 		_defineMaxAge();
 
+
+		m_UnitSkillsMap = new std::map<UnitSkillsEnum, int>();
+		m_UnitAttributesMap = new std::map<UnitAttributesEnum, int>();
+
 		// Stats and Skills.
 		_defineStandardBeginningStats();
-		_defineStatsBasedOnUnitRace();
 	}
 
 	~Unit() = default;
 
 	void Update();
 
+	bool SetDerivedStats();
 	bool SetClass(std::string c);
 	bool SetBirthsign() {
 		m_Birthsign = YearCounter::Get()->GetCurrentBirthsign();
@@ -127,11 +131,11 @@ public:
 
 
 	std::map<UnitSkillsEnum, int>* GetUnitSkills() {
-		return &m_UnitSkillsMap;
+		return m_UnitSkillsMap;
 	}
 
 	std::map<UnitAttributesEnum, int>* GetUnitAttributes() {
-		return &m_UnitAttributesMap;
+		return m_UnitAttributesMap;
 	}
 
 
@@ -142,18 +146,19 @@ public:
 
 
 	std::string m_Name;
-	std::string m_Birthsign = ""; // Defined by year-quartal in which unit was "born".
+	std::string m_Birthsign = "NULL"; // Defined by year-quartal in which unit was "born".
 
 	UnitClass* m_UnitClass = nullptr;
 	Player* m_AssociatedPlayer = nullptr;
 	std::string m_UnitPlayerColor = "NULL";
+
 private:
 	int m_AgeInternal = -1;
 
 
 	// Units skills and attributes.
-	std::map<UnitSkillsEnum, int> m_UnitSkillsMap;
-	std::map<UnitAttributesEnum, int> m_UnitAttributesMap;
+	std::map<UnitSkillsEnum, int>* m_UnitSkillsMap;
+	std::map<UnitAttributesEnum, int>* m_UnitAttributesMap;
 
 private:
 	void _determineUnitRibbonColor();
@@ -161,7 +166,8 @@ private:
 
 	void _defineStandardBeginningStats(); // All skills and attributes start at 5.
 	void _defineStatsBasedOnUnitRace(); // Based on race give bonuses or minuses to stats or skills.
-
+	void _defineStatsBasedOnUnitBirthsign(); // Gives bonuses and minuses based on the birthsign of unit.
+	void _defineDerivedAttributes();
 };
 
 

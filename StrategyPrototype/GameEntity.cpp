@@ -3,6 +3,19 @@
 EntitiesStorage* EntitiesStorage::m_EntitiesStorage = nullptr;
 WorldMap* WorldMap::m_WorldMapInstance = nullptr;
 
+bool Unit::SetDerivedStats() {
+
+	if (this->m_EntityRaceCmp == nullptr) return false;
+	if (COMPARE_STRINGS(m_Birthsign, "NULL") == 0) return false;
+	if (m_UnitClass == nullptr) return false;
+
+
+	_defineStatsBasedOnUnitRace();
+	_defineStatsBasedOnUnitBirthsign();
+	_defineDerivedAttributes();
+
+	return true;
+}
 
 GameEntity::~GameEntity() {
 
@@ -18,40 +31,340 @@ GameEntity::~GameEntity() {
 
 void Unit::_defineStandardBeginningStats() {
 
-	m_UnitSkillsMap.insert(std::make_pair(UnitSkillsEnum::UNIT_SKILL_HEAVY_ARMOR, 8));
-	m_UnitSkillsMap.insert(std::make_pair(UnitSkillsEnum::UNIT_SKILL_MEDIUM_ARMOR, 8));
-	m_UnitSkillsMap.insert(std::make_pair(UnitSkillsEnum::UNIT_SKILL_LIGHT_ARMOR, 8));
-	m_UnitSkillsMap.insert(std::make_pair(UnitSkillsEnum::UNIT_SKILL_SPEAR, 8));
-	m_UnitSkillsMap.insert(std::make_pair(UnitSkillsEnum::UNIT_SKILL_AXE, 8));
-	m_UnitSkillsMap.insert(std::make_pair(UnitSkillsEnum::UNIT_SKILL_BLUNT_WEAPON, 8));
-	m_UnitSkillsMap.insert(std::make_pair(UnitSkillsEnum::UNIT_SKILL_LONG_BLADE, 8));
-	m_UnitSkillsMap.insert(std::make_pair(UnitSkillsEnum::UNIT_SKILL_SHORT_BLADE, 8));
-	m_UnitSkillsMap.insert(std::make_pair(UnitSkillsEnum::UNIT_SKILL_BLOCK, 8));
-	m_UnitSkillsMap.insert(std::make_pair(UnitSkillsEnum::UNIT_SKILL_MARKSMAN, 8));
-	m_UnitSkillsMap.insert(std::make_pair(UnitSkillsEnum::UNIT_SKILL_ACROBATICS, 8));
-	m_UnitSkillsMap.insert(std::make_pair(UnitSkillsEnum::UNIT_SKILL_ATHLETICS, 8));
-	m_UnitSkillsMap.insert(std::make_pair(UnitSkillsEnum::UNIT_SKILL_SNEAK, 8));
-	m_UnitSkillsMap.insert(std::make_pair(UnitSkillsEnum::UNIT_SKILL_UNARMORED, 8));
-	m_UnitSkillsMap.insert(std::make_pair(UnitSkillsEnum::UNIT_SKILL_ILLUSION, 8));
-	m_UnitSkillsMap.insert(std::make_pair(UnitSkillsEnum::UNIT_SKILL_MERCANTILE, 8));
-	m_UnitSkillsMap.insert(std::make_pair(UnitSkillsEnum::UNIT_SKILL_SPEECHCRAFT, 8));
-	m_UnitSkillsMap.insert(std::make_pair(UnitSkillsEnum::UNIT_SKILL_ALCHEMY, 8));
-	m_UnitSkillsMap.insert(std::make_pair(UnitSkillsEnum::UNIT_SKILL_CONJURATION, 8));
-	m_UnitSkillsMap.insert(std::make_pair(UnitSkillsEnum::UNIT_SKILL_ENCHANT, 8));
-	m_UnitSkillsMap.insert(std::make_pair(UnitSkillsEnum::UNIT_SKILL_ALTERATION, 8));
-	m_UnitSkillsMap.insert(std::make_pair(UnitSkillsEnum::UNIT_SKILL_DESTRUCTION, 8));
-	m_UnitSkillsMap.insert(std::make_pair(UnitSkillsEnum::UNIT_SKILL_MYSTICISM, 8));
-	m_UnitSkillsMap.insert(std::make_pair(UnitSkillsEnum::UNIT_SKILL_RESTORATION, 8));
+	GetUnitSkills()->insert(std::make_pair(UnitSkillsEnum::UNIT_SKILL_HEAVY_ARMOR, 8));
+	GetUnitSkills()->insert(std::make_pair(UnitSkillsEnum::UNIT_SKILL_MEDIUM_ARMOR, 8));
+	GetUnitSkills()->insert(std::make_pair(UnitSkillsEnum::UNIT_SKILL_LIGHT_ARMOR, 8));
+	GetUnitSkills()->insert(std::make_pair(UnitSkillsEnum::UNIT_SKILL_SPEAR, 8));
+	GetUnitSkills()->insert(std::make_pair(UnitSkillsEnum::UNIT_SKILL_AXE, 8));
+	GetUnitSkills()->insert(std::make_pair(UnitSkillsEnum::UNIT_SKILL_BLUNT_WEAPON, 8));
+	GetUnitSkills()->insert(std::make_pair(UnitSkillsEnum::UNIT_SKILL_LONG_BLADE, 8));
+	GetUnitSkills()->insert(std::make_pair(UnitSkillsEnum::UNIT_SKILL_SHORT_BLADE, 8));
+	GetUnitSkills()->insert(std::make_pair(UnitSkillsEnum::UNIT_SKILL_BLOCK, 8));
+	GetUnitSkills()->insert(std::make_pair(UnitSkillsEnum::UNIT_SKILL_MARKSMAN, 8));
+	GetUnitSkills()->insert(std::make_pair(UnitSkillsEnum::UNIT_SKILL_ACROBATICS, 8));
+	GetUnitSkills()->insert(std::make_pair(UnitSkillsEnum::UNIT_SKILL_ATHLETICS, 8));
+	GetUnitSkills()->insert(std::make_pair(UnitSkillsEnum::UNIT_SKILL_SNEAK, 8));
+	GetUnitSkills()->insert(std::make_pair(UnitSkillsEnum::UNIT_SKILL_UNARMORED, 8));
+	GetUnitSkills()->insert(std::make_pair(UnitSkillsEnum::UNIT_SKILL_ILLUSION, 8));
+	GetUnitSkills()->insert(std::make_pair(UnitSkillsEnum::UNIT_SKILL_MERCANTILE, 8));
+	GetUnitSkills()->insert(std::make_pair(UnitSkillsEnum::UNIT_SKILL_SPEECHCRAFT, 8));
+	GetUnitSkills()->insert(std::make_pair(UnitSkillsEnum::UNIT_SKILL_ALCHEMY, 8));
+	GetUnitSkills()->insert(std::make_pair(UnitSkillsEnum::UNIT_SKILL_CONJURATION, 8));
+	GetUnitSkills()->insert(std::make_pair(UnitSkillsEnum::UNIT_SKILL_ENCHANT, 8));
+	GetUnitSkills()->insert(std::make_pair(UnitSkillsEnum::UNIT_SKILL_ALTERATION, 8));
+	GetUnitSkills()->insert(std::make_pair(UnitSkillsEnum::UNIT_SKILL_DESTRUCTION, 8));
+	GetUnitSkills()->insert(std::make_pair(UnitSkillsEnum::UNIT_SKILL_MYSTICISM, 8));
+	GetUnitSkills()->insert(std::make_pair(UnitSkillsEnum::UNIT_SKILL_RESTORATION, 8));
 
 
-	m_UnitAttributesMap.insert(std::make_pair(UnitAttributesEnum::UNIT_ATTRIBUTE_STRENGTH, 8));
-	m_UnitAttributesMap.insert(std::make_pair(UnitAttributesEnum::UNIT_ATTRIBUTE_INTELLIGENCE, 8));
-	m_UnitAttributesMap.insert(std::make_pair(UnitAttributesEnum::UNIT_ATTRIBUTE_WILLPOWER, 8));
-	m_UnitAttributesMap.insert(std::make_pair(UnitAttributesEnum::UNIT_ATTRIBUTE_AGILITY, 8));
-	m_UnitAttributesMap.insert(std::make_pair(UnitAttributesEnum::UNIT_ATTRIBUTE_SPEED, 8));
-	m_UnitAttributesMap.insert(std::make_pair(UnitAttributesEnum::UNIT_ATTRIBUTE_ENDURANCE, 8));
-	m_UnitAttributesMap.insert(std::make_pair(UnitAttributesEnum::UNIT_ATTRIBUTE_PERSONALITY, 8));
+	GetUnitAttributes()->insert(std::make_pair(UnitAttributesEnum::UNIT_ATTRIBUTE_STRENGTH, 8));
+	GetUnitAttributes()->insert(std::make_pair(UnitAttributesEnum::UNIT_ATTRIBUTE_INTELLIGENCE, 8));
+	GetUnitAttributes()->insert(std::make_pair(UnitAttributesEnum::UNIT_ATTRIBUTE_WILLPOWER, 8));
+	GetUnitAttributes()->insert(std::make_pair(UnitAttributesEnum::UNIT_ATTRIBUTE_AGILITY, 8));
+	GetUnitAttributes()->insert(std::make_pair(UnitAttributesEnum::UNIT_ATTRIBUTE_SPEED, 8));
+	GetUnitAttributes()->insert(std::make_pair(UnitAttributesEnum::UNIT_ATTRIBUTE_ENDURANCE, 8));
+	GetUnitAttributes()->insert(std::make_pair(UnitAttributesEnum::UNIT_ATTRIBUTE_PERSONALITY, 8));
+
+	GetUnitAttributes()->insert(std::make_pair(UnitAttributesEnum::UNIT_ATTRIBUTE_HEALTH, 10));
+	GetUnitAttributes()->insert(std::make_pair(UnitAttributesEnum::UNIT_ATTRIBUTE_MAGICKA, 10));
+	GetUnitAttributes()->insert(std::make_pair(UnitAttributesEnum::UNIT_ATTRIBUTE_FATIGUE, 10));
 }
+
+void Unit::_defineDerivedAttributes() {
+
+	UnitAttributes* attr = new UnitAttributes();
+	UnitSkills* skills = new UnitSkills();
+
+	// NOTE:
+	// Define derived attributes after standard attributes and
+	// after the birthsign and race were defined...
+
+
+	// Define health.
+	// .. define multiplier
+	int health_multiplier = 1;
+	if (this->m_EntityRaceCmp->m_EntityRace == CMPEntityRace::Race::RACE_HIGHELF) {
+		health_multiplier -= 0.5f;
+	}
+	else if (this->m_EntityRaceCmp->m_EntityRace == CMPEntityRace::Race::RACE_ORC) {
+		health_multiplier += 2;
+	}
+	else if (this->m_EntityRaceCmp->m_EntityRace == CMPEntityRace::Race::RACE_DWARF) {
+		health_multiplier += 1.5f;
+	}
+	else if (this->m_EntityRaceCmp->m_EntityRace == CMPEntityRace::Race::RACE_TROLL) {
+		health_multiplier += 1;
+	}
+
+
+	int strength = GetUnitAttributes()->at(UnitAttributesEnum::UNIT_ATTRIBUTE_STRENGTH);
+	int endurance = GetUnitAttributes()->at(UnitAttributesEnum::UNIT_ATTRIBUTE_ENDURANCE);
+	
+	int health = int((strength * health_multiplier + endurance) / 2);
+	attr->SetAttribute(GetUnitAttributes(), "Health", health);
+
+
+
+	// Define magicka.
+
+	// Define multiplier..
+	// .. based on race.
+	int multiplier = 1;
+	if (this->m_EntityRaceCmp->m_EntityRace == CMPEntityRace::Race::RACE_HIGHELF) {
+		multiplier += 1;
+	}
+	else if(this->m_EntityRaceCmp->m_EntityRace == CMPEntityRace::Race::RACE_DARKELF) {
+		multiplier += 0.5f;
+	}
+	else if (this->m_EntityRaceCmp->m_EntityRace == CMPEntityRace::Race::RACE_ORC) {
+		multiplier -= 0.5f;
+	}
+	else if (this->m_EntityRaceCmp->m_EntityRace == CMPEntityRace::Race::RACE_DWARF) {
+		multiplier -= 0.5f;
+	}
+	else if (this->m_EntityRaceCmp->m_EntityRace == CMPEntityRace::Race::RACE_GOBLIN) {
+		multiplier -= 0.7f;
+	}
+
+	// .. based on birthsign.
+	if (COMPARE_STRINGS(this->m_Birthsign, "The Mage") == 0) {
+		multiplier += 0.5f;
+	}
+	else if (COMPARE_STRINGS(this->m_Birthsign, "The Sorcerer") == 0) {
+		multiplier += 1.0f;
+	}
+	else if (COMPARE_STRINGS(this->m_Birthsign, "The Ritual") == 0) {
+		multiplier += 0.3f;
+	}
+
+	int intelligence = GetUnitAttributes()->at(UnitAttributesEnum::UNIT_ATTRIBUTE_INTELLIGENCE);
+	int willpower = GetUnitAttributes()->at(UnitAttributesEnum::UNIT_ATTRIBUTE_WILLPOWER);
+
+	int magicka = int(multiplier * (intelligence + willpower));
+	attr->SetAttribute(GetUnitAttributes(), "Magicka", magicka);
+
+
+
+
+	// Define Fatigue.
+	// .. define multiplier
+	int fatigue_multiplier = 1;
+	if (this->m_EntityRaceCmp->m_EntityRace == CMPEntityRace::Race::RACE_HIGHELF) {
+		fatigue_multiplier += 0.2f;
+	}
+	else if (this->m_EntityRaceCmp->m_EntityRace == CMPEntityRace::Race::RACE_ORC) {
+		fatigue_multiplier += 1;
+	}
+	else if (this->m_EntityRaceCmp->m_EntityRace == CMPEntityRace::Race::RACE_DWARF) {
+		fatigue_multiplier += 0.7f;
+	}
+	else if (this->m_EntityRaceCmp->m_EntityRace == CMPEntityRace::Race::RACE_TROLL) {
+		fatigue_multiplier += 1.5f;
+	}
+	else if (this->m_EntityRaceCmp->m_EntityRace == CMPEntityRace::Race::RACE_GNOME) {
+		fatigue_multiplier -= 0.5f;
+	}
+	else if (this->m_EntityRaceCmp->m_EntityRace == CMPEntityRace::Race::RACE_DWARF) {
+		fatigue_multiplier -= 0.5f;
+	}
+	else if (this->m_EntityRaceCmp->m_EntityRace == CMPEntityRace::Race::RACE_GOBLIN) {
+		fatigue_multiplier -= 0.5f;
+	}
+
+
+	int agility = GetUnitAttributes()->at(UnitAttributesEnum::UNIT_ATTRIBUTE_AGILITY);
+	int fatigue = int(fatigue_multiplier * (agility + willpower + endurance + strength));
+
+	attr->SetAttribute(GetUnitAttributes(), "Fatigue", fatigue);
+}
+
+
+void  Unit::_defineStatsBasedOnUnitBirthsign() {
+
+
+	UnitAttributes* attr = new UnitAttributes();
+	UnitSkills* skills = new UnitSkills();
+
+
+	if (COMPARE_STRINGS(this->m_Birthsign, "The Warrior") == 0) {
+
+
+		attr->SetAttribute(GetUnitAttributes(), "Strength", 10);
+		attr->UnsetAttribute(GetUnitAttributes(), "Intelligence", 5);
+
+	}
+
+
+	else if (COMPARE_STRINGS(this->m_Birthsign, "The Mage") == 0) {
+
+		attr->SetAttribute(GetUnitAttributes(), "Magicka", 20);
+		attr->SetAttribute(GetUnitAttributes(), "Intelligence", 5);
+
+		attr->UnsetAttribute(GetUnitAttributes(), "Strength", 5);
+
+	}
+
+
+	else if (COMPARE_STRINGS(this->m_Birthsign, "The Thief") == 0) {
+
+		attr->SetAttribute(GetUnitAttributes(), "Speed", 5);
+		skills->SetSkill(GetUnitSkills(), "Sneak", 10);
+
+		skills->UnsetSkill(GetUnitSkills(), "Personality", 10);
+
+	}
+
+
+	else if (COMPARE_STRINGS(this->m_Birthsign, "The Tower") == 0) {
+
+
+		attr->SetAttribute(GetUnitAttributes(), "Health", 10);
+		attr->SetAttribute(GetUnitAttributes(), "Speed", 2);
+		skills->SetSkill(GetUnitSkills(), "Sneak", 5);
+
+	}
+
+
+	else if (COMPARE_STRINGS(this->m_Birthsign, "The Lover") == 0) {
+
+		attr->SetAttribute(GetUnitAttributes(), "Personality", 10);
+
+	}
+
+
+	else if (COMPARE_STRINGS(this->m_Birthsign, "The Guard") == 0) {
+
+
+		attr->SetAttribute(GetUnitAttributes(), "Health", 15);
+		attr->SetAttribute(GetUnitAttributes(), "Strength", 5);
+		attr->SetAttribute(GetUnitAttributes(), "Endurance", 5);
+
+		skills->SetSkill(GetUnitSkills(), "Heavy Armor", 10);
+		skills->UnsetSkill(GetUnitSkills(), "Sneak", 10);
+
+	}
+
+
+	else if (COMPARE_STRINGS(this->m_Birthsign, "The Sorcerer") == 0) {
+
+		attr->SetAttribute(GetUnitAttributes(), "Intelligence", 5);
+		attr->SetAttribute(GetUnitAttributes(), "Magicka", 5);
+
+		skills->SetSkill(GetUnitSkills(), "Destruction", 10);
+		skills->UnsetSkill(GetUnitSkills(), "Heavy Armor", 10);
+	}
+
+
+	else if (COMPARE_STRINGS(this->m_Birthsign, "The Shadow") == 0) {
+
+		attr->SetAttribute(GetUnitAttributes(), "Speed", 10);
+		attr->SetAttribute(GetUnitAttributes(), "Health", 5);
+
+		skills->SetSkill(GetUnitSkills(), "Unarmored", 5);
+		skills->UnsetSkill(GetUnitSkills(), "Sneak", 20);
+	}
+
+
+	else if (COMPARE_STRINGS(this->m_Birthsign, "The Lightfeet") == 0) {
+
+		attr->SetAttribute(GetUnitAttributes(), "Speed", 20);
+		attr->SetAttribute(GetUnitAttributes(), "Endurance", 5);
+
+		attr->UnsetAttribute(GetUnitAttributes(), "Strength", 5);
+		attr->UnsetAttribute(GetUnitAttributes(), "Health", 5);
+
+
+		skills->SetSkill(GetUnitSkills(), "Athletics", 15);
+		skills->SetSkill(GetUnitSkills(), "Acrobatics", 10);
+
+		skills->UnsetSkill(GetUnitSkills(), "Heavy Armor", 15);
+		skills->UnsetSkill(GetUnitSkills(), "Medium Armor", 10);
+
+	}
+
+
+	else if (COMPARE_STRINGS(this->m_Birthsign, "The Ritual") == 0) {
+
+		skills->SetSkill(GetUnitSkills(), "Mysticism", 15);
+
+	}
+
+
+	else if (COMPARE_STRINGS(this->m_Birthsign, "The Paladin") == 0) {
+
+		skills->SetSkill(GetUnitSkills(), "Heavy Armor", 20);
+		skills->SetSkill(GetUnitSkills(), "Personality", 15);
+
+		attr->SetAttribute(GetUnitAttributes(), "Strength", 5);
+
+		skills->UnsetSkill(GetUnitSkills(), "Light Armor", 10);
+		skills->UnsetSkill(GetUnitSkills(), "Sneak", 20);
+	}
+
+
+	else if (COMPARE_STRINGS(this->m_Birthsign, "The Mechanist") == 0) {
+
+		attr->SetAttribute(GetUnitAttributes(), "Intelligence", 10);
+
+	}
+
+
+	else if (COMPARE_STRINGS(this->m_Birthsign, "The Ignorant") == 0) {
+
+		attr->UnsetAttribute(GetUnitAttributes(), "Intelligence", 10);
+
+	}
+
+
+	else if (COMPARE_STRINGS(this->m_Birthsign, "The Lord") == 0) {
+
+		attr->SetAttribute(GetUnitAttributes(), "Intelligence", 5);
+		attr->SetAttribute(GetUnitAttributes(), "Personality", 20);
+
+		attr->UnsetAttribute(GetUnitAttributes(), "Speed", 10);
+		attr->UnsetAttribute(GetUnitAttributes(), "Willpower", 5);
+
+		skills->UnsetSkill(GetUnitSkills(), "Short Sword", 5);
+		skills->UnsetSkill(GetUnitSkills(), "Axe", 5);
+		skills->UnsetSkill(GetUnitSkills(), "Blunt Weapon", 5);
+		skills->UnsetSkill(GetUnitSkills(), "Spear", 5);
+
+	}
+
+
+	else if (COMPARE_STRINGS(this->m_Birthsign, "The Protector") == 0) {
+		
+		skills->SetSkill(GetUnitSkills(), "Short Sword", 5);
+		skills->SetSkill(GetUnitSkills(), "Axe", 5);
+		skills->SetSkill(GetUnitSkills(), "Blunt Weapon", 5);
+		skills->SetSkill(GetUnitSkills(), "Spear", 5);
+
+	}
+
+
+	else if (COMPARE_STRINGS(this->m_Birthsign, "The Stubborn") == 0) {
+
+		attr->UnsetAttribute(GetUnitAttributes(), "Intelligence", 20);
+		attr->UnsetAttribute(GetUnitAttributes(), "Magicka", 10);
+
+		attr->SetAttribute(GetUnitAttributes(), "Endurance", 20);
+		attr->SetAttribute(GetUnitAttributes(), "Strength", 5);
+
+
+	}
+
+
+	else if (COMPARE_STRINGS(this->m_Birthsign, "The Serpent") == 0) {
+
+		attr->SetAttribute(GetUnitAttributes(), "Intelligence", 50);
+		attr->SetAttribute(GetUnitAttributes(), "Willpower", 25);
+
+		skills->SetSkill(GetUnitSkills(), "Sneak", 25);
+		skills->SetSkill(GetUnitSkills(), "Mysticism", 25);
+		skills->SetSkill(GetUnitSkills(), "Destruction", 25);
+	}
+}
+
 
 void Unit::_defineStatsBasedOnUnitRace() {
 
@@ -69,136 +382,136 @@ void Unit::_defineStatsBasedOnUnitRace() {
 		break;
 	case CMPEntityRace::Race::RACE_HUMAN:
 		// Bonuses
-		attr->SetAttribute(&m_UnitAttributesMap, "Strength", 2);
-		attr->SetAttribute(&m_UnitAttributesMap, "Intelligence", 5);
-		attr->SetAttribute(&m_UnitAttributesMap, "Personality", 5);
+		attr->SetAttribute(m_UnitAttributesMap, "Strength", 2);
+		attr->SetAttribute(m_UnitAttributesMap, "Intelligence", 5);
+		attr->SetAttribute(m_UnitAttributesMap, "Personality", 5);
 
 		// Minuses
-		attr->UnsetAttribute(&m_UnitAttributesMap, "Endurance", 3);
+		attr->UnsetAttribute(m_UnitAttributesMap, "Endurance", 3);
 
 
 
 
-		skills->SetSkill(&m_UnitSkillsMap, "Light Armor", 10);
-		skills->SetSkill(&m_UnitSkillsMap, "Long Blade", 10);
-		skills->SetSkill(&m_UnitSkillsMap, "Restoration", 5);
-		skills->SetSkill(&m_UnitSkillsMap, "Destruction", 5);
-		skills->SetSkill(&m_UnitSkillsMap, "Medium Armor", 5);
+		skills->SetSkill(m_UnitSkillsMap, "Light Armor", 10);
+		skills->SetSkill(m_UnitSkillsMap, "Long Blade", 10);
+		skills->SetSkill(m_UnitSkillsMap, "Restoration", 5);
+		skills->SetSkill(m_UnitSkillsMap, "Destruction", 5);
+		skills->SetSkill(m_UnitSkillsMap, "Medium Armor", 5);
 
 
 		break;
 	case CMPEntityRace::Race::RACE_TROLL:
 		// Bonuses
-		attr->SetAttribute(&m_UnitAttributesMap, "Strength", 5);
-		attr->SetAttribute(&m_UnitAttributesMap, "Agility", 5);
+		attr->SetAttribute(m_UnitAttributesMap, "Strength", 5);
+		attr->SetAttribute(m_UnitAttributesMap, "Agility", 5);
 
 		// Minuses
 		// none.
 
 
-		skills->SetSkill(&m_UnitSkillsMap, "Unarmored", 10);
-		skills->SetSkill(&m_UnitSkillsMap, "Short Blade", 5);
-		skills->SetSkill(&m_UnitSkillsMap, "Mercantile", 10);
-		skills->SetSkill(&m_UnitSkillsMap, "Speechcraft", 5);
-		skills->SetSkill(&m_UnitSkillsMap, "Acrobatics", 5);
+		skills->SetSkill(m_UnitSkillsMap, "Unarmored", 10);
+		skills->SetSkill(m_UnitSkillsMap, "Short Blade", 5);
+		skills->SetSkill(m_UnitSkillsMap, "Mercantile", 10);
+		skills->SetSkill(m_UnitSkillsMap, "Speechcraft", 5);
+		skills->SetSkill(m_UnitSkillsMap, "Acrobatics", 5);
 
 		break;
 	case CMPEntityRace::Race::RACE_DWARF:
 		// Bonuses
-		attr->SetAttribute(&m_UnitAttributesMap, "Endurance", 5);
-		attr->SetAttribute(&m_UnitAttributesMap, "Strength", 5);
-		attr->SetAttribute(&m_UnitAttributesMap, "Personality", 5);
+		attr->SetAttribute(m_UnitAttributesMap, "Endurance", 5);
+		attr->SetAttribute(m_UnitAttributesMap, "Strength", 5);
+		attr->SetAttribute(m_UnitAttributesMap, "Personality", 5);
 
 		// Minuses
-		attr->UnsetAttribute(&m_UnitAttributesMap, "Agility", 5);
+		attr->UnsetAttribute(m_UnitAttributesMap, "Agility", 5);
 
 
-		skills->SetSkill(&m_UnitSkillsMap, "Mercantile", 10);
-		skills->SetSkill(&m_UnitSkillsMap, "Blunt Weapon", 10);
-		skills->SetSkill(&m_UnitSkillsMap, "Heavy Armor", 10);
-		skills->SetSkill(&m_UnitSkillsMap, "Athletics", 5);
-		skills->SetSkill(&m_UnitSkillsMap, "Axe", 5);
+		skills->SetSkill(m_UnitSkillsMap, "Mercantile", 10);
+		skills->SetSkill(m_UnitSkillsMap, "Blunt Weapon", 10);
+		skills->SetSkill(m_UnitSkillsMap, "Heavy Armor", 10);
+		skills->SetSkill(m_UnitSkillsMap, "Athletics", 5);
+		skills->SetSkill(m_UnitSkillsMap, "Axe", 5);
 
 		break;
 	case CMPEntityRace::Race::RACE_ORC:
 		// Bonuses
-		attr->SetAttribute(&m_UnitAttributesMap, "Strength", 10);
-		attr->SetAttribute(&m_UnitAttributesMap, "Endurance", 7);
+		attr->SetAttribute(m_UnitAttributesMap, "Strength", 10);
+		attr->SetAttribute(m_UnitAttributesMap, "Endurance", 7);
 
 		// Minuses
-		attr->UnsetAttribute(&m_UnitAttributesMap, "Intelligence", 4);
+		attr->UnsetAttribute(m_UnitAttributesMap, "Intelligence", 4);
 
 
-		skills->SetSkill(&m_UnitSkillsMap, "Medium Armor", 10);
-		skills->SetSkill(&m_UnitSkillsMap, "Axe", 10);
-		skills->SetSkill(&m_UnitSkillsMap, "Heavy Armor", 10);
-		skills->SetSkill(&m_UnitSkillsMap, "Block", 5);
-		skills->SetSkill(&m_UnitSkillsMap, "Mysticism", 5);
+		skills->SetSkill(m_UnitSkillsMap, "Medium Armor", 10);
+		skills->SetSkill(m_UnitSkillsMap, "Axe", 10);
+		skills->SetSkill(m_UnitSkillsMap, "Heavy Armor", 10);
+		skills->SetSkill(m_UnitSkillsMap, "Block", 5);
+		skills->SetSkill(m_UnitSkillsMap, "Mysticism", 5);
 
 		break;
 	case CMPEntityRace::Race::RACE_HIGHELF:
 		// Bonuses
-		attr->SetAttribute(&m_UnitAttributesMap, "Intelligence", 10);
-		attr->SetAttribute(&m_UnitAttributesMap, "Agility", 3);
+		attr->SetAttribute(m_UnitAttributesMap, "Intelligence", 10);
+		attr->SetAttribute(m_UnitAttributesMap, "Agility", 3);
 
 		// Minuses
-		attr->UnsetAttribute(&m_UnitAttributesMap, "Strength", 3);
+		attr->UnsetAttribute(m_UnitAttributesMap, "Strength", 3);
 
 
-		skills->SetSkill(&m_UnitSkillsMap, "Medium Armor", 5);
-		skills->SetSkill(&m_UnitSkillsMap, "Restoration", 10);
-		skills->SetSkill(&m_UnitSkillsMap, "Illusion", 5);
-		skills->SetSkill(&m_UnitSkillsMap, "Conjuration", 10);
-		skills->SetSkill(&m_UnitSkillsMap, "Enchant", 5);
+		skills->SetSkill(m_UnitSkillsMap, "Medium Armor", 5);
+		skills->SetSkill(m_UnitSkillsMap, "Restoration", 10);
+		skills->SetSkill(m_UnitSkillsMap, "Illusion", 5);
+		skills->SetSkill(m_UnitSkillsMap, "Conjuration", 10);
+		skills->SetSkill(m_UnitSkillsMap, "Enchant", 5);
 
 		break;
 	case CMPEntityRace::Race::RACE_DARKELF:
 		// Bonuses
-		attr->SetAttribute(&m_UnitAttributesMap, "Speed", 7);
-		attr->SetAttribute(&m_UnitAttributesMap, "Agility", 10);
+		attr->SetAttribute(m_UnitAttributesMap, "Speed", 7);
+		attr->SetAttribute(m_UnitAttributesMap, "Agility", 10);
 
 		// Minuses
-		attr->UnsetAttribute(&m_UnitAttributesMap, "Personality", 2);
+		attr->UnsetAttribute(m_UnitAttributesMap, "Personality", 2);
 
 
-		skills->SetSkill(&m_UnitSkillsMap, "Light Armor", 5);
-		skills->SetSkill(&m_UnitSkillsMap, "Destruction", 10);
-		skills->SetSkill(&m_UnitSkillsMap, "Mysticism", 10);
-		skills->SetSkill(&m_UnitSkillsMap, "Conjuration", 5);
-		skills->SetSkill(&m_UnitSkillsMap, "Short Blade", 5);
+		skills->SetSkill(m_UnitSkillsMap, "Light Armor", 5);
+		skills->SetSkill(m_UnitSkillsMap, "Destruction", 10);
+		skills->SetSkill(m_UnitSkillsMap, "Mysticism", 10);
+		skills->SetSkill(m_UnitSkillsMap, "Conjuration", 5);
+		skills->SetSkill(m_UnitSkillsMap, "Short Blade", 5);
 
 		break;
 	case CMPEntityRace::Race::RACE_GOBLIN:
 		// Bonuses
-		attr->SetAttribute(&m_UnitAttributesMap, "Intelligence", 10);
-		attr->SetAttribute(&m_UnitAttributesMap, "Personality", 4);
+		attr->SetAttribute(m_UnitAttributesMap, "Intelligence", 10);
+		attr->SetAttribute(m_UnitAttributesMap, "Personality", 4);
 
 		// Minuses
-		attr->UnsetAttribute(&m_UnitAttributesMap, "Strength", 5);
+		attr->UnsetAttribute(m_UnitAttributesMap, "Strength", 5);
 
 
-		skills->SetSkill(&m_UnitSkillsMap, "Light Armor", 5);
-		skills->SetSkill(&m_UnitSkillsMap, "Illusion", 10);
-		skills->SetSkill(&m_UnitSkillsMap, "Speechcraft", 5);
-		skills->SetSkill(&m_UnitSkillsMap, "Alteration", 10);
-		skills->SetSkill(&m_UnitSkillsMap, "Conjuration", 5);
+		skills->SetSkill(m_UnitSkillsMap, "Light Armor", 5);
+		skills->SetSkill(m_UnitSkillsMap, "Illusion", 10);
+		skills->SetSkill(m_UnitSkillsMap, "Speechcraft", 5);
+		skills->SetSkill(m_UnitSkillsMap, "Alteration", 10);
+		skills->SetSkill(m_UnitSkillsMap, "Conjuration", 5);
 
 		break;
 	case CMPEntityRace::Race::RACE_GNOME:
 		// Bonuses
-		attr->SetAttribute(&m_UnitAttributesMap, "Intelligence", 10);
-		attr->SetAttribute(&m_UnitAttributesMap, "Agility", 5);
-		attr->SetAttribute(&m_UnitAttributesMap, "Speed", 3);
+		attr->SetAttribute(m_UnitAttributesMap, "Intelligence", 10);
+		attr->SetAttribute(m_UnitAttributesMap, "Agility", 5);
+		attr->SetAttribute(m_UnitAttributesMap, "Speed", 3);
 
 		// Minuses
-		attr->UnsetAttribute(&m_UnitAttributesMap, "Strength", 5);
+		attr->UnsetAttribute(m_UnitAttributesMap, "Strength", 5);
 
 
-		skills->SetSkill(&m_UnitSkillsMap, "Unarmored", 10);
-		skills->SetSkill(&m_UnitSkillsMap, "Illusion", 5);
-		skills->SetSkill(&m_UnitSkillsMap, "Mysticism", 5);
-		skills->SetSkill(&m_UnitSkillsMap, "Alteration", 10);
-		skills->SetSkill(&m_UnitSkillsMap, "Short Blade", 5);
+		skills->SetSkill(m_UnitSkillsMap, "Unarmored", 10);
+		skills->SetSkill(m_UnitSkillsMap, "Illusion", 5);
+		skills->SetSkill(m_UnitSkillsMap, "Mysticism", 5);
+		skills->SetSkill(m_UnitSkillsMap, "Alteration", 10);
+		skills->SetSkill(m_UnitSkillsMap, "Short Blade", 5);
 
 		break;
 	default:
@@ -279,52 +592,52 @@ bool Unit::SetClass(std::string c) {
 
 	// Second, make new class definitions.
 	if (COMPARE_STRINGS(c, "Archer") == 0) {
-		m_UnitClass = new UnitClassArcher(&m_UnitSkillsMap, &m_UnitAttributesMap);
+		m_UnitClass = new UnitClassArcher(m_UnitSkillsMap, m_UnitAttributesMap);
 	}
 	else if (COMPARE_STRINGS(c, "Assassin") == 0) {
-		m_UnitClass = new UnitClassAssassin(&m_UnitSkillsMap, &m_UnitAttributesMap);
+		m_UnitClass = new UnitClassAssassin(m_UnitSkillsMap, m_UnitAttributesMap);
 	}
 	else if (COMPARE_STRINGS(c, "Barbarian") == 0) {
-		m_UnitClass = new UnitClassBarbarian(&m_UnitSkillsMap, &m_UnitAttributesMap);
+		m_UnitClass = new UnitClassBarbarian(m_UnitSkillsMap, m_UnitAttributesMap);
 	}
 	else if (COMPARE_STRINGS(c, "Battlemage") == 0) {
-		m_UnitClass = new UnitClassBattlemage(&m_UnitSkillsMap, &m_UnitAttributesMap);
+		m_UnitClass = new UnitClassBattlemage(m_UnitSkillsMap, m_UnitAttributesMap);
 	}
 	else if (COMPARE_STRINGS(c, "Healer") == 0) {
-		m_UnitClass = new UnitClassHealer(&m_UnitSkillsMap, &m_UnitAttributesMap);
+		m_UnitClass = new UnitClassHealer(m_UnitSkillsMap, m_UnitAttributesMap);
 	}
 	else if (COMPARE_STRINGS(c, "Inquisitor") == 0) {
-		m_UnitClass = new UnitClassInquisitor(&m_UnitSkillsMap, &m_UnitAttributesMap);
+		m_UnitClass = new UnitClassInquisitor(m_UnitSkillsMap, m_UnitAttributesMap);
 	}
 	else if (COMPARE_STRINGS(c, "Knight") == 0) {
-		m_UnitClass = new UnitClassKnight(&m_UnitSkillsMap, &m_UnitAttributesMap);
+		m_UnitClass = new UnitClassKnight(m_UnitSkillsMap, m_UnitAttributesMap);
 	}
 	else if (COMPARE_STRINGS(c, "Mage") == 0) {
-		m_UnitClass = new UnitClassMage(&m_UnitSkillsMap, &m_UnitAttributesMap);
+		m_UnitClass = new UnitClassMage(m_UnitSkillsMap, m_UnitAttributesMap);
 	}
 	else if (COMPARE_STRINGS(c, "Nightblade") == 0) {
-		m_UnitClass = new UnitClassNightblade(&m_UnitSkillsMap, &m_UnitAttributesMap);
+		m_UnitClass = new UnitClassNightblade(m_UnitSkillsMap, m_UnitAttributesMap);
 	}
 	else if (COMPARE_STRINGS(c, "Paladin") == 0) {
-		m_UnitClass = new UnitClassPaladin(&m_UnitSkillsMap, &m_UnitAttributesMap);
+		m_UnitClass = new UnitClassPaladin(m_UnitSkillsMap, m_UnitAttributesMap);
 	}
 	else if (COMPARE_STRINGS(c, "Rogue") == 0) {
-		m_UnitClass = new UnitClassRogue(&m_UnitSkillsMap, &m_UnitAttributesMap);
+		m_UnitClass = new UnitClassRogue(m_UnitSkillsMap, m_UnitAttributesMap);
 	}
 	else if (COMPARE_STRINGS(c, "Scout") == 0) {
-		m_UnitClass = new UnitClassScout(&m_UnitSkillsMap, &m_UnitAttributesMap);
+		m_UnitClass = new UnitClassScout(m_UnitSkillsMap, m_UnitAttributesMap);
 	}
 	else if (COMPARE_STRINGS(c, "Sorcerer") == 0) {
-		m_UnitClass = new UnitClassSorcerer(&m_UnitSkillsMap, &m_UnitAttributesMap);
+		m_UnitClass = new UnitClassSorcerer(m_UnitSkillsMap, m_UnitAttributesMap);
 	}
 	else if (COMPARE_STRINGS(c, "Spellsword") == 0) {
-		m_UnitClass = new UnitClassSpellsword(&m_UnitSkillsMap, &m_UnitAttributesMap);
+		m_UnitClass = new UnitClassSpellsword(m_UnitSkillsMap, m_UnitAttributesMap);
 	}
 	else if (COMPARE_STRINGS(c, "Spy") == 0) {
-		m_UnitClass = new UnitClassSpy(&m_UnitSkillsMap, &m_UnitAttributesMap);
+		m_UnitClass = new UnitClassSpy(m_UnitSkillsMap, m_UnitAttributesMap);
 	}
 	else if (COMPARE_STRINGS(c, "Warrior") == 0) {
-		m_UnitClass = new UnitClassWarrior(&m_UnitSkillsMap, &m_UnitAttributesMap);
+		m_UnitClass = new UnitClassWarrior(m_UnitSkillsMap, m_UnitAttributesMap);
 	}
 	else {
 		return false;

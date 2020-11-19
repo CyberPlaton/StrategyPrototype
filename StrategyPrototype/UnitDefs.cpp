@@ -132,6 +132,18 @@ std::string AttributeToString(UnitAttributesEnum attr) {
 
 		break;
 
+	case UnitAttributesEnum::UNIT_ATTRIBUTE_HEALTH:
+		return "Health";
+
+		break;
+	case UnitAttributesEnum::UNIT_ATTRIBUTE_MAGICKA:
+		return "Magicka";
+
+		break;
+	case UnitAttributesEnum::UNIT_ATTRIBUTE_FATIGUE:
+		return "Fatigue";
+
+		break;
 	}
 }
 
@@ -265,6 +277,18 @@ UnitAttributesEnum AttributeStringtoEnum(std::string attr) {
 	}
 	else if (COMPARE_STRINGS(attr, "Personality") == 0) {
 		return UnitAttributesEnum::UNIT_ATTRIBUTE_PERSONALITY;
+
+	}
+	else if (COMPARE_STRINGS(attr, "Health") == 0) {
+		return UnitAttributesEnum::UNIT_ATTRIBUTE_HEALTH;
+
+	}
+	else if (COMPARE_STRINGS(attr, "Magicka") == 0) {
+		return UnitAttributesEnum::UNIT_ATTRIBUTE_MAGICKA;
+
+	}
+	else if (COMPARE_STRINGS(attr, "Fatigue") == 0) {
+		return UnitAttributesEnum::UNIT_ATTRIBUTE_FATIGUE;
 
 	}
 	else {

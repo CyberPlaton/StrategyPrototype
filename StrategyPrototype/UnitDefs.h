@@ -51,7 +51,11 @@ enum class UnitAttributesEnum {
 	UNIT_ATTRIBUTE_AGILITY = 3,
 	UNIT_ATTRIBUTE_SPEED = 4,
 	UNIT_ATTRIBUTE_ENDURANCE = 5,
-	UNIT_ATTRIBUTE_PERSONALITY = 6
+	UNIT_ATTRIBUTE_PERSONALITY = 6,
+
+	UNIT_ATTRIBUTE_HEALTH = 7,
+	UNIT_ATTRIBUTE_MAGICKA = 8,
+	UNIT_ATTRIBUTE_FATIGUE = 9
 };
 
 
@@ -157,19 +161,6 @@ struct UnitClassArcher : public UnitClass {
 		// For drawing class ribbon.
 		m_UnitClassSpritename = "unit_class_archer";
 		m_UnitClassName = "Archer";
-
-		/*
-		// Zero out stats.
-		for(auto it: m_UnitAttributes->m_UnitAttributesMap){
-			
-			it.second = 0;
-		}
-
-		for (auto it : m_UnitSkills->m_UnitSkillsMap) {
-
-			it.second = 0;
-		}
-		*/
 
 		_defineStats();
 	}
