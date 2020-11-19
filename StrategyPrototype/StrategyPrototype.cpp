@@ -1703,9 +1703,10 @@ void CMPCameraInput::_handleMapViewMouse(Camera* cam) {
 
 		if (context->GetMouse(0).bPressed) {
 
+			// TESTING PURPOSES:
 			tile = GetMaptileAtMousePosition(context->GetMouseX(), context->GetMouseY());
-			Unit* unit = MakeNewUnitAtPos(g_rUnitRaces[++g_iUnitRaceIndex%8], EntitiesStorage::Get()->GetPlayersVec()->at(0),
-				g_sUnitClasses[++g_iUnitClassIndex % 5], "gnome_mechafighter",
+			Unit* unit = MakeNewUnitAtPos(PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_PlayerEmpireRace, PlayerTurnCounter::Get()->m_CurrentTurnPlayer,
+				g_sUnitClasses[++g_iUnitClassIndex % 5], "gnome_noble",
 				tile->m_TransformCmp->m_PosX, tile->m_TransformCmp->m_PosY,
 				tile->m_TransformCmp->m_GameWorldSpaceCell[0], tile->m_TransformCmp->m_GameWorldSpaceCell[1]);
 
@@ -2425,13 +2426,13 @@ bool Game::OnUserCreate() {
 	*/	
 
 	
-	Player* player = new Player("Bogdan", "blue");
+	Player* player = new Player("Bogdan", "blue", CMPEntityRace::Race::RACE_HUMAN);
 	storage->AddPlayer(player);
 
-	Player* player2 = new Player("Hans", "red");
+	Player* player2 = new Player("Hans", "red", CMPEntityRace::Race::RACE_ORC);
 	storage->AddPlayer(player2);
 
-	Player* player3 = new Player("Walter", "orange");
+	Player* player3 = new Player("Walter", "orange", CMPEntityRace::Race::RACE_HIGHELF);
 	storage->AddPlayer(player3);
 
 
@@ -2487,6 +2488,13 @@ bool Game::OnUserCreate() {
 	gui->AddSprite("assets/unit/unit_player_color_red.png", "unit_player_color_red");
 	gui->AddSprite("assets/unit/unit_player_color_blue.png", "unit_player_color_blue");
 	gui->AddSprite("assets/unit/unit_player_color_magenta.png", "unit_player_color_magenta");
+	gui->AddSprite("assets/unit/unit_player_color_green.png", "unit_player_color_green");
+	gui->AddSprite("assets/unit/unit_player_color_black.png", "unit_player_color_black");
+	gui->AddSprite("assets/unit/unit_player_color_brown.png", "unit_player_color_brown");
+	gui->AddSprite("assets/unit/unit_player_color_orange.png", "unit_player_color_orange");
+	gui->AddSprite("assets/unit/unit_player_color_yellow.png", "unit_player_color_yellow");
+
+	
 
 	// Add unit_class_ribons.
 	gui->AddSprite("assets/unit/unit_class_archer.png", "unit_class_archer");

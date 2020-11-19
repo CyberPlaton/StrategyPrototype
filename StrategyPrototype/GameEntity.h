@@ -1543,10 +1543,16 @@ private:
 
 class Player {
 public:
-	Player(std::string playername, std::string playercolor) {
+	Player(std::string playername, std::string playercolor, CMPEntityRace::Race race) {
 		
+		// NOTE:
+		// We explicitly set a race for a player,
+		// as player can only instantiate certain types of cities and units 
+		// associated with this race.
+
 		m_PlayerName = playername;
 		m_PlayerColor = playercolor;
+		m_PlayerEmpireRace = race;
 	}
 
 	void AddCity(City* c) {
@@ -1557,6 +1563,8 @@ public:
 	std::string m_PlayerName;
 	std::string m_PlayerColor;
 	std::vector<City*> m_PlayerCities;
+
+	CMPEntityRace::Race m_PlayerEmpireRace;
 
 	Unit* m_CurrentlySelectedUnit = nullptr;
 private:
