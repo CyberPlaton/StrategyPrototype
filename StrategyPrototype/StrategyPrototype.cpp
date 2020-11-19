@@ -1595,6 +1595,7 @@ void CMPCameraInput::_handleCityViewKeyboard(Camera* cam) {
 
 }
 
+/*
 static int g_iUnitClassIndex = 0;
 static int g_iUnitRaceIndex = 0;
 static std::string g_sUnitClasses[5] = {
@@ -1611,7 +1612,7 @@ static CMPEntityRace::Race g_rUnitRaces[8] = {
 	CMPEntityRace::Race::RACE_GOBLIN,
 	CMPEntityRace::Race::RACE_DWARF
 };
-
+*/
 
 void CMPCameraInput::_handleMapViewMouse(Camera* cam) {
 
@@ -1664,6 +1665,7 @@ void CMPCameraInput::_handleMapViewMouse(Camera* cam) {
 	}
 
 
+	/*
 	if (context->GetKey(olc::Key::CTRL).bHeld) {
 
 		if (context->GetMouse(0).bPressed) {
@@ -1678,6 +1680,7 @@ void CMPCameraInput::_handleMapViewMouse(Camera* cam) {
 
 		}
 	}
+	*/
 
 }
 
