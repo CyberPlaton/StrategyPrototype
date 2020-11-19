@@ -281,7 +281,54 @@ bool Unit::SetClass(std::string c) {
 	if (COMPARE_STRINGS(c, "Archer") == 0) {
 		m_UnitClass = new UnitClassArcher(&m_UnitSkillsMap, &m_UnitAttributesMap);
 	}
-
+	else if (COMPARE_STRINGS(c, "Assassin") == 0) {
+		m_UnitClass = new UnitClassAssassin(&m_UnitSkillsMap, &m_UnitAttributesMap);
+	}
+	else if (COMPARE_STRINGS(c, "Barbarian") == 0) {
+		m_UnitClass = new UnitClassBarbarian(&m_UnitSkillsMap, &m_UnitAttributesMap);
+	}
+	else if (COMPARE_STRINGS(c, "Battlemage") == 0) {
+		m_UnitClass = new UnitClassBattlemage(&m_UnitSkillsMap, &m_UnitAttributesMap);
+	}
+	else if (COMPARE_STRINGS(c, "Healer") == 0) {
+		m_UnitClass = new UnitClassHealer(&m_UnitSkillsMap, &m_UnitAttributesMap);
+	}
+	else if (COMPARE_STRINGS(c, "Inquisitor") == 0) {
+		m_UnitClass = new UnitClassInquisitor(&m_UnitSkillsMap, &m_UnitAttributesMap);
+	}
+	else if (COMPARE_STRINGS(c, "Knight") == 0) {
+		m_UnitClass = new UnitClassKnight(&m_UnitSkillsMap, &m_UnitAttributesMap);
+	}
+	else if (COMPARE_STRINGS(c, "Mage") == 0) {
+		m_UnitClass = new UnitClassMage(&m_UnitSkillsMap, &m_UnitAttributesMap);
+	}
+	else if (COMPARE_STRINGS(c, "Nightblade") == 0) {
+		m_UnitClass = new UnitClassNightblade(&m_UnitSkillsMap, &m_UnitAttributesMap);
+	}
+	else if (COMPARE_STRINGS(c, "Paladin") == 0) {
+		m_UnitClass = new UnitClassPaladin(&m_UnitSkillsMap, &m_UnitAttributesMap);
+	}
+	else if (COMPARE_STRINGS(c, "Rogue") == 0) {
+		m_UnitClass = new UnitClassRogue(&m_UnitSkillsMap, &m_UnitAttributesMap);
+	}
+	else if (COMPARE_STRINGS(c, "Scout") == 0) {
+		m_UnitClass = new UnitClassScout(&m_UnitSkillsMap, &m_UnitAttributesMap);
+	}
+	else if (COMPARE_STRINGS(c, "Sorcerer") == 0) {
+		m_UnitClass = new UnitClassSorcerer(&m_UnitSkillsMap, &m_UnitAttributesMap);
+	}
+	else if (COMPARE_STRINGS(c, "Spellsword") == 0) {
+		m_UnitClass = new UnitClassSpellsword(&m_UnitSkillsMap, &m_UnitAttributesMap);
+	}
+	else if (COMPARE_STRINGS(c, "Spy") == 0) {
+		m_UnitClass = new UnitClassSpy(&m_UnitSkillsMap, &m_UnitAttributesMap);
+	}
+	else if (COMPARE_STRINGS(c, "Warrior") == 0) {
+		m_UnitClass = new UnitClassWarrior(&m_UnitSkillsMap, &m_UnitAttributesMap);
+	}
+	else {
+		return false;
+	}
 
 
 	if (m_UnitClass != nullptr) return true;
