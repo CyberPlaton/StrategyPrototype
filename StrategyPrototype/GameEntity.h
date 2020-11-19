@@ -164,6 +164,7 @@ private:
 	void _determineUnitRibbonColor();
 	void _defineMaxAge();
 
+	void _defineRandomUnitTalents(); // Defines randomized bonuses to attributes and skills.
 	void _defineStandardBeginningStats(); // All skills and attributes start at 5.
 	void _defineStatsBasedOnUnitRace(); // Based on race give bonuses or minuses to stats or skills.
 	void _defineStatsBasedOnUnitBirthsign(); // Gives bonuses and minuses based on the birthsign of unit.

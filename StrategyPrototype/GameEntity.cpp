@@ -17,6 +17,93 @@ bool Unit::SetDerivedStats() {
 	return true;
 }
 
+void Unit::_defineRandomUnitTalents() {
+
+	// NOTE:
+	// We define 1 attribute and 1 skill to be increased or decreased with 0-5 Points.
+	// Samewise, we do the same with 1 other attribute and 1 other skill, but revert the value...
+
+	using namespace std;
+
+	// Randomize attributes
+	int random_index_attr = Random() % GetUnitAttributes()->size();
+	int random_index_attr_2 = Random() % GetUnitAttributes()->size();
+
+
+	// Randomize skills
+	int random_index_skills = Random() % GetUnitSkills()->size();
+	int random_index_skills_2 = Random() % GetUnitSkills()->size();
+
+
+
+	UnitAttributes* attr = new UnitAttributes();
+	UnitSkills* skills = new UnitSkills();
+
+
+	int random_value = 1 + Random() % 6;
+	int random_direction = random_value % 2;
+
+	if (random_direction == 0) {
+		random_value = (-random_value);
+
+
+		// Attribute 1
+		UnitAttributesEnum a = UnitAttributesEnum(random_index_attr);
+		attr->SetAttribute(GetUnitAttributes(), AttributeToString(a), random_value);
+
+		// Skill 1
+		UnitSkillsEnum s = UnitSkillsEnum(random_index_skills);
+		skills->SetSkill(GetUnitSkills(), SkillToString(s), random_value);
+
+
+		// Attribute 2
+		UnitAttributesEnum aa = UnitAttributesEnum(random_index_attr_2);
+		attr->SetAttribute(GetUnitAttributes(), AttributeToString(aa), -random_value);
+
+		// Skill 2
+		UnitSkillsEnum ss = UnitSkillsEnum(random_index_skills_2);
+		skills->SetSkill(GetUnitSkills(), SkillToString(ss), -random_value);
+
+
+		cout << color(colors::DARKRED) << endl;
+		cout << "Random Talent: Attribute \"" << AttributeToString(a) << "\" ::= " << std::to_string(random_value) << endl;
+		cout << "Random Talent: Skill \"" << SkillToString(s) << "\" ::= " << std::to_string(random_value) << endl;
+		cout << "Random Talent: Attribute \"" << AttributeToString(aa) << "\" ::= " << std::to_string(-random_value) << endl;
+		cout << "Random Talent: Skill \"" << SkillToString(ss) << "\" ::= " << std::to_string(-random_value) << endl;
+		cout << white << endl;
+
+
+	}
+	else {
+
+		// Attribute 1
+		UnitAttributesEnum a = UnitAttributesEnum(random_index_attr);
+		attr->SetAttribute(GetUnitAttributes(), AttributeToString(a), random_value);
+
+		// Skill 1
+		UnitSkillsEnum s = UnitSkillsEnum(random_index_skills);
+		skills->SetSkill(GetUnitSkills(), SkillToString(s), random_value);
+
+
+		// Attribute 2
+		UnitAttributesEnum aa = UnitAttributesEnum(random_index_attr_2);
+		attr->SetAttribute(GetUnitAttributes(), AttributeToString(aa), -random_value);
+
+		// Skill 2
+		UnitSkillsEnum ss = UnitSkillsEnum(random_index_skills_2);
+		skills->SetSkill(GetUnitSkills(), SkillToString(ss), -random_value);
+
+
+		cout << color(colors::DARKRED) << endl;
+		cout << "Random Talent: Attribute \"" << AttributeToString(a) << "\" ::= " << std::to_string(random_value) << endl;
+		cout << "Random Talent: Skill \"" << SkillToString(s) << "\" ::= " << std::to_string(random_value) << endl;
+		cout << "Random Talent: Attribute \"" << AttributeToString(aa) << "\" ::= " << std::to_string(-random_value) << endl;
+		cout << "Random Talent: Skill \"" << SkillToString(ss) << "\" ::= " << std::to_string(-random_value) << endl;
+		cout << white << endl;
+	}
+
+}
+
 GameEntity::~GameEntity() {
 
 	delete m_IDCmp; m_IDCmp = nullptr;
@@ -68,6 +155,9 @@ void Unit::_defineStandardBeginningStats() {
 	GetUnitAttributes()->insert(std::make_pair(UnitAttributesEnum::UNIT_ATTRIBUTE_HEALTH, 10));
 	GetUnitAttributes()->insert(std::make_pair(UnitAttributesEnum::UNIT_ATTRIBUTE_MAGICKA, 10));
 	GetUnitAttributes()->insert(std::make_pair(UnitAttributesEnum::UNIT_ATTRIBUTE_FATIGUE, 10));
+
+	
+	_defineRandomUnitTalents();
 }
 
 void Unit::_defineDerivedAttributes() {

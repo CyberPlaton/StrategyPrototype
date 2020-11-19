@@ -1,7 +1,7 @@
 #include"Platform.h"
 
 int Random() {
-	srand(unsigned int(omp_get_wtime()));
+	//srand(unsigned int(omp_get_wtime()));
 	return rand();
 }
 
