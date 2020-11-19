@@ -7,7 +7,6 @@
 
 
 
-
 class Game;
 class Camera;
 struct CMPCameraInput{
@@ -90,6 +89,7 @@ public:
 	void DrawCityPanels();
 	void DrawYearQuartalPanel();
 	void DrawUnitPanels();
+	void DrawCurrentTurnPlayerPanel();
 
 
 	/*
@@ -156,6 +156,75 @@ private:
 	void _drawCityviewGroundBasedOnCityMaptileType(MapTile* maptile);
 };
 
+
+struct PlayerTurnCounter {
+
+	static PlayerTurnCounter* Get() {
+
+		if (g_pPlayerTurnCounter) {
+			return g_pPlayerTurnCounter;
+		}
+		else {
+			g_pPlayerTurnCounter = new PlayerTurnCounter();
+			return g_pPlayerTurnCounter;
+		}
+	}
+
+	static void Del() {
+
+		if (g_pPlayerTurnCounter) {
+			delete g_pPlayerTurnCounter;
+		}
+	}
+
+
+	void BeginGame() {
+		// Let player begin.
+		m_CurrentTurnPlayer = m_InGamePlayers[0];
+	}
+
+
+	void AddPlayer(Player* p) {
+		m_InGamePlayers.push_back(p);
+	}
+
+	void EliminatePlayer(Player* p) {
+
+		std::vector<Player*>::iterator it = std::find(m_InGamePlayers.begin(), m_InGamePlayers.end(), p);
+		m_InGamePlayers.erase(it);
+	}
+
+
+	bool NextPlayerTurn() {
+
+		bool all_had_turn = false;
+		int current_index = m_CurrentPlayerIndex;
+		m_CurrentPlayerIndex = (++m_CurrentPlayerIndex) % m_InGamePlayers.size();
+
+		if (current_index > 0 & m_CurrentPlayerIndex == 0) {
+			all_had_turn = true;
+		}
+
+		m_CurrentTurnPlayer = m_InGamePlayers[m_CurrentPlayerIndex];
+	
+		
+		return all_had_turn;
+	}
+
+
+	Player* m_CurrentTurnPlayer = nullptr;
+	std::vector<Player*> m_InGamePlayers;
+
+private:
+	int m_CurrentPlayerIndex = -1;
+	bool m_AllPlayersHadTurn = false;
+
+
+	static PlayerTurnCounter* g_pPlayerTurnCounter;
+
+private:
+
+};
 
 
 class Game : public olc::PixelGameEngine {

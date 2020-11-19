@@ -82,8 +82,6 @@ struct UnitSkills {
 			}
 		}
 	}
-
-	//std::map<UnitSkillsEnum, int> m_UnitSkillsMap;
 };
 
 
@@ -113,8 +111,6 @@ struct UnitAttributes {
 			}
 		}
 	}
-
-	//std::map<UnitAttributesEnum, int> m_UnitAttributesMap;
 };
 
 
@@ -133,10 +129,6 @@ Minor skills, like the secondary ones, give a bonus of 5 to skills.
 Major and minor attributes do the same.
 */
 struct UnitClass {
-
-
-	//UnitAttributes* m_UnitAttributes = nullptr;
-	//UnitSkills* m_UnitSkills = nullptr;
 
 	std::string m_UnitClassSpritename = "NULL";
 	std::string m_UnitClassName = "NULL";
@@ -199,20 +191,6 @@ struct UnitClassSpy : public UnitClass {
 		m_UnitClassSpritename = "unit_class_spy";
 		m_UnitClassName = "Spy";
 
-		/*
-		// Zero out stats.
-		for(auto it: m_UnitAttributes->m_UnitAttributesMap){
-
-			it.second = 0;
-		}
-
-		for (auto it : m_UnitSkills->m_UnitSkillsMap) {
-
-			it.second = 0;
-		}
-		*/
-
-
 		_defineStats();
 	}
 
@@ -250,20 +228,6 @@ struct UnitClassAssassin : public UnitClass {
 		m_UnitClassSpritename = "unit_class_assassin";
 		m_UnitClassName = "Assassin";
 
-		/*
-		// Zero out stats.
-		for(auto it: m_UnitAttributes->m_UnitAttributesMap){
-
-			it.second = 0;
-		}
-
-		for (auto it : m_UnitSkills->m_UnitSkillsMap) {
-
-			it.second = 0;
-		}
-		*/
-
-
 		_defineStats();
 	}
 
@@ -300,20 +264,6 @@ struct UnitClassRogue : public UnitClass {
 		// For drawing class ribbon.
 		m_UnitClassSpritename = "unit_class_rogue";
 		m_UnitClassName = "Rogue";
-
-		/*
-		// Zero out stats.
-		for(auto it: m_UnitAttributes->m_UnitAttributesMap){
-
-			it.second = 0;
-		}
-
-		for (auto it : m_UnitSkills->m_UnitSkillsMap) {
-
-			it.second = 0;
-		}
-		*/
-
 
 		_defineStats();
 	}
@@ -353,20 +303,6 @@ struct UnitClassScout : public UnitClass {
 		m_UnitClassSpritename = "unit_class_scout";
 		m_UnitClassName = "Scout";
 
-		/*
-		// Zero out stats.
-		for(auto it: m_UnitAttributes->m_UnitAttributesMap){
-
-			it.second = 0;
-		}
-
-		for (auto it : m_UnitSkills->m_UnitSkillsMap) {
-
-			it.second = 0;
-		}
-		*/
-
-
 		_defineStats();
 	}
 
@@ -405,20 +341,6 @@ struct UnitClassBarbarian : public UnitClass {
 		m_UnitClassSpritename = "unit_class_barbarian";
 		m_UnitClassName = "Barbarian";
 
-		/*
-		// Zero out stats.
-		for(auto it: m_UnitAttributes->m_UnitAttributesMap){
-
-			it.second = 0;
-		}
-
-		for (auto it : m_UnitSkills->m_UnitSkillsMap) {
-
-			it.second = 0;
-		}
-		*/
-
-
 		_defineStats();
 	}
 
@@ -456,20 +378,6 @@ struct UnitClassWarrior : public UnitClass {
 		m_UnitClassSpritename = "unit_class_warrior";
 		m_UnitClassName = "Warrior";
 
-		/*
-		// Zero out stats.
-		for(auto it: m_UnitAttributes->m_UnitAttributesMap){
-
-			it.second = 0;
-		}
-
-		for (auto it : m_UnitSkills->m_UnitSkillsMap) {
-
-			it.second = 0;
-		}
-		*/
-
-
 		_defineStats();
 	}
 
@@ -506,20 +414,6 @@ struct UnitClassKnight : public UnitClass {
 		m_UnitClassSpritename = "unit_class_knight";
 		m_UnitClassName = "Knight";
 
-		/*
-		// Zero out stats.
-		for(auto it: m_UnitAttributes->m_UnitAttributesMap){
-
-			it.second = 0;
-		}
-
-		for (auto it : m_UnitSkills->m_UnitSkillsMap) {
-
-			it.second = 0;
-		}
-		*/
-
-
 		_defineStats();
 	}
 
@@ -555,20 +449,6 @@ struct UnitClassPaladin : public UnitClass {
 		// For drawing class ribbon.
 		m_UnitClassSpritename = "unit_class_paladin";
 		m_UnitClassName = "Paladin";
-
-		/*
-		// Zero out stats.
-		for(auto it: m_UnitAttributes->m_UnitAttributesMap){
-
-			it.second = 0;
-		}
-
-		for (auto it : m_UnitSkills->m_UnitSkillsMap) {
-
-			it.second = 0;
-		}
-		*/
-
 
 		_defineStats();
 	}
@@ -609,20 +489,6 @@ struct UnitClassSpellsword : public UnitClass {
 		m_UnitClassSpritename = "unit_class_spellsword";
 		m_UnitClassName = "Spellsword";
 
-		/*
-		// Zero out stats.
-		for(auto it: m_UnitAttributes->m_UnitAttributesMap){
-
-			it.second = 0;
-		}
-
-		for (auto it : m_UnitSkills->m_UnitSkillsMap) {
-
-			it.second = 0;
-		}
-		*/
-
-
 		_defineStats();
 	}
 
@@ -659,20 +525,6 @@ struct UnitClassBattlemage : public UnitClass {
 		// For drawing class ribbon.
 		m_UnitClassSpritename = "unit_class_battlemage";
 		m_UnitClassName = "Battlemage";
-
-		/*
-		// Zero out stats.
-		for(auto it: m_UnitAttributes->m_UnitAttributesMap){
-
-			it.second = 0;
-		}
-
-		for (auto it : m_UnitSkills->m_UnitSkillsMap) {
-
-			it.second = 0;
-		}
-		*/
-
 
 		_defineStats();
 	}
@@ -711,20 +563,6 @@ struct UnitClassNightblade : public UnitClass {
 		m_UnitClassSpritename = "unit_class_nightblade";
 		m_UnitClassName = "Nightblade";
 
-		/*
-		// Zero out stats.
-		for(auto it: m_UnitAttributes->m_UnitAttributesMap){
-
-			it.second = 0;
-		}
-
-		for (auto it : m_UnitSkills->m_UnitSkillsMap) {
-
-			it.second = 0;
-		}
-		*/
-
-
 		_defineStats();
 	}
 
@@ -760,20 +598,6 @@ struct UnitClassInquisitor : public UnitClass {
 		// For drawing class ribbon.
 		m_UnitClassSpritename = "unit_class_inquisitor";
 		m_UnitClassName = "Inquisitor";
-
-		/*
-		// Zero out stats.
-		for(auto it: m_UnitAttributes->m_UnitAttributesMap){
-
-			it.second = 0;
-		}
-
-		for (auto it : m_UnitSkills->m_UnitSkillsMap) {
-
-			it.second = 0;
-		}
-		*/
-
 
 		_defineStats();
 	}
@@ -813,20 +637,6 @@ struct UnitClassMage : public UnitClass {
 		m_UnitClassSpritename = "unit_class_mage";
 		m_UnitClassName = "Mage";
 
-		/*
-		// Zero out stats.
-		for(auto it: m_UnitAttributes->m_UnitAttributesMap){
-
-			it.second = 0;
-		}
-
-		for (auto it : m_UnitSkills->m_UnitSkillsMap) {
-
-			it.second = 0;
-		}
-		*/
-
-
 		_defineStats();
 	}
 
@@ -862,20 +672,6 @@ struct UnitClassSorcerer : public UnitClass {
 		// For drawing class ribbon.
 		m_UnitClassSpritename = "unit_class_sorcerer";
 		m_UnitClassName = "Sorcerer";
-
-		/*
-		// Zero out stats.
-		for(auto it: m_UnitAttributes->m_UnitAttributesMap){
-
-			it.second = 0;
-		}
-
-		for (auto it : m_UnitSkills->m_UnitSkillsMap) {
-
-			it.second = 0;
-		}
-		*/
-
 
 		_defineStats();
 	}
@@ -913,20 +709,6 @@ struct UnitClassHealer : public UnitClass {
 		m_UnitClassSpritename = "unit_class_healer";
 		m_UnitClassName = "Healer";
 
-		/*
-		// Zero out stats.
-		for(auto it: m_UnitAttributes->m_UnitAttributesMap){
-
-			it.second = 0;
-		}
-
-		for (auto it : m_UnitSkills->m_UnitSkillsMap) {
-
-			it.second = 0;
-		}
-		*/
-
-
 		_defineStats();
 	}
 
@@ -946,4 +728,53 @@ private:
 private:
 	void _defineStats();
 	void _undefStats();
+};
+
+
+
+// Civilian Unit classes.
+// Those define not stats, but "abilities", means
+// what can this type of unit do, like
+// builder can build imporovements, forest chop down trees etc.
+// Further civilian units got a "level" of theyre work and it gives certain bonuses...
+
+struct UnitClassCitizen : public UnitClass {
+	UnitClassCitizen(std::map<UnitSkillsEnum, int>* skillsmap,
+		std::map<UnitAttributesEnum, int>* attrmap) {
+
+		m_ZoneOfControl = false;
+		m_IgnoresZoneOfControl = false;
+
+		m_AttrMap = attrmap;
+		m_SkillsMap = skillsmap;
+
+		// For drawing class ribbon.
+		m_UnitClassSpritename = "unit_class_citizen";
+		m_UnitClassName = "Citizen";
+
+		_defineStats();
+	}
+
+
+	~UnitClassCitizen() {
+
+		_undefStats();
+	}
+
+
+private:
+
+	// Pointers to units skills and attributes map.
+	std::map<UnitSkillsEnum, int>* m_SkillsMap = nullptr;
+	std::map<UnitAttributesEnum, int>* m_AttrMap = nullptr;
+
+private:
+	void _defineStats() {
+
+	}
+
+	void _undefStats() {
+
+	}
+
 };

@@ -4,10 +4,43 @@ Game* Game::m_Game = nullptr;
 static olc::vf2d g_vi2dCameraPosition = olc::vf2d(0.0f, 0.0f);
 static int ColorValue = 0;
 
+PlayerTurnCounter* PlayerTurnCounter::g_pPlayerTurnCounter = nullptr;
+
 
 IMGUI* IMGUI::m_IMGUI = nullptr;
 int IMGUI::m_WidgetID = 0; // A valid ID is greater 0.
 
+
+std::string GetColorFromString(std::string color) {
+
+	if (COMPARE_STRINGS(color, "red") == 0) {
+		return "unit_player_color_red";
+	}
+	else if (COMPARE_STRINGS(color, "blue") == 0) {
+		return "unit_player_color_blue";
+	}
+	else if (COMPARE_STRINGS(color, "magenta") == 0) {
+		return "unit_player_color_magenta";
+	}
+	else if (COMPARE_STRINGS(color, "green") == 0) {
+		return "unit_player_color_green";
+	}
+	else if (COMPARE_STRINGS(color, "brown") == 0) {
+		return "unit_player_color_brown";
+	}
+	else if (COMPARE_STRINGS(color, "black") == 0) {
+		return "unit_player_color_black";
+	}
+	else if (COMPARE_STRINGS(color, "orange") == 0) {
+		return "unit_player_color_orange";
+	}
+	else if (COMPARE_STRINGS(color, "yellow") == 0) {
+		return "unit_player_color_yellow";
+	}
+	else{
+		return "NULL";
+	}
+}
 
 
 Unit* MakeNewUnitAtPos(CMPEntityRace::Race race, Player* p, std::string unit_class, std::string spritename, int xpos, int ypos, int x_cell, int y_cell) {
@@ -1595,7 +1628,7 @@ void CMPCameraInput::_handleCityViewKeyboard(Camera* cam) {
 
 }
 
-/*
+
 static int g_iUnitClassIndex = 0;
 static int g_iUnitRaceIndex = 0;
 static std::string g_sUnitClasses[5] = {
@@ -1612,7 +1645,7 @@ static CMPEntityRace::Race g_rUnitRaces[8] = {
 	CMPEntityRace::Race::RACE_GOBLIN,
 	CMPEntityRace::Race::RACE_DWARF
 };
-*/
+
 
 void CMPCameraInput::_handleMapViewMouse(Camera* cam) {
 
@@ -1665,7 +1698,7 @@ void CMPCameraInput::_handleMapViewMouse(Camera* cam) {
 	}
 
 
-	/*
+	
 	if (context->GetKey(olc::Key::CTRL).bHeld) {
 
 		if (context->GetMouse(0).bPressed) {
@@ -1680,7 +1713,7 @@ void CMPCameraInput::_handleMapViewMouse(Camera* cam) {
 
 		}
 	}
-	*/
+	
 
 }
 
@@ -2395,25 +2428,20 @@ bool Game::OnUserCreate() {
 	Player* player = new Player("Bogdan", "blue");
 	storage->AddPlayer(player);
 
-	/*
-	Player* player2 = new Player("Peter", "red");
-	Player* player3 = new Player("Katharina", "magenta");
-	Player* player4 = new Player("Walter", "black");
-	Player* player5 = new Player("Fred", "orange");
-	Player* player6 = new Player("Hans", "green");
-	Player* player7 = new Player("Hans Hans", "yellow");
-	Player* player8 = new Player("Javid", "brown");
-
-
+	Player* player2 = new Player("Hans", "red");
 	storage->AddPlayer(player2);
+
+	Player* player3 = new Player("Walter", "orange");
 	storage->AddPlayer(player3);
-	storage->AddPlayer(player4);
-	storage->AddPlayer(player5);
-	storage->AddPlayer(player6);
-	storage->AddPlayer(player7);
-	storage->AddPlayer(player8);
 
 
+
+	PlayerTurnCounter::Get()->AddPlayer(player);
+	PlayerTurnCounter::Get()->AddPlayer(player2);
+	PlayerTurnCounter::Get()->AddPlayer(player3);
+
+
+	/*
 	// Cityname should be max 11. chars...
 	City* city2 = MakeNewCity(true, "Stormhaven", CMPEntityRace::Race::RACE_HUMAN, player, 7, 6, 5);
 	City* fort = MakeNewCity(true, "Durotar", CMPEntityRace::Race::RACE_ORC, player2, 15, 8, 8);
@@ -2484,6 +2512,9 @@ bool Game::OnUserCreate() {
 	// Astrology and birthsigns. YearCounter.
 	YearCounter::Get(); // .. = construction.
 
+	// Set first player as current turn player.
+	PlayerTurnCounter::Get()->BeginGame();
+
 	return true;
 }
 
@@ -2552,6 +2583,19 @@ void Renderer::DrawCityPanels() {
 }
 
 
+void Renderer::DrawCurrentTurnPlayerPanel() {
+
+	using namespace olc;
+
+	// The tooltip will show current birtsign.
+	IMGUI::Get()->ToolTipSpriteButton(GEN_ID, 2, 64, "city_panel", "This Players Turn");
+
+	// Draw current year...
+	Game::Get()->DrawStringDecal(olc::vi2d(2 + 16, 64 + 16), PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_PlayerName, olc::BLACK);
+
+	IMGUI::Get()->ToolTipSpriteButton(GEN_ID, 2 + 90, 64 + 8, GetColorFromString(PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_PlayerColor), "Player Color");
+}
+
 
 void Renderer::DrawYearQuartalPanel() {
 
@@ -2616,17 +2660,6 @@ void Renderer::RenderCityLayer1() {
 	m_Game->SetDrawTarget(m_Layer1);
 	m_Game->Clear(olc::BLANK);
 
-
-	/*
-	m_Game->DrawDecal(vi2d(128, 128), m_Game->m_SpriteResourceMap.at("gnome_worker"));
-	m_Game->DrawDecal(vi2d(256, 128), m_Game->m_SpriteResourceMap.at("gnome_citizen"));
-	m_Game->DrawDecal(vi2d(320, 128), m_Game->m_SpriteResourceMap.at("gnome_noble"));
-	m_Game->DrawDecal(vi2d(384, 128), m_Game->m_SpriteResourceMap.at("gnome_farmer"));
-	m_Game->DrawDecal(vi2d(512, 128), m_Game->m_SpriteResourceMap.at("gnome_fisher"));
-	m_Game->DrawDecal(vi2d(512, 256), m_Game->m_SpriteResourceMap.at("gnome_hunter"));
-	m_Game->DrawDecal(vi2d(512, 320), m_Game->m_SpriteResourceMap.at("gnome_priest"));
-	m_Game->DrawDecal(vi2d(512, 384), m_Game->m_SpriteResourceMap.at("gnome_miner"));
-	*/
 
 
 	m_Game->EnableLayer(m_Layer1, true);
@@ -2776,114 +2809,7 @@ void Renderer::RenderCityLayer3() {
 
 	}
 
-
-	/*
-	if (m_CurrentViewedCity == nullptr) return;
-	for (auto it = m_CurrentViewedCity->m_ClaimedRegions.begin(); it != m_CurrentViewedCity->m_ClaimedRegions.end(); ++it) {
-
-		region = reinterpret_cast<MapTileRegion*>(*it);
-
-		for (auto iter = region->m_MapTileRegionTiles.begin(); iter != region->m_MapTileRegionTiles.end(); ++iter) {
-
-			entity = *iter;
-
-			// Layer4. Maptiles.
-			if (COMPARE_STRINGS(entity->m_IDCmp->m_DynamicTypeName, "MapTile") == 0) {
-
-				// Render map tile.
-
-				// Draw appropriate loaded sprite on position specified.
-				m_Game->DrawDecal(vi2d(entity->m_TransformCmp->m_PosX, entity->m_TransformCmp->m_PosY),
-					m_Game->m_SpriteResourceMap.at(entity->m_GraphicsCmp->m_SpriteName));
-
-			}
-
-		}
-	}
-
-
-
-	for (auto it = m_CurrentViewedCity->m_ClaimedRegions.begin(); it != m_CurrentViewedCity->m_ClaimedRegions.end(); ++it) {
-
-		region = reinterpret_cast<MapTileRegion*>(*it);
-
-		for (auto iter = region->m_MapTileRegionTiles.begin(); iter != region->m_MapTileRegionTiles.end(); ++iter) {
-
-			entity = *iter;
-			// Layer 3. Hills, Forests, Mountains, Rivers.
-			maptile = reinterpret_cast<MapTile*>(entity);
-			for (auto itr = maptile->m_MapTileEntities->begin(); itr != maptile->m_MapTileEntities->end(); ++itr) {
-
-				maptile_entt = *itr;
-
-				if (COMPARE_STRINGS(maptile_entt->m_IDCmp->m_DynamicTypeName, "Mountains") == 0) {
-
-					// Render...
-					// Draw appropriate loaded sprite on position specified.
-					m_Game->DrawDecal(vi2d(maptile_entt->m_TransformCmp->m_PosX, maptile_entt->m_TransformCmp->m_PosY),
-						m_Game->m_SpriteResourceMap.at(maptile_entt->m_GraphicsCmp->m_SpriteName));
-				}
-				if (COMPARE_STRINGS(maptile_entt->m_IDCmp->m_DynamicTypeName, "Hills") == 0) {
-
-					// Render...
-					// Draw appropriate loaded sprite on position specified.
-					m_Game->DrawDecal(vi2d(maptile_entt->m_TransformCmp->m_PosX, maptile_entt->m_TransformCmp->m_PosY),
-						m_Game->m_SpriteResourceMap.at(maptile_entt->m_GraphicsCmp->m_SpriteName));
-				}
-				if (COMPARE_STRINGS(maptile_entt->m_IDCmp->m_DynamicTypeName, "Forest") == 0) {
-
-					// Render...
-					// Draw appropriate loaded sprite on position specified.
-					m_Game->DrawDecal(vi2d(maptile_entt->m_TransformCmp->m_PosX, maptile_entt->m_TransformCmp->m_PosY),
-						m_Game->m_SpriteResourceMap.at(maptile_entt->m_GraphicsCmp->m_SpriteName));
-				}
-				if (COMPARE_STRINGS(maptile_entt->m_IDCmp->m_DynamicTypeName, "River") == 0) {
-
-					// Render...
-					// Draw appropriate loaded sprite on position specified.
-					m_Game->DrawDecal(vi2d(maptile_entt->m_TransformCmp->m_PosX, maptile_entt->m_TransformCmp->m_PosY),
-						m_Game->m_SpriteResourceMap.at(maptile_entt->m_GraphicsCmp->m_SpriteName));
-				}
-
-			}
-
-		}
-
-	}
-
-
-	for (auto it = m_CurrentViewedCity->m_ClaimedRegions.begin(); it != m_CurrentViewedCity->m_ClaimedRegions.end(); ++it) {
-
-		region = reinterpret_cast<MapTileRegion*>(*it);
-
-		for (auto iter = region->m_MapTileRegionTiles.begin(); iter != region->m_MapTileRegionTiles.end(); ++iter) {
-
-			entity = *iter;
-			// Layer2. Cities and Improvements.
-			maptile = reinterpret_cast<MapTile*>(entity);
-			for (auto itr = maptile->m_MapTileEntities->begin(); itr != maptile->m_MapTileEntities->end(); ++itr) {
-
-				maptile_entt = *itr;
-
-				if (COMPARE_STRINGS(maptile_entt->m_IDCmp->m_DynamicTypeName, "City") == 0) {
-
-					city = reinterpret_cast<City*>(maptile_entt);
-
-					// Render...
-					m_Game->DrawDecal(vi2d(city->m_TransformCmp->m_PosX, city->m_TransformCmp->m_PosY),
-						m_Game->m_SpriteResourceMap.at(city->GetCurrentCitySprite()));
-				}
-
-			}
-
-		}
-
-	}
-	*/
-
-
 	// Later render cities citizens and other units ...
-
 
 
 	m_Game->EnableLayer(m_Layer3, true);
@@ -3713,6 +3639,11 @@ void Renderer::RenderLayer0() {
 
 	// Show unit panels and general unit information.
 	DrawUnitPanels();
+
+
+
+	// Show whos turn it is.
+	DrawCurrentTurnPlayerPanel();
 	
 }
 
@@ -3971,6 +3902,14 @@ void ForestSearch::executeStateLogic() {
 void Game::AdvanceOneTurn() {
 
 	using namespace std;
+
+	// Let every player make theyre turn,
+	// after it advance one turn for all.
+
+	if (!PlayerTurnCounter::Get()->NextPlayerTurn()) {
+		return;
+	}
+
 
 	if (m_AdvanceOneTurn) {
 

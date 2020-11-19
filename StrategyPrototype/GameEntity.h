@@ -45,7 +45,7 @@ bool HasMapTileRiver(MapTile* maptile);
 River* MakeNewRiver(std::string spritename, int x_cell_pos, int y_cell_pos);
 
 Unit* MakeNewUnitAtPos(CMPEntityRace::Race race, Player* p, std::string unit_class, std::string spritename, int xpos, int ypos, int x_cell, int y_cell);
-
+std::string GetColorFromString(std::string color);
 
 enum class TileImprovementLevel {
 	TILE_IMPROVEMENT_LVL_INVALID = -1,
@@ -1558,6 +1558,7 @@ public:
 	std::string m_PlayerColor;
 	std::vector<City*> m_PlayerCities;
 
+	Unit* m_CurrentlySelectedUnit = nullptr;
 private:
 
 
