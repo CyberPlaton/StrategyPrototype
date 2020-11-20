@@ -111,7 +111,7 @@ public:
 
 
 		// Define unit name based on race.
-
+		_defineUnitName();
 
 
 		// Define AI for unit.
