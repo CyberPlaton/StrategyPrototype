@@ -5,6 +5,8 @@
 #include"UnitDefs.h"
 #include"UnitHelpers.h"
 
+
+// CLASSES DECLARATIONS.
 class MapTile;
 class MapRessource;
 class Forest;
@@ -17,6 +19,205 @@ class Player;
 class River;
 class Unit;
 typedef std::array<std::array<MapTile*, 20>, 20> MapTileArray;
+
+
+/*
+UNIT AI LOGIC FUNCTIONS.
+
+Some functions like attack, defend, move, patrol etc.
+must be set from "outside", like an AI-Engine that is "bigger" than this
+units AI component, or the player controling this unit.
+
+After that the unit executes the logic until it reaches the defined "endpoint" or
+its "unterbrochen".
+*/
+
+// WAIT
+class UnitWaitLogic : public IStateLogic {
+public:
+	UnitWaitLogic(CMPArtificialIntelligence& ai);
+	~UnitWaitLogic();
+
+
+	void executeStateLogic() override;
+
+
+
+
+
+	// Holding Unit and its AI component.
+	CMPArtificialIntelligence* m_AICmp = nullptr;
+	Unit* m_ManagedUnit = nullptr;
+
+private:
+
+private:
+
+};
+
+// PATROL
+class UnitPatrolLogic : public IStateLogic {
+public:
+	UnitPatrolLogic(CMPArtificialIntelligence& ai);
+	~UnitPatrolLogic();
+
+
+	void executeStateLogic() override;
+
+
+
+
+
+	// Holding Unit and its AI component.
+	CMPArtificialIntelligence* m_AICmp = nullptr;
+	Unit* m_ManagedUnit = nullptr;
+
+private:
+
+private:
+
+};
+
+// MOVE
+class UnitMoveLogic : public IStateLogic {
+public:
+	UnitMoveLogic(CMPArtificialIntelligence& ai);
+	~UnitMoveLogic();
+
+
+	void executeStateLogic() override;
+
+
+
+
+
+	// Holding Unit and its AI component.
+	CMPArtificialIntelligence* m_AICmp = nullptr;
+	Unit* m_ManagedUnit = nullptr;
+
+private:
+
+private:
+
+};
+
+// ATTACK
+class UnitAttackLogic : public IStateLogic {
+public:
+	UnitAttackLogic(CMPArtificialIntelligence& ai);
+	~UnitAttackLogic();
+
+
+	void executeStateLogic() override;
+
+
+
+
+
+	// Holding Unit and its AI component.
+	CMPArtificialIntelligence* m_AICmp = nullptr;
+	Unit* m_ManagedUnit = nullptr;
+
+private:
+
+private:
+
+};
+
+// DEFEND
+class UnitDefendLogic : public IStateLogic {
+public:
+	UnitDefendLogic(CMPArtificialIntelligence& ai);
+	~UnitDefendLogic();
+
+
+	void executeStateLogic() override;
+
+
+
+
+
+	// Holding Unit and its AI component.
+	CMPArtificialIntelligence* m_AICmp = nullptr;
+	Unit* m_ManagedUnit = nullptr;
+
+private:
+
+private:
+
+};
+
+// DIE
+class UnitDieLogic : public IStateLogic {
+public:
+	UnitDieLogic(CMPArtificialIntelligence& ai);
+	~UnitDieLogic();
+
+
+	void executeStateLogic() override;
+
+
+
+
+
+	// Holding Unit and its AI component.
+	CMPArtificialIntelligence* m_AICmp = nullptr;
+	Unit* m_ManagedUnit = nullptr;
+
+private:
+
+private:
+
+};
+
+// SEARCH
+class UnitSearchLogic : public IStateLogic {
+public:
+	UnitSearchLogic(CMPArtificialIntelligence& ai);
+	~UnitSearchLogic();
+
+
+	void executeStateLogic() override;
+
+
+
+
+
+	// Holding Unit and its AI component.
+	CMPArtificialIntelligence* m_AICmp = nullptr;
+	Unit* m_ManagedUnit = nullptr;
+
+private:
+
+private:
+
+};
+
+// FLEE
+class UnitFleeLogic : public IStateLogic {
+public:
+	UnitFleeLogic(CMPArtificialIntelligence& ai);
+	~UnitFleeLogic();
+
+
+	void executeStateLogic() override;
+
+
+
+
+
+	// Holding Unit and its AI component.
+	CMPArtificialIntelligence* m_AICmp = nullptr;
+	Unit* m_ManagedUnit = nullptr;
+
+private:
+
+private:
+
+};
+
+
+
 
 
 // Helpers.
@@ -88,9 +289,13 @@ public:
 
 		m_IDCmp->m_DynamicTypeName = "Unit";
 	
+		
 
 		m_TransformCmp->m_PosX = xpos;
 		m_TransformCmp->m_PosY = ypos;
+		m_TransformCmp->m_GameWorldSpaceCell[0] = set_x_cell;
+		m_TransformCmp->m_GameWorldSpaceCell[1] = set_y_cell;
+
 
 
 		m_GraphicsCmp = new CMPGraphics();
@@ -109,10 +314,8 @@ public:
 		// Stats and Skills.
 		_defineStandardBeginningStats();
 
-
-		// Define unit name based on race.
+		// Define name.
 		_defineUnitName();
-
 
 		// Define AI for unit.
 		m_AICmp = new CMPArtificialIntelligence(this);
@@ -120,6 +323,15 @@ public:
 		// We need to map according state functions first, else we get errors.
 		// Like:
 		// forest->m_AICmp->MapState("state_search", new ForestSearch(*forest->m_AICmp));
+
+		m_AICmp->MapState("state_flee", new UnitFleeLogic(*m_AICmp));
+		m_AICmp->MapState("state_search", new UnitSearchLogic(*m_AICmp));
+		m_AICmp->MapState("state_die", new UnitDieLogic(*m_AICmp));
+		m_AICmp->MapState("state_defend", new UnitDefendLogic(*m_AICmp));
+		m_AICmp->MapState("state_attack", new UnitAttackLogic(*m_AICmp));
+		m_AICmp->MapState("state_move", new UnitMoveLogic(*m_AICmp));
+		m_AICmp->MapState("state_patrol", new UnitPatrolLogic(*m_AICmp));
+		m_AICmp->MapState("state_wait", new UnitWaitLogic(*m_AICmp));
 
 		m_AICmp->ChangeState(States::STATE_WAIT);
 	}
@@ -1605,267 +1817,4 @@ private:
 
 	bool _isMapTileSurroundedByOwnTiles(MapTile* tile);
 	bool _belongMapTileToThisPlayer(MapTile* tile);
-};
-
-
-
-
-/*
-UNIT AI LOGIC FUNCTIONS.
-
-Some functions like attack, defend, move, patrol etc.
-must be set from "outside", like an AI-Engine that is "bigger" than this
-units AI component, or the player controling this unit.
-
-After that the unit executes the logic until it reaches the defined "endpoint" or
-its "unterbrochen".
-*/
-
-// WAIT
-class UnitWaitLogic : public IStateLogic {
-public:
-	UnitWaitLogic(CMPArtificialIntelligence& ai) {
-
-		m_AICmp = &ai;
-		m_ManagedUnit = static_cast<Unit*>(m_AICmp->m_ManagedObject);
-	}
-
-	~UnitWaitLogic() {
-		
-	}
-
-	void executeStateLogic() override;
-
-
-
-
-
-	// Holding Unit and its AI component.
-	CMPArtificialIntelligence* m_AICmp = nullptr;
-	Unit* m_ManagedUnit = nullptr;
-
-private:
-
-private:
-
-};
-
-
-
-
-
-// PATROL
-class UnitPatrolLogic : public IStateLogic {
-public:
-	UnitPatrolLogic(CMPArtificialIntelligence& ai) {
-
-		m_AICmp = &ai;
-		m_ManagedUnit = static_cast<Unit*>(m_AICmp->m_ManagedObject);
-	}
-
-	~UnitPatrolLogic() {
-
-	}
-
-	void executeStateLogic() override;
-
-
-
-
-
-	// Holding Unit and its AI component.
-	CMPArtificialIntelligence* m_AICmp = nullptr;
-	Unit* m_ManagedUnit = nullptr;
-
-private:
-
-private:
-
-};
-
-
-
-
-// MOVE
-class UnitMoveLogic : public IStateLogic {
-public:
-	UnitMoveLogic(CMPArtificialIntelligence& ai) {
-
-		m_AICmp = &ai;
-		m_ManagedUnit = static_cast<Unit*>(m_AICmp->m_ManagedObject);
-	}
-
-	~UnitMoveLogic() {
-
-	}
-
-	void executeStateLogic() override;
-
-
-
-
-
-	// Holding Unit and its AI component.
-	CMPArtificialIntelligence* m_AICmp = nullptr;
-	Unit* m_ManagedUnit = nullptr;
-
-private:
-
-private:
-
-};
-
-
-
-// ATTACK
-class UnitAttackLogic : public IStateLogic {
-public:
-	UnitAttackLogic(CMPArtificialIntelligence& ai) {
-
-		m_AICmp = &ai;
-		m_ManagedUnit = static_cast<Unit*>(m_AICmp->m_ManagedObject);
-	}
-
-	~UnitAttackLogic() {
-
-	}
-
-	void executeStateLogic() override;
-
-
-
-
-
-	// Holding Unit and its AI component.
-	CMPArtificialIntelligence* m_AICmp = nullptr;
-	Unit* m_ManagedUnit = nullptr;
-
-private:
-
-private:
-
-};
-
-
-
-
-// DEFEND
-class UnitDefendLogic : public IStateLogic {
-public:
-	UnitDefendLogic(CMPArtificialIntelligence& ai) {
-
-		m_AICmp = &ai;
-		m_ManagedUnit = static_cast<Unit*>(m_AICmp->m_ManagedObject);
-	}
-
-	~UnitDefendLogic() {
-
-	}
-
-	void executeStateLogic() override;
-
-
-
-
-
-	// Holding Unit and its AI component.
-	CMPArtificialIntelligence* m_AICmp = nullptr;
-	Unit* m_ManagedUnit = nullptr;
-
-private:
-
-private:
-
-};
-
-
-
-// DIE
-class UnitDieLogic : public IStateLogic {
-public:
-	UnitDieLogic(CMPArtificialIntelligence& ai) {
-
-		m_AICmp = &ai;
-		m_ManagedUnit = static_cast<Unit*>(m_AICmp->m_ManagedObject);
-	}
-
-	~UnitDieLogic() {
-
-	}
-
-	void executeStateLogic() override;
-
-
-
-
-
-	// Holding Unit and its AI component.
-	CMPArtificialIntelligence* m_AICmp = nullptr;
-	Unit* m_ManagedUnit = nullptr;
-
-private:
-
-private:
-
-};
-
-
-// SEARCH
-class UnitSearchLogic : public IStateLogic {
-public:
-	UnitSearchLogic(CMPArtificialIntelligence& ai) {
-
-		m_AICmp = &ai;
-		m_ManagedUnit = static_cast<Unit*>(m_AICmp->m_ManagedObject);
-	}
-
-	~UnitSearchLogic() {
-
-	}
-
-	void executeStateLogic() override;
-
-
-
-
-
-	// Holding Unit and its AI component.
-	CMPArtificialIntelligence* m_AICmp = nullptr;
-	Unit* m_ManagedUnit = nullptr;
-
-private:
-
-private:
-
-};
-
-
-
-// FLEE
-class UnitFleeLogic : public IStateLogic {
-public:
-	UnitFleeLogic(CMPArtificialIntelligence& ai) {
-
-		m_AICmp = &ai;
-		m_ManagedUnit = static_cast<Unit*>(m_AICmp->m_ManagedObject);
-	}
-
-	~UnitFleeLogic() {
-
-	}
-
-	void executeStateLogic() override;
-
-
-
-
-
-	// Holding Unit and its AI component.
-	CMPArtificialIntelligence* m_AICmp = nullptr;
-	Unit* m_ManagedUnit = nullptr;
-
-private:
-
-private:
-
 };

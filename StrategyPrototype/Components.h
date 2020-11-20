@@ -222,27 +222,42 @@ struct CMPEntityRace {
 			break;
 		case CMPEntityRace::Race::RACE_HUMAN:
 			m_EntityRaceString = "Human";
+			m_EntityRace = CMPEntityRace::Race::RACE_HUMAN;
 			break;
 		case CMPEntityRace::Race::RACE_TROLL:
-			m_EntityRaceString = "Human";
+			m_EntityRaceString = "Troll";
+			m_EntityRace = CMPEntityRace::Race::RACE_TROLL;
+
 			break;
 		case CMPEntityRace::Race::RACE_DWARF:
 			m_EntityRaceString = "Dwarf";
+			m_EntityRace = CMPEntityRace::Race::RACE_DWARF;
+
 			break;
 		case CMPEntityRace::Race::RACE_ORC:
 			m_EntityRaceString = "Orc";
+			m_EntityRace = CMPEntityRace::Race::RACE_ORC;
+
 			break;
 		case CMPEntityRace::Race::RACE_HIGHELF:
 			m_EntityRaceString = "High Elf";
+			m_EntityRace = CMPEntityRace::Race::RACE_HIGHELF;
+
 			break;
 		case CMPEntityRace::Race::RACE_DARKELF:
 			m_EntityRaceString = "Dark Elf";
+			m_EntityRace = CMPEntityRace::Race::RACE_DARKELF;
+
 			break;
 		case CMPEntityRace::Race::RACE_GOBLIN:
 			m_EntityRaceString = "Goblin";
+			m_EntityRace = CMPEntityRace::Race::RACE_GOBLIN;
+
 			break;
 		case CMPEntityRace::Race::RACE_GNOME:
 			m_EntityRaceString = "Gnome";
+			m_EntityRace = CMPEntityRace::Race::RACE_GNOME;
+
 			break;
 		default:
 			break;

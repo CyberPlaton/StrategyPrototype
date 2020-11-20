@@ -3666,24 +3666,34 @@ void Renderer::DrawUnitPanels() {
 	Unit* unit = nullptr;
 	IMGUI* gui = IMGUI::Get();
 
+	// Flag for drawing additional panels.
+	static bool age_panel = false;
+
+
 	for (auto it = vec.begin(); it != vec.end(); ++it) {
 
 		unit = reinterpret_cast<Unit*>(*it);
 
-
-		//if (gui->ToolTipSpriteButton(++m_IDHelper + GEN_ID, unit->m_TransformCmp->m_PosX, unit->m_TransformCmp->m_PosY + 64, "city_panel", "UNIT CLASS", olc::Pixel(255, 0, 0, 255)));
-
-		// New buttons.
 		// Player unit color.
 		std::string player_string = "Belongs to " + unit->m_AssociatedPlayer->m_PlayerName;
-		if (gui->ToolTipSpriteButton(++m_IDHelper + GEN_ID, unit->m_TransformCmp->m_PosX, unit->m_TransformCmp->m_PosY, unit->m_UnitPlayerColor, player_string, olc::WHITE));
+		if (gui->ToolTipSpriteButton(Random() + GEN_ID, unit->m_TransformCmp->m_PosX, unit->m_TransformCmp->m_PosY, unit->m_UnitPlayerColor, player_string, olc::WHITE)) {
+
+			age_panel = (age_panel == true) ? false : true;
+		}
 
 		// Unit ribbon.
 		std::string unit_ribbon = unit->m_UnitClass->m_UnitClassName;
-		if (gui->ToolTipSpriteButton(++m_IDHelper + GEN_ID, unit->m_TransformCmp->m_PosX + 64 - 16, unit->m_TransformCmp->m_PosY, unit->m_UnitClass->m_UnitClassSpritename, unit_ribbon, olc::WHITE));
+		if (gui->ToolTipSpriteButton(Random() + GEN_ID, unit->m_TransformCmp->m_PosX + 64 - 16, unit->m_TransformCmp->m_PosY, unit->m_UnitClass->m_UnitClassSpritename, unit_ribbon, olc::WHITE));
+	
 
-		std::string age = "Age: " + std::to_string(unit->m_Age) + " MaxAge: " + std::to_string(unit->m_MaxAge);
-		gui->TextButton(++m_IDHelper + GEN_ID, unit->m_TransformCmp->m_PosX+16, unit->m_TransformCmp->m_PosY+64, age);
+		
+
+		// Drawing additional panels.
+		if (age_panel) {
+
+			std::string age = "Age: " + std::to_string(unit->m_Age) + " MaxAge: " + std::to_string(unit->m_MaxAge);
+			gui->TextButton(++m_IDHelper + GEN_ID, unit->m_TransformCmp->m_PosX + 16, unit->m_TransformCmp->m_PosY + 64, age);
+		}
 		
 	}
 }

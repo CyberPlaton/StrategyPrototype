@@ -3404,6 +3404,96 @@ bool City::_isMapTileClaimedByCity(MapTile* maptile) {
 UNIT AI LOGIC.
 */
 
+UnitWaitLogic::UnitWaitLogic(CMPArtificialIntelligence& ai) {
+
+	m_AICmp = &ai;
+	m_ManagedUnit = static_cast<Unit*>(m_AICmp->m_ManagedObject);
+}
+
+UnitWaitLogic::~UnitWaitLogic() {
+
+}
+
+UnitPatrolLogic::UnitPatrolLogic(CMPArtificialIntelligence& ai) {
+
+	m_AICmp = &ai;
+	m_ManagedUnit = static_cast<Unit*>(m_AICmp->m_ManagedObject);
+}
+
+UnitPatrolLogic::~UnitPatrolLogic() {
+
+}
+
+UnitMoveLogic::UnitMoveLogic(CMPArtificialIntelligence& ai) {
+
+	m_AICmp = &ai;
+	m_ManagedUnit = static_cast<Unit*>(m_AICmp->m_ManagedObject);
+}
+
+UnitMoveLogic::~UnitMoveLogic() {
+
+}
+
+UnitAttackLogic::UnitAttackLogic(CMPArtificialIntelligence& ai) {
+
+	m_AICmp = &ai;
+	m_ManagedUnit = static_cast<Unit*>(m_AICmp->m_ManagedObject);
+}
+
+UnitAttackLogic::~UnitAttackLogic() {
+
+}
+
+
+UnitDefendLogic::UnitDefendLogic(CMPArtificialIntelligence& ai) {
+
+	m_AICmp = &ai;
+	m_ManagedUnit = static_cast<Unit*>(m_AICmp->m_ManagedObject);
+}
+
+UnitDefendLogic::~UnitDefendLogic() {
+
+}
+
+UnitDieLogic::UnitDieLogic(CMPArtificialIntelligence& ai) {
+
+	m_AICmp = &ai;
+	m_ManagedUnit = static_cast<Unit*>(m_AICmp->m_ManagedObject);
+}
+
+UnitDieLogic::~UnitDieLogic() {
+
+}
+
+
+UnitSearchLogic::UnitSearchLogic(CMPArtificialIntelligence& ai) {
+
+	m_AICmp = &ai;
+	m_ManagedUnit = static_cast<Unit*>(m_AICmp->m_ManagedObject);
+}
+
+UnitSearchLogic::~UnitSearchLogic() {
+
+}
+
+
+UnitFleeLogic::UnitFleeLogic(CMPArtificialIntelligence& ai) {
+
+	m_AICmp = &ai;
+	m_ManagedUnit = static_cast<Unit*>(m_AICmp->m_ManagedObject);
+}
+
+UnitFleeLogic::~UnitFleeLogic() {
+
+}
+
+
+
+
+
+
+
+
 void UnitFleeLogic::executeStateLogic() {
 
 	using namespace std;
