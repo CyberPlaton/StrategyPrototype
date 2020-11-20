@@ -16,6 +16,8 @@ enum class States {
 	STATE_DEFEND = 3,
 	STATE_FLEE = 4,
 	STATE_DIE = 5,
+	STATE_MOVE = 6,
+	STATE_WAIT = 7,
 
 
 

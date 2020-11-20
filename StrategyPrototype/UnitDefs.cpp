@@ -1,5 +1,7 @@
 #include"UnitDefs.h"
 
+
+
 std::string SkillToString(UnitSkillsEnum skill) {
 	switch (skill) {
 	case UnitSkillsEnum::UNIT_SKILL_HEAVY_ARMOR:

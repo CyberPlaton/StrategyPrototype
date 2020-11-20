@@ -153,7 +153,15 @@ struct CMPArtificialIntelligence {
 			state_string = "state_die";
 
 			break;
-		
+
+		case States::STATE_MOVE:
+			state_string = "state_move";
+
+			break;
+		case States::STATE_WAIT:
+			state_string = "state_wait";
+
+			break;
 		default:
 			break;
 		}

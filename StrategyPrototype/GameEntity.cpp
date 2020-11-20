@@ -3,6 +3,51 @@
 EntitiesStorage* EntitiesStorage::m_EntitiesStorage = nullptr;
 WorldMap* WorldMap::m_WorldMapInstance = nullptr;
 
+
+void Unit::_defineUnitName() {
+
+	switch (m_EntityRaceCmp->m_EntityRace) {
+	case CMPEntityRace::Race::RACE_INVALID:
+		break;
+	case CMPEntityRace::Race::RACE_HUMAN:
+		m_Name = UnitNames::Get()->GetRandomHumanName();
+		break;
+	case CMPEntityRace::Race::RACE_TROLL:
+		m_Name = UnitNames::Get()->GetRandomTrollName();
+
+		break;
+	case CMPEntityRace::Race::RACE_DWARF:
+		m_Name = UnitNames::Get()->GetRandomDwarfName();
+
+		break;
+	case CMPEntityRace::Race::RACE_ORC:
+		m_Name = UnitNames::Get()->GetRandomOrcName();
+
+		break;
+	case CMPEntityRace::Race::RACE_HIGHELF:
+		m_Name = UnitNames::Get()->GetRandomHighelfName();
+
+		break;
+	case CMPEntityRace::Race::RACE_DARKELF:
+		m_Name = UnitNames::Get()->GetRandomDarkelfName();
+
+		break;
+	case CMPEntityRace::Race::RACE_GOBLIN:
+		m_Name = UnitNames::Get()->GetRandomGoblinName();
+
+		break;
+	case CMPEntityRace::Race::RACE_GNOME:
+		m_Name = UnitNames::Get()->GetRandomGnomeName();
+
+		break;
+	default:
+		break;
+	}
+	
+
+}
+
+
 bool Unit::SetDerivedStats() {
 
 	if (this->m_EntityRaceCmp == nullptr) return false;
@@ -3336,4 +3381,120 @@ bool City::_isMapTileClaimedByCity(MapTile* maptile) {
 	}
 	
 	return false;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+UNIT AI LOGIC.
+*/
+
+void UnitFleeLogic::executeStateLogic() {
+
+	using namespace std;
+
+
+
+	cout << color(colors::DARKGREEN);
+	cout << "UnitFleeLogic::executeStateLogic() executed for ";
+	cout << this->m_ManagedUnit->m_Name << white << endl;
+}
+
+void UnitSearchLogic::executeStateLogic() {
+
+	using namespace std;
+
+
+
+
+	cout << color(colors::DARKGREEN);
+	cout << "UnitSearchLogic::executeStateLogic() executed for ";
+	cout << this->m_ManagedUnit->m_Name << white << endl;
+}
+
+void UnitDieLogic::executeStateLogic() {
+
+	using namespace std;
+
+
+
+
+	cout << color(colors::DARKGREEN);
+	cout << "UnitDieLogic::executeStateLogic() executed for ";
+	cout << this->m_ManagedUnit->m_Name << white << endl;
+}
+
+void UnitDefendLogic::executeStateLogic() {
+
+	using namespace std;
+
+
+
+
+	cout << color(colors::DARKGREEN);
+	cout << "UnitDefendLogic::executeStateLogic() executed for ";
+	cout << this->m_ManagedUnit->m_Name << white << endl;
+}
+
+void UnitAttackLogic::executeStateLogic() {
+
+	using namespace std;
+
+
+
+
+	cout << color(colors::DARKGREEN);
+	cout << "UnitAttackLogic::executeStateLogic() executed for ";
+	cout << this->m_ManagedUnit->m_Name << white << endl;
+}
+
+void UnitMoveLogic::executeStateLogic() {
+
+	using namespace std;
+
+
+
+
+	cout << color(colors::DARKGREEN);
+	cout << "UnitMoveLogic::executeStateLogic() executed for ";
+	cout << this->m_ManagedUnit->m_Name << white << endl;
+}
+
+void UnitPatrolLogic::executeStateLogic() {
+
+	using namespace std;
+
+
+
+
+	cout << color(colors::DARKGREEN);
+	cout << "UnitPatrolLogic::executeStateLogic() executed for ";
+	cout << this->m_ManagedUnit->m_Name << white << endl;
+}
+
+void UnitWaitLogic::executeStateLogic() {
+
+	using namespace std;
+
+
+
+
+	cout << color(colors::DARKGREEN);
+	cout << "UnitWaitLogic::executeStateLogic() executed for ";
+	cout << this->m_ManagedUnit->m_Name << white << endl;
 }
