@@ -257,7 +257,7 @@ Player* GetPlayer(std::string name);
 bool HasMapTileRiver(MapTile* maptile);
 River* MakeNewRiver(std::string spritename, int x_cell_pos, int y_cell_pos);
 
-Unit* MakeNewUnitAtPos(CMPEntityRace::Race race, Player* p, std::string unit_class, std::string spritename, int xpos, int ypos, int x_cell, int y_cell);
+Unit* MakeNewUnitAtPos(CMPEntityRace::Race race, UnitMovementType movement_type, Player* p, std::string unit_class, std::string spritename, int xpos, int ypos, int x_cell, int y_cell);
 Unit* GetUnitAtMapTileFromMousePosition(int xpos, int ypos);
 std::string GetColorFromString(std::string color);
 
@@ -297,7 +297,7 @@ public:
 
 class Unit : public GameEntity {
 public:
-	Unit(CMPEntityRace::Race race, std::string spritename, int xpos, int ypos, int set_x_cell, int set_y_cell) {
+	Unit(CMPEntityRace::Race race, UnitMovementType movement_type, std::string spritename, int xpos, int ypos, int set_x_cell, int set_y_cell) {
 
 		m_IDCmp->m_DynamicTypeName = "Unit";
 	
@@ -346,6 +346,14 @@ public:
 		m_AICmp->MapState("state_wait", new UnitWaitLogic(*m_AICmp));
 
 		m_AICmp->ChangeState(States::STATE_WAIT);
+
+
+
+		// Movement
+		// NOTE:
+		// Mostly, movement points are in range from 3-14,
+		// with 6 or 8 is most often.
+		_determineMovementPoints();
 	}
 
 
@@ -353,6 +361,10 @@ public:
 
 	// Move unit to a location.
 	void MoveTo(int x_cell, int y_cell);
+
+	// Saves maptiles to which this unit can go in current turn.
+	// It returns the reachable maptiles, so we can draw them in main function.
+	bool DetermineTilesInMovementRange(std::vector<MapTile*>* storage);
 	
 	// Unit cease to exist.
 	void Die();
@@ -380,6 +392,8 @@ public:
 		return (m_AssociatedPlayer == nullptr) ? false : true;
 	}
 
+	unsigned int GetMovementPoints() { return m_MovementPoints; }
+
 
 
 	std::map<UnitSkillsEnum, int>* GetUnitSkills() {
@@ -404,9 +418,12 @@ public:
 	Player* m_AssociatedPlayer = nullptr;
 	std::string m_UnitPlayerColor = "NULL";
 
+	UnitMovementType m_UnitMovementType = UnitMovementType::UNIT_MOVEMENT_TYPE_INVALID;
+
 private:
 	int m_AgeInternal = -1;
 
+	unsigned int m_MovementPoints = 0;
 
 	// Units skills and attributes.
 	std::map<UnitSkillsEnum, int>* m_UnitSkillsMap;
@@ -423,6 +440,13 @@ private:
 	void _defineDerivedAttributes();
 
 	void _defineUnitName();
+
+	unsigned int _determineMovementPoints();
+	void _resetMovementPoints();
+
+
+	// Based on given position returns a vector of neighboring maptiles.
+	std::vector<MapTile*>* _getNeighbouringMapTiles(int xpos, int ypos);
 };
 
 
@@ -1287,6 +1311,10 @@ public:
 		}
 
 
+		// Basic movements cost for maptiles.
+		m_MovementCostCmp = new CMPMovementCostModifier();
+		_setMovementCost();
+
 	}
 
 
@@ -1302,6 +1330,128 @@ public:
 	MapTileType m_MapTileType = MapTileType::MAPTILE_TYPE_INVALID;
 
 	MapTileRegion* m_AssociatedRegion = nullptr;
+
+
+private:
+
+
+private:
+
+	void _setMovementCost() {
+		switch (m_MapTileType) {
+		case MapTileType::MAPTILE_TYPE_ICE:
+
+			m_MovementCostCmp->SetBaseMovementCost(3);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_HUMAN, 0);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_ORC, 0);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_HIGHELF, -2);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_DARKELF, -2);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_TROLL, -2);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_GNOME, 1);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_DWARF, 1);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_GOBLIN, 1);
+
+			break;
+		case  MapTileType::MAPTILE_TYPE_JUNGLE:
+			m_MovementCostCmp->SetBaseMovementCost(2);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_HUMAN, 0);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_ORC, 0);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_HIGHELF, -1);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_DARKELF, -1);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_TROLL, -1);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_GNOME, 1);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_DWARF, 1);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_GOBLIN, 1);
+
+			break;
+		case  MapTileType::MAPTILE_TYPE_SAND:
+			m_MovementCostCmp->SetBaseMovementCost(1);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_HUMAN, 0);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_ORC, 0);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_HIGHELF, 0);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_DARKELF, 0);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_TROLL, 0);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_GNOME, 0);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_DWARF, 0);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_GOBLIN, 0);
+			break;
+		case MapTileType::MAPTILE_TYPE_SAVANNAH:
+			m_MovementCostCmp->SetBaseMovementCost(2);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_HUMAN, 0);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_ORC, 0);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_HIGHELF, -1);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_DARKELF, -1);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_TROLL, -1);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_GNOME, 1);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_DWARF, 1);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_GOBLIN, 1);
+			break;
+
+		case MapTileType::MAPTILE_TYPE_SNOW:
+			m_MovementCostCmp->SetBaseMovementCost(3);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_HUMAN, 0);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_ORC, 0);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_HIGHELF, -2);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_DARKELF, -2);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_TROLL, -2);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_GNOME, 1);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_DWARF, 1);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_GOBLIN, 1);
+
+			break;
+		case MapTileType::MAPTILE_TYPE_TEMPERATE:
+			m_MovementCostCmp->SetBaseMovementCost(3);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_HUMAN, 0);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_ORC, 0);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_HIGHELF, -2);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_DARKELF, -2);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_TROLL, -2);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_GNOME, 1);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_DWARF, 1);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_GOBLIN, 1);
+
+			break;
+		case MapTileType::MAPTILE_TYPE_TUNDRA:
+			m_MovementCostCmp->SetBaseMovementCost(3);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_HUMAN, 0);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_ORC, 0);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_HIGHELF, -2);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_DARKELF, -2);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_TROLL, -2);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_GNOME, 1);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_DWARF, 1);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_GOBLIN, 1);
+			break;
+		case MapTileType::MAPTILE_TYPE_WATER_DEEP:
+			m_MovementCostCmp->SetBaseMovementCost(3);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_HUMAN, 0);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_ORC, 0);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_HIGHELF, -2);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_DARKELF, -2);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_TROLL, -2);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_GNOME, 1);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_DWARF, 1);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_GOBLIN, 1);
+
+			break;
+			case MapTileType::MAPTILE_TYPE_WATER_SHALLOW:
+				m_MovementCostCmp->SetBaseMovementCost(3);
+				m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_HUMAN, 0);
+				m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_ORC, 0);
+				m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_HIGHELF, -2);
+				m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_DARKELF, -2);
+				m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_TROLL, -2);
+				m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_GNOME, 1);
+				m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_DWARF, 1);
+				m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_GOBLIN, 1);
+			break;
+
+
+
+		default:
+			break;
+		}
+	}
 };
 
 

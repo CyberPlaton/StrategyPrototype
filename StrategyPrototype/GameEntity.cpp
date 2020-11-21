@@ -3383,7 +3383,91 @@ bool City::_isMapTileClaimedByCity(MapTile* maptile) {
 	return false;
 }
 
+unsigned int  Unit::_determineMovementPoints() {
 
+	int fatigue = this->m_UnitAttributesMap->at(UnitAttributesEnum::UNIT_ATTRIBUTE_FATIGUE);
+	int speed = this->m_UnitAttributesMap->at(UnitAttributesEnum::UNIT_ATTRIBUTE_SPEED);
+
+	m_MovementPoints = int((fatigue * speed) / 10 );
+
+	return m_MovementPoints;
+}
+
+void  Unit::_resetMovementPoints() {
+
+	m_MovementPoints = _determineMovementPoints();
+}
+
+bool Unit::DetermineTilesInMovementRange(std::vector<MapTile*>* storage){
+
+	// Check tiles if unit can reach them.
+	// If we get only tiles we cant reach, then stop.
+
+	// 1) Check tiles around unit.
+	// 2) Check tiles 2 tiles around unit.
+	// and so on.
+
+	MapTile* maptile = nullptr;
+
+	std::vector<MapTile*> neighbors_vec = *_getNeighbouringMapTiles(this->m_TransformCmp->m_GameWorldSpaceCell[0], this->m_TransformCmp->m_GameWorldSpaceCell[1]);
+
+	
+	for (auto it = neighbors_vec.begin(); it != neighbors_vec.end(); ++it) {
+
+		maptile = *it;
+		int move_cost = maptile->m_MovementCostCmp->GetRaceModifiedMovementCost(this->m_EntityRaceCmp->m_EntityRaceString);
+
+		if ((m_MovementPoints - move_cost) >= 0) {
+
+			storage->push_back(maptile);
+		}
+	}
+
+	neighbors_vec.clear();
+
+	return((storage->size() > 0) ? true : false);
+}
+
+
+std::vector<MapTile*>* Unit::_getNeighbouringMapTiles(int xpos, int ypos) {
+
+	std::vector<MapTile*>* vec = new std::vector<MapTile*>();
+
+	int up[2], down[2], right[2], left[2];
+
+	up[0] = xpos;
+	up[1] = ypos-1;
+
+	down[0] = xpos;
+	down[1] = ypos+1;
+
+	right[0] = xpos+1;
+	right[1] = ypos;
+
+	left[0] = xpos-1;
+	left[1] = ypos;
+
+	MapTile* tile = nullptr;
+
+	tile = GetMapTileAtWorldPosition(up[0], up[1]);
+	if (tile) vec->push_back(tile);
+	tile = nullptr;
+
+	tile = GetMapTileAtWorldPosition(down[0], down[1]);
+	if (tile) vec->push_back(tile);
+	tile = nullptr;
+
+	tile = GetMapTileAtWorldPosition(right[0], right[1]);
+	if (tile) vec->push_back(tile);
+	tile = nullptr;
+
+	tile = GetMapTileAtWorldPosition(left[0], left[1]);
+	if (tile) vec->push_back(tile);
+	tile = nullptr;
+
+
+	return vec;
+}
 
 
 // Move unit to a location.

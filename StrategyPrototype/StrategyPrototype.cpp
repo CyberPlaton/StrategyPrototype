@@ -43,9 +43,9 @@ std::string GetColorFromString(std::string color) {
 }
 
 
-Unit* MakeNewUnitAtPos(CMPEntityRace::Race race, Player* p, std::string unit_class, std::string spritename, int xpos, int ypos, int x_cell, int y_cell) {
+Unit* MakeNewUnitAtPos(CMPEntityRace::Race race, UnitMovementType movement_type, Player* p, std::string unit_class, std::string spritename, int xpos, int ypos, int x_cell, int y_cell) {
 
-	Unit* u = new Unit(race, spritename, xpos, ypos, x_cell, y_cell);
+	Unit* u = new Unit(race, movement_type, spritename, xpos, ypos, x_cell, y_cell);
 
 	u->SetBirthsign();
 
@@ -1703,9 +1703,33 @@ void CMPCameraInput::_handleMapViewMouse(Camera* cam) {
 		else {
 			cout << " nullptr" << white << endl;
 		}
+
+
+		// Deselect unit. Clear storage.
+		if (PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlySelectedUnit == nullptr) {
+			if (context->m_SelectedUnitsMovementTiles) {
+				
+				if (context->m_SelectedUnitsMovementTiles->size() > 0) {
+
+					context->m_SelectedUnitsMovementTiles->clear();
+
+					delete context->m_SelectedUnitsMovementTiles;
+					context->m_SelectedUnitsMovementTiles = nullptr;
+				}
+			}
+		}
 	}
 
+
 	if (PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlySelectedUnit != nullptr) {
+
+
+		// Display to where unit can move to.
+		if (context->m_SelectedUnitsMovementTiles == nullptr) {
+
+			context->m_SelectedUnitsMovementTiles = new std::vector<MapTile*>();
+			PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlySelectedUnit->DetermineTilesInMovementRange(context->m_SelectedUnitsMovementTiles);
+		}
 
 		if (context->GetKey(olc::Key::ENTER).bPressed) {
 
@@ -1745,6 +1769,15 @@ void CMPCameraInput::_handleMapViewMouse(Camera* cam) {
 
 			PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlySelectedUnit->MoveTo(pos.x, pos.y);
 
+			// Deselect after movement and clear storage for movement tiles.
+			PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlySelectedUnit = nullptr;
+			if (context->m_SelectedUnitsMovementTiles->size() > 0) {
+
+				context->m_SelectedUnitsMovementTiles->clear();
+
+				delete context->m_SelectedUnitsMovementTiles;
+				context->m_SelectedUnitsMovementTiles = nullptr;
+			}
 		}
 	}
 
@@ -1762,7 +1795,9 @@ void CMPCameraInput::_handleMapViewMouse(Camera* cam) {
 
 			// TESTING PURPOSES:
 			tile = GetMaptileAtMousePosition(context->GetMouseX(), context->GetMouseY());
-			Unit* unit = MakeNewUnitAtPos(PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_PlayerEmpireRace, PlayerTurnCounter::Get()->m_CurrentTurnPlayer,
+
+			// Creating walking unit.
+			Unit* unit = MakeNewUnitAtPos(PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_PlayerEmpireRace, UnitMovementType::UNIT_MOVEMENT_TYPE_WALKING, PlayerTurnCounter::Get()->m_CurrentTurnPlayer,
 				g_sUnitClasses[++g_iUnitClassIndex % 5], "gnome_noble",
 				tile->m_TransformCmp->m_PosX, tile->m_TransformCmp->m_PosY,
 				tile->m_TransformCmp->m_GameWorldSpaceCell[0], tile->m_TransformCmp->m_GameWorldSpaceCell[1]);
@@ -1774,6 +1809,26 @@ void CMPCameraInput::_handleMapViewMouse(Camera* cam) {
 	
 
 }
+
+
+void Game::DrawSelectedUnitsMovementTiles() {
+
+	if (m_SelectedUnitsMovementTiles == nullptr) return;
+	if (m_SelectedUnitsMovementTiles->size() == 0) return;
+
+	using namespace olc;
+	MapTile* tile = nullptr;
+
+	for (auto it = m_SelectedUnitsMovementTiles->begin();
+		it != m_SelectedUnitsMovementTiles->end(); ++it) {
+
+		tile = *it;
+
+		DrawDecal(vi2d(tile->m_TransformCmp->m_PosX, tile->m_TransformCmp->m_PosY),
+			m_SpriteResourceMap.at("unit_rangecell"));
+	}
+}
+
 
 
 void CMPCameraInput::_handleCityViewMouse(Camera* cam) {
@@ -1871,6 +1926,8 @@ void Game::_loadSpriteResources() {
 	Sprite* c21 = new Sprite("assets/map/overlay_cell/map_cell_border_up_down.png");
 	Sprite* c22 = new Sprite("assets/map/overlay_cell/map_cell_border_up_left.png");
 	Sprite* c23 = new Sprite("assets/map/overlay_cell/map_cell_border_up_right.png");
+	Sprite* c24 = new Sprite("assets/unit/unit_rangecell.png");
+
 
 
 	m_SpriteStorage.push_back(c1);
@@ -1897,6 +1954,7 @@ void Game::_loadSpriteResources() {
 	m_SpriteStorage.push_back(c21);
 	m_SpriteStorage.push_back(c22);
 	m_SpriteStorage.push_back(c23);
+	m_SpriteStorage.push_back(c24);
 
 
 	Decal* dec10 = new Decal(c10);
@@ -1913,6 +1971,8 @@ void Game::_loadSpriteResources() {
 	Decal* dec21 = new Decal(c21);
 	Decal* dec22 = new Decal(c22);
 	Decal* dec23 = new Decal(c23);
+	Decal* dec24 = new Decal(c24);
+
 
 	m_SpriteResourceMap.insert(std::make_pair("map_cell_border_down", dec10));
 	m_SpriteResourceMap.insert(std::make_pair("map_cell_border_down_left", dec11));
@@ -1928,6 +1988,8 @@ void Game::_loadSpriteResources() {
 	m_SpriteResourceMap.insert(std::make_pair("map_cell_border_up_down", dec21));
 	m_SpriteResourceMap.insert(std::make_pair("map_cell_border_up_left", dec22));
 	m_SpriteResourceMap.insert(std::make_pair("map_cell_border_up_right", dec23));
+	m_SpriteResourceMap.insert(std::make_pair("unit_rangecell", dec24));
+
 
 
 	// River tiles.
@@ -2613,6 +2675,12 @@ bool Game::OnUserUpdate(float fElapsedTime) {
 
 
 	m_Renderer->Render();
+
+	// Consider move to Renderer.
+	DrawSelectedUnitsMovementTiles();
+	//if (m_SelectedUnitsMovementTiles->size() > 0) m_SelectedUnitsMovementTiles->clear(); // Resetting should be done after we deselect unit or movement was done...
+
+
 	IMGUI::Get()->FinishIMGUI();
 
 	return true;
@@ -3727,6 +3795,7 @@ void Renderer::DrawUnitPanels() {
 
 	// Flag for drawing additional panels.
 	static bool age_panel = false;
+	static bool movement_points_panel = false;
 
 
 	for (auto it = vec.begin(); it != vec.end(); ++it) {
@@ -3738,6 +3807,7 @@ void Renderer::DrawUnitPanels() {
 		if (gui->ToolTipSpriteButton(Random() + GEN_ID, unit->m_TransformCmp->m_PosX, unit->m_TransformCmp->m_PosY, unit->m_UnitPlayerColor, player_string, olc::WHITE)) {
 
 			age_panel = (age_panel == true) ? false : true;
+			movement_points_panel = (movement_points_panel == true) ? false : true;
 		}
 
 		// Unit ribbon.
@@ -3752,6 +3822,11 @@ void Renderer::DrawUnitPanels() {
 
 			std::string age = "Age: " + std::to_string(unit->m_Age) + " MaxAge: " + std::to_string(unit->m_MaxAge);
 			gui->TextButton(++m_IDHelper + GEN_ID, unit->m_TransformCmp->m_PosX + 16, unit->m_TransformCmp->m_PosY + 64, age);
+		}
+		if (movement_points_panel) {
+
+			std::string points = "Movement Points: " + std::to_string(unit->GetMovementPoints());
+			gui->TextButton(++m_IDHelper + GEN_ID, unit->m_TransformCmp->m_PosX + 16, unit->m_TransformCmp->m_PosY + 64 + 16, points);
 		}
 		
 	}

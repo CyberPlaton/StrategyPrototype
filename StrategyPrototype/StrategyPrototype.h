@@ -287,6 +287,11 @@ public:
 	bool m_PoliticalMap = true;
 	bool m_AdvanceOneTurn = false;
 
+
+	// UI Component. For drawing movement tiles for selected unit.
+	std::vector<MapTile*>* m_SelectedUnitsMovementTiles = nullptr;
+	void DrawSelectedUnitsMovementTiles();
+
 private:
 	static Game* m_Game;
 

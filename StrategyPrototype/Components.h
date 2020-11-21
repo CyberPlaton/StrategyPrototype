@@ -5,6 +5,14 @@
 
 class MapTile;
 
+
+enum class UnitMovementType {
+	UNIT_MOVEMENT_TYPE_INVALID = -1,
+	UNIT_MOVEMENT_TYPE_WALKING = 0,
+	UNIT_MOVEMENT_TYPE_FLYING = 1,
+	UNIT_MOVEMENT_TYPE_SWIMMING = 2
+};
+
 struct TimeCounter {
 
 	void Start() {
