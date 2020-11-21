@@ -1709,6 +1709,7 @@ void CMPCameraInput::_handleMapViewMouse(Camera* cam) {
 		if (PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlySelectedUnit == nullptr) {
 			if (context->m_SelectedUnitsMovementTiles) {
 				
+
 				if (context->m_SelectedUnitsMovementTiles->size() > 0) {
 
 					context->m_SelectedUnitsMovementTiles->clear();
