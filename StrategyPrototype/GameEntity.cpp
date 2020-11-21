@@ -3386,6 +3386,59 @@ bool City::_isMapTileClaimedByCity(MapTile* maptile) {
 
 
 
+// Move unit to a location.
+void Unit::MoveTo(int x_cell, int y_cell) {
+
+	using namespace std;
+
+	/*
+	NOTE:
+	We need to move from one tile to next.
+	Not from x,y to x´,y´.
+
+	Moreover we need to move so many tiles every TURN, not immediately.
+	Furthermore we need to have a defined "way" of moving, that is PATH.
+	
+
+	But for now, we test moving directly to destination.
+	*/
+	int curr_pos_x, curr_pos_y;
+	curr_pos_x = m_TransformCmp->m_PosX;
+	curr_pos_y = m_TransformCmp->m_PosY;
+
+	int curr_tile[2];
+	curr_tile[0] = m_TransformCmp->m_GameWorldSpaceCell[0];
+	curr_tile[1] = m_TransformCmp->m_GameWorldSpaceCell[1];
+
+
+
+	MapTile* tile = GetMapTileAtWorldPosition(x_cell, y_cell);
+	if (tile == nullptr) return;
+
+	int tile_pos[2] = { tile->m_TransformCmp->m_PosX, tile->m_TransformCmp->m_PosY }; // Destination tilepos in x,y position.
+
+	// Instant teleportation to that position.
+	m_TransformCmp->m_PosX = tile_pos[0];
+	m_TransformCmp->m_PosY = tile_pos[1];
+
+	m_TransformCmp->m_GameWorldSpaceCell[0] = tile->m_TransformCmp->m_GameWorldSpaceCell[0];
+	m_TransformCmp->m_GameWorldSpaceCell[1] = tile->m_TransformCmp->m_GameWorldSpaceCell[1];
+
+
+
+	cout << APP_ERROR_COLOR << endl;
+	cout << "Unit " << this->m_Name << " moved from (" << curr_pos_x << ":" << curr_pos_y << ") ::= (" << curr_tile[0] << ":" << curr_tile[1] << ") to" << endl;
+	cout << "(" << m_TransformCmp->m_PosX << ":" << m_TransformCmp->m_PosY << ") ::= (" << m_TransformCmp->m_GameWorldSpaceCell[0] << ":" << m_TransformCmp->m_GameWorldSpaceCell[1] << ")." << white << endl;
+}
+
+// Unit cease to exist.
+void Unit::Die() {
+
+}
+
+
+
+
 
 
 
@@ -3414,7 +3467,14 @@ UnitWaitLogic::~UnitWaitLogic() {
 
 }
 
-UnitPatrolLogic::UnitPatrolLogic(CMPArtificialIntelligence& ai) {
+UnitPatrolLogic::UnitPatrolLogic(CMPArtificialIntelligence& ai, bool circle, States endpointstate) {
+
+	// Specify endpoint state.
+	m_TransitState = endpointstate;
+	if (circle == false) { // Enforce a valid state to transit to.
+		if (m_TransitState == States::STATE_INVALID) throw std::runtime_error(std::string("INVALID OR NO TRANSIT STATE SPECIFIED."));
+	}
+
 
 	m_AICmp = &ai;
 	m_ManagedUnit = static_cast<Unit*>(m_AICmp->m_ManagedObject);
@@ -3567,14 +3627,89 @@ void UnitMoveLogic::executeStateLogic() {
 
 void UnitPatrolLogic::executeStateLogic() {
 
+	using namespace olc;
 	using namespace std;
-
-
-
 
 	cout << color(colors::DARKGREEN);
 	cout << "UnitPatrolLogic::executeStateLogic() executed for ";
 	cout << this->m_ManagedUnit->m_Name << white << endl;
+
+
+
+	Unit* object = m_ManagedUnit;
+
+	if (object) {
+
+		cout << color(colors::DARKGREEN);
+		cout << "Begin Patroling routine for " << object->m_Name << "." << white << endl;
+
+		if (m_PatrolPointReached == false) {
+
+			//object->physicsCmp->m_Acceleration += 1.5f;
+
+			
+			vi2d p1 = vi2d(m_PatrolPoints[0].x, m_PatrolPoints[0].y); // Point to reach, coordinates are maptile positions.
+			vi2d p2 = vi2d(object->m_TransformCmp->m_GameWorldSpaceCell[0], object->m_TransformCmp->m_GameWorldSpaceCell[1]); // Where we are.
+
+			/*
+			vi2d endpoint = p1 - p2;
+			*/
+			vi2d endpoint;
+
+			if (p1.x > p2.x) endpoint.x = p2.x + 1;
+			if (p1.x < p2.x) endpoint.x = p2.x - 1;
+			if (p1.x == p2.x) endpoint.x = p2.x; // X position reached.
+
+			if (p1.y > p2.y) endpoint.y = p2.y + 1;
+			if (p1.y < p2.y) endpoint.y = p2.y - 1;
+			if (p1.y == p2.y) endpoint.y = p2.y; // Y position reached.
+
+
+			// We are giving the worldmap cell coordinates which we wish to reach.
+			object->MoveTo(endpoint.x, endpoint.y);
+
+			vi2d left = (p1 - p2);
+			cout << color(colors::CYAN) << object->m_Name << " left to reach patrolpoint ::= " << left.str() << white << endl;
+
+			if ((endpoint - p2) == vi2d(0, 0)) m_PatrolPointReached = true;
+
+		}
+		else {
+
+			if (m_TransitState != States::STATE_INVALID && m_PatrolPoints.size() > 0) { // Valid transit state given => no looping of patrol route.
+
+				if (m_PatrolPoints.size() > 0) { // Not all points reached, patrol further.
+
+					m_PatrolPoints.erase(m_PatrolPoints.begin());
+					m_PatrolPointReached = false;
+
+
+					if (m_PatrolPoints.size() == 0) { // All patrol points reached, change state.
+
+						object->m_AICmp->ChangeState(m_TransitState);
+
+						cout << color(colors::DARKGREEN);
+						cout << "Patroling routine for " << object->m_Name << " complete." << white << endl;
+					}
+				}
+			}
+			else { // circle = true => looping of patrol route.
+
+				// Append the current reached patrol point to the end.
+				m_PatrolPoints.push_back(m_PatrolPoints[0]);
+				m_PatrolPoints.erase(m_PatrolPoints.begin());
+
+				m_PatrolPointReached = false;
+
+				cout << color(colors::DARKGREEN);
+				cout << "Patroling point reached for " << object->m_Name << ". Continue to next Patroling point." << white << endl;
+			}
+		}
+
+	}
+	else {
+		return;
+	}
 }
 
 void UnitWaitLogic::executeStateLogic() {

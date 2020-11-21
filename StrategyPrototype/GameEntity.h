@@ -4,6 +4,7 @@
 #include"YearCounter.h"
 #include"UnitDefs.h"
 #include"UnitHelpers.h"
+#include"olcPixelGameEngine.h"
 
 
 // CLASSES DECLARATIONS.
@@ -58,7 +59,7 @@ private:
 // PATROL
 class UnitPatrolLogic : public IStateLogic {
 public:
-	UnitPatrolLogic(CMPArtificialIntelligence& ai);
+	UnitPatrolLogic(CMPArtificialIntelligence& ai, bool circle = true, States endpointstate = States::STATE_INVALID);
 	~UnitPatrolLogic();
 
 
@@ -67,12 +68,22 @@ public:
 
 
 
+	void AddPatrolPoint(olc::vi2d v) {
+		m_PatrolPoints.push_back(v);
+	}
+
 
 	// Holding Unit and its AI component.
 	CMPArtificialIntelligence* m_AICmp = nullptr;
 	Unit* m_ManagedUnit = nullptr;
 
 private:
+
+	States m_TransitState; // To which state to change after patrolend reached.
+	bool m_PatrolPointReached = false;
+
+	std::vector<olc::vi2d> m_PatrolPoints; // The "points" on the worldmap to patrol.
+										   // Points are cell positions like {1:2} etc.
 
 private:
 
@@ -247,6 +258,7 @@ bool HasMapTileRiver(MapTile* maptile);
 River* MakeNewRiver(std::string spritename, int x_cell_pos, int y_cell_pos);
 
 Unit* MakeNewUnitAtPos(CMPEntityRace::Race race, Player* p, std::string unit_class, std::string spritename, int xpos, int ypos, int x_cell, int y_cell);
+Unit* GetUnitAtMapTileFromMousePosition(int xpos, int ypos);
 std::string GetColorFromString(std::string color);
 
 enum class TileImprovementLevel {
@@ -1355,6 +1367,8 @@ struct EntitiesStorage {
 	std::vector<GameEntity*>* GetRiversVec() { return m_Riversvec; }
 	std::vector<Player*>* GetPlayersVec() { return m_PlayersVec; }
 	std::vector<GameEntity*>* GetUnitsVec() { return m_UnitsVec; }
+	std::vector<GameEntity*>* GetForestsVec() { return m_ForestsVec; }
+
 
 
 
@@ -1424,6 +1438,11 @@ struct EntitiesStorage {
 			// Is it a unit?
 			if (_isUnit(e)) {
 				_addUnit(e);
+			}
+
+			// Is Forest?
+			if (_isForest(e)) {
+				_addForest(e);
 			}
 		}
 			
@@ -1546,6 +1565,17 @@ struct EntitiesStorage {
 				m_UnitsVec->erase(it);
 			}
 		}
+
+
+		// Delete Forests
+		if (_isForest(e)) {
+
+			std::vector< GameEntity* >::iterator it = std::find(m_ForestsVec->begin(), m_ForestsVec->end(), e);
+
+			if (it != m_ForestsVec->end()) {
+				m_ForestsVec->erase(it);
+			}
+		}
 		
 	}
 
@@ -1583,6 +1613,7 @@ private:
 	static EntitiesStorage* m_EntitiesStorage;
 
 
+	std::vector<GameEntity*>* m_ForestsVec; // Holds all forests in game.
 	std::vector<GameEntity*>* m_Riversvec; // Holds all rivers in game.
 	std::vector< GameEntity*>* m_MapTileGameEntitiesVec; // Vector that explicitly hold Maptiles. 
 	std::vector< GameEntity* >* m_GameEntitiesVec; // Holds all entities ingame.
@@ -1612,6 +1643,7 @@ private:
 		m_MountainsHillsVec = new std::vector<GameEntity*>();
 		m_Riversvec = new std::vector<GameEntity*>();
 		m_UnitsVec = new std::vector<GameEntity*>();
+		m_ForestsVec = new std::vector<GameEntity*>();
 
 		m_PlayersVec = new std::vector<Player*>();
 	}
@@ -1632,6 +1664,10 @@ private:
 		else {
 			return false;
 		}
+	}
+
+	void _addForest(GameEntity* e) {
+		m_ForestsVec->push_back(e);
 	}
 
 	void _addUnit(GameEntity* e) {
@@ -1715,6 +1751,15 @@ private:
 			return false;
 		}
 
+	}
+
+
+	bool _isForest(GameEntity* e) {
+		if (e != nullptr) {
+			if (COMPARE_STRINGS(e->m_IDCmp->m_DynamicTypeName, "Forest") == 0) return true;
+		}
+
+		return false;
 	}
 
 

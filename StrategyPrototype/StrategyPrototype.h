@@ -156,7 +156,10 @@ private:
 	void _drawCityviewGroundBasedOnCityMaptileType(MapTile* maptile);
 };
 
-
+/*
+NOTE:
+Turn-Based strategy with I-GO-U-GO mode.
+*/
 struct PlayerTurnCounter {
 
 	static PlayerTurnCounter* Get() {
@@ -297,8 +300,8 @@ private:
 	void _updateLocalMapTileCellCoords();
 	void _updateEntitiesMapTileCoords();
 
-
-	void _updateAI2();
+	// Function updates the forests AI components.
+	void _updateForestAI2();
 };
 
 

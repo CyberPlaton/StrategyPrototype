@@ -59,6 +59,27 @@ Unit* MakeNewUnitAtPos(CMPEntityRace::Race race, Player* p, std::string unit_cla
 }
 
 
+Unit* GetUnitAtMapTileFromMousePosition(int xpos, int ypos) {
+
+	std::vector<GameEntity*> vec = *EntitiesStorage::Get()->GetUnitsVec();
+	
+	Unit* unit = nullptr;
+
+	for (auto it = vec.begin(); it != vec.end(); ++it) {
+
+		unit = reinterpret_cast<Unit*>(*it);
+
+		if (int(xpos / SPRITES_WIDTH_AND_HEIGHT) == int(unit->m_TransformCmp->m_PosX / SPRITES_WIDTH_AND_HEIGHT) &&
+			int(ypos / SPRITES_WIDTH_AND_HEIGHT) == int(unit->m_TransformCmp->m_PosY / SPRITES_WIDTH_AND_HEIGHT)) {
+
+			return unit;
+		}
+	}
+
+
+	return nullptr;
+}
+
 
 std::string IMGUI::_getLastHitButton() {
 
@@ -1395,17 +1416,12 @@ void CMPCameraInput::HandleKeyboard(Camera* cam) {
 }
 
 
+
 void CMPCameraInput::_handleMapViewKeyBoard(Camera* cam) {
 
 	Game* context = cam->m_Game;
 
 	int speed = 4;
-
-	/*
-	if (context->GetKey(olc::Key::ENTER).bReleased) {
-		context->m_Renderer->ChangeRenderMode();
-	}
-	*/
 
 	if (context->GetKey(olc::Key::ESCAPE).bReleased) {
 		exit(0);
@@ -1481,28 +1497,8 @@ void CMPCameraInput::_handleMapViewKeyBoard(Camera* cam) {
 
 	}
 
-	/*
-	if (context->GetKey(olc::Key::SPACE).bReleased) {
-
-		if (context->m_TimeModeTurnBased == false) return;
-
-		using namespace std;
-
-		int turn = context->m_TurnCount;
-
-		cout << APP_ERROR_COLOR;
-		cout << "EXECUTING TURN " << turn << " AI LOGIC." << white << endl;
-
-		context->AdvanceOneTurn();
-
-		cout << APP_ERROR_COLOR;
-		cout << "EXECUTED TURN " << turn << " AI LOGIC." << white << endl << endl << endl;
-
-	}
-	*/
-
 	if (context->GetKey(olc::Key::SHIFT).bHeld) {
-		speed = 4;
+
 	}
 
 
@@ -1611,6 +1607,9 @@ void CMPCameraInput::_handleMapViewKeyBoard(Camera* cam) {
 			}
 		}
 	}
+
+
+
 }
 
 
@@ -1690,7 +1689,56 @@ void CMPCameraInput::_handleMapViewMouse(Camera* cam) {
 	
 	if (context->GetMouse(0).bPressed) {
 		IMGUI::Get()->GetUIState()->m_MouseDown = 0;
+
+		using namespace std;
+		cout << color(colors::BLUE) << endl;
+
+		// Select unit.
+		PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlySelectedUnit = GetUnitAtMapTileFromMousePosition(context->GetMouseX(), context->GetMouseY());
+		
+		cout << "Unit selected: ";
+		if (PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlySelectedUnit) {
+			cout << PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlySelectedUnit->m_Name << white << endl;
+		}
+		else {
+			cout << " nullptr" << white << endl;
+		}
 	}
+
+	if (PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlySelectedUnit != nullptr) {
+
+		if (context->GetKey(olc::Key::ENTER).bPressed) {
+
+			// Set loose to patrol.
+			PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlySelectedUnit->m_AICmp->ChangeState(States::STATE_PATROL);
+
+			// IGOUGO Mode --> execute units logic...
+			//NOTE:
+			// This works for instant "go to".
+			// For patroling the AI-Unit should himself set AT THE END of a PLAYER TURN "tryExecuteLogic"...
+			// Thus we get an effect like in CIV6.
+			PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlySelectedUnit->m_AICmp->TryExecuteStateLogic();
+		}
+
+
+		if (context->GetMouse(1).bPressed) {
+
+			using namespace olc;
+			using namespace std;
+
+			cout << color(colors::MAGENTA) << endl;
+			cout << "GetMouse(1).bPressed" << white << endl;
+
+			vi2d pos = { 0,0 };
+			pos.x = GetMaptileAtMousePosition(context->GetMouseX(), context->GetMouseY())->m_TransformCmp->m_GameWorldSpaceCell[0];
+			pos.y = GetMaptileAtMousePosition(context->GetMouseX(), context->GetMouseY())->m_TransformCmp->m_GameWorldSpaceCell[1];
+
+			// Add patrol points.
+			reinterpret_cast<UnitPatrolLogic*>(PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlySelectedUnit->m_AICmp->m_StateLogicMap.at("state_patrol"))->AddPatrolPoint(pos);
+			
+		}
+	}
+
 
 	// Reset the mousedown state to non-down...
 	if (context->GetMouse(0).bReleased) {
@@ -2442,9 +2490,12 @@ bool Game::OnUserCreate() {
 	PlayerTurnCounter::Get()->AddPlayer(player3);
 
 
-	/*
+	
 	// Cityname should be max 11. chars...
-	City* city2 = MakeNewCity(true, "Stormhaven", CMPEntityRace::Race::RACE_HUMAN, player, 7, 6, 5);
+	City* city2 = MakeNewCity(true, "Stormgrad", CMPEntityRace::Race::RACE_HUMAN, player, 7, 6, 5);
+	storage->AddGameEntitie(city2);
+
+	/*
 	City* fort = MakeNewCity(true, "Durotar", CMPEntityRace::Race::RACE_ORC, player2, 15, 8, 8);
 	City* city4 = MakeNewCity(false, "Lorderon", CMPEntityRace::Race::RACE_HUMAN, player3, 4, 11, 2);
 
@@ -2456,7 +2507,6 @@ bool Game::OnUserCreate() {
 	City* fort3 = MakeNewCity(false, "Upper Razor Hill", CMPEntityRace::Race::RACE_HUMAN, player8, 8, 2, 1);
 
 
-	storage->AddGameEntitie(city2);
 	storage->AddGameEntitie(city4);
 	storage->AddGameEntitie(fort);
 
@@ -3700,24 +3750,25 @@ void Renderer::DrawUnitPanels() {
 
 
 
-void Game::_updateAI2() {
+void Game::_updateForestAI2() {
+
+	using namespace std;
 
 	EntitiesStorage* storage = EntitiesStorage::Get();
-
-	// Get all entities with AI Component.
-	std::vector< GameEntity* > vec = *storage->GetAIEntitiesStorage();
+	std::vector<GameEntity*> vec = *storage->GetForestsVec();
 	GameEntity* entity = nullptr;
 	
+
+	cout << color(colors::BLUE) << endl << endl;
+	cout << "Executing _updateForestAI2()." << white << endl;
+
 	for (auto it = vec.begin(); it != vec.end(); ++it) {
-
-
 		try {
-			using namespace std;
 
 			entity = *it;
 
 			cout << APP_COLOR;
-			cout << "Executing state logic for " << entity->m_IDCmp->m_ID << " at position "
+			cout << "Executing state logic for " << entity->m_IDCmp->m_DynamicTypeName << " at position "
 				<< entity->m_TransformCmp->m_GameWorldSpaceCell[0] << " : " << entity->m_TransformCmp->m_GameWorldSpaceCell[1] << white << endl;
 
 			if (!entity->m_AICmp->TryExecuteStateLogic()) {
@@ -3869,8 +3920,8 @@ void ForestSearch::executeStateLogic() {
 	// This logic acts only on normaltype forests.
 	if (m_ManagedForest->m_ForestType == Forest::ForestType::FOREST_NORMAL) {
 
-		cout << color(colors::BLUE);
-		cout << "_checkForNewForestCreation() for " << m_ManagedForest->m_IDCmp->m_ID << " executing." << white << endl;
+		//cout << color(colors::BLUE);
+		//cout << "_checkForNewForestCreation() for " << m_ManagedForest->m_IDCmp->m_ID << " executing." << white << endl;
 		_checkForNewForestCreation(m_ManagedForest);
 
 
@@ -3881,12 +3932,12 @@ void ForestSearch::executeStateLogic() {
 			m_ManagedForest->m_ForestType = Forest::ForestType::FOREST_DEEP;
 			m_ManagedForest->m_ForestLifetime = 200 * TURN_TIME_MODIFIER;
 
-			cout << color(colors::WHITE);
-			cout << "_surroundedByForestNormalOrDeep() successfully executed for " << m_ManagedForest->m_IDCmp->m_ID << " at position " << m_ManagedForest->m_TransformCmp->m_GameWorldSpaceCell[0] << " : " << m_ManagedForest->m_TransformCmp->m_GameWorldSpaceCell[1] << white << endl;
+			//cout << color(colors::WHITE);
+			//cout << "_surroundedByForestNormalOrDeep() successfully executed for " << m_ManagedForest->m_IDCmp->m_ID << " at position " << m_ManagedForest->m_TransformCmp->m_GameWorldSpaceCell[0] << " : " << m_ManagedForest->m_TransformCmp->m_GameWorldSpaceCell[1] << white << endl;
 		}
 		else {
-			cout << color(colors::WHITE);
-			cout << "_surroundedByForestNormalOrDeep() unsuccessfully executed for " << m_ManagedForest->m_IDCmp->m_ID << " at position " << m_ManagedForest->m_TransformCmp->m_GameWorldSpaceCell[0] << " : " << m_ManagedForest->m_TransformCmp->m_GameWorldSpaceCell[1] << white << endl;
+			//cout << color(colors::WHITE);
+			//cout << "_surroundedByForestNormalOrDeep() unsuccessfully executed for " << m_ManagedForest->m_IDCmp->m_ID << " at position " << m_ManagedForest->m_TransformCmp->m_GameWorldSpaceCell[0] << " : " << m_ManagedForest->m_TransformCmp->m_GameWorldSpaceCell[1] << white << endl;
 		
 
 			// Check whether to raise Randomly a deepforest.
@@ -3894,8 +3945,8 @@ void ForestSearch::executeStateLogic() {
 				m_ManagedForest->m_ForestType = Forest::ForestType::FOREST_DEEP;
 				m_ManagedForest->m_ForestLifetime = 200 * TURN_TIME_MODIFIER;
 
-				cout << color(colors::MAGENTA);
-				cout << "Randomly raised DeepForest " << m_ManagedForest->m_IDCmp->m_ID << " at position " << m_ManagedForest->m_TransformCmp->m_GameWorldSpaceCell[0] << " : " << m_ManagedForest->m_TransformCmp->m_GameWorldSpaceCell[1] << white << endl;
+				//cout << color(colors::MAGENTA);
+				//	cout << "Randomly raised DeepForest " << m_ManagedForest->m_IDCmp->m_ID << " at position " << m_ManagedForest->m_TransformCmp->m_GameWorldSpaceCell[0] << " : " << m_ManagedForest->m_TransformCmp->m_GameWorldSpaceCell[1] << white << endl;
 
 			}
 
@@ -3906,8 +3957,8 @@ void ForestSearch::executeStateLogic() {
 	// Spawning Random forest around deep forest logic.
 	if (m_ManagedForest->m_ForestType == Forest::ForestType::FOREST_DEEP) {
 
-		cout << color(colors::BLUE);
-		cout << "_spawnRandomForestAroundDeepOne() for " << m_ManagedForest->m_IDCmp->m_ID << " executed." << white << endl;
+		//cout << color(colors::BLUE);
+		//cout << "_spawnRandomForestAroundDeepOne() for " << m_ManagedForest->m_IDCmp->m_ID << " executed." << white << endl;
 		_spawnRandomForestAroundDeepOne(m_ManagedForest);
 	}
 
@@ -3931,7 +3982,7 @@ void Game::AdvanceOneTurn() {
 
 	if (m_AdvanceOneTurn) {
 
-		_updateAI2();
+		_updateForestAI2();
 
 		m_TurnCount++;
 
@@ -3969,7 +4020,7 @@ void Game::AdvanceOneTurn() {
 	}
 	else if (m_TimeModeTurnBased == false) {
 
-		_updateAI2();
+		_updateForestAI2();
 
 
 		m_TurnCount++;
@@ -4134,8 +4185,8 @@ void ForestSearch::_checkForNewForestCreation(Forest* forest) {
 
 				storage->AddGameEntitie(f);
 
-				cout << color(colors::CYAN);
-				cout << "New Forest created: CELL ( " << f->m_TransformCmp->m_GameWorldSpaceCell[0] << " : " << f->m_TransformCmp->m_GameWorldSpaceCell[1] << " )" << " ---- ID: " << f->m_IDCmp->m_ID << white << endl;
+				//cout << color(colors::CYAN);
+				//cout << "New Forest created: CELL ( " << f->m_TransformCmp->m_GameWorldSpaceCell[0] << " : " << f->m_TransformCmp->m_GameWorldSpaceCell[1] << " )" << " ---- ID: " << f->m_IDCmp->m_ID << white << endl;
 			
 			}
 		}
@@ -4168,8 +4219,8 @@ void ForestSearch::_checkForNewForestCreation(Forest* forest) {
 
 				storage->AddGameEntitie(f);
 
-				cout << color(colors::CYAN);
-				cout << "New Forest created: CELL ( " << f->m_TransformCmp->m_GameWorldSpaceCell[0] << " : " << f->m_TransformCmp->m_GameWorldSpaceCell[1] << " )" << " ---- ID: " << f->m_IDCmp->m_ID << white << endl;
+				//cout << color(colors::CYAN);
+				//cout << "New Forest created: CELL ( " << f->m_TransformCmp->m_GameWorldSpaceCell[0] << " : " << f->m_TransformCmp->m_GameWorldSpaceCell[1] << " )" << " ---- ID: " << f->m_IDCmp->m_ID << white << endl;
 			}
 
 		}
@@ -4202,8 +4253,8 @@ void ForestSearch::_checkForNewForestCreation(Forest* forest) {
 
 				storage->AddGameEntitie(f);
 
-				cout << color(colors::CYAN);
-				cout << "New Forest created: CELL ( " << f->m_TransformCmp->m_GameWorldSpaceCell[0] << " : " << f->m_TransformCmp->m_GameWorldSpaceCell[1] << " )" << " ---- ID: " << f->m_IDCmp->m_ID << white << endl;
+				//cout << color(colors::CYAN);
+				//cout << "New Forest created: CELL ( " << f->m_TransformCmp->m_GameWorldSpaceCell[0] << " : " << f->m_TransformCmp->m_GameWorldSpaceCell[1] << " )" << " ---- ID: " << f->m_IDCmp->m_ID << white << endl;
 			}
 
 		}
@@ -4235,8 +4286,8 @@ void ForestSearch::_checkForNewForestCreation(Forest* forest) {
 
 				storage->AddGameEntitie(f);
 
-				cout << color(colors::CYAN);
-				cout << "New Forest created: CELL ( " << f->m_TransformCmp->m_GameWorldSpaceCell[0] << " : " << f->m_TransformCmp->m_GameWorldSpaceCell[1] << " )" << " ---- ID: " << f->m_IDCmp->m_ID << white << endl;
+				//cout << color(colors::CYAN);
+				//cout << "New Forest created: CELL ( " << f->m_TransformCmp->m_GameWorldSpaceCell[0] << " : " << f->m_TransformCmp->m_GameWorldSpaceCell[1] << " )" << " ---- ID: " << f->m_IDCmp->m_ID << white << endl;
 			}
 
 		}
@@ -4284,8 +4335,8 @@ void ForestSearch::_spawnRandomForestAroundDeepOne(Forest* deepForest) {
 
 			storage->AddGameEntitie(new_forest);
 
-			cout << color(colors::CYAN);
-			cout << "New Forest created around DeepForest: CELL ( " << new_forest->m_TransformCmp->m_GameWorldSpaceCell[0] << " : " << new_forest->m_TransformCmp->m_GameWorldSpaceCell[1] << " )" << " ---- ID: " << new_forest->m_IDCmp->m_ID << white << endl;
+			//cout << color(colors::CYAN);
+			//cout << "New Forest created around DeepForest: CELL ( " << new_forest->m_TransformCmp->m_GameWorldSpaceCell[0] << " : " << new_forest->m_TransformCmp->m_GameWorldSpaceCell[1] << " )" << " ---- ID: " << new_forest->m_IDCmp->m_ID << white << endl;
 		}
 
 		break;
@@ -4305,8 +4356,8 @@ void ForestSearch::_spawnRandomForestAroundDeepOne(Forest* deepForest) {
 
 			storage->AddGameEntitie(new_forest);
 
-			cout << color(colors::CYAN);
-			cout << "New Forest created around DeepForest: CELL ( " << new_forest->m_TransformCmp->m_GameWorldSpaceCell[0] << " : " << new_forest->m_TransformCmp->m_GameWorldSpaceCell[1] << " )" << " ---- ID: " << new_forest->m_IDCmp->m_ID << white << endl;
+			//cout << color(colors::CYAN);
+			//cout << "New Forest created around DeepForest: CELL ( " << new_forest->m_TransformCmp->m_GameWorldSpaceCell[0] << " : " << new_forest->m_TransformCmp->m_GameWorldSpaceCell[1] << " )" << " ---- ID: " << new_forest->m_IDCmp->m_ID << white << endl;
 		}
 
 
@@ -4326,8 +4377,8 @@ void ForestSearch::_spawnRandomForestAroundDeepOne(Forest* deepForest) {
 
 			storage->AddGameEntitie(new_forest);
 
-			cout << color(colors::CYAN);
-			cout << "New Forest created around DeepForest: CELL ( " << new_forest->m_TransformCmp->m_GameWorldSpaceCell[0] << " : " << new_forest->m_TransformCmp->m_GameWorldSpaceCell[1] << " )" << " ---- ID: " << new_forest->m_IDCmp->m_ID << white << endl;
+			//cout << color(colors::CYAN);
+			//cout << "New Forest created around DeepForest: CELL ( " << new_forest->m_TransformCmp->m_GameWorldSpaceCell[0] << " : " << new_forest->m_TransformCmp->m_GameWorldSpaceCell[1] << " )" << " ---- ID: " << new_forest->m_IDCmp->m_ID << white << endl;
 		}
 
 		break;
@@ -4347,8 +4398,8 @@ void ForestSearch::_spawnRandomForestAroundDeepOne(Forest* deepForest) {
 
 			storage->AddGameEntitie(new_forest);
 
-			cout << color(colors::CYAN);
-			cout << "New Forest created around DeepForest: CELL ( " << new_forest->m_TransformCmp->m_GameWorldSpaceCell[0] << " : " << new_forest->m_TransformCmp->m_GameWorldSpaceCell[1] << " )" << " ---- ID: " << new_forest->m_IDCmp->m_ID << white << endl;
+			//cout << color(colors::CYAN);
+			//cout << "New Forest created around DeepForest: CELL ( " << new_forest->m_TransformCmp->m_GameWorldSpaceCell[0] << " : " << new_forest->m_TransformCmp->m_GameWorldSpaceCell[1] << " )" << " ---- ID: " << new_forest->m_IDCmp->m_ID << white << endl;
 		}
 
 
@@ -4369,8 +4420,8 @@ void ForestSearch::_spawnRandomForestAroundDeepOne(Forest* deepForest) {
 
 			storage->AddGameEntitie(new_forest);
 
-			cout << color(colors::CYAN);
-			cout << "New Forest created around DeepForest: CELL ( " << new_forest->m_TransformCmp->m_GameWorldSpaceCell[0] << " : " << new_forest->m_TransformCmp->m_GameWorldSpaceCell[1] << " )" << " ---- ID: " << new_forest->m_IDCmp->m_ID << white << endl;
+			//cout << color(colors::CYAN);
+			//cout << "New Forest created around DeepForest: CELL ( " << new_forest->m_TransformCmp->m_GameWorldSpaceCell[0] << " : " << new_forest->m_TransformCmp->m_GameWorldSpaceCell[1] << " )" << " ---- ID: " << new_forest->m_IDCmp->m_ID << white << endl;
 		}
 		break;
 	case 5:
@@ -4389,8 +4440,8 @@ void ForestSearch::_spawnRandomForestAroundDeepOne(Forest* deepForest) {
 
 			storage->AddGameEntitie(new_forest);
 
-			cout << color(colors::CYAN);
-			cout << "New Forest created around DeepForest: CELL ( " << new_forest->m_TransformCmp->m_GameWorldSpaceCell[0] << " : " << new_forest->m_TransformCmp->m_GameWorldSpaceCell[1] << " )" << " ---- ID: " << new_forest->m_IDCmp->m_ID << white << endl;
+			//cout << color(colors::CYAN);
+			//cout << "New Forest created around DeepForest: CELL ( " << new_forest->m_TransformCmp->m_GameWorldSpaceCell[0] << " : " << new_forest->m_TransformCmp->m_GameWorldSpaceCell[1] << " )" << " ---- ID: " << new_forest->m_IDCmp->m_ID << white << endl;
 		}
 		break;
 	case 6:
@@ -4410,8 +4461,8 @@ void ForestSearch::_spawnRandomForestAroundDeepOne(Forest* deepForest) {
 
 			storage->AddGameEntitie(new_forest);
 
-			cout << color(colors::CYAN);
-			cout << "New Forest created around DeepForest: CELL ( " << new_forest->m_TransformCmp->m_GameWorldSpaceCell[0] << " : " << new_forest->m_TransformCmp->m_GameWorldSpaceCell[1] << " )" << " ---- ID: " << new_forest->m_IDCmp->m_ID << white << endl;
+			//cout << color(colors::CYAN);
+			//cout << "New Forest created around DeepForest: CELL ( " << new_forest->m_TransformCmp->m_GameWorldSpaceCell[0] << " : " << new_forest->m_TransformCmp->m_GameWorldSpaceCell[1] << " )" << " ---- ID: " << new_forest->m_IDCmp->m_ID << white << endl;
 		}
 
 		break;
@@ -4430,8 +4481,8 @@ void ForestSearch::_spawnRandomForestAroundDeepOne(Forest* deepForest) {
 
 			storage->AddGameEntitie(new_forest);
 
-			cout << color(colors::CYAN);
-			cout << "New Forest created around DeepForest: CELL ( " << new_forest->m_TransformCmp->m_GameWorldSpaceCell[0] << " : " << new_forest->m_TransformCmp->m_GameWorldSpaceCell[1] << " )" << " ---- ID: " << new_forest->m_IDCmp->m_ID << white << endl;
+			//cout << color(colors::CYAN);
+			//cout << "New Forest created around DeepForest: CELL ( " << new_forest->m_TransformCmp->m_GameWorldSpaceCell[0] << " : " << new_forest->m_TransformCmp->m_GameWorldSpaceCell[1] << " )" << " ---- ID: " << new_forest->m_IDCmp->m_ID << white << endl;
 		}
 		break;
 	default:
