@@ -1710,19 +1710,20 @@ void CMPCameraInput::_handleMapViewMouse(Camera* cam) {
 		if (context->GetKey(olc::Key::ENTER).bPressed) {
 
 			// Set loose to patrol.
-			PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlySelectedUnit->m_AICmp->ChangeState(States::STATE_PATROL);
+			//PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlySelectedUnit->m_AICmp->ChangeState(States::STATE_PATROL);
 
 			// IGOUGO Mode --> execute units logic...
 			//NOTE:
 			// This works for instant "go to".
 			// For patroling the AI-Unit should himself set AT THE END of a PLAYER TURN "tryExecuteLogic"...
 			// Thus we get an effect like in CIV6.
-			PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlySelectedUnit->m_AICmp->TryExecuteStateLogic();
+			//PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlySelectedUnit->m_AICmp->TryExecuteStateLogic();
 		}
 
 
 		if (context->GetMouse(1).bPressed) {
 
+			/*
 			using namespace olc;
 			using namespace std;
 
@@ -1735,7 +1736,15 @@ void CMPCameraInput::_handleMapViewMouse(Camera* cam) {
 
 			// Add patrol points.
 			reinterpret_cast<UnitPatrolLogic*>(PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlySelectedUnit->m_AICmp->m_StateLogicMap.at("state_patrol"))->AddPatrolPoint(pos);
-			
+			*/
+			using namespace olc;
+
+			vi2d pos = { 0,0 };
+			pos.x = GetMaptileAtMousePosition(context->GetMouseX(), context->GetMouseY())->m_TransformCmp->m_GameWorldSpaceCell[0];
+			pos.y = GetMaptileAtMousePosition(context->GetMouseX(), context->GetMouseY())->m_TransformCmp->m_GameWorldSpaceCell[1];
+
+			PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlySelectedUnit->MoveTo(pos.x, pos.y);
+
 		}
 	}
 

@@ -302,6 +302,8 @@ private:
 
 	// Function updates the forests AI components.
 	void _updateForestAI2();
+
+
 };
 
 
