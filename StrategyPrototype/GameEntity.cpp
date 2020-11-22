@@ -3410,14 +3410,18 @@ bool Unit::DetermineTilesInMovementRange2(std::map<MapTile*, int>* storage) {
 	std::vector<MapTile*>* vec = nullptr;
 	std::vector<MapTile*>* sec_vec = nullptr;
 	std::vector<MapTile*>* third_vec = nullptr;
+	std::vector<MapTile*>* fourth_vec = nullptr;
 
 
 
 	vec = _getNeighbouringMapTiles(m_TransformCmp->m_GameWorldSpaceCell[0], m_TransformCmp->m_GameWorldSpaceCell[1]); // Has neighbors.
 
+
 	MapTile* maptile = nullptr;
 	MapTile* sec_maptile = nullptr;
 	MapTile* third_maptile = nullptr;
+	MapTile* fourth_maptile = nullptr;
+
 
 
 	// Some test.
@@ -3533,6 +3537,37 @@ bool Unit::DetermineTilesInMovementRange2(std::map<MapTile*, int>* storage) {
 					}					
 				}
 
+
+				// Fourth Loop.
+				// Get Neighbors.
+				fourth_vec = _getNeighbouringMapTiles(third_maptile->m_TransformCmp->m_GameWorldSpaceCell[0], third_maptile->m_TransformCmp->m_GameWorldSpaceCell[1]);
+				while (fourth_vec->size() > 0) {
+
+					fourth_maptile = fourth_vec->back();
+
+
+
+					// Get cost.
+					int fourth_maptile_cost = fourth_maptile->m_MovementCostCmp->GetRaceModifiedMovementCost(m_EntityRaceCmp->m_EntityRaceString);
+
+					if ((m_MovementPoints - (fourth_maptile_cost + third_maptile_cost + sec_maptile_ost + maptile_cost)) >= 0) {
+
+						if (_isMapTileAlreadyInserted(fourth_maptile, storage) == false) {
+
+							storage->insert(std::make_pair(fourth_maptile, fourth_maptile_cost + third_maptile_cost + sec_maptile_ost + maptile_cost));
+
+							cout << APP_SUCCESS_COLOR;
+							cout << "Inserted " << fourth_maptile->m_IDCmp->m_DynamicTypeName << " at (" << fourth_maptile->m_TransformCmp->m_GameWorldSpaceCell[0] << ":" << fourth_maptile->m_TransformCmp->m_GameWorldSpaceCell[1] << ") ";
+							cout << " with cost of " << fourth_maptile_cost + third_maptile_cost + sec_maptile_ost + maptile_cost << "." << white << endl;
+						}
+					}
+
+
+
+					// Loop breaking.
+					fourth_vec->pop_back();
+
+				}
 
 
 				// Loop breaking.

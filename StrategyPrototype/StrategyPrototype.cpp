@@ -1450,6 +1450,25 @@ void CMPCameraInput::_handleMapViewKeyBoard(Camera* cam) {
 
 	if (context->GetKey(olc::Key::CTRL).bHeld) {
 
+		if (PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlySelectedUnit != nullptr) {
+
+			if (context->GetKey(olc::Key::W).bPressed) {
+
+				UnitAttributes* attr = new UnitAttributes();
+
+				attr->SetAttribute(PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlySelectedUnit->GetUnitAttributes(), "Speed", 1);
+
+				using namespace std;
+
+				cout << APP_ERROR_COLOR;
+				cout << "Speed of " << PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlySelectedUnit->m_Name;
+				cout << " increased by 1. Currently ::= " << PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlySelectedUnit->GetUnitAttributes()->at(UnitAttributesEnum::UNIT_ATTRIBUTE_SPEED) << white << endl;
+				
+				PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlySelectedUnit->UpdateMovementPoints();
+			}
+
+		}
+
 		if (context->GetKey(olc::Key::G).bPressed) {
 
 			context->m_DebugDrawGrid = (context->m_DebugDrawGrid == true) ? false : true;

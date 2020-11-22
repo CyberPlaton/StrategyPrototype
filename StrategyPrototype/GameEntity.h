@@ -380,6 +380,9 @@ public:
 	~Unit() = default;
 
 	void Update();
+	void UpdateMovementPoints() {
+		_resetMovementPoints();
+	}
 
 	bool SetDerivedStats();
 	bool SetClass(std::string c);
