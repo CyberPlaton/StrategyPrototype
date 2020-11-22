@@ -427,7 +427,7 @@ public:
 private:
 	int m_AgeInternal = -1;
 
-	unsigned int m_MovementPoints = 0;
+	int m_MovementPoints = 0;
 
 	// Units skills and attributes.
 	std::map<UnitSkillsEnum, int>* m_UnitSkillsMap;
@@ -455,6 +455,7 @@ private:
 	void _removeAlphaTileFromNeighboringMapTiles(MapTile* alpha, std::map<MapTile*, int>* storage);
 	int _getCurrentCostForTile(int previously_accumulated_cost, MapTile* maptile);
 	bool _isMapTileWeAreStandingOn(MapTile* m);
+	bool _isMapTileAlreadyInserted(MapTile* m, std::map<MapTile*, int>* storage);
 };
 
 
