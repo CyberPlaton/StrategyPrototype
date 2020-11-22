@@ -1024,7 +1024,13 @@ Player* GetPlayer(std::string name) {
 	}
 }
 
+/*
+Primary function for each time you want to get a Maptile from an X-Y-Coordinate.
+This function considers camera movement and adjust the x-y-value accordingly
+to give you dynamically correct the maptile you wish.
 
+It too check for whether at clicked position a maptile exists.
+*/
 MapTile* GetMaptileAtMousePosition(int x, int y) {
 
 	int x_cell = int((x + g_vi2dCameraPosition.x) / SPRITES_WIDTH_AND_HEIGHT);
