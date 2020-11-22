@@ -365,6 +365,10 @@ public:
 	// Saves maptiles to which this unit can go in current turn.
 	// It returns the reachable maptiles, so we can draw them in main function.
 	bool DetermineTilesInMovementRange(std::vector<MapTile*>* storage);
+
+	// return false on error, else true.
+	bool DetermineTilesInMovementRange2(std::map<MapTile*, int>* storage);
+
 	
 	// Unit cease to exist.
 	void Die();
@@ -447,6 +451,10 @@ private:
 
 	// Based on given position returns a vector of neighboring maptiles.
 	std::vector<MapTile*>* _getNeighbouringMapTiles(int xpos, int ypos);
+	void _removeAlphaTileFromNeighboringMapTiles(MapTile* alpha, std::vector<MapTile*>* storage);
+	void _removeAlphaTileFromNeighboringMapTiles(MapTile* alpha, std::map<MapTile*, int>* storage);
+	int _getCurrentCostForTile(int previously_accumulated_cost, MapTile* maptile);
+	bool _isMapTileWeAreStandingOn(MapTile* m);
 };
 
 
@@ -1341,7 +1349,6 @@ public:
 	MapTileType m_MapTileType = MapTileType::MAPTILE_TYPE_INVALID;
 
 	MapTileRegion* m_AssociatedRegion = nullptr;
-
 
 private:
 

@@ -1756,8 +1756,8 @@ void CMPCameraInput::_handleMapViewMouse(Camera* cam) {
 		// Display to where unit can move to.
 		if (context->m_SelectedUnitsMovementTiles == nullptr) {
 
-			context->m_SelectedUnitsMovementTiles = new std::vector<MapTile*>();
-			PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlySelectedUnit->DetermineTilesInMovementRange(context->m_SelectedUnitsMovementTiles);
+			context->m_SelectedUnitsMovementTiles = new std::map<MapTile*, int>();
+			PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlySelectedUnit->DetermineTilesInMovementRange2(context->m_SelectedUnitsMovementTiles);
 		}
 
 		if (context->GetKey(olc::Key::ENTER).bPressed) {
@@ -1852,7 +1852,7 @@ void Game::DrawSelectedUnitsMovementTiles() {
 	for (auto it = m_SelectedUnitsMovementTiles->begin();
 		it != m_SelectedUnitsMovementTiles->end(); ++it) {
 
-		tile = *it;
+		tile = it->first;
 
 		// Draw cells.
 		DrawDecal(vi2d(tile->m_TransformCmp->m_PosX, tile->m_TransformCmp->m_PosY),
@@ -1860,8 +1860,8 @@ void Game::DrawSelectedUnitsMovementTiles() {
 
 		
 		// Draw race modified cost for each tile.
-		std::string out = "Cost: " + std::to_string(tile->m_MovementCostCmp->GetRaceModifiedMovementCost(race));
-		DrawStringDecal(vi2d(tile->m_TransformCmp->m_PosX + 16, tile->m_TransformCmp->m_PosY + 32), out, olc::BLACK);
+		std::string out = "Cost: " + std::to_string(it->second);
+		DrawStringDecal(vi2d(tile->m_TransformCmp->m_PosX, tile->m_TransformCmp->m_PosY + 32), out, olc::BLACK);
 		
 	}
 }

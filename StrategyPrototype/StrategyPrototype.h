@@ -290,7 +290,8 @@ public:
 
 
 	// UI Component. For drawing movement tiles for selected unit.
-	std::vector<MapTile*>* m_SelectedUnitsMovementTiles = nullptr;
+	//std::vector<MapTile*>* m_SelectedUnitsMovementTiles = nullptr;
+	std::map<MapTile*, int>* m_SelectedUnitsMovementTiles = nullptr;
 	void DrawSelectedUnitsMovementTiles();
 
 private:

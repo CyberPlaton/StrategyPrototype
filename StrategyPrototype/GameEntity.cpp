@@ -3398,6 +3398,78 @@ void  Unit::_resetMovementPoints() {
 	m_MovementPoints = _determineMovementPoints();
 }
 
+
+bool Unit::DetermineTilesInMovementRange2(std::map<MapTile*, int>* storage) {
+
+	// NOTE:
+	// We associate every maptile with a cost, and store it in given map.
+
+	std::vector<MapTile*>* vec = nullptr;
+	std::vector<MapTile*>* sec_vec = nullptr;
+
+
+	vec = _getNeighbouringMapTiles(m_TransformCmp->m_GameWorldSpaceCell[0], m_TransformCmp->m_GameWorldSpaceCell[1]); // Has neighbors.
+
+	MapTile* maptile = nullptr;
+	MapTile* sec_maptile = nullptr;
+
+
+	while (vec->size() > 0) {
+
+		// Iterate reverse -> easier to delete checked maptile.
+		maptile = vec->back();
+		int maptile_cost = maptile->m_MovementCostCmp->GetRaceModifiedMovementCost(m_EntityRaceCmp->m_EntityRaceString);
+
+		if (m_MovementPoints - (maptile_cost) >= 0) {
+
+			storage->insert(std::make_pair(maptile, maptile_cost));
+		}
+
+
+		// Neighbors of checked maptile.
+		sec_vec = _getNeighbouringMapTiles(maptile->m_TransformCmp->m_GameWorldSpaceCell[0], maptile->m_TransformCmp->m_GameWorldSpaceCell[1]);
+
+		// Delete first "alpha_maptile" from sec_vec
+		_removeAlphaTileFromNeighboringMapTiles(maptile, sec_vec);
+
+
+		while (sec_vec->size() > 0) {
+
+			sec_maptile = sec_vec->back();
+
+			// Maptile we are standing on are zero movement cost.
+			if (_isMapTileWeAreStandingOn(sec_maptile)) {
+
+				storage->insert(std::make_pair(sec_maptile, 0));
+				
+				// Loop breaking. 
+				sec_vec->pop_back();
+				continue;
+			}
+
+			int sec_maptile_ost = sec_maptile->m_MovementCostCmp->GetRaceModifiedMovementCost(m_EntityRaceCmp->m_EntityRaceString);
+
+			if (m_MovementPoints - (sec_maptile_ost + maptile_cost) >= 0) {
+
+
+				storage->insert(std::make_pair(sec_maptile, sec_maptile_ost + maptile_cost));
+			}
+
+			// Loop breaking.
+			sec_vec->pop_back();
+		}
+
+
+
+		// Loop breaking.
+		vec->pop_back();
+	}
+
+	
+	return true;
+}
+
+
 bool Unit::DetermineTilesInMovementRange(std::vector<MapTile*>* storage){
 
 	// Check tiles if unit can reach them.
@@ -3430,6 +3502,70 @@ bool Unit::DetermineTilesInMovementRange(std::vector<MapTile*>* storage){
 }
 
 
+bool Unit::_isMapTileWeAreStandingOn(MapTile* m) {
+
+	if (m->m_TransformCmp->m_GameWorldSpaceCell[0] == m_TransformCmp->m_GameWorldSpaceCell[0] &&
+		m->m_TransformCmp->m_GameWorldSpaceCell[1] == m_TransformCmp->m_GameWorldSpaceCell[1]) {
+
+		return true;
+	}
+
+	return false;
+}
+
+
+void Unit::_removeAlphaTileFromNeighboringMapTiles(MapTile* alpha, std::vector<MapTile*>* storage) {
+
+	GameEntity* entt = nullptr;
+
+	for (auto it = storage->begin(); it != storage->end(); ++it) {
+
+		entt = *it;
+
+		if (COMPARE_STRINGS_2(alpha->m_IDCmp->m_ID, entt->m_IDCmp->m_ID) == 0) {
+
+			storage->erase(it);
+		}
+	}
+
+	/*
+	std::vector<MapTile*>::iterator it = std::find(storage->begin(), storage->end(), alpha);
+
+	if (it != storage->end()) {
+		storage->erase(it);
+	}
+	*/
+}
+
+void Unit::_removeAlphaTileFromNeighboringMapTiles(MapTile* alpha, std::map<MapTile*, int>* storage) {
+
+	GameEntity* entt = nullptr;
+
+	for (auto it = storage->begin(); it != storage->end(); ++it) {
+
+		entt = it->first;
+
+		if (COMPARE_STRINGS_2(alpha->m_IDCmp->m_ID, entt->m_IDCmp->m_ID) == 0) {
+
+			storage->erase(it);
+		}
+	}
+
+	/*
+	for (auto it : *storage) {
+		if (COMPARE_STRINGS_2(alpha->m_IDCmp->m_ID, it.first->m_IDCmp->m_ID)) {
+			storage->erase(it.first);
+		}
+	}
+	*/
+}
+
+
+int Unit::_getCurrentCostForTile(int previously_accumulated_cost, MapTile* maptile) {
+
+	int tile_cost = maptile->m_MovementCostCmp->GetRaceModifiedMovementCost(m_EntityRaceCmp->m_EntityRaceString);
+	return previously_accumulated_cost + tile_cost;
+}
 
 
 std::vector<MapTile*>* Unit::_getNeighbouringMapTiles(int xpos, int ypos) {
