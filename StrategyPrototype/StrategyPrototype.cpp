@@ -65,17 +65,32 @@ Unit* GetUnitAtMapTileFromMousePosition(int xpos, int ypos) {
 	
 	Unit* unit = nullptr;
 
+	// We compare the cells of maptile at that position and unit.
+	MapTile* tile = nullptr;
+	int unit_cell[2], tile_cell[2];
+
+	tile = GetMaptileAtMousePosition(xpos, ypos);
+	if (tile) {
+		tile_cell[0] = tile->m_TransformCmp->m_GameWorldSpaceCell[0];
+		tile_cell[1] = tile->m_TransformCmp->m_GameWorldSpaceCell[1];
+	}
+	else {
+		return nullptr;
+	}
+
+
 	for (auto it = vec.begin(); it != vec.end(); ++it) {
 
 		unit = reinterpret_cast<Unit*>(*it);
 
-		if (int(xpos / SPRITES_WIDTH_AND_HEIGHT) == int(unit->m_TransformCmp->m_PosX / SPRITES_WIDTH_AND_HEIGHT) &&
-			int(ypos / SPRITES_WIDTH_AND_HEIGHT) == int(unit->m_TransformCmp->m_PosY / SPRITES_WIDTH_AND_HEIGHT)) {
+		unit_cell[0] = unit->m_TransformCmp->m_GameWorldSpaceCell[0];
+		unit_cell[1] = unit->m_TransformCmp->m_GameWorldSpaceCell[1];
 
+
+		if (unit_cell[0] == tile_cell[0] && unit_cell[1] == tile_cell[1]) {
 			return unit;
 		}
 	}
-
 
 	return nullptr;
 }
@@ -1454,6 +1469,10 @@ void CMPCameraInput::_handleMapViewKeyBoard(Camera* cam) {
 			context->m_TimeModeTurnBased = (context->m_TimeModeTurnBased == true) ? false : true;
 		}
 
+		if (context->GetKey(olc::Key::U).bPressed) {
+			context->m_DebugDrawUnitPositions = (context->m_DebugDrawUnitPositions == true) ? false : true;
+		}
+
 
 
 
@@ -1701,8 +1720,11 @@ void CMPCameraInput::_handleMapViewMouse(Camera* cam) {
 			cout << PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlySelectedUnit->m_Name << white << endl;
 		}
 		else {
-			cout << " nullptr" << white << endl;
+			cout << " nullptr" << white << endl;;
 		}
+		cout << color(colors::DARKCYAN) << endl;
+		cout << " at position  ::= " << context->GetMouseX() << ":" << context->GetMouseY() << endl;
+		cout << " at cell ::= " << int(context->GetMouseX() / SPRITES_WIDTH_AND_HEIGHT) << ":" << int(context->GetMouseY() / SPRITES_WIDTH_AND_HEIGHT) << white << endl;
 
 
 		// Deselect unit. Clear storage.
@@ -1819,14 +1841,22 @@ void Game::DrawSelectedUnitsMovementTiles() {
 
 	using namespace olc;
 	MapTile* tile = nullptr;
+	CMPEntityRace::Race race = PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_PlayerEmpireRace;
 
 	for (auto it = m_SelectedUnitsMovementTiles->begin();
 		it != m_SelectedUnitsMovementTiles->end(); ++it) {
 
 		tile = *it;
 
+		// Draw cells.
 		DrawDecal(vi2d(tile->m_TransformCmp->m_PosX, tile->m_TransformCmp->m_PosY),
 			m_SpriteResourceMap.at("unit_rangecell"));
+
+		
+		// Draw race modified cost for each tile.
+		std::string out = "Cost: " + std::to_string(tile->m_MovementCostCmp->GetRaceModifiedMovementCost(race));
+		DrawStringDecal(vi2d(tile->m_TransformCmp->m_PosX + 16, tile->m_TransformCmp->m_PosY + 32), out, olc::BLACK);
+		
 	}
 }
 
@@ -3091,6 +3121,10 @@ void Renderer::RenderCityLayer4() {
 
 void Game::DebugDrawStats() {
 
+	using namespace std;
+	using namespace olc;
+
+
 	if (!m_DebugDraw) return;
 
 	if (!m_DebugDrawGeneralOptions) {
@@ -3109,7 +3143,24 @@ void Game::DebugDrawStats() {
 	}
 
 
+	if (m_DebugDrawUnitPositions) {
 
+		std::string pos, cell;
+		Unit* unit = nullptr;
+
+		for (auto it = EntitiesStorage::Get()->GetUnitsVec()->begin(); it != EntitiesStorage::Get()->GetUnitsVec()->end(); ++it) {
+
+			unit = reinterpret_cast<Unit*>(*it);
+
+			pos = "(" + std::to_string(unit->m_TransformCmp->m_PosX) + ":" + std::to_string(unit->m_TransformCmp->m_PosY) + ")";
+			cell = "(" + std::to_string(unit->m_TransformCmp->m_GameWorldSpaceCell[0]) + ":" + std::to_string(unit->m_TransformCmp->m_GameWorldSpaceCell[1]) + ")";
+
+
+			DrawStringDecal(vi2d(unit->m_TransformCmp->m_PosX + 16, unit->m_TransformCmp->m_PosY + 16), pos, olc::BLACK);
+			DrawStringDecal(vi2d(unit->m_TransformCmp->m_PosX + 16, unit->m_TransformCmp->m_PosY + 32), cell, olc::BLACK);
+		}
+
+	}
 
 
 

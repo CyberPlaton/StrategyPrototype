@@ -447,6 +447,7 @@ private:
 
 	// Based on given position returns a vector of neighboring maptiles.
 	std::vector<MapTile*>* _getNeighbouringMapTiles(int xpos, int ypos);
+
 };
 
 
@@ -1036,11 +1037,22 @@ public:
 
 
 		m_MovementCostCmp = new CMPMovementCostModifier();
+		_setMovementCost();
 	}
 
 
 private:
-	void _initMovementCost();
+	void _setMovementCost() {
+		m_MovementCostCmp->SetBaseMovementCost(3);
+		m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_HUMAN, 1);
+		m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_ORC, 1);
+		m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_HIGHELF, 1);
+		m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_DARKELF, 1);
+		m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_TROLL, 1);
+		m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_GNOME, -2);
+		m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_DWARF, -2);
+		m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_GOBLIN, -2);
+	}
 };
 
 

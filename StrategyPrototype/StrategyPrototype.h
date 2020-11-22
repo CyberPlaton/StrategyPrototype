@@ -270,6 +270,7 @@ public:
 	bool m_DebugDrawForestInfo = false;
 	bool m_DebugDrawMapTileInfo = false;
 	bool m_DebugDrawGeneralOptions = false;
+	bool m_DebugDrawUnitPositions = false;
 
 	bool m_TimeModeTurnBased = true;
 

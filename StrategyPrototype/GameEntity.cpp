@@ -3423,6 +3423,13 @@ bool Unit::DetermineTilesInMovementRange(std::vector<MapTile*>* storage){
 		}
 	}
 
+
+	// Now check for each neighboring cell theyre neighbors.
+
+
+
+
+
 	neighbors_vec.clear();
 
 	return((storage->size() > 0) ? true : false);
