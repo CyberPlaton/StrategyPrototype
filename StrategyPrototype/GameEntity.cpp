@@ -3408,6 +3408,7 @@ bool Unit::DetermineTilesInMovementRange(std::vector<MapTile*>* storage){
 	// and so on.
 
 	MapTile* maptile = nullptr;
+	int move_cost = 0;
 
 	std::vector<MapTile*> neighbors_vec = *_getNeighbouringMapTiles(this->m_TransformCmp->m_GameWorldSpaceCell[0], this->m_TransformCmp->m_GameWorldSpaceCell[1]);
 
@@ -3415,7 +3416,7 @@ bool Unit::DetermineTilesInMovementRange(std::vector<MapTile*>* storage){
 	for (auto it = neighbors_vec.begin(); it != neighbors_vec.end(); ++it) {
 
 		maptile = *it;
-		int move_cost = maptile->m_MovementCostCmp->GetRaceModifiedMovementCost(this->m_EntityRaceCmp->m_EntityRaceString);
+		move_cost = maptile->m_MovementCostCmp->GetRaceModifiedMovementCost(this->m_EntityRaceCmp->m_EntityRaceString);
 
 		if ((m_MovementPoints - move_cost) >= 0) {
 
@@ -3423,17 +3424,12 @@ bool Unit::DetermineTilesInMovementRange(std::vector<MapTile*>* storage){
 		}
 	}
 
-
-	// Now check for each neighboring cell theyre neighbors.
-
-
-
-
-
 	neighbors_vec.clear();
 
 	return((storage->size() > 0) ? true : false);
 }
+
+
 
 
 std::vector<MapTile*>* Unit::_getNeighbouringMapTiles(int xpos, int ypos) {

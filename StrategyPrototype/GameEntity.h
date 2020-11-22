@@ -447,7 +447,6 @@ private:
 
 	// Based on given position returns a vector of neighboring maptiles.
 	std::vector<MapTile*>* _getNeighbouringMapTiles(int xpos, int ypos);
-
 };
 
 

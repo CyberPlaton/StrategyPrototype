@@ -67,7 +67,15 @@ struct UnitSkills {
 
 		for (auto it : *skillsmap) {
 			if (it.first == s) {
-				skillsmap->at(it.first) -= num;
+
+				// We define every skill to be >= 5.
+				// Thus, check for it.
+				if ((skillsmap->at(it.first) -= num) < 5) {
+					skillsmap->at(it.first) = 5;
+				}
+				else {
+					skillsmap->at(it.first) -= num;
+				}
 			}
 		}
 	}
@@ -78,7 +86,16 @@ struct UnitSkills {
 
 		for (auto it : *skillsmap) {
 			if (it.first == s) {
-				skillsmap->at(it.first) += num;
+
+
+				// We define the maximum for a skill as 100.
+				// Thus, check for it.
+				if ((skillsmap->at(it.first) += num) > 100) {
+					skillsmap->at(it.first) = 100;
+				}
+				else {
+					skillsmap->at(it.first) += num;
+				}
 			}
 		}
 	}
@@ -95,7 +112,15 @@ struct UnitAttributes {
 
 		for (auto it : *attrmap) {
 			if (it.first == a) {
-				attrmap->at(it.first) -= num;
+
+				// We define every attr to be >= 5.
+				// Thus, check for it.
+				if ((attrmap->at(it.first) -= num) < 5) {
+					attrmap->at(it.first) = 5;
+				}
+				else {
+					attrmap->at(it.first) -= num;
+				}
 			}
 		}
 	}
@@ -107,7 +132,15 @@ struct UnitAttributes {
 				
 		for (auto it : *attrmap) {
 			if (it.first == a) {
-				attrmap->at(it.first) += num;
+
+				// We define the maximum for a skill as 100.
+				// Thus, check for it.
+				if ((attrmap->at(it.first) += num) > 100) {
+					attrmap->at(it.first) = 100;
+				}
+				else {
+					attrmap->at(it.first) += num;
+				}
 			}
 		}
 	}
