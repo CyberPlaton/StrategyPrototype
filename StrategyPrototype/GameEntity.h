@@ -261,6 +261,8 @@ Unit* MakeNewUnitAtPos(CMPEntityRace::Race race, UnitMovementType movement_type,
 Unit* GetUnitAtMapTileFromMousePosition(int xpos, int ypos);
 std::string GetColorFromString(std::string color);
 
+
+
 enum class TileImprovementLevel {
 	TILE_IMPROVEMENT_LVL_INVALID = -1,
 	TILE_IMPROVEMENT_LVL_ONE = 0,
@@ -454,11 +456,13 @@ private:
 
 	// Based on given position returns a vector of neighboring maptiles.
 	std::vector<MapTile*>* _getNeighbouringMapTiles(int xpos, int ypos);
+	std::vector<MapTile*>* _getNeighbouringMapTiles(MapTile* maptile);
 	void _removeAlphaTileFromNeighboringMapTiles(MapTile* alpha, std::vector<MapTile*>* storage);
 	void _removeAlphaTileFromNeighboringMapTiles(MapTile* alpha, std::map<MapTile*, int>* storage);
 	int _getCurrentCostForTile(int previously_accumulated_cost, MapTile* maptile);
 	bool _isMapTileWeAreStandingOn(MapTile* m);
 	bool _isMapTileAlreadyInserted(MapTile* m, std::map<MapTile*, int>* storage);
+	bool _isMapTileDuplicateNeighbor(MapTile* m, std::vector<MapTile*>* storage);
 };
 
 
