@@ -214,6 +214,8 @@ void Unit::_defineDerivedAttributes() {
 	// Define derived attributes after standard attributes and
 	// after the birthsign and race were defined...
 
+	using namespace std;
+
 
 	// Define health.
 	// .. define multiplier
@@ -237,6 +239,10 @@ void Unit::_defineDerivedAttributes() {
 	
 	int health = int((strength * health_multiplier + endurance) / 2);
 	attr->SetAttribute(GetUnitAttributes(), "Health", health);
+
+
+	cout << color(colors::CYAN);
+	cout << "Health for " << m_Name << " defined by (" << strength << " * " << health_multiplier << " + " << endurance << ") / 2 = " << health << white << endl;
 
 
 
@@ -275,9 +281,11 @@ void Unit::_defineDerivedAttributes() {
 	int intelligence = GetUnitAttributes()->at(UnitAttributesEnum::UNIT_ATTRIBUTE_INTELLIGENCE);
 	int willpower = GetUnitAttributes()->at(UnitAttributesEnum::UNIT_ATTRIBUTE_WILLPOWER);
 
-	int magicka = int(multiplier * (intelligence + willpower));
+	int magicka = int(multiplier * (intelligence + willpower)/2);
 	attr->SetAttribute(GetUnitAttributes(), "Magicka", magicka);
 
+	cout << color(colors::CYAN);
+	cout << "Magicka for " << m_Name << " defined by " << multiplier << " * (" << intelligence << " + " << willpower << ") / 2 = " << magicka << white << endl;
 
 
 
@@ -308,9 +316,12 @@ void Unit::_defineDerivedAttributes() {
 
 
 	int agility = GetUnitAttributes()->at(UnitAttributesEnum::UNIT_ATTRIBUTE_AGILITY);
-	int fatigue = int(fatigue_multiplier * (agility + willpower + endurance + strength));
+	int fatigue = int(fatigue_multiplier * (int(strength + endurance)/2));
 
 	attr->SetAttribute(GetUnitAttributes(), "Fatigue", fatigue);
+
+	cout << color(colors::CYAN);
+	cout << "Fatigue for " << m_Name << " defined by " << fatigue_multiplier << " * (" << " (" << endurance << " + " << strength <<") / 2 ) = " << fatigue << white << endl;
 }
 
 
