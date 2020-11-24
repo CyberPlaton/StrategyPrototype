@@ -348,21 +348,17 @@ public:
 		m_AICmp->MapState("state_wait", new UnitWaitLogic(*m_AICmp));
 
 		m_AICmp->ChangeState(States::STATE_WAIT);
-
-
-
-		// Movement
-		// NOTE:
-		// Mostly, movement points are in range from 3-14,
-		// with 6 or 8 is most often.
-		_determineMovementPoints();
 	}
 
 
 	// Unit specific, all classes wide functionality.
 
 	// Move unit to a location.
-	void MoveTo(int x_cell, int y_cell);
+	// Storage has the movement cost definitions for this particular unit.
+	void MoveTo(int x_cell, int y_cell, std::map<MapTile*, int>* storage);
+	void MoveTo(int x_cell, int y_cell) {
+		this->MoveTo(x_cell, y_cell, m_MovementCostStorage);
+	}
 
 	// Saves maptiles to which this unit can go in current turn.
 	// It returns the reachable maptiles, so we can draw them in main function.
@@ -425,6 +421,9 @@ public:
 	std::string m_UnitPlayerColor = "NULL";
 
 	UnitMovementType m_UnitMovementType = UnitMovementType::UNIT_MOVEMENT_TYPE_INVALID;
+
+	// Update this everytime we have unit in focus.
+	std::map<MapTile*, int>* m_MovementCostStorage = nullptr;
 
 private:
 	int m_AgeInternal = -1;

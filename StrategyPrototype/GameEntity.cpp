@@ -3385,10 +3385,18 @@ bool City::_isMapTileClaimedByCity(MapTile* maptile) {
 
 unsigned int  Unit::_determineMovementPoints() {
 
+	using namespace std;
+
 	int fatigue = this->m_UnitAttributesMap->at(UnitAttributesEnum::UNIT_ATTRIBUTE_FATIGUE);
 	int speed = this->m_UnitAttributesMap->at(UnitAttributesEnum::UNIT_ATTRIBUTE_SPEED);
 
-	m_MovementPoints = int((fatigue + speed));
+	cout << color(colors::CYAN);
+	cout << "Fatigue of " << fatigue << " and Speed of " << speed << " gives ";
+
+	m_MovementPoints = int((fatigue + speed) / (m_Age));
+
+
+	cout << m_MovementPoints << " Movement Points." << white << endl;
 
 	return m_MovementPoints;
 }
@@ -3472,6 +3480,10 @@ bool Unit::DetermineTilesInMovementRange2(std::map<MapTile*, int>* storage) {
 
 	}
 
+
+
+	m_MovementCostStorage = storage;
+
 	return true;
 }
 
@@ -3489,38 +3501,6 @@ bool Unit::_isMapTileAlreadyInserted(MapTile* m, std::map<MapTile*, int>* storag
 	}
 
 	return false;
-}
-
-
-bool Unit::DetermineTilesInMovementRange(std::vector<MapTile*>* storage){
-
-	// Check tiles if unit can reach them.
-	// If we get only tiles we cant reach, then stop.
-
-	// 1) Check tiles around unit.
-	// 2) Check tiles 2 tiles around unit.
-	// and so on.
-
-	MapTile* maptile = nullptr;
-	int move_cost = 0;
-
-	std::vector<MapTile*> neighbors_vec = *_getNeighbouringMapTiles(this->m_TransformCmp->m_GameWorldSpaceCell[0], this->m_TransformCmp->m_GameWorldSpaceCell[1]);
-
-	
-	for (auto it = neighbors_vec.begin(); it != neighbors_vec.end(); ++it) {
-
-		maptile = *it;
-		move_cost = maptile->m_MovementCostCmp->GetRaceModifiedMovementCost(this->m_EntityRaceCmp->m_EntityRaceString);
-
-		if ((m_MovementPoints - move_cost) >= 0) {
-
-			storage->push_back(maptile);
-		}
-	}
-
-	neighbors_vec.clear();
-
-	return((storage->size() > 0) ? true : false);
 }
 
 
@@ -3584,7 +3564,7 @@ std::vector<MapTile*>* Unit::_getNeighbouringMapTiles(MapTile* maptile) {
 
 
 // Move unit to a location.
-void Unit::MoveTo(int x_cell, int y_cell) {
+void Unit::MoveTo(int x_cell, int y_cell, std::map<MapTile*, int>* storage) {
 
 	using namespace std;
 
@@ -3599,6 +3579,20 @@ void Unit::MoveTo(int x_cell, int y_cell) {
 
 	But for now, we test moving directly to destination.
 	*/
+
+	// Firstly, check for whether we can reach the maptile.
+	MapTile* maptile = nullptr;
+	bool flag = false;
+	maptile = GetMapTileAtWorldPosition(x_cell, y_cell);
+	for (auto it : *storage) {
+
+		if (COMPARE_STRINGS_2(maptile->m_IDCmp->m_ID, it.first->m_IDCmp->m_ID) == 0) {
+			flag = true;
+		}
+	}
+
+	if (flag == false) return;
+
 	int curr_pos_x, curr_pos_y;
 	curr_pos_x = m_TransformCmp->m_PosX;
 	curr_pos_y = m_TransformCmp->m_PosY;
@@ -3621,6 +3615,10 @@ void Unit::MoveTo(int x_cell, int y_cell) {
 	m_TransformCmp->m_GameWorldSpaceCell[0] = tile->m_TransformCmp->m_GameWorldSpaceCell[0];
 	m_TransformCmp->m_GameWorldSpaceCell[1] = tile->m_TransformCmp->m_GameWorldSpaceCell[1];
 
+
+
+	// Lastly, decrease movement points.
+	m_MovementPoints -= storage->at(maptile);
 
 
 	cout << APP_ERROR_COLOR << endl;
@@ -3863,7 +3861,7 @@ void UnitPatrolLogic::executeStateLogic() {
 
 
 			// We are giving the worldmap cell coordinates which we wish to reach.
-			object->MoveTo(endpoint.x, endpoint.y);
+			object->MoveTo(endpoint.x, endpoint.y, m_ManagedUnit->m_MovementCostStorage);
 
 			vi2d left = (p1 - p2);
 			cout << color(colors::CYAN) << object->m_Name << " left to reach patrolpoint ::= " << left.str() << white << endl;

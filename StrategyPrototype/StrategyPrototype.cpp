@@ -53,6 +53,8 @@ Unit* MakeNewUnitAtPos(CMPEntityRace::Race race, UnitMovementType movement_type,
 
 	u->SetDerivedStats();
 
+	u->UpdateMovementPoints();
+
 	u->SetPlayer(p);
 
 	return u;
@@ -4157,6 +4159,7 @@ void Game::AdvanceOneTurn() {
 
 			unit = reinterpret_cast<Unit*>(it);
 			unit->Update();
+			unit->UpdateMovementPoints();
 
 			cout << APP_SUCCESS_COLOR;
 			cout << endl;
