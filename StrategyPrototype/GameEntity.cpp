@@ -3388,7 +3388,7 @@ unsigned int  Unit::_determineMovementPoints() {
 	int fatigue = this->m_UnitAttributesMap->at(UnitAttributesEnum::UNIT_ATTRIBUTE_FATIGUE);
 	int speed = this->m_UnitAttributesMap->at(UnitAttributesEnum::UNIT_ATTRIBUTE_SPEED);
 
-	m_MovementPoints = 2 + int((fatigue + speed) / 10 );
+	m_MovementPoints = int((fatigue + speed));
 
 	return m_MovementPoints;
 }
@@ -3398,17 +3398,6 @@ void  Unit::_resetMovementPoints() {
 	m_MovementPoints = _determineMovementPoints();
 }
 
-
-bool Unit::_isMapTileDuplicateNeighbor(MapTile* m, std::vector<MapTile*>* storage) {
-
-
-	for (auto it : *storage) {
-
-		if (COMPARE_STRINGS_2(m->m_IDCmp->m_ID, it->m_IDCmp->m_ID) == 0) return true;
-	}
-
-	return false;
-}
 
 
 bool Unit::DetermineTilesInMovementRange2(std::map<MapTile*, int>* storage) {
@@ -3430,59 +3419,58 @@ bool Unit::DetermineTilesInMovementRange2(std::map<MapTile*, int>* storage) {
 	for (auto it : first_neighbors) { // For each neighbor, do:
 
 		// If we can reach it, insert in storage.
-		if (_getCurrentCostForTile(0, it) - (it->m_MovementCostCmp->GetRaceModifiedMovementCost(m_EntityRaceCmp->m_EntityRaceString)) >= 0) {
+		if (m_MovementPoints - (it->m_MovementCostCmp->GetRaceModifiedMovementCost(m_EntityRaceCmp->m_EntityRaceString)) >= 0) {
 
-			storage->insert(std::make_pair(it, it->m_MovementCostCmp->GetRaceModifiedMovementCost(m_EntityRaceCmp->m_EntityRaceString)));
-
+			storage->try_emplace(it, it->m_MovementCostCmp->GetRaceModifiedMovementCost(m_EntityRaceCmp->m_EntityRaceString));
 		}
 	}
+
+	first_neighbors.clear();
+
 
 	// Second step, insert maptile we are standing on as zero cost.
-	storage->insert(std::make_pair(GetMapTileAtWorldPosition(m_TransformCmp->m_GameWorldSpaceCell[0], m_TransformCmp->m_GameWorldSpaceCell[1]), 0));
+	storage->try_emplace(GetMapTileAtWorldPosition(m_TransformCmp->m_GameWorldSpaceCell[0], m_TransformCmp->m_GameWorldSpaceCell[1]), 0);
 
-
-	// Now go into recursion...
-
-	// For each maptile in the storage
-	// Get theyre nieghbors and check whether we can reach them
-	/*
-	for each X in storage do:
-		
-		save neighbors of X in neighbors_vec.
-
-
-			for each neighbor Y in neighbors_vec.
-					
-				check whether we can reach Y:
-					if(movement_points - cost_of_X + cost_of_Y >= 0): // We can get cost of X like	 storage->at(X).second;
-						save Y in storage.
-	*/
-
-	int cost, parent_cost;
-
+	// Third. Copy evrything to vector. Thus we can push to end and  iterate over EVERY tile.
+	std::vector<MapTile*> copied_vec;
 	for (auto it : *storage) {
 
-
-		neighbors_vec = *_getNeighbouringMapTiles(it.first->m_TransformCmp->m_GameWorldSpaceCell[0], it.first->m_TransformCmp->m_GameWorldSpaceCell[1]);
-
-
-		for (auto iter : neighbors_vec) {
-
-
-			cost = iter->m_MovementCostCmp->GetRaceModifiedMovementCost(m_EntityRaceCmp->m_EntityRaceString);
-			parent_cost = storage->at(it.first);
-
-			if(m_MovementPoints - (cost + parent_cost) >= 0){
-
-
-				if (_isMapTileAlreadyInserted(iter, storage) == false) {
-					storage->insert(std::make_pair(iter, cost + parent_cost));
-				}
-			}
-		}
+		copied_vec.push_back(it.first);
 	}
 
 
+	int cost = 0, parent_cost = 0;
+	int loops = 0;
+
+	// Do algorithm:
+	for (int i = 0; i < copied_vec.size(); ++i) {
+
+
+		neighbors_vec = *_getNeighbouringMapTiles(copied_vec[i]);
+
+
+		for (auto n_itr : neighbors_vec) {
+
+
+			cost = n_itr->m_MovementCostCmp->GetRaceModifiedMovementCost(m_EntityRaceCmp->m_EntityRaceString);
+			parent_cost = storage->at(copied_vec[i]);
+
+
+			if (m_MovementPoints - (cost + parent_cost) >= 0 &&
+				_isMapTileAlreadyInserted(n_itr, storage) == false) {
+
+
+				storage->try_emplace(n_itr, cost + parent_cost);
+
+				// And save particular maptile for recursive processing of neighbors.
+				copied_vec.push_back(n_itr);
+			}
+
+
+		}
+
+
+	}
 
 	return true;
 }
@@ -3545,60 +3533,6 @@ bool Unit::_isMapTileWeAreStandingOn(MapTile* m) {
 	}
 
 	return false;
-}
-
-
-void Unit::_removeAlphaTileFromNeighboringMapTiles(MapTile* alpha, std::vector<MapTile*>* storage) {
-
-	GameEntity* entt = nullptr;
-
-	for (auto it = storage->begin(); it != storage->end(); ++it) {
-
-		entt = *it;
-
-		if (COMPARE_STRINGS_2(alpha->m_IDCmp->m_ID, entt->m_IDCmp->m_ID) == 0) {
-
-			storage->erase(it);
-		}
-	}
-
-	/*
-	std::vector<MapTile*>::iterator it = std::find(storage->begin(), storage->end(), alpha);
-
-	if (it != storage->end()) {
-		storage->erase(it);
-	}
-	*/
-}
-
-void Unit::_removeAlphaTileFromNeighboringMapTiles(MapTile* alpha, std::map<MapTile*, int>* storage) {
-
-	GameEntity* entt = nullptr;
-
-	for (auto it = storage->begin(); it != storage->end(); ++it) {
-
-		entt = it->first;
-
-		if (COMPARE_STRINGS_2(alpha->m_IDCmp->m_ID, entt->m_IDCmp->m_ID) == 0) {
-
-			storage->erase(it);
-		}
-	}
-
-	/*
-	for (auto it : *storage) {
-		if (COMPARE_STRINGS_2(alpha->m_IDCmp->m_ID, it.first->m_IDCmp->m_ID)) {
-			storage->erase(it.first);
-		}
-	}
-	*/
-}
-
-
-int Unit::_getCurrentCostForTile(int previously_accumulated_cost, MapTile* maptile) {
-
-	int tile_cost = maptile->m_MovementCostCmp->GetRaceModifiedMovementCost(m_EntityRaceCmp->m_EntityRaceString);
-	return previously_accumulated_cost + tile_cost;
 }
 
 

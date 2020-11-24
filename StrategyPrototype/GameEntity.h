@@ -366,9 +366,6 @@ public:
 
 	// Saves maptiles to which this unit can go in current turn.
 	// It returns the reachable maptiles, so we can draw them in main function.
-	bool DetermineTilesInMovementRange(std::vector<MapTile*>* storage);
-
-	// return false on error, else true.
 	bool DetermineTilesInMovementRange2(std::map<MapTile*, int>* storage);
 
 	
@@ -457,12 +454,9 @@ private:
 	// Based on given position returns a vector of neighboring maptiles.
 	std::vector<MapTile*>* _getNeighbouringMapTiles(int xpos, int ypos);
 	std::vector<MapTile*>* _getNeighbouringMapTiles(MapTile* maptile);
-	void _removeAlphaTileFromNeighboringMapTiles(MapTile* alpha, std::vector<MapTile*>* storage);
-	void _removeAlphaTileFromNeighboringMapTiles(MapTile* alpha, std::map<MapTile*, int>* storage);
-	int _getCurrentCostForTile(int previously_accumulated_cost, MapTile* maptile);
 	bool _isMapTileWeAreStandingOn(MapTile* m);
 	bool _isMapTileAlreadyInserted(MapTile* m, std::map<MapTile*, int>* storage);
-	bool _isMapTileDuplicateNeighbor(MapTile* m, std::vector<MapTile*>* storage);
+
 };
 
 
