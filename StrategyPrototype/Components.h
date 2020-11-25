@@ -4,6 +4,13 @@
 #include"FiniteStateMachine.h"
 
 class MapTile;
+// Final function for getting the cost.
+// It queries whether on maptile are entities like hills, mountains or forest and
+// returns a cost accordigly.
+namespace MovementCostHelper {
+
+	extern int GetFinalMovementCost(std::string race, MapTile* maptile);
+}
 
 
 enum class UnitMovementType {
@@ -286,6 +293,11 @@ struct CMPEntityRace {
 // It gives the movement cost back, based on the race of the entity.
 struct CMPMovementCostModifier {
 
+	// Final function for getting the cost.
+	// It queries whether on maptile are entities like hills, mountains or forest and
+	// returns a cost accordigly.
+	int GetFinalMovementCost(std::string race, MapTile* maptile);
+
 	// This function should be used to get the actual movement cost for a unit trespassing on this terrain.
 	// It returns the basemovementcost modified by the racial abilities etc. of a unit.
 	int GetRaceModifiedMovementCost(std::string race) {
@@ -314,42 +326,46 @@ struct CMPMovementCostModifier {
 		else if (COMPARE_STRINGS(race, "Troll") == 0) {
 			return (m_BaseMovementCost + _getRaceModifierValue(CMPEntityRace::Race::RACE_TROLL));
 		}
+		else {
+			return -999;
+		}
 
 	}
 
 	int GetRaceModifiedMovementCost(CMPEntityRace::Race race) {
 		switch (race) {
+
 		case CMPEntityRace::Race::RACE_HUMAN:
 			return GetRaceModifiedMovementCost("Human");
 			break;
 
 		case CMPEntityRace::Race::RACE_ORC:
-		return GetRaceModifiedMovementCost("Orc");
-		break;	
+			return GetRaceModifiedMovementCost("Orc");
+			break;	
 
 		case CMPEntityRace::Race::RACE_HIGHELF:
-		return GetRaceModifiedMovementCost("High Elf");
-		break;	
+			return GetRaceModifiedMovementCost("High Elf");
+			break;	
 		
 		case CMPEntityRace::Race::RACE_DARKELF:
-		return GetRaceModifiedMovementCost("Dark Elf");
-		break;	
+			return GetRaceModifiedMovementCost("Dark Elf");
+			break;	
 		
 		case CMPEntityRace::Race::RACE_TROLL:
-		return GetRaceModifiedMovementCost("Troll");
-		break;	
+			return GetRaceModifiedMovementCost("Troll");
+			break;	
 
 		case CMPEntityRace::Race::RACE_GNOME:
-		return GetRaceModifiedMovementCost("Gnome");
-		break;	
+			return GetRaceModifiedMovementCost("Gnome");
+			break;	
 
 		case CMPEntityRace::Race::RACE_DWARF:
-		return GetRaceModifiedMovementCost("Dwarf");
-		break;	
+			return GetRaceModifiedMovementCost("Dwarf");
+			break;	
 
 		case CMPEntityRace::Race::RACE_GOBLIN:
-		return GetRaceModifiedMovementCost("Goblin");
-		break;	
+			return GetRaceModifiedMovementCost("Goblin");
+			break;	
 
 		default:
 			return -999;
@@ -445,7 +461,7 @@ private:
 			return m_RaceModifierGoblin;
 			break;
 		default:
-			return 0;
+			return -999;
 			break;
 		}
 	}

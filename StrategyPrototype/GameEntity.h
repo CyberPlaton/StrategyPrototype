@@ -1011,15 +1011,22 @@ private:
 
 private:
 	void _setMovementCost() {
-		m_MovementCostCmp->SetBaseMovementCost(3);
+		
+		// Base cost for moving on hills.
+		m_MovementCostCmp->SetBaseMovementCost(2);
+
+		// Race modifiers for moving on hills.
+		// Get minuses for moving on hills.
 		m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_HUMAN, 1);
-		m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_ORC, 1);
-		m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_HIGHELF, 1);
-		m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_DARKELF, 1);
+		m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_ORC, 0);
+		m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_HIGHELF, 2);
+		m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_DARKELF, 2);
 		m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_TROLL, 1);
-		m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_GNOME, -2);
-		m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_DWARF, -2);
-		m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_GOBLIN, -2);
+
+		// Get bonuses for moving on hills.
+		m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_GNOME, -1);
+		m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_DWARF, -1);
+		m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_GOBLIN, -1);
 	}
 };
 
@@ -1092,15 +1099,21 @@ private:
 
 private:
 	void _setMovementCost() {
-		m_MovementCostCmp->SetBaseMovementCost(4);
+		// Base cost form oving on mountains.
+		m_MovementCostCmp->SetBaseMovementCost(3);
+
+		// Race modifiers..
+		// minuses..
 		m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_HUMAN, 2);
 		m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_ORC, 2);
 		m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_HIGHELF, 3);
 		m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_DARKELF, 3);
 		m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_TROLL, 3);
-		m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_GNOME, -3);
-		m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_DWARF, -3);
-		m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_GOBLIN, -2);
+
+		// bonuses...
+		m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_GNOME, -2);
+		m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_DWARF, -2);
+		m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_GOBLIN, -1);
 	}
 };
 
@@ -1142,9 +1155,6 @@ public:
 		m_GraphicsCmp->m_SpriteName = name;
 
 
-		m_MovementCostCmp = new CMPMovementCostModifier();
-		_setMovementCost();
-
 		m_AICmp = new CMPArtificialIntelligence(this);
 
 		// Define props
@@ -1175,6 +1185,12 @@ public:
 		else if (IsSubstringInString("savannah", name)) {
 			m_ForestClass = ForestClass::FOREST_CLASS_SAVANNAH;
 		}
+
+
+		// Set movement cost after ForestType is define, as
+		// we count on its definition.
+		m_MovementCostCmp = new CMPMovementCostModifier();
+		_setMovementCost();
 		
 	}
 
@@ -1205,46 +1221,71 @@ private:
 		case ForestType::FOREST_DEEP:
 			// Base cost for a deepforest...
 			m_MovementCostCmp->SetBaseMovementCost(3);
-			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_HUMAN, 0);
-			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_ORC, 0);
+
+			// Race modifiers..
+			// bonuses..
 			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_HIGHELF, -2);
 			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_DARKELF, -2);
 			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_TROLL, -2);
-			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_GNOME, 1);
-			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_DWARF, 1);
-			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_GOBLIN, 1);
+
+
+			// minuses...
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_HUMAN, 1);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_ORC, 1);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_GNOME, 3);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_DWARF, 3);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_GOBLIN, 3);
 
 			break;
 		case ForestType::FOREST_NORMAL:
+			// Normal forest base cost
 			m_MovementCostCmp->SetBaseMovementCost(2);
-			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_HUMAN, 0);
-			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_ORC, 0);
+
+			// bonuses...
 			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_HIGHELF, -1);
 			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_DARKELF, -1);
 			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_TROLL, -1);
-			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_GNOME, 1);
-			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_DWARF, 1);
-			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_GOBLIN, 1);
+
+
+			// minuses...
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_HUMAN, 1);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_ORC, 1);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_GNOME, 2);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_DWARF, 2);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_GOBLIN, 2);
 
 			break;
 		case ForestType::FOREST_SCARCE:
-			m_MovementCostCmp->SetBaseMovementCost(1);
-			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_HUMAN, 0);
-			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_ORC, 0);
-			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_HIGHELF, 0);
-			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_DARKELF, 0);
-			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_TROLL, 0);
-			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_GNOME, 0);
-			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_DWARF, 0);
-			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_GOBLIN, 0);
-			break;
-		case ForestType::FOREST_DYING:
+			// Base cost.. like normal forest.
 			m_MovementCostCmp->SetBaseMovementCost(2);
-			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_HUMAN, 0);
-			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_ORC, 0);
+
+			// bonuses...
 			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_HIGHELF, -1);
 			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_DARKELF, -1);
 			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_TROLL, -1);
+
+
+			// minuses...
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_HUMAN, 0);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_ORC, 0);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_GNOME, 1);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_DWARF, 1);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_GOBLIN, 1);
+			break;
+		case ForestType::FOREST_DYING:
+			// Base cost.. like normal/deep forest...
+			m_MovementCostCmp->SetBaseMovementCost(2);
+
+			// Race modifiers..
+			// bonuses..
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_HIGHELF, -1);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_DARKELF, -1);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_TROLL, -1);
+
+
+			// minuses...
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_HUMAN, 0);
+			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_ORC, 0);
 			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_GNOME, 1);
 			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_DWARF, 1);
 			m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_GOBLIN, 1);

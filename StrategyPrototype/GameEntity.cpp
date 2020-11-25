@@ -524,6 +524,7 @@ void Unit::_defineStatsBasedOnUnitRace() {
 	if (m_EntityRaceCmp == nullptr) return;
 
 	float intelligence_multiplier = 1.0f;
+	int intelligence = 0;
 
 
 	switch (m_EntityRaceCmp->m_EntityRace) {
@@ -534,7 +535,7 @@ void Unit::_defineStatsBasedOnUnitRace() {
 
 
 		intelligence_multiplier = 0.65f;
-		int intelligence = GetUnitAttributes()->at(UnitAttributesEnum::UNIT_ATTRIBUTE_INTELLIGENCE);
+		intelligence = GetUnitAttributes()->at(UnitAttributesEnum::UNIT_ATTRIBUTE_INTELLIGENCE);
 		intelligence = 0.5f + intelligence * intelligence_multiplier;
 
 		// Bonuses
@@ -3446,6 +3447,87 @@ bool Unit::DetermineTilesInMovementRange2(std::map<MapTile*, int>* storage) {
 	// Other tiles neighbors.
 	std::vector<MapTile*> neighbors_vec;
 
+
+	// First step before recursion, checking immediate neighbors.
+	for (auto it : first_neighbors) { // For each neighbor, do:
+
+		// If we can reach it, insert in storage.
+		if (m_MovementPoints - (it->m_MovementCostCmp->GetFinalMovementCost(m_EntityRaceCmp->m_EntityRaceString, it)) >= 0) {
+
+			storage->try_emplace(it, it->m_MovementCostCmp->GetFinalMovementCost(m_EntityRaceCmp->m_EntityRaceString, it));
+		}
+	}
+
+	first_neighbors.clear();
+
+
+	// Second step, insert maptile we are standing on as zero cost.
+	storage->try_emplace(GetMapTileAtWorldPosition(m_TransformCmp->m_GameWorldSpaceCell[0], m_TransformCmp->m_GameWorldSpaceCell[1]), 0);
+
+	// Third. Copy evrything to vector. Thus we can push to end and  iterate over EVERY tile.
+	std::vector<MapTile*> copied_vec;
+	for (auto it : *storage) {
+
+		copied_vec.push_back(it.first);
+	}
+
+
+	int cost = 0, parent_cost = 0;
+	int loops = 0;
+
+	// Do algorithm:
+	for (int i = 0; i < copied_vec.size(); ++i) {
+
+
+		neighbors_vec = *_getNeighbouringMapTiles(copied_vec[i]);
+
+
+		for (auto n_itr : neighbors_vec) {
+
+
+			cost = n_itr->m_MovementCostCmp->GetFinalMovementCost(m_EntityRaceCmp->m_EntityRaceString, n_itr);
+			parent_cost = storage->at(copied_vec[i]);
+
+
+			if (m_MovementPoints - (cost + parent_cost) >= 0 &&
+				_isMapTileAlreadyInserted(n_itr, storage) == false) {
+
+
+				storage->try_emplace(n_itr, cost + parent_cost);
+
+				// And save particular maptile for recursive processing of neighbors.
+				copied_vec.push_back(n_itr);
+			}
+
+
+		}
+
+
+	}
+
+
+
+	m_MovementCostStorage = storage;
+
+	return true;
+}
+
+
+/*
+bool Unit::DetermineTilesInMovementRange2(std::map<MapTile*, int>* storage) {
+
+	using namespace std;
+	cout << APP_COLOR << endl;
+
+	// NOTE:
+	// We associate every maptile with a cost, and store it in given map.
+	// We define the maptile we are standing on, as cost of 0.
+
+	std::vector<MapTile*> first_neighbors = *_getNeighbouringMapTiles(m_TransformCmp->m_GameWorldSpaceCell[0], m_TransformCmp->m_GameWorldSpaceCell[1]);
+
+	// Other tiles neighbors.
+	std::vector<MapTile*> neighbors_vec;
+
 	
 	// First step before recursion, checking immediate neighbors.
 	for (auto it : first_neighbors) { // For each neighbor, do:
@@ -3510,7 +3592,7 @@ bool Unit::DetermineTilesInMovementRange2(std::map<MapTile*, int>* storage) {
 
 	return true;
 }
-
+*/
 
 
 

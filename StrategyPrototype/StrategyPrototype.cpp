@@ -7,6 +7,37 @@ static int ColorValue = 0;
 PlayerTurnCounter* PlayerTurnCounter::g_pPlayerTurnCounter = nullptr;
 
 
+int MovementCostHelper::GetFinalMovementCost(std::string race, MapTile* maptile) {
+
+	int cost = 0;
+
+	for (auto it : *maptile->m_MapTileEntities) {
+
+		if (COMPARE_STRINGS(it->m_IDCmp->m_DynamicTypeName, "Forest") == 0) {
+
+			cost = it->m_MovementCostCmp->GetRaceModifiedMovementCost(race);
+		}
+		else if (COMPARE_STRINGS(it->m_IDCmp->m_DynamicTypeName, "Hills") == 0) {
+
+			cost = it->m_MovementCostCmp->GetRaceModifiedMovementCost(race);
+		}
+		else if (COMPARE_STRINGS(it->m_IDCmp->m_DynamicTypeName, "Mountains") == 0) {
+
+			cost = it->m_MovementCostCmp->GetRaceModifiedMovementCost(race);
+		}
+
+	}
+
+	// Means, no entities on tile and tile is empty.
+	if (cost == 0) {
+		cost = maptile->m_MovementCostCmp->GetRaceModifiedMovementCost(race);
+	}
+
+
+	return cost;
+}
+
+
 IMGUI* IMGUI::m_IMGUI = nullptr;
 int IMGUI::m_WidgetID = 0; // A valid ID is greater 0.
 
