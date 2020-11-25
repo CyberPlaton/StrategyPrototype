@@ -14,32 +14,61 @@ int MovementCostHelper::GetFinalMovementCost(std::string race, MapTile* maptile,
 		return 999;
 	}
 
+	// Firstly, for flying units, we define standard cost for everything := 2.
+	if (unit->m_UnitMovementType == UnitMovementType::UNIT_MOVEMENT_TYPE_FLYING) {
+		return 2;
+	}
+
+
+
 
 	int cost = 0;
 
+	// Secondly, we deal with walking and swimming units separately:
+	if (unit->m_UnitMovementType == UnitMovementType::UNIT_MOVEMENT_TYPE_SWIMMING) {
 
-	for (auto it : *maptile->m_MapTileEntities) {
+		// Swimming ...
+		for (auto it : *maptile->m_MapTileEntities) {
 
-		if (COMPARE_STRINGS(it->m_IDCmp->m_DynamicTypeName, "Forest") == 0) {
+			if (COMPARE_STRINGS(it->m_IDCmp->m_DynamicTypeName, "River") == 0) { // Get cost for moving on river.
 
-			cost = it->m_MovementCostCmp->GetRaceModifiedMovementCost(race);
+				cost = it->m_MovementCostCmp->GetRaceModifiedMovementCost(race);
+			}
 		}
-		else if (COMPARE_STRINGS(it->m_IDCmp->m_DynamicTypeName, "Hills") == 0) {
 
-			cost = it->m_MovementCostCmp->GetRaceModifiedMovementCost(race);
-		}
-		else if (COMPARE_STRINGS(it->m_IDCmp->m_DynamicTypeName, "Mountains") == 0) {
-
-			cost = it->m_MovementCostCmp->GetRaceModifiedMovementCost(race);
+		// If no river then get cost for moving on maptile:
+		if (cost == 0) {
+			cost = maptile->m_MovementCostCmp->GetRaceModifiedMovementCost(race);
 		}
 
 	}
+	else {
 
-	// Means, no entities on tile and tile is empty.
-	if (cost == 0) {
-		cost = maptile->m_MovementCostCmp->GetRaceModifiedMovementCost(race);
+		// Walking...
+		
+		for (auto it : *maptile->m_MapTileEntities) {
+
+			if (COMPARE_STRINGS(it->m_IDCmp->m_DynamicTypeName, "Forest") == 0) {
+
+				cost = it->m_MovementCostCmp->GetRaceModifiedMovementCost(race);
+			}
+			else if (COMPARE_STRINGS(it->m_IDCmp->m_DynamicTypeName, "Hills") == 0) {
+
+				cost = it->m_MovementCostCmp->GetRaceModifiedMovementCost(race);
+			}
+			else if (COMPARE_STRINGS(it->m_IDCmp->m_DynamicTypeName, "Mountains") == 0) {
+
+				cost = it->m_MovementCostCmp->GetRaceModifiedMovementCost(race);
+			}
+
+		}
+
+		// Means, no entities on tile and tile is empty.
+		if (cost == 0) {
+			cost = maptile->m_MovementCostCmp->GetRaceModifiedMovementCost(race);
+		}
+
 	}
-
 
 	return cost;
 }
