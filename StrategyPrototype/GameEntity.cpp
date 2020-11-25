@@ -3780,8 +3780,13 @@ void Unit::MoveTo(int x_cell, int y_cell, std::map<MapTile*, int>* storage) {
 	city = HasMapTileCityOrFort(tile);
 	if (city != nullptr) {
 
-		city->m_PresentUnitsMap.emplace(this->m_Name, this);
 
+		// NOTE:
+		// we need to see whether we should have a std::map or std::vector
+		// for storage of units...
+		// if map, then we need to have NON-SIMILAR keys...
+		//city->m_PresentUnitsMap.emplace(this->m_Name, this);
+		city->m_PresentUnitsMap.push_back(this);
 		
 		cout << APP_COLOR << endl;
 		cout << "Unit " << this->m_Name << " entered " << city->m_CityName << " ." << white << endl;

@@ -18,7 +18,7 @@ bool IsUnitInCityOrFort(Unit* unit) {
 		for (auto itr : city->m_PresentUnitsMap) {
 
 
-			if (COMPARE_STRINGS_2(unit->m_IDCmp->m_ID, itr.second->m_IDCmp->m_ID) == 0) {
+			if (COMPARE_STRINGS_2(unit->m_IDCmp->m_ID, itr->m_IDCmp->m_ID) == 0) {
 
 
 				return true;
@@ -1822,7 +1822,10 @@ void CMPCameraInput::_handleMapViewMouse(Camera* cam) {
 	
 	MapTile* tile = nullptr;
 	City* city = nullptr;
-	if (context->GetMouse(1).bPressed) {
+	
+	// Do not enter city by clicking on it, if we only want sent unit on it.
+	if (context->GetMouse(1).bPressed && PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlySelectedUnit == nullptr){
+		
 
 		tile = GetMaptileAtMousePosition(context->GetMouseX(), context->GetMouseY());
 
@@ -3520,11 +3523,11 @@ void Renderer::Render2Layer1() {
 
 		unit = reinterpret_cast<Unit*>(*it);
 
-		// For now, do not check for out of screen..
-		
+
 		// Do not draw tiles we do not see.
 		if (unit->m_TransformCmp->m_Cell[0] > VISIBLE_MAP_WIDTH ||
-			unit->m_TransformCmp->m_Cell[1] > VISIBLE_MAP_HEIGHT) continue;
+			unit->m_TransformCmp->m_Cell[1] > VISIBLE_MAP_HEIGHT ||
+			IsUnitInCityOrFort(unit)) continue;
 
 
 		// Draw unit.
@@ -3978,6 +3981,15 @@ void Renderer::DrawUnitPanels() {
 	for (auto it = vec.begin(); it != vec.end(); ++it) {
 
 		unit = reinterpret_cast<Unit*>(*it);
+
+
+
+		// Do not draw tiles we do not see.
+		if (unit->m_TransformCmp->m_Cell[0] > VISIBLE_MAP_WIDTH ||
+			unit->m_TransformCmp->m_Cell[1] > VISIBLE_MAP_HEIGHT ||
+			IsUnitInCityOrFort(unit)) continue;
+
+
 
 		// Player unit color.
 		std::string player_string = "Belongs to " + unit->m_AssociatedPlayer->m_PlayerName;

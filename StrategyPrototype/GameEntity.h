@@ -631,7 +631,8 @@ public:
 	bool m_CoastalCity = false; // Defines the layout in cityview, and is set at initialization.
 
 	std::map<std::string, CityRessource*> m_CityRessourcesMap;
-	std::map<std::string, GameEntity*> m_PresentUnitsMap;
+	//std::map<std::string, GameEntity*> m_PresentUnitsMap;
+	std::vector<GameEntity*> m_PresentUnitsMap;
 
 	std::vector<MapTileRegion*> m_ClaimedRegions;
 	std::string m_ClaimedRegionsSpriteName;
