@@ -224,10 +224,10 @@ void Unit::_defineDerivedAttributes() {
 		health_multiplier -= 0.5f;
 	}
 	else if (this->m_EntityRaceCmp->m_EntityRace == CMPEntityRace::Race::RACE_ORC) {
-		health_multiplier += 2;
+		health_multiplier += 1;
 	}
 	else if (this->m_EntityRaceCmp->m_EntityRace == CMPEntityRace::Race::RACE_DWARF) {
-		health_multiplier += 1.5f;
+		health_multiplier += 1.0f;
 	}
 	else if (this->m_EntityRaceCmp->m_EntityRace == CMPEntityRace::Race::RACE_TROLL) {
 		health_multiplier += 1;
@@ -264,7 +264,10 @@ void Unit::_defineDerivedAttributes() {
 		multiplier -= 0.5f;
 	}
 	else if (this->m_EntityRaceCmp->m_EntityRace == CMPEntityRace::Race::RACE_GOBLIN) {
-		multiplier -= 0.7f;
+		multiplier -= 0.5f;
+	}
+	else if (this->m_EntityRaceCmp->m_EntityRace == CMPEntityRace::Race::RACE_GNOME) {
+		multiplier -= 0.5f;
 	}
 
 	// .. based on birthsign.
@@ -520,6 +523,7 @@ void Unit::_defineStatsBasedOnUnitRace() {
 
 	if (m_EntityRaceCmp == nullptr) return;
 
+	float intelligence_multiplier = 1.0f;
 
 
 	switch (m_EntityRaceCmp->m_EntityRace) {
@@ -527,9 +531,18 @@ void Unit::_defineStatsBasedOnUnitRace() {
 	case CMPEntityRace::Race::RACE_INVALID:
 		break;
 	case CMPEntityRace::Race::RACE_HUMAN:
+
+
+		intelligence_multiplier = 0.65f;
+		int intelligence = GetUnitAttributes()->at(UnitAttributesEnum::UNIT_ATTRIBUTE_INTELLIGENCE);
+		intelligence = 0.5f + intelligence * intelligence_multiplier;
+
 		// Bonuses
+		attr->SetAttribute(m_UnitAttributesMap, "Intelligence", intelligence);
+
+
+
 		attr->SetAttribute(m_UnitAttributesMap, "Strength", 2);
-		attr->SetAttribute(m_UnitAttributesMap, "Intelligence", 5);
 		attr->SetAttribute(m_UnitAttributesMap, "Personality", 5);
 
 		// Minuses
@@ -537,7 +550,7 @@ void Unit::_defineStatsBasedOnUnitRace() {
 
 
 
-
+		
 		skills->SetSkill(m_UnitSkillsMap, "Light Armor", 10);
 		skills->SetSkill(m_UnitSkillsMap, "Long Blade", 10);
 		skills->SetSkill(m_UnitSkillsMap, "Restoration", 5);
