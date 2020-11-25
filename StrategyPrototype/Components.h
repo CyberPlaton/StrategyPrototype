@@ -3,13 +3,14 @@
 #include"ColorConsole.h"
 #include"FiniteStateMachine.h"
 
+class Unit;
 class MapTile;
 // Final function for getting the cost.
 // It queries whether on maptile are entities like hills, mountains or forest and
 // returns a cost accordigly.
 namespace MovementCostHelper {
 
-	extern int GetFinalMovementCost(std::string race, MapTile* maptile);
+	extern int GetFinalMovementCost(std::string race, MapTile* maptile, Unit* unit);
 }
 
 
@@ -296,7 +297,7 @@ struct CMPMovementCostModifier {
 	// Final function for getting the cost.
 	// It queries whether on maptile are entities like hills, mountains or forest and
 	// returns a cost accordigly.
-	int GetFinalMovementCost(std::string race, MapTile* maptile);
+	int GetFinalMovementCost(std::string race, MapTile* maptile, Unit* unit);
 
 	// This function should be used to get the actual movement cost for a unit trespassing on this terrain.
 	// It returns the basemovementcost modified by the racial abilities etc. of a unit.

@@ -3433,6 +3433,49 @@ void  Unit::_resetMovementPoints() {
 
 
 
+bool Unit::CanMoveOnMapTile(MapTile* tile) {
+
+	switch (m_UnitMovementType) {
+	case UnitMovementType::UNIT_MOVEMENT_TYPE_FLYING:
+		return true; // Flying units can fly over mountains, hills... and water.
+		break;
+	case UnitMovementType::UNIT_MOVEMENT_TYPE_WALKING:
+
+		// Walking units cannot walk over water...
+		// Later we deal accordingly with sand and ice.
+		if (tile->m_MapTileType == MapTile::MapTileType::MAPTILE_TYPE_WATER_SHALLOW ||
+			tile->m_MapTileType == MapTile::MapTileType::MAPTILE_TYPE_WATER_DEEP) {
+
+			return false;
+		}
+		else {
+			return true;
+		}
+		break;
+	case UnitMovementType::UNIT_MOVEMENT_TYPE_SWIMMING:
+		
+		// Swimming units can only swimm over water...
+		if (tile->m_MapTileType == MapTile::MapTileType::MAPTILE_TYPE_WATER_SHALLOW ||
+			tile->m_MapTileType == MapTile::MapTileType::MAPTILE_TYPE_WATER_DEEP) {
+
+			return true;
+		}
+		else if (HasMapTileRiver(tile)) { // Check whether a river is present, then true.
+			
+			return true;
+		}
+		else {
+			return false;
+		}
+		break;
+	default:
+		return false;
+		break;
+	}
+}
+
+
+
 bool Unit::DetermineTilesInMovementRange2(std::map<MapTile*, int>* storage) {
 
 	using namespace std;
@@ -3452,9 +3495,9 @@ bool Unit::DetermineTilesInMovementRange2(std::map<MapTile*, int>* storage) {
 	for (auto it : first_neighbors) { // For each neighbor, do:
 
 		// If we can reach it, insert in storage.
-		if (m_MovementPoints - (it->m_MovementCostCmp->GetFinalMovementCost(m_EntityRaceCmp->m_EntityRaceString, it)) >= 0) {
+		if (m_MovementPoints - (it->m_MovementCostCmp->GetFinalMovementCost(m_EntityRaceCmp->m_EntityRaceString, it, this)) >= 0) {
 
-			storage->try_emplace(it, it->m_MovementCostCmp->GetFinalMovementCost(m_EntityRaceCmp->m_EntityRaceString, it));
+			storage->try_emplace(it, it->m_MovementCostCmp->GetFinalMovementCost(m_EntityRaceCmp->m_EntityRaceString, it, this));
 		}
 	}
 
@@ -3485,7 +3528,7 @@ bool Unit::DetermineTilesInMovementRange2(std::map<MapTile*, int>* storage) {
 		for (auto n_itr : neighbors_vec) {
 
 
-			cost = n_itr->m_MovementCostCmp->GetFinalMovementCost(m_EntityRaceCmp->m_EntityRaceString, n_itr);
+			cost = n_itr->m_MovementCostCmp->GetFinalMovementCost(m_EntityRaceCmp->m_EntityRaceString, n_itr, this);
 			parent_cost = storage->at(copied_vec[i]);
 
 

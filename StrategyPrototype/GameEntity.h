@@ -303,7 +303,7 @@ public:
 
 		m_IDCmp->m_DynamicTypeName = "Unit";
 	
-		
+		_setUnitMovementType(movement_type);
 
 		m_TransformCmp->m_PosX = xpos;
 		m_TransformCmp->m_PosY = ypos;
@@ -396,6 +396,7 @@ public:
 
 	unsigned int GetMovementPoints() { return m_MovementPoints; }
 
+	bool CanMoveOnMapTile(MapTile* tile);
 
 
 	std::map<UnitSkillsEnum, int>* GetUnitSkills() {
@@ -437,6 +438,10 @@ private:
 private:
 	void _determineUnitRibbonColor();
 	void _defineMaxAge();
+
+	void _setUnitMovementType(UnitMovementType type) {
+		m_UnitMovementType = type;
+	}
 
 	void _defineRandomUnitTalents(); // Defines randomized bonuses to attributes and skills.
 	void _defineStandardBeginningStats(); // All skills and attributes start at 5.

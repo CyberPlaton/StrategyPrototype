@@ -7,9 +7,16 @@ static int ColorValue = 0;
 PlayerTurnCounter* PlayerTurnCounter::g_pPlayerTurnCounter = nullptr;
 
 
-int MovementCostHelper::GetFinalMovementCost(std::string race, MapTile* maptile) {
+int MovementCostHelper::GetFinalMovementCost(std::string race, MapTile* maptile, Unit* unit) {
+
+	// We have to check whether this unit type HAS THE ABILITY to move on particular maptile type.
+	if (unit->CanMoveOnMapTile(maptile) == false) {
+		return 999;
+	}
+
 
 	int cost = 0;
+
 
 	for (auto it : *maptile->m_MapTileEntities) {
 
