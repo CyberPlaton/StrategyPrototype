@@ -1,0 +1,401 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DEFECTS>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\</FILEPATH>
+      <FILENAME>Components.h</FILENAME>
+      <LINE>28</LINE>
+      <COLUMN>32</COLUMN>
+    </SFA>
+    <DEFECTCODE>26451</DEFECTCODE>
+    <DESCRIPTION>Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2).</DESCRIPTION>
+    <FUNCTION>TimeCounter::TimeOut</FUNCTION>
+    <DECORATED>?TimeOut@TimeCounter@@QEAA_NXZ</DECORATED>
+    <FUNCLINE>26</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\</FILEPATH>
+      <FILENAME>StrategyPrototype.h</FILENAME>
+      <LINE>75</LINE>
+      <COLUMN>1</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'Renderer::m_Layer1' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>Renderer::{ctor}</FUNCTION>
+    <DECORATED>??0Renderer@@QEAA@PEAVGame@@PEAVCamera@@@Z</DECORATED>
+    <FUNCLINE>75</FUNCLINE>
+    <ADDITIONALINFO>
+      <targetSymbol>Renderer::m_Layer1</targetSymbol>
+    </ADDITIONALINFO>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\</FILEPATH>
+      <FILENAME>StrategyPrototype.h</FILENAME>
+      <LINE>75</LINE>
+      <COLUMN>1</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'Renderer::m_Layer4' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>Renderer::{ctor}</FUNCTION>
+    <DECORATED>??0Renderer@@QEAA@PEAVGame@@PEAVCamera@@@Z</DECORATED>
+    <FUNCLINE>75</FUNCLINE>
+    <ADDITIONALINFO>
+      <targetSymbol>Renderer::m_Layer4</targetSymbol>
+    </ADDITIONALINFO>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\</FILEPATH>
+      <FILENAME>StrategyPrototype.h</FILENAME>
+      <LINE>75</LINE>
+      <COLUMN>1</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'Renderer::m_Layer3' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>Renderer::{ctor}</FUNCTION>
+    <DECORATED>??0Renderer@@QEAA@PEAVGame@@PEAVCamera@@@Z</DECORATED>
+    <FUNCLINE>75</FUNCLINE>
+    <ADDITIONALINFO>
+      <targetSymbol>Renderer::m_Layer3</targetSymbol>
+    </ADDITIONALINFO>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\</FILEPATH>
+      <FILENAME>StrategyPrototype.h</FILENAME>
+      <LINE>75</LINE>
+      <COLUMN>1</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'Renderer::m_Layer2' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>Renderer::{ctor}</FUNCTION>
+    <DECORATED>??0Renderer@@QEAA@PEAVGame@@PEAVCamera@@@Z</DECORATED>
+    <FUNCLINE>75</FUNCLINE>
+    <ADDITIONALINFO>
+      <targetSymbol>Renderer::m_Layer2</targetSymbol>
+    </ADDITIONALINFO>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\</FILEPATH>
+      <FILENAME>StrategyPrototype.h</FILENAME>
+      <LINE>207</LINE>
+      <COLUMN>47</COLUMN>
+    </SFA>
+    <DEFECTCODE>6281</DEFECTCODE>
+    <DESCRIPTION>Incorrect order of operations:  relational operators have higher precedence than bitwise operators.</DESCRIPTION>
+    <FUNCTION>PlayerTurnCounter::NextPlayerTurn</FUNCTION>
+    <DECORATED>?NextPlayerTurn@PlayerTurnCounter@@QEAA_NXZ</DECORATED>
+    <FUNCLINE>201</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\</FILEPATH>
+      <FILENAME>StrategyPrototype.h</FILENAME>
+      <LINE>207</LINE>
+      <COLUMN>20</COLUMN>
+    </SFA>
+    <DEFECTCODE>6281</DEFECTCODE>
+    <DESCRIPTION>Incorrect order of operations:  relational operators have higher precedence than bitwise operators.</DESCRIPTION>
+    <FUNCTION>PlayerTurnCounter::NextPlayerTurn</FUNCTION>
+    <DECORATED>?NextPlayerTurn@PlayerTurnCounter@@QEAA_NXZ</DECORATED>
+    <FUNCLINE>201</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\</FILEPATH>
+      <FILENAME>StrategyPrototype.h</FILENAME>
+      <LINE>345</LINE>
+      <COLUMN>0</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'UIState::m_MouseX' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>UIState::{ctor}</FUNCTION>
+    <DECORATED>??0UIState@@QEAA@XZ</DECORATED>
+    <FUNCLINE>345</FUNCLINE>
+    <ADDITIONALINFO>
+      <targetSymbol>UIState::m_MouseX</targetSymbol>
+    </ADDITIONALINFO>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\</FILEPATH>
+      <FILENAME>StrategyPrototype.h</FILENAME>
+      <LINE>345</LINE>
+      <COLUMN>0</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'UIState::m_MouseY' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>UIState::{ctor}</FUNCTION>
+    <DECORATED>??0UIState@@QEAA@XZ</DECORATED>
+    <FUNCLINE>345</FUNCLINE>
+    <ADDITIONALINFO>
+      <targetSymbol>UIState::m_MouseY</targetSymbol>
+    </ADDITIONALINFO>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\</FILEPATH>
+      <FILENAME>StrategyPrototype.h</FILENAME>
+      <LINE>345</LINE>
+      <COLUMN>0</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'UIState::m_KeyMode' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>UIState::{ctor}</FUNCTION>
+    <DECORATED>??0UIState@@QEAA@XZ</DECORATED>
+    <FUNCLINE>345</FUNCLINE>
+    <ADDITIONALINFO>
+      <targetSymbol>UIState::m_KeyMode</targetSymbol>
+    </ADDITIONALINFO>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\</FILEPATH>
+      <FILENAME>StrategyPrototype.h</FILENAME>
+      <LINE>345</LINE>
+      <COLUMN>0</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'UIState::m_KeyEntered' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>UIState::{ctor}</FUNCTION>
+    <DECORATED>??0UIState@@QEAA@XZ</DECORATED>
+    <FUNCLINE>345</FUNCLINE>
+    <ADDITIONALINFO>
+      <targetSymbol>UIState::m_KeyEntered</targetSymbol>
+    </ADDITIONALINFO>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\</FILEPATH>
+      <FILENAME>StrategyPrototype.h</FILENAME>
+      <LINE>345</LINE>
+      <COLUMN>0</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'UIState::m_KeyboardItem' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>UIState::{ctor}</FUNCTION>
+    <DECORATED>??0UIState@@QEAA@XZ</DECORATED>
+    <FUNCLINE>345</FUNCLINE>
+    <ADDITIONALINFO>
+      <targetSymbol>UIState::m_KeyboardItem</targetSymbol>
+    </ADDITIONALINFO>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\</FILEPATH>
+      <FILENAME>StrategyPrototype.h</FILENAME>
+      <LINE>345</LINE>
+      <COLUMN>0</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'UIState::m_LastFocusedWidget' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>UIState::{ctor}</FUNCTION>
+    <DECORATED>??0UIState@@QEAA@XZ</DECORATED>
+    <FUNCLINE>345</FUNCLINE>
+    <ADDITIONALINFO>
+      <targetSymbol>UIState::m_LastFocusedWidget</targetSymbol>
+    </ADDITIONALINFO>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\</FILEPATH>
+      <FILENAME>StrategyPrototype.cpp</FILENAME>
+      <LINE>541</LINE>
+      <COLUMN>5</COLUMN>
+    </SFA>
+    <DEFECTCODE>6011</DEFECTCODE>
+    <DESCRIPTION>Dereferencing NULL pointer 'decal'. </DESCRIPTION>
+    <FUNCTION>IMGUI::ToolTipSpriteButton</FUNCTION>
+    <DECORATED>?ToolTipSpriteButton@IMGUI@@QEAAHHHHV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@0@Z</DECORATED>
+    <FUNCLINE>519</FUNCLINE>
+    <PROBABILITY>1</PROBABILITY>
+    <RANK>4</RANK>
+    <CATEGORY>
+      <RULECATEGORY>mspft</RULECATEGORY>
+    </CATEGORY>
+    <PATH>
+      <SFA>
+        <FILEPATH>C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\</FILEPATH>
+        <FILENAME>StrategyPrototype.cpp</FILENAME>
+        <LINE>524</LINE>
+        <COLUMN>6</COLUMN>
+        <KEYEVENT>
+          <ID>1</ID>
+          <KIND>declaration</KIND>
+          <IMPORTANCE>Essential</IMPORTANCE>
+          <MESSAGE>'decal' is NULL</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\</FILEPATH>
+        <FILENAME>StrategyPrototype.cpp</FILENAME>
+        <LINE>526</LINE>
+        <COLUMN>36</COLUMN>
+        <KEYEVENT>
+          <ID>2</ID>
+          <KIND>branch</KIND>
+          <IMPORTANCE>Full</IMPORTANCE>
+          <MESSAGE>Enter this branch, (assume '&lt;branch condition&gt;')</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\</FILEPATH>
+        <FILENAME>StrategyPrototype.cpp</FILENAME>
+        <LINE>528</LINE>
+        <COLUMN>21</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\</FILEPATH>
+        <FILENAME>StrategyPrototype.cpp</FILENAME>
+        <LINE>541</LINE>
+        <COLUMN>5</COLUMN>
+        <KEYEVENT>
+          <ID>3</ID>
+          <KIND>usage</KIND>
+          <IMPORTANCE>Essential</IMPORTANCE>
+          <MESSAGE>'decal' is dereferenced, but may still be NULL</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+    </PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\</FILEPATH>
+      <FILENAME>StrategyPrototype.cpp</FILENAME>
+      <LINE>648</LINE>
+      <COLUMN>5</COLUMN>
+    </SFA>
+    <DEFECTCODE>6011</DEFECTCODE>
+    <DESCRIPTION>Dereferencing NULL pointer 'decal'. </DESCRIPTION>
+    <FUNCTION>IMGUI::ToolTipSpriteButton</FUNCTION>
+    <DECORATED>?ToolTipSpriteButton@IMGUI@@QEAAHHHHV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@0UPixel@olc@@@Z</DECORATED>
+    <FUNCLINE>626</FUNCLINE>
+    <PROBABILITY>1</PROBABILITY>
+    <RANK>4</RANK>
+    <CATEGORY>
+      <RULECATEGORY>mspft</RULECATEGORY>
+    </CATEGORY>
+    <PATH>
+      <SFA>
+        <FILEPATH>C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\</FILEPATH>
+        <FILENAME>StrategyPrototype.cpp</FILENAME>
+        <LINE>631</LINE>
+        <COLUMN>6</COLUMN>
+        <KEYEVENT>
+          <ID>1</ID>
+          <KIND>declaration</KIND>
+          <IMPORTANCE>Essential</IMPORTANCE>
+          <MESSAGE>'decal' is NULL</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\</FILEPATH>
+        <FILENAME>StrategyPrototype.cpp</FILENAME>
+        <LINE>633</LINE>
+        <COLUMN>36</COLUMN>
+        <KEYEVENT>
+          <ID>2</ID>
+          <KIND>branch</KIND>
+          <IMPORTANCE>Full</IMPORTANCE>
+          <MESSAGE>Enter this branch, (assume '&lt;branch condition&gt;')</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\</FILEPATH>
+        <FILENAME>StrategyPrototype.cpp</FILENAME>
+        <LINE>635</LINE>
+        <COLUMN>21</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\</FILEPATH>
+        <FILENAME>StrategyPrototype.cpp</FILENAME>
+        <LINE>648</LINE>
+        <COLUMN>5</COLUMN>
+        <KEYEVENT>
+          <ID>3</ID>
+          <KIND>usage</KIND>
+          <IMPORTANCE>Essential</IMPORTANCE>
+          <MESSAGE>'decal' is dereferenced, but may still be NULL</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+    </PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\</FILEPATH>
+      <FILENAME>StrategyPrototype.cpp</FILENAME>
+      <LINE>819</LINE>
+      <COLUMN>5</COLUMN>
+    </SFA>
+    <DEFECTCODE>6011</DEFECTCODE>
+    <DESCRIPTION>Dereferencing NULL pointer 'decal'. </DESCRIPTION>
+    <FUNCTION>IMGUI::SpriteButton</FUNCTION>
+    <DECORATED>?SpriteButton@IMGUI@@QEAAHHHHV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z</DECORATED>
+    <FUNCLINE>797</FUNCLINE>
+    <PROBABILITY>1</PROBABILITY>
+    <RANK>4</RANK>
+    <CATEGORY>
+      <RULECATEGORY>mspft</RULECATEGORY>
+    </CATEGORY>
+    <PATH>
+      <SFA>
+        <FILEPATH>C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\</FILEPATH>
+        <FILENAME>StrategyPrototype.cpp</FILENAME>
+        <LINE>801</LINE>
+        <COLUMN>6</COLUMN>
+        <KEYEVENT>
+          <ID>1</ID>
+          <KIND>declaration</KIND>
+          <IMPORTANCE>Essential</IMPORTANCE>
+          <MESSAGE>'decal' is NULL</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\</FILEPATH>
+        <FILENAME>StrategyPrototype.cpp</FILENAME>
+        <LINE>803</LINE>
+        <COLUMN>36</COLUMN>
+        <KEYEVENT>
+          <ID>2</ID>
+          <KIND>branch</KIND>
+          <IMPORTANCE>Full</IMPORTANCE>
+          <MESSAGE>Enter this branch, (assume '&lt;branch condition&gt;')</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\</FILEPATH>
+        <FILENAME>StrategyPrototype.cpp</FILENAME>
+        <LINE>805</LINE>
+        <COLUMN>21</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\</FILEPATH>
+        <FILENAME>StrategyPrototype.cpp</FILENAME>
+        <LINE>819</LINE>
+        <COLUMN>5</COLUMN>
+        <KEYEVENT>
+          <ID>3</ID>
+          <KIND>usage</KIND>
+          <IMPORTANCE>Essential</IMPORTANCE>
+          <MESSAGE>'decal' is dereferenced, but may still be NULL</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+    </PATH>
+  </DEFECT>
+</DEFECTS>

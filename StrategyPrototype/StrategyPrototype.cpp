@@ -2487,6 +2487,8 @@ void Game::_loadSpriteResources() {
 
 
 	// Units.
+
+	Sprite* gnome_gyro = new Sprite("assets/unit/gnome/gnome_gyrocopter.png");
 	Sprite* gnome = new Sprite("assets/unit/gnome/gnome_mechafighter.png");
 	Sprite* troll = new Sprite("assets/unit/troll/troll_raptor_rider.png");
 	Sprite* gnome1 = new Sprite("assets/unit/gnome/gnome_citizen.png");
@@ -2499,7 +2501,7 @@ void Game::_loadSpriteResources() {
 	Sprite* gnome8 = new Sprite("assets/unit/gnome/gnome_farmer.png");
 
 
-
+	m_SpriteStorage.push_back(gnome_gyro);
 	m_SpriteStorage.push_back(gnome1);
 	m_SpriteStorage.push_back(gnome2);
 	m_SpriteStorage.push_back(gnome3);
@@ -2513,6 +2515,7 @@ void Game::_loadSpriteResources() {
 	m_SpriteStorage.push_back(gnome);
 	m_SpriteStorage.push_back(troll);
 
+	Decal* d_gnome_gyro = new Decal(gnome_gyro);
 	Decal* d_gnome1 = new Decal(gnome1);
 	Decal* d_gnome2 = new Decal(gnome2);
 	Decal* d_gnome3 = new Decal(gnome3);
@@ -2534,6 +2537,8 @@ void Game::_loadSpriteResources() {
 	m_SpriteResourceMap.insert(std::make_pair("gnome_miner", d_gnome7));
 	m_SpriteResourceMap.insert(std::make_pair("gnome_farmer", d_gnome8));
 	m_SpriteResourceMap.insert(std::make_pair("gnome_mechafighter", d_gnome));
+	m_SpriteResourceMap.insert(std::make_pair("gnome_gyrocopter", d_gnome_gyro));
+
 	
 	m_SpriteResourceMap.insert(std::make_pair("troll_raptor_rider", d_troll));
 
