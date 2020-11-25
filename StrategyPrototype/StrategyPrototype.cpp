@@ -7,6 +7,45 @@ static int ColorValue = 0;
 PlayerTurnCounter* PlayerTurnCounter::g_pPlayerTurnCounter = nullptr;
 
 
+bool IsUnitInCityOrFort(Unit* unit) {
+
+	City* city = nullptr;
+
+	for (auto it : *EntitiesStorage::Get()->GetCitiesVec()) {
+
+		city = reinterpret_cast<City*>(it);
+
+		for (auto itr : city->m_PresentUnitsMap) {
+
+
+			if (COMPARE_STRINGS_2(unit->m_IDCmp->m_ID, itr.second->m_IDCmp->m_ID) == 0) {
+
+
+				return true;
+			}
+		}
+	}
+
+	return false;
+}
+
+City* HasMapTileCityOrFort(MapTile* maptile) {
+
+	City* city = nullptr;
+
+	for (auto it : *maptile->m_MapTileEntities) {
+
+		city = reinterpret_cast<City*>(it);
+
+		if (COMPARE_STRINGS(city->m_IDCmp->m_DynamicTypeName, "City") == 0) {
+
+			return city;
+		}
+	}
+
+	return nullptr;
+}
+
 int MovementCostHelper::GetFinalMovementCost(std::string race, MapTile* maptile, Unit* unit) {
 
 	// We have to check whether this unit type HAS THE ABILITY to move on particular maptile type.
@@ -3482,29 +3521,16 @@ void Renderer::Render2Layer1() {
 		unit = reinterpret_cast<Unit*>(*it);
 
 		// For now, do not check for out of screen..
+		
+		// Do not draw tiles we do not see.
+		if (unit->m_TransformCmp->m_Cell[0] > VISIBLE_MAP_WIDTH ||
+			unit->m_TransformCmp->m_Cell[1] > VISIBLE_MAP_HEIGHT) continue;
+
 
 		// Draw unit.
 		m_Game->DrawDecal(vf2d(unit->m_TransformCmp->m_PosX, unit->m_TransformCmp->m_PosY), 
 						m_Game->m_SpriteResourceMap.at(unit->m_GraphicsCmp->m_SpriteName));
 	}
-
-
-
-	/*
-	m_Game->DrawDecal(vi2d(320, 256), m_Game->m_SpriteResourceMap.at("gnome_mechafighter"));
-	m_Game->DrawDecal(vi2d(384, 256), m_Game->m_SpriteResourceMap.at("troll_raptor_rider"));
-
-	m_Game->DrawDecal(vi2d(128, 128), m_Game->m_SpriteResourceMap.at("gnome_worker"));
-	m_Game->DrawDecal(vi2d(256, 128), m_Game->m_SpriteResourceMap.at("gnome_citizen"));
-	m_Game->DrawDecal(vi2d(320, 128), m_Game->m_SpriteResourceMap.at("gnome_noble"));
-	m_Game->DrawDecal(vi2d(384, 128), m_Game->m_SpriteResourceMap.at("gnome_farmer"));
-	m_Game->DrawDecal(vi2d(512, 128), m_Game->m_SpriteResourceMap.at("gnome_fisher"));
-	m_Game->DrawDecal(vi2d(512, 256), m_Game->m_SpriteResourceMap.at("gnome_hunter"));
-	m_Game->DrawDecal(vi2d(512, 320), m_Game->m_SpriteResourceMap.at("gnome_priest"));
-	m_Game->DrawDecal(vi2d(512, 384), m_Game->m_SpriteResourceMap.at("gnome_miner"));
-	*/
-
-	
 
 
 

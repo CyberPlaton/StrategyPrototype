@@ -3773,6 +3773,21 @@ void Unit::MoveTo(int x_cell, int y_cell, std::map<MapTile*, int>* storage) {
 	cout << APP_ERROR_COLOR << endl;
 	cout << "Unit " << this->m_Name << " moved from (" << curr_pos_x << ":" << curr_pos_y << ") ::= (" << curr_tile[0] << ":" << curr_tile[1] << ") to" << endl;
 	cout << "(" << m_TransformCmp->m_PosX << ":" << m_TransformCmp->m_PosY << ") ::= (" << m_TransformCmp->m_GameWorldSpaceCell[0] << ":" << m_TransformCmp->m_GameWorldSpaceCell[1] << ")." << white << endl;
+
+
+	// CHeck whether a city is at this tile and if so, enter it
+	City* city = nullptr;
+	city = HasMapTileCityOrFort(tile);
+	if (city != nullptr) {
+
+		city->m_PresentUnitsMap.emplace(this->m_Name, this);
+
+		
+		cout << APP_COLOR << endl;
+		cout << "Unit " << this->m_Name << " entered " << city->m_CityName << " ." << white << endl;
+	}
+
+
 }
 
 // Unit cease to exist.
