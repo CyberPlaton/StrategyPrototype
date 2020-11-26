@@ -684,13 +684,15 @@ void Unit::_defineStatsBasedOnUnitRace() {
 void Unit::_defineMaxAge() {
 
 	int r = Random() % 10;
+	int r3 = Random() % 10;
+
 	int r2 = Random() % 2;
 
 	if (r2 == 0) {
-		m_MaxAge = 70 + r;
+		m_MaxAge = 70 + r + r3;
 	}
 	else {
-		m_MaxAge = 70 - r;
+		m_MaxAge = 70 - r - r3;
 
 	}
 }
