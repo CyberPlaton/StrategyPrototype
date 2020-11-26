@@ -7,24 +7,40 @@ static int ColorValue = 0;
 PlayerTurnCounter* PlayerTurnCounter::g_pPlayerTurnCounter = nullptr;
 
 
+bool IsUnitInCityOrFort(City* city, Unit* unit) {
+
+	std::vector<GameEntity*>::iterator it = std::find(city->m_PresentUnitsMap.begin(), city->m_PresentUnitsMap.end(), unit);
+
+	if (it == city->m_PresentUnitsMap.end()) return false;
+	else return true;
+}
+
 bool IsUnitInCityOrFort(Unit* unit) {
 
 	City* city = nullptr;
+	Unit* city_unit = nullptr;
 
-	for (auto it : *EntitiesStorage::Get()->GetCitiesVec()) {
+	std::vector<GameEntity*> vec = *EntitiesStorage::Get()->GetCitiesVec();
 
-		city = reinterpret_cast<City*>(it);
+	for (auto it = vec.begin(); it != vec.end(); ++it) {
 
-		for (auto itr : city->m_PresentUnitsMap) {
+		city = reinterpret_cast<City*>(*it);
 
 
-			if (COMPARE_STRINGS_2(unit->m_IDCmp->m_ID, itr->m_IDCmp->m_ID) == 0) {
 
+		for (auto itr = city->m_PresentUnitsMap.begin(); itr != city->m_PresentUnitsMap.end(); ++itr) {
+
+			city_unit = reinterpret_cast<Unit*>(*itr);
+
+
+
+			if (COMPARE_STRINGS_2(unit->m_IDCmp->m_ID, city_unit->m_IDCmp->m_ID) == 0) {
 
 				return true;
 			}
 		}
 	}
+
 
 	return false;
 }
@@ -1849,15 +1865,33 @@ void CMPCameraInput::_handleMapViewMouse(Camera* cam) {
 		cout << color(colors::BLUE) << endl;
 
 		// Select unit.
-		PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlySelectedUnit = GetUnitAtMapTileFromMousePosition(context->GetMouseX(), context->GetMouseY());
-		
+		Unit* unit = nullptr;
+		unit = GetUnitAtMapTileFromMousePosition(context->GetMouseX(), context->GetMouseY());
+
+
 		cout << "Unit selected: ";
-		if (PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlySelectedUnit) {
-			cout << PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlySelectedUnit->m_Name << white << endl;
+		if (unit) {
+			if (IsUnitInCityOrFort(unit) == false) {
+
+				PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlySelectedUnit = unit;
+				cout << PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlySelectedUnit->m_Name << white << endl;
+			}
+			else {
+
+				cout << " ...but it is in city... " << white << endl;
+				PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlySelectedUnit = nullptr;
+
+				unit = nullptr;
+			}
 		}
 		else {
-			cout << " nullptr" << white << endl;;
+			cout << " ...but it is nullptr... " << white << endl;
+			PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlySelectedUnit = nullptr;
+
+			unit = nullptr;
 		}
+
+
 		cout << color(colors::DARKCYAN) << endl;
 		cout << " at position  ::= " << context->GetMouseX() << ":" << context->GetMouseY() << endl;
 		cout << " at cell ::= " << int(context->GetMouseX() / SPRITES_WIDTH_AND_HEIGHT) << ":" << int(context->GetMouseY() / SPRITES_WIDTH_AND_HEIGHT) << white << endl;
@@ -3523,11 +3557,13 @@ void Renderer::Render2Layer1() {
 
 		unit = reinterpret_cast<Unit*>(*it);
 
+		// Do not draw units that are in city.
+		if(IsUnitInCityOrFort(unit)) continue;
 
 		// Do not draw tiles we do not see.
 		if (unit->m_TransformCmp->m_Cell[0] > VISIBLE_MAP_WIDTH ||
-			unit->m_TransformCmp->m_Cell[1] > VISIBLE_MAP_HEIGHT ||
-			IsUnitInCityOrFort(unit)) continue;
+			unit->m_TransformCmp->m_Cell[1] > VISIBLE_MAP_HEIGHT) continue;
+
 
 
 		// Draw unit.

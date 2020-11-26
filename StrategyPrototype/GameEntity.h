@@ -257,6 +257,7 @@ Player* GetPlayer(std::string name);
 bool HasMapTileRiver(MapTile* maptile);
 City* HasMapTileCityOrFort(MapTile* maptile);
 bool IsUnitInCityOrFort(Unit* unit);
+bool IsUnitInCityOrFort(City* city, Unit* unit);
 River* MakeNewRiver(std::string spritename, int x_cell_pos, int y_cell_pos);
 
 Unit* MakeNewUnitAtPos(CMPEntityRace::Race race, UnitMovementType movement_type, Player* p, std::string unit_class, std::string spritename, int xpos, int ypos, int x_cell, int y_cell);
