@@ -91,6 +91,7 @@ public:
 	void DrawUnitPanels();
 	void DrawCurrentTurnPlayerPanel();
 	void DrawFogOfWar(); // Consider redo the concept of fog of war. As this function is fairly slow.... and there are better ways.
+	void DrawUnitStats(Unit* unit);
 
 
 	/*
@@ -289,6 +290,7 @@ public:
 	bool m_ShowCityPanel = true;
 	bool m_PoliticalMap = true;
 	bool m_AdvanceOneTurn = false;
+	bool m_DrawUnitStats = false;
 
 
 	// UI Component. For drawing movement tiles for selected unit.

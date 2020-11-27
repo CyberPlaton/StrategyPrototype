@@ -1963,6 +1963,35 @@ void CMPCameraInput::_handleMapViewMouse(Camera* cam) {
 	
 	MapTile* tile = nullptr;
 	City* city = nullptr;
+	Unit* unit = nullptr;
+
+
+	if (context->GetKey(olc::Key::C).bPressed && PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlySelectedUnit != nullptr) {
+
+		tile = GetMaptileAtMousePosition(context->GetMouseX(), context->GetMouseY());
+
+		for (auto it : *tile->m_MapTileEntities) {
+
+			if (COMPARE_STRINGS_2(it->m_IDCmp->m_ID, PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlySelectedUnit->m_IDCmp->m_ID) == 0) {
+
+
+				context->m_DrawUnitStats = (context->m_DrawUnitStats == true) ? false: true;
+			}
+		}
+	}
+
+
+	if (PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlySelectedUnit == nullptr) {
+
+		context->m_DrawUnitStats = false;
+	}
+
+	if (context->GetKey(olc::Key::C).bReleased) {
+
+		context->m_DrawUnitStats = false;
+	}
+
+
 	
 	// Do not enter city by clicking on it, if we only want sent unit on it.
 	if (context->GetMouse(1).bPressed && PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlySelectedUnit == nullptr){
@@ -2123,7 +2152,6 @@ void CMPCameraInput::_handleMapViewMouse(Camera* cam) {
 	if (context->GetMouse(0).bReleased) {
 		IMGUI::Get()->GetUIState()->m_MouseDown = -1;
 	}
-
 
 	
 	if (context->GetKey(olc::Key::CTRL).bHeld) {
@@ -4188,7 +4216,74 @@ void Renderer::RenderLayer0() {
 	// Show whos turn it is.
 	DrawCurrentTurnPlayerPanel();
 
-	
+
+	if (m_Game->m_DrawUnitStats) {
+
+		DrawUnitStats(PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlySelectedUnit);
+	}
+
+}
+
+
+void Renderer::DrawUnitStats(Unit* unit) {
+
+	IMGUI* gui = IMGUI::Get();
+
+	std::map<UnitAttributesEnum, int> attr_vec = *unit->GetUnitAttributes();
+	std::map<UnitSkillsEnum, int> skills_vec = *unit->GetUnitSkills();
+
+	// Attributes.
+	int xpos, ypos;
+	xpos = 300;
+	ypos = 0;
+	for (auto it : attr_vec) {
+
+		// Draw attribute.
+		gui->TextButton(++m_IDHelper + GEN_ID + Random(), xpos, ypos, AttributeToString(it.first));
+
+		// Draw its value.
+		gui->TextButton(++m_IDHelper + GEN_ID + Random(), xpos + AttributeToString(it.first).size()*9, ypos, std::to_string(it.second));
+
+		ypos += 12;
+	}
+
+
+	// Skills.
+	xpos = 400;
+	ypos = 0;
+	for (auto it : skills_vec) {
+
+		// Draw skills.
+		gui->TextButton(++m_IDHelper + GEN_ID + Random(), xpos, ypos, SkillToString(it.first));
+
+		// Draw its value.
+		gui->TextButton(++m_IDHelper + GEN_ID + Random(), xpos + SkillToString(it.first).size() * 9, ypos, std::to_string(it.second));
+
+		ypos += 12;
+	}
+
+
+	// Draw general unit information.
+	xpos = 200;
+	ypos = 0;
+
+	// Race.
+	gui->TextButton(++m_IDHelper + GEN_ID + Random(), xpos, ypos, unit->m_EntityRaceCmp->m_EntityRaceString);
+	ypos += 12;
+
+	// Name.
+	gui->TextButton(++m_IDHelper + GEN_ID + Random(), xpos, ypos, unit->m_Name);
+	ypos += 12;
+
+	// Class.
+	gui->TextButton(++m_IDHelper + GEN_ID + Random(), xpos, ypos, unit->m_UnitClass->m_UnitClassName);
+	ypos += 12;
+
+	// Age.
+	gui->TextButton(++m_IDHelper + GEN_ID + Random(), xpos, ypos, std::to_string(unit->m_Age));
+	ypos += 12;
+
+
 }
 
 
