@@ -1337,13 +1337,12 @@ public:
 		MAPTILE_TYPE_WATER_DEEP = 6,
 		MAPTILE_TYPE_WATER_SHALLOW = 7,
 		MAPTILE_TYPE_JUNGLE = 8
-
 	};
+
 public:
 	MapTile(std::string name, std::string layer, int xpos, int ypos) {
 		
 		m_IDCmp->m_DynamicTypeName = "MapTile";
-
 		m_MapTileEntities = new std::vector<GameEntity*>();
 
 		// Maptiles have transform, graphics, id.

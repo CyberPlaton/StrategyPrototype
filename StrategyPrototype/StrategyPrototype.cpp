@@ -3708,8 +3708,8 @@ void Renderer::Render2Layer1() {
 		// Check whether maptile was explored...
 		// We need to check this, as we draw ALL UNITS and not just players ones...
 		// Here we check whether this maptile is IN fog of war, thus we dont draw units.
-		if (curr_player->m_MapVisibility[unit->m_TransformCmp->m_Cell[0]][unit->m_TransformCmp->m_Cell[1]] == 0 ||
-			curr_player->m_MapVisibility[unit->m_TransformCmp->m_Cell[0]][unit->m_TransformCmp->m_Cell[1]] == 1) continue;
+		if (curr_player->m_MapVisibility[unit->m_TransformCmp->m_GameWorldSpaceCell[0]][unit->m_TransformCmp->m_GameWorldSpaceCell[1]] == 0 ||
+			curr_player->m_MapVisibility[unit->m_TransformCmp->m_GameWorldSpaceCell[0]][unit->m_TransformCmp->m_GameWorldSpaceCell[1]] == 1) continue;
 
 
 
@@ -3754,7 +3754,7 @@ void Renderer::Render2Layer2() {
 
 
 		// Check whether maptile was explored...
-		if (curr_player->m_MapVisibility[entity->m_TransformCmp->m_Cell[0]][entity->m_TransformCmp->m_Cell[1]] == 0) continue;
+		if (curr_player->m_MapVisibility[entity->m_TransformCmp->m_GameWorldSpaceCell[0]][entity->m_TransformCmp->m_GameWorldSpaceCell[1]] == 0) continue;
 
 
 
@@ -3788,7 +3788,7 @@ void Renderer::Render2Layer2() {
 		// See whether maptile was explored. This is necessary, as we loop through ALL CITIES,
 		// and not just the players ones.
 		// Furthermore, check whether there are cities IN fog of war, if so, draw them. As we draw them as part of game definition...
-		if (curr_player->m_MapVisibility[city->m_TransformCmp->m_Cell[0]][city->m_TransformCmp->m_Cell[1]] == 0) continue;
+		if (curr_player->m_MapVisibility[city->m_TransformCmp->m_GameWorldSpaceCell[0]][city->m_TransformCmp->m_GameWorldSpaceCell[1]] == 0) continue;
 
 
 
@@ -3836,11 +3836,11 @@ void Renderer::Render2Layer2() {
 
 
 				// Visibility check....
-				if (curr_player->m_MapVisibility[tile->m_TransformCmp->m_Cell[0]][tile->m_TransformCmp->m_Cell[1]] == 0) continue;
+				if (curr_player->m_MapVisibility[tile->m_TransformCmp->m_GameWorldSpaceCell[0]][tile->m_TransformCmp->m_GameWorldSpaceCell[1]] == 0) continue;
 
 
 				// ... but, we dont want to draw city regions, if city is IN fog of war.
-				if (curr_player->m_MapVisibility[tile->m_TransformCmp->m_Cell[0]][tile->m_TransformCmp->m_Cell[1]] > 1) {
+				if (curr_player->m_MapVisibility[tile->m_TransformCmp->m_GameWorldSpaceCell[0]][tile->m_TransformCmp->m_GameWorldSpaceCell[1]] > 1) {
 
 
 
@@ -3956,7 +3956,7 @@ void Renderer::Render2Layer3() {
 
 
 		// We check whether this maptile was explored for current player. If not, dont draw.
-		if (curr_player->m_MapVisibility[maptile->m_TransformCmp->m_Cell[0]][maptile->m_TransformCmp->m_Cell[1]] == 0) continue;
+		if (curr_player->m_MapVisibility[maptile->m_TransformCmp->m_GameWorldSpaceCell[0]][maptile->m_TransformCmp->m_GameWorldSpaceCell[1]] == 0) continue;
 
 
 
@@ -3999,7 +3999,7 @@ void Renderer::Render2Layer3() {
 
 
 		// We check whether this maptile was explored for current player. If not, dont draw.
-		if (curr_player->m_MapVisibility[maptile->m_TransformCmp->m_Cell[0]][maptile->m_TransformCmp->m_Cell[1]] == 0) continue;
+		if (curr_player->m_MapVisibility[entity->m_TransformCmp->m_GameWorldSpaceCell[0]][entity->m_TransformCmp->m_GameWorldSpaceCell[1]] == 0) continue;
 
 
 
@@ -4043,7 +4043,7 @@ void Renderer::Render2Layer3() {
 
 
 		// We check whether this maptile was explored for current player. If not, dont draw.
-		if (curr_player->m_MapVisibility[maptile->m_TransformCmp->m_Cell[0]][maptile->m_TransformCmp->m_Cell[1]] == 0) continue;
+		if (curr_player->m_MapVisibility[river->m_TransformCmp->m_GameWorldSpaceCell[0]][river->m_TransformCmp->m_GameWorldSpaceCell[1]] == 0) continue;
 
 
 
@@ -4084,7 +4084,7 @@ void Renderer::Render2Layer4() {
 			maptile->m_TransformCmp->m_Cell[1] > VISIBLE_MAP_HEIGHT) continue;
 
 		// We check whether this maptile was explored for current player. If not, dont draw.
-		if (curr_player->m_MapVisibility[maptile->m_TransformCmp->m_Cell[0]][maptile->m_TransformCmp->m_Cell[1]] == 0) continue;
+		if (curr_player->m_MapVisibility[maptile->m_TransformCmp->m_GameWorldSpaceCell[0]][maptile->m_TransformCmp->m_GameWorldSpaceCell[1]] == 0) continue;
 		
 
 		// Draw appropriate loaded sprite on position specified.
