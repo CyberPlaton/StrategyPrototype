@@ -6,6 +6,13 @@ static int ColorValue = 0;
 
 PlayerTurnCounter* PlayerTurnCounter::g_pPlayerTurnCounter = nullptr;
 
+bool IsPlayersUnit(Player* p, Unit* u) {
+
+	std::vector<Unit*>::iterator it = std::find(p->m_PlayerUnits.begin(), p->m_PlayerUnits.end(), u);
+
+	return ((it == p->m_PlayerUnits.end()) ? false : true);
+}
+
 
 void GetPrimaryMapTilesAroundSelf(int xpos, int ypos, std::vector<MapTile*>* storage) {
 
@@ -1705,24 +1712,6 @@ void CMPCameraInput::_handleMapViewKeyBoard(Camera* cam) {
 
 	if (context->GetKey(olc::Key::CTRL).bHeld) {
 
-		if (PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlySelectedUnit != nullptr) {
-
-			if (context->GetKey(olc::Key::W).bPressed) {
-
-				UnitAttributes* attr = new UnitAttributes();
-
-				attr->SetAttribute(PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlySelectedUnit->GetUnitAttributes(), "Speed", 1);
-
-				using namespace std;
-
-				cout << APP_ERROR_COLOR;
-				cout << "Speed of " << PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlySelectedUnit->m_Name;
-				cout << " increased by 1. Currently ::= " << PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlySelectedUnit->GetUnitAttributes()->at(UnitAttributesEnum::UNIT_ATTRIBUTE_SPEED) << white << endl;
-				
-				PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlySelectedUnit->UpdateMovementPoints();
-			}
-
-		}
 
 		if (context->GetKey(olc::Key::G).bPressed) {
 
@@ -1989,23 +1978,26 @@ void CMPCameraInput::_handleMapViewMouse(Camera* cam) {
 		}
 	}
 	
+
 	if (context->GetMouse(0).bPressed) {
 		IMGUI::Get()->GetUIState()->m_MouseDown = 0;
 
 		using namespace std;
 		cout << color(colors::BLUE) << endl;
 
-		// Select unit.
+		// Select unit. But, do not select units we do not own.
 		Unit* unit = nullptr;
 		unit = GetUnitAtMapTileFromMousePosition(context->GetMouseX(), context->GetMouseY());
-
 
 		cout << "Unit selected: ";
 		if (unit) {
 			if (IsUnitInCityOrFort(unit) == false) {
 
-				PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlySelectedUnit = unit;
-				cout << PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlySelectedUnit->m_Name << white << endl;
+				if (IsPlayersUnit(PlayerTurnCounter::Get()->m_CurrentTurnPlayer, unit)) {
+
+					PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlySelectedUnit = unit;
+					cout << PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlySelectedUnit->m_Name << white << endl;
+				}
 			}
 			else {
 
@@ -2021,6 +2013,8 @@ void CMPCameraInput::_handleMapViewMouse(Camera* cam) {
 
 			unit = nullptr;
 		}
+
+
 
 
 		cout << color(colors::DARKCYAN) << endl;
@@ -2126,8 +2120,10 @@ void CMPCameraInput::_handleMapViewMouse(Camera* cam) {
 				tile->m_TransformCmp->m_PosX, tile->m_TransformCmp->m_PosY,
 				tile->m_TransformCmp->m_GameWorldSpaceCell[0], tile->m_TransformCmp->m_GameWorldSpaceCell[1]);
 
-			EntitiesStorage::Get()->AddGameEntitie(unit);
 
+
+			EntitiesStorage::Get()->AddGameEntitie(unit);
+			PlayerTurnCounter::Get()->m_CurrentTurnPlayer->AddUnit(unit); // Add unit to players vector.
 		}
 	}
 	

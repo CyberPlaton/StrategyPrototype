@@ -272,6 +272,7 @@ void ReverseMapVisionForEntity(GameEntity* entt, Player* associated_player);
 void GetPrimaryMapTilesAroundSelf(int xpos, int ypos, std::vector<MapTile*>* storage); // Like tiles directly around self.
 void GetSecondaryMapTilesAroundSelf(int xpos, int ypos, std::vector<MapTile*>* storage); // Like tiles 1 tile away around self.
 
+bool IsPlayersUnit(Player* p, Unit* u);
 
 
 
@@ -2076,10 +2077,15 @@ public:
 		m_PlayerCities.push_back(c);
 	}
 
+	void AddUnit(Unit* u) {
+		m_PlayerUnits.push_back(u);
+	}
 
 	std::string m_PlayerName;
 	std::string m_PlayerColor;
 	std::vector<City*> m_PlayerCities;
+	std::vector<Unit*> m_PlayerUnits;
+
 
 	CMPEntityRace::Race m_PlayerEmpireRace;
 
