@@ -1201,8 +1201,6 @@ int IMGUI::Button(int id, int xpos, int ypos) {
 
 River* MakeNewRiver(std::string spritename, int x_cell_pos, int y_cell_pos) {
 
-	// TODO:
-	// Define later on which layer to render rivers...
 	River* r = new River(spritename, "layer3", int(x_cell_pos * SPRITES_WIDTH_AND_HEIGHT), int(y_cell_pos * SPRITES_WIDTH_AND_HEIGHT));
 	r->m_TransformCmp->m_GameWorldSpaceCell[0] = x_cell_pos;
 	r->m_TransformCmp->m_GameWorldSpaceCell[1] = y_cell_pos;
@@ -1940,6 +1938,7 @@ static CMPEntityRace::Race g_rUnitRaces[8] = {
 };
 
 
+static bool g_bAddingPatrolPoints = false;
 void CMPCameraInput::_handleMapViewMouse(Camera* cam) {
 
 	using namespace std;
@@ -2055,36 +2054,50 @@ void CMPCameraInput::_handleMapViewMouse(Camera* cam) {
 			PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlySelectedUnit->DetermineTilesInMovementRange2(context->m_SelectedUnitsMovementTiles);
 		}
 
-		if (context->GetKey(olc::Key::ENTER).bPressed) {
+		if (context->GetKey(olc::Key::SHIFT).bReleased) {
+			
+			g_bAddingPatrolPoints = false;
+		}
 
-			// Set loose to patrol.
-			//PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlySelectedUnit->m_AICmp->ChangeState(States::STATE_PATROL);
+		if (context->GetKey(olc::Key::SHIFT).bHeld) {
 
-			// IGOUGO Mode --> execute units logic...
-			//NOTE:
-			// This works for instant "go to".
-			// For patroling the AI-Unit should himself set AT THE END of a PLAYER TURN "tryExecuteLogic"...
-			// Thus we get an effect like in CIV6.
-			//PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlySelectedUnit->m_AICmp->TryExecuteStateLogic();
+			g_bAddingPatrolPoints = true;
+
+			if (context->GetMouse(1).bPressed && g_bAddingPatrolPoints) {
+
+				
+				using namespace olc;
+				using namespace std;
+
+				cout << color(colors::MAGENTA) << endl;
+				cout << "GetMouse(1).bPressed" << white << endl;
+
+				vi2d pos = { 0,0 };
+				pos.x = GetMaptileAtMousePosition(context->GetMouseX(), context->GetMouseY())->m_TransformCmp->m_GameWorldSpaceCell[0];
+				pos.y = GetMaptileAtMousePosition(context->GetMouseX(), context->GetMouseY())->m_TransformCmp->m_GameWorldSpaceCell[1];
+
+				// Add patrol points.
+				reinterpret_cast<UnitPatrolLogic*>(PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlySelectedUnit->m_AICmp->m_StateLogicMap.at("state_patrol"))->AddPatrolPoint(pos);
+				
+			}
+
+			if (context->GetKey(olc::Key::ENTER).bPressed && g_bAddingPatrolPoints) {
+
+				// Set loose to patrol.
+				PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlySelectedUnit->m_AICmp->ChangeState(States::STATE_PATROL);
+
+				// IGOUGO Mode --> execute units logic...
+				//NOTE:
+				// This works for instant "go to".
+				// For patroling the AI-Unit should himself set AT THE END of a PLAYER TURN "tryExecuteLogic"...
+				// Thus we get an effect like in CIV6.
+				PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlySelectedUnit->m_AICmp->TryExecuteStateLogic();
+			}
 		}
 
 
-		if (context->GetMouse(1).bPressed) {
+		if (context->GetMouse(1).bPressed && !g_bAddingPatrolPoints) {
 
-			/*
-			using namespace olc;
-			using namespace std;
-
-			cout << color(colors::MAGENTA) << endl;
-			cout << "GetMouse(1).bPressed" << white << endl;
-
-			vi2d pos = { 0,0 };
-			pos.x = GetMaptileAtMousePosition(context->GetMouseX(), context->GetMouseY())->m_TransformCmp->m_GameWorldSpaceCell[0];
-			pos.y = GetMaptileAtMousePosition(context->GetMouseX(), context->GetMouseY())->m_TransformCmp->m_GameWorldSpaceCell[1];
-
-			// Add patrol points.
-			reinterpret_cast<UnitPatrolLogic*>(PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlySelectedUnit->m_AICmp->m_StateLogicMap.at("state_patrol"))->AddPatrolPoint(pos);
-			*/
 			using namespace olc;
 
 			vi2d pos = { 0,0 };
@@ -3785,6 +3798,7 @@ void Renderer::Render2Layer2() {
 	City* city = nullptr;
 	MapTileRegion* region = nullptr;
 
+	
 	for (auto it = vec.begin(); it != vec.end(); ++it) {
 
 		city = reinterpret_cast<City*>(*it);
@@ -3816,12 +3830,12 @@ void Renderer::Render2Layer2() {
 		}
 		
 
-		// After that we draw city. Thus the city will be drawn oer the regiontiles...
+		// After that we draw city. Thus the city will be drawn over the regiontiles...
 		// Draw appropriate loaded sprite on position specified.
 		m_Game->DrawDecal(vi2d(city->m_TransformCmp->m_PosX, city->m_TransformCmp->m_PosY),
 			m_Game->m_SpriteResourceMap.at(city->GetCurrentCitySprite()));
 	}
-
+	
 
 
 	// Continue rendering political map related borders. Here, city borders.
@@ -4116,6 +4130,11 @@ void Renderer::RenderLayer0() {
 
 	m_Game->Clear(olc::BLANK);
 
+
+	// Draw FOG OF WAR.
+	DrawFogOfWar();
+
+
 	// Draw gui sidepanel. It is non-interactive.
 	m_Game->DrawDecal(vf2d(m_Game->ScreenWidth() - 384, 0), m_Game->m_SpriteResourceMap.at("sidepanel"));
 
@@ -4169,11 +4188,6 @@ void Renderer::RenderLayer0() {
 	// Show whos turn it is.
 	DrawCurrentTurnPlayerPanel();
 
-
-
-
-	// Draw FOG OF WAR.
-	DrawFogOfWar();
 	
 }
 
@@ -4589,10 +4603,7 @@ bool ForestSearch::_surroundedByForestNormalOrDeep(Forest* forest) {
 
 
 	EntitiesStorage* storage = EntitiesStorage::Get();
-	std::vector< GameEntity* > vec = *storage->GetAIEntitiesStorage();
-
-	// TODO:
-	// Add forests to own vector storage, and iterate through it.
+	std::vector< GameEntity* > vec = *storage->GetForestsVec();
 
 
 	Forest* other_forest = nullptr;
@@ -4602,10 +4613,6 @@ bool ForestSearch::_surroundedByForestNormalOrDeep(Forest* forest) {
 		if (forest == *it) continue;
 
 		other_forest = reinterpret_cast<Forest*>(*it);
-
-		// TODO continue:
-		// For now, we make sure to iterate only thorugh forests like this.
-		if (!IsSubstringInString("Forest", other_forest->m_IDCmp->m_DynamicTypeName)) continue;
 
 
 		if (other_forest->m_TransformCmp->m_GameWorldSpaceCell[0] == forest_cell[0] &&

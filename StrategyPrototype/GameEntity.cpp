@@ -1516,14 +1516,6 @@ void WorldMapDrawingOptions::_createMap() {
 		}
 		else if (IsSubstringInString("rivers;", line)) {
 
-		/*
-		TODO: 
-		Theres a bug in rivers mapfile definitions.
-		The positions in file e.g. 9:9 are not 8:8 in game, there is an offset of 1 as I remember.
-
-		Eliminate this bug later with a mapeditor. Because mapdefinitions like this are crappy hell...
-		*/
-			
 			cout << APP_COLOR;
 			cout << "CREATING RIVERS." << white << endl;
 
@@ -1562,84 +1554,24 @@ void WorldMapDrawingOptions::_createMap() {
 					River* r = MakeNewRiver("river_up_right_left_down", xpos, ypos);
 					storage->AddGameEntitie(r);
 
-					/*
-					++xpos;
-					if (xpos > mapwidth) {
-
-						// Move on to the next line.
-						++ypos;
-						if (ypos > mapheight) {
-							ypos = -1; // Set to 0 or reset it...
-						}
-
-
-						// Reset xpos.
-						xpos = 0;
-					}
-					*/
 				}
 				else if (IsSubstringInString("up_right_left", token)) {
 
 					River* r = MakeNewRiver("river_up_right_left", xpos, ypos);
 					storage->AddGameEntitie(r);
 
-					/*
-					++xpos;
-					if (xpos > mapwidth) {
-
-						// Move on to the next line.
-						++ypos;
-						if (ypos > mapheight) {
-							ypos = -1; // Set to 0 or reset it...
-						}
-
-
-						// Reset xpos.
-						xpos = 0;
-					}
-					*/
 				}
 				else if (IsSubstringInString("up_right_down", token)) {
 
 					River* r = MakeNewRiver("river_up_right_down", xpos, ypos);
 					storage->AddGameEntitie(r);
 
-					/*
-					++xpos;
-					if (xpos > mapwidth) {
-
-						// Move on to the next line.
-						++ypos;
-						if (ypos > mapheight) {
-							ypos = -1; // Set to 0 or reset it...
-						}
-
-
-						// Reset xpos.
-						xpos = 0;
-					}
-					*/
 				}
 				else if (IsSubstringInString("down_left", token)) {
 
 						River* r = MakeNewRiver("river_down_left", xpos, ypos);
 						storage->AddGameEntitie(r);
 
-						/*
-						++xpos;
-						if (xpos > mapwidth) {
-
-							// Move on to the next line.
-							++ypos;
-							if (ypos > mapheight) {
-								ypos = -1; // Set to 0 or reset it...
-							}
-
-
-							// Reset xpos.
-							xpos = 0;
-						}
-						*/
 					}
 					else if (IsSubstringInString("down_right", token)) {
 
@@ -1647,127 +1579,36 @@ void WorldMapDrawingOptions::_createMap() {
 						storage->AddGameEntitie(r);
 
 
-						/*
-						++xpos;
-						if (xpos > mapwidth) {
-
-							// Move on to the next line.
-							++ypos;
-							if (ypos > mapheight) {
-								ypos = -1; // Set to 0 or reset it...
-							}
-
-
-							// Reset xpos.
-							xpos = 0;
-						}
-						*/
 					}
 					else if (IsSubstringInString("left_right", token)) {
 
 						River* r = MakeNewRiver("river_left_right", xpos, ypos);
 						storage->AddGameEntitie(r);
 
-						/*
-						++xpos;
-						if (xpos > mapwidth) {
-
-							// Move on to the next line.
-							++ypos;
-							if (ypos > mapheight) {
-								ypos = -1; // Set to 0 or reset it...
-							}
-
-
-							// Reset xpos.
-							xpos = 0;
-						}
-						*/
 					}
 					else if (IsSubstringInString("left_right_down", token)) {
 
 						River* r = MakeNewRiver("river_left_right_down", xpos, ypos);
 						storage->AddGameEntitie(r);
 
-
-						/*
-						++xpos;
-						if (xpos > mapwidth) {
-
-							// Move on to the next line.
-							++ypos;
-							if (ypos > mapheight) {
-								ypos = -1; // Set to 0 or reset it...
-							}
-
-
-							// Reset xpos.
-							xpos = 0;
-						}
-						*/
 					}
 					else if (IsSubstringInString("left_up_down", token)) {
 
 						River* r = MakeNewRiver("river_left_up_down", xpos, ypos);
 						storage->AddGameEntitie(r);
 
-						/*
-						++xpos;
-						if (xpos > mapwidth) {
-
-							// Move on to the next line.
-							++ypos;
-							if (ypos > mapheight) {
-								ypos = -1; // Set to 0 or reset it...
-							}
-
-
-							// Reset xpos.
-							xpos = 0;
-						}
-						*/
 					}
 					else if (IsSubstringInString("up_down", token)) {
 
 						River* r = MakeNewRiver("river_up_down", xpos, ypos);
 						storage->AddGameEntitie(r);
 
-						/*
-						++xpos;
-						if (xpos > mapwidth) {
-
-							// Move on to the next line.
-							++ypos;
-							if (ypos > mapheight) {
-								ypos = -1; // Set to 0 or reset it...
-							}
-
-
-							// Reset xpos.
-							xpos = 0;
-						}
-						*/
 					}
 					else if (IsSubstringInString("up_left", token)) {
 
 						River* r = MakeNewRiver("river_up_left", xpos, ypos);
 						storage->AddGameEntitie(r);
 
-						/*
-						++xpos;
-						if (xpos > mapwidth) {
-
-							// Move on to the next line.
-							++ypos;
-							if (ypos > mapheight) {
-								ypos = -1; // Set to 0 or reset it...
-							}
-
-
-							// Reset xpos.
-							xpos = 0;
-						}
-						*/
 					}
 					else if (IsSubstringInString("up_right", token)) {
 
@@ -1775,40 +1616,9 @@ void WorldMapDrawingOptions::_createMap() {
 						storage->AddGameEntitie(r);
 
 
-						/*
-						++xpos;
-						if (xpos > mapwidth) {
-
-							// Move on to the next line.
-							++ypos;
-							if (ypos > mapheight) {
-								ypos = -1; // Set to 0 or reset it...
-							}
-
-
-							// Reset xpos.
-							xpos = 0;
-						}
-						*/
 					}
 					else if (IsSubstringInString("none", token)) {
-						/*
-						// No river defined here.
-						++xpos;
-						if (xpos > mapwidth) {
 
-							// Move on to the next line.
-							++ypos;
-							if (ypos > mapheight) {
-								ypos = -1; // Set to 0 or reset it...
-							}
-
-
-							// Reset xpos.
-							xpos = 0;
-						}
-						continue;
-						*/
 					}
 
 
@@ -4003,13 +3813,20 @@ void UnitMoveLogic::executeStateLogic() {
 
 
 
-
 	cout << color(colors::DARKGREEN);
 	cout << "UnitMoveLogic::executeStateLogic() executed for ";
 	cout << this->m_ManagedUnit->m_Name << white << endl;
 }
 
 void UnitPatrolLogic::executeStateLogic() {
+
+	/*
+	NOTE: TODO:
+	As we have now a new movement system, we need to redo the patroling logic.
+
+	Instead of moving the unit here, we issue movement orders, and at
+	the end of turn, the unit executes them.
+	*/
 
 	using namespace olc;
 	using namespace std;
@@ -4028,16 +3845,10 @@ void UnitPatrolLogic::executeStateLogic() {
 		cout << "Begin Patroling routine for " << object->m_Name << "." << white << endl;
 
 		if (m_PatrolPointReached == false) {
-
-			//object->physicsCmp->m_Acceleration += 1.5f;
-
 			
 			vi2d p1 = vi2d(m_PatrolPoints[0].x, m_PatrolPoints[0].y); // Point to reach, coordinates are maptile positions.
 			vi2d p2 = vi2d(object->m_TransformCmp->m_GameWorldSpaceCell[0], object->m_TransformCmp->m_GameWorldSpaceCell[1]); // Where we are.
 
-			/*
-			vi2d endpoint = p1 - p2;
-			*/
 			vi2d endpoint;
 
 			if (p1.x > p2.x) endpoint.x = p2.x + 1;
@@ -4050,10 +3861,18 @@ void UnitPatrolLogic::executeStateLogic() {
 
 
 			// We are giving the worldmap cell coordinates which we wish to reach.
-			object->MoveTo(endpoint.x, endpoint.y, m_ManagedUnit->m_MovementCostStorage);
+			//object->MoveTo(endpoint.x, endpoint.y, m_ManagedUnit->m_MovementCostStorage);
 
+			// Issue movement order by storing it.
+			int movePoint[2];
+			movePoint[0] = endpoint.x;
+			movePoint[1] = endpoint.y;
+			//object->m_MovementObjectives.push_back(movePoint);
+
+			/*
 			vi2d left = (p1 - p2);
 			cout << color(colors::CYAN) << object->m_Name << " left to reach patrolpoint ::= " << left.str() << white << endl;
+			*/
 
 			if ((endpoint - p2) == vi2d(0, 0)) m_PatrolPointReached = true;
 

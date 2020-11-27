@@ -439,6 +439,11 @@ public:
 	// Update this everytime we have unit in focus.
 	std::map<MapTile*, int>* m_MovementCostStorage = nullptr;
 
+	// Storage for objectives where the unit has to move to.
+	// Purpose is, that units execute movement objectives to destinations
+	// on turn end autonomously.
+	//std::vector<int[2]> m_MovementObjectives;
+
 private:
 	int m_AgeInternal = -1;
 
