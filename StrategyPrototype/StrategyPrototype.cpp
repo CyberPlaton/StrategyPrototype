@@ -1710,6 +1710,12 @@ void CMPCameraInput::_handleMapViewKeyBoard(Camera* cam) {
 		exit(0);
 	}
 
+	if (context->GetKey(olc::Key::ENTER).bReleased) {
+		
+		context->m_AdvanceOneTurn = true;
+		context->AdvanceOneTurn();
+	}
+
 	if (context->GetKey(olc::Key::CTRL).bHeld) {
 
 
@@ -2885,10 +2891,10 @@ bool Game::OnUserCreate() {
 	Player* player = new Player("Bogdan", "blue", CMPEntityRace::Race::RACE_HUMAN);
 	storage->AddPlayer(player);
 
-	Player* player2 = new Player("Hans", "red", CMPEntityRace::Race::RACE_ORC);
+	Player* player2 = new Player("Katharina", "magenta", CMPEntityRace::Race::RACE_ORC);
 	storage->AddPlayer(player2);
 
-	Player* player3 = new Player("Walter", "orange", CMPEntityRace::Race::RACE_HIGHELF);
+	Player* player3 = new Player("Walter", "orange", CMPEntityRace::Race::RACE_HUMAN);
 	storage->AddPlayer(player3);
 
 
@@ -2903,27 +2909,13 @@ bool Game::OnUserCreate() {
 	City* city2 = MakeNewCity(true, "Stormgrad", CMPEntityRace::Race::RACE_HUMAN, player, 7, 6, 5);
 	storage->AddGameEntitie(city2);
 
-	/*
-	City* fort = MakeNewCity(true, "Durotar", CMPEntityRace::Race::RACE_ORC, player2, 15, 8, 8);
-	City* city4 = MakeNewCity(false, "Lorderon", CMPEntityRace::Race::RACE_HUMAN, player3, 4, 11, 2);
 
-	City* city3 = MakeNewCity(true, "Orgrimmar", CMPEntityRace::Race::RACE_ORC, player4, 18, 5, 2);
-	City* fort2 = MakeNewCity(false, "Razor Hill", CMPEntityRace::Race::RACE_ORC, player5, 13, 3, 4);
-
-	City* city5 = MakeNewCity(true, "Iceveil", CMPEntityRace::Race::RACE_HUMAN, player6, 2, 2, 1);
-	City* city6 = MakeNewCity(false, "Lower Orgrimmar", CMPEntityRace::Race::RACE_ORC, player7, 18, 12, 1);
-	City* fort3 = MakeNewCity(false, "Upper Razor Hill", CMPEntityRace::Race::RACE_HUMAN, player8, 8, 2, 1);
-
-
-	storage->AddGameEntitie(city4);
-	storage->AddGameEntitie(fort);
-
+	City* city3 = MakeNewCity(true, "Gral", CMPEntityRace::Race::RACE_ORC, player2, 15, 9, 5);
 	storage->AddGameEntitie(city3);
-	storage->AddGameEntitie(fort2);
-	storage->AddGameEntitie(city5);
-	storage->AddGameEntitie(city6);
-	storage->AddGameEntitie(fort3);
-	*/
+
+
+	City* city4 = MakeNewCity(true, "Lorderon", CMPEntityRace::Race::RACE_HUMAN, player3, 15, 2, 5);
+	storage->AddGameEntitie(city4);
 
 
 	// TimeCounter
@@ -3030,9 +3022,30 @@ void Renderer::DrawCityPanels() {
 	City* city = nullptr;
 	int id;
 
+
+	// Testing: Fog of war.
+	Player* curr_player = PlayerTurnCounter::Get()->m_CurrentTurnPlayer;
+
+
 	for (auto it : *EntitiesStorage::Get()->GetCitiesVec()) {
 
 		city = reinterpret_cast<City*>(it);
+
+
+		// Do not draw tiles we do not see.
+		if (city->m_TransformCmp->m_Cell[0] > VISIBLE_MAP_WIDTH ||
+			city->m_TransformCmp->m_Cell[1] > VISIBLE_MAP_HEIGHT) continue;
+
+
+		// Check whether maptile was explored...
+		// We need to check this, as we draw ALL UNITS and not just players ones...
+		// Here we check whether this maptile is IN fog of war, thus we dont draw units.
+		if (curr_player->m_MapVisibility[city->m_TransformCmp->m_GameWorldSpaceCell[0]][city->m_TransformCmp->m_GameWorldSpaceCell[1]] == 0 ||
+			curr_player->m_MapVisibility[city->m_TransformCmp->m_GameWorldSpaceCell[0]][city->m_TransformCmp->m_GameWorldSpaceCell[1]] == 1) continue;
+
+
+
+
 
 		std::string cityname = city->m_CityName;
 		std::string citysize = std::to_string(city->m_CitySize);
@@ -4221,6 +4234,9 @@ void Renderer::DrawUnitPanels() {
 	static bool movement_points_panel = false;
 
 
+	Player* curr_player = PlayerTurnCounter::Get()->m_CurrentTurnPlayer;
+
+
 	for (auto it = vec.begin(); it != vec.end(); ++it) {
 
 		unit = reinterpret_cast<Unit*>(*it);
@@ -4231,6 +4247,13 @@ void Renderer::DrawUnitPanels() {
 		if (unit->m_TransformCmp->m_Cell[0] > VISIBLE_MAP_WIDTH ||
 			unit->m_TransformCmp->m_Cell[1] > VISIBLE_MAP_HEIGHT ||
 			IsUnitInCityOrFort(unit)) continue;
+
+
+		// Check whether maptile was explored...
+		// We need to check this, as we draw ALL UNITS and not just players ones...
+		// Here we check whether this maptile is IN fog of war, thus we dont draw units.
+		if (curr_player->m_MapVisibility[unit->m_TransformCmp->m_GameWorldSpaceCell[0]][unit->m_TransformCmp->m_GameWorldSpaceCell[1]] == 0 ||
+			curr_player->m_MapVisibility[unit->m_TransformCmp->m_GameWorldSpaceCell[0]][unit->m_TransformCmp->m_GameWorldSpaceCell[1]] == 1) continue;
 
 
 
