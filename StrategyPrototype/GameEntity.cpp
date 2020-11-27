@@ -3667,6 +3667,7 @@ bool Unit::_isMapTileWeAreStandingOn(MapTile* m) {
 }
 
 
+
 std::vector<MapTile*>* Unit::_getNeighbouringMapTiles(int xpos, int ypos) {
 
 	std::vector<MapTile*>* vec = new std::vector<MapTile*>();
@@ -3718,6 +3719,11 @@ std::vector<MapTile*>* Unit::_getNeighbouringMapTiles(MapTile* maptile) {
 void Unit::MoveTo(int x_cell, int y_cell, std::map<MapTile*, int>* storage) {
 
 	using namespace std;
+
+	// For fog of war.
+	// Before we move, decrement mapvision reference count for old maptiles.
+	ReverseMapVisionForEntity(this, m_AssociatedPlayer);
+
 
 	/*
 	NOTE:
@@ -3775,6 +3781,11 @@ void Unit::MoveTo(int x_cell, int y_cell, std::map<MapTile*, int>* storage) {
 	cout << APP_ERROR_COLOR << endl;
 	cout << "Unit " << this->m_Name << " moved from (" << curr_pos_x << ":" << curr_pos_y << ") ::= (" << curr_tile[0] << ":" << curr_tile[1] << ") to" << endl;
 	cout << "(" << m_TransformCmp->m_PosX << ":" << m_TransformCmp->m_PosY << ") ::= (" << m_TransformCmp->m_GameWorldSpaceCell[0] << ":" << m_TransformCmp->m_GameWorldSpaceCell[1] << ")." << white << endl;
+
+
+	// For fog of war...
+	// if unit has moved, we need to update the reference count for the maptiles it sees.
+	UpdateMapVisionForEntity(this, m_AssociatedPlayer);
 
 
 	// CHeck whether a city is at this tile and if so, enter it
@@ -4088,4 +4099,82 @@ void UnitWaitLogic::executeStateLogic() {
 	cout << color(colors::DARKGREEN);
 	cout << "UnitWaitLogic::executeStateLogic() executed for ";
 	cout << this->m_ManagedUnit->m_Name << white << endl;
+}
+
+
+void Player::_initMapVisibilityMatrix() {
+
+
+	for (int i = 0; i < MAP_SIZE; ++i) {
+		for (int j = 0; j < MAP_SIZE; ++j) {
+
+			// Set initially every tile, whole map, as unexplored.
+			m_MapVisibility[i][j] = 0;
+		}
+	}
+}
+
+
+void City::UpdateVisibility() {
+
+	/*
+	NOTE:
+
+	Function for city needs to be redone.
+
+	We should,
+
+	iterate through all region-maptiles,
+	and set visibility for them and
+
+	probabaly for direct neighbors of those maptiles.
+	*/
+
+
+	// Get maptiles around self.
+	int own_pos[2];
+	int right[2], left[2], up[2], down[2];
+	int left_up[2], left_down[2], right_up[2], right_down[2];
+
+
+	own_pos[0] = this->m_TransformCmp->m_GameWorldSpaceCell[0];
+	own_pos[1] = this->m_TransformCmp->m_GameWorldSpaceCell[1];
+
+	right[0] = this->m_TransformCmp->m_GameWorldSpaceCell[0] + 1;
+	right[1] = this->m_TransformCmp->m_GameWorldSpaceCell[1];
+
+	left[0] = this->m_TransformCmp->m_GameWorldSpaceCell[0] - 1;
+	left[1] = this->m_TransformCmp->m_GameWorldSpaceCell[1];
+
+	up[0] = this->m_TransformCmp->m_GameWorldSpaceCell[0];
+	up[1] = this->m_TransformCmp->m_GameWorldSpaceCell[1] - 1;
+
+	down[0] = this->m_TransformCmp->m_GameWorldSpaceCell[0];
+	down[1] = this->m_TransformCmp->m_GameWorldSpaceCell[1] + 1;
+
+	left_up[0] = this->m_TransformCmp->m_GameWorldSpaceCell[0] - 1;
+	left_up[1] = this->m_TransformCmp->m_GameWorldSpaceCell[1] - 1;
+
+	left_down[0] = this->m_TransformCmp->m_GameWorldSpaceCell[0] - 1;
+	left_down[1] = this->m_TransformCmp->m_GameWorldSpaceCell[1] + 1;
+
+	right_up[0] = this->m_TransformCmp->m_GameWorldSpaceCell[0] + 1;
+	right_up[1] = this->m_TransformCmp->m_GameWorldSpaceCell[1] - 1;
+
+	right_down[0] = this->m_TransformCmp->m_GameWorldSpaceCell[0] + 1;
+	right_down[1] = this->m_TransformCmp->m_GameWorldSpaceCell[1] + 1;
+
+
+
+	// Increase reference count for maptiles around self.
+	m_AssociatedPlayer->m_MapVisibility[right[0]][right[1]]++;
+	m_AssociatedPlayer->m_MapVisibility[left[0]][left[1]]++;
+	m_AssociatedPlayer->m_MapVisibility[up[0]][up[1]]++;
+	m_AssociatedPlayer->m_MapVisibility[down[0]][down[1]]++;
+	m_AssociatedPlayer->m_MapVisibility[left_up[0]][left_up[1]]++;
+	m_AssociatedPlayer->m_MapVisibility[left_down[0]][left_down[1]]++;
+	m_AssociatedPlayer->m_MapVisibility[right_up[0]][right_up[1]]++;
+	m_AssociatedPlayer->m_MapVisibility[right_down[0]][right_down[1]]++;
+	m_AssociatedPlayer->m_MapVisibility[own_pos[0]][own_pos[1]]++;
+
 }

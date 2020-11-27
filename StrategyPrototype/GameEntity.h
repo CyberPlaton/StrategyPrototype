@@ -264,6 +264,15 @@ Unit* MakeNewUnitAtPos(CMPEntityRace::Race race, UnitMovementType movement_type,
 Unit* GetUnitAtMapTileFromMousePosition(int xpos, int ypos);
 std::string GetColorFromString(std::string color);
 
+// Function SETS maptiles directly around entity as visible for the associated player.
+void UpdateMapVisionForEntity(GameEntity* entt, Player* associated_player);
+// Function UNSETS maptiles directly around entity as visible for the associated player.
+void ReverseMapVisionForEntity(GameEntity* entt, Player* associated_player);
+
+void GetPrimaryMapTilesAroundSelf(int xpos, int ypos, std::vector<MapTile*>* storage); // Like tiles directly around self.
+void GetSecondaryMapTilesAroundSelf(int xpos, int ypos, std::vector<MapTile*>* storage); // Like tiles 1 tile away around self.
+
+
 
 
 enum class TileImprovementLevel {
@@ -597,6 +606,9 @@ public:
 		MakeCityBorders();
 		_deriveCityLandscapeType();
 	}
+
+	// Function updates visibility of maptiles around self.
+	void UpdateVisibility();
 
 	// Use this to render current city representation.
 	std::string GetCurrentCitySprite();
@@ -2073,11 +2085,15 @@ public:
 	CMPEntityRace::Race m_PlayerEmpireRace;
 
 	Unit* m_CurrentlySelectedUnit = nullptr;
+
+	// FogOfWar related.
+	int m_MapVisibility[MAP_SIZE][MAP_SIZE];
 private:
 
 
 private:
 
+	void _initMapVisibilityMatrix();
 
 	bool _isMapTileSurroundedByOwnTiles(MapTile* tile);
 	bool _belongMapTileToThisPlayer(MapTile* tile);

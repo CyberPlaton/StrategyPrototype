@@ -90,6 +90,7 @@ public:
 	void DrawYearQuartalPanel();
 	void DrawUnitPanels();
 	void DrawCurrentTurnPlayerPanel();
+	void DrawFogOfWar(); // Consider redo the concept of fog of war. As this function is fairly slow.... and there are better ways.
 
 
 	/*
@@ -115,6 +116,7 @@ public:
 	void Render2Layer1();
 
 	// Layer for drawin effects or general things.
+	// Here we draw fog of war over maptiles.
 	void RenderLayer0();
 
 

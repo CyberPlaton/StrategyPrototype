@@ -7,6 +7,124 @@ static int ColorValue = 0;
 PlayerTurnCounter* PlayerTurnCounter::g_pPlayerTurnCounter = nullptr;
 
 
+void GetPrimaryMapTilesAroundSelf(int xpos, int ypos, std::vector<MapTile*>* storage) {
+
+	int right[2], left[2], up[2], down[2];
+	int left_up[2], left_down[2], right_up[2], right_down[2];
+
+	right[0] = xpos + 1;
+	right[1] = ypos;
+
+	left[0] = xpos - 1;
+	left[1] = ypos;
+
+	up[0] = xpos;
+	up[1] = ypos - 1;
+
+	down[0] = xpos;
+	down[1] = ypos + 1;
+
+	left_up[0] = xpos - 1;
+	left_up[1] = ypos - 1;
+
+	left_down[0] = xpos - 1;
+	left_down[1] = ypos + 1;
+
+	right_up[0] = xpos + 1;
+	right_up[1] = ypos - 1;
+
+	right_down[0] = xpos + 1;
+	right_down[1] = ypos + 1;
+
+
+
+	MapTile* t1, * t2, * t3, * t4, * t5, * t6, * t7, * t8;
+
+#pragma omp parallel
+	t1 = GetMapTileAtWorldPosition(right[0], right[1]);
+	t2 = GetMapTileAtWorldPosition(left[0], left[1]);
+	t3 = GetMapTileAtWorldPosition(up[0], up[1]);
+	t4 = GetMapTileAtWorldPosition(down[0], down[1]);
+	t5 = GetMapTileAtWorldPosition(left_up[0], left_up[1]);
+	t6 = GetMapTileAtWorldPosition(left_down[0], left_down[1]);
+	t7 = GetMapTileAtWorldPosition(right_up[0], right_up[1]);
+	t8 = GetMapTileAtWorldPosition(right_down[0], right_down[1]);
+
+	
+	if (t1) {
+		storage->push_back(t1);
+	}
+	if (t2) {
+		storage->push_back(t2);
+
+	}
+	if (t3) {
+		storage->push_back(t3);
+
+	}
+	if (t4) {
+		storage->push_back(t4);
+
+	}
+	if (t5) {
+		storage->push_back(t5);
+
+	}
+	if (t6) {
+		storage->push_back(t6);
+
+	}
+	if (t7) {
+		storage->push_back(t7);
+
+	}
+	if (t8) {
+		storage->push_back(t8);
+	}
+}
+
+
+void GetSecondaryMapTilesAroundSelf(int xpos, int ypos, std::vector<MapTile*>* storage) {
+
+}
+
+
+void UpdateMapVisionForEntity(GameEntity* entt, Player* associated_player) {
+
+	std::vector<MapTile*> vec;
+	GetPrimaryMapTilesAroundSelf(entt->m_TransformCmp->m_GameWorldSpaceCell[0], entt->m_TransformCmp->m_GameWorldSpaceCell[1], &vec);
+
+	for (auto it : vec) {
+
+		associated_player->m_MapVisibility[it->m_TransformCmp->m_GameWorldSpaceCell[0]][it->m_TransformCmp->m_GameWorldSpaceCell[1]] +=  (associated_player->m_MapVisibility[it->m_TransformCmp->m_GameWorldSpaceCell[0]][it->m_TransformCmp->m_GameWorldSpaceCell[1]] == 0) ? 2 : 1;
+	
+	}
+
+
+	// Increase for ownpos.
+	associated_player->m_MapVisibility[entt->m_TransformCmp->m_GameWorldSpaceCell[0]][entt->m_TransformCmp->m_GameWorldSpaceCell[1]] += (associated_player->m_MapVisibility[entt->m_TransformCmp->m_GameWorldSpaceCell[0]][entt->m_TransformCmp->m_GameWorldSpaceCell[1]] == 0) ? 2 : 1;
+
+
+}
+
+
+void ReverseMapVisionForEntity(GameEntity* entt, Player* associated_player) {
+
+	std::vector<MapTile*> vec;
+	GetPrimaryMapTilesAroundSelf(entt->m_TransformCmp->m_GameWorldSpaceCell[0], entt->m_TransformCmp->m_GameWorldSpaceCell[1], &vec);
+
+	for (auto it : vec) {
+
+		associated_player->m_MapVisibility[it->m_TransformCmp->m_GameWorldSpaceCell[0]][it->m_TransformCmp->m_GameWorldSpaceCell[1]]--;
+	}
+
+
+	// Increase for ownpos.
+	associated_player->m_MapVisibility[entt->m_TransformCmp->m_GameWorldSpaceCell[0]][entt->m_TransformCmp->m_GameWorldSpaceCell[1]]--;
+}
+
+
+
 bool IsUnitInCityOrFort(City* city, Unit* unit) {
 
 	std::vector<GameEntity*>::iterator it = std::find(city->m_PresentUnitsMap.begin(), city->m_PresentUnitsMap.end(), unit);
@@ -178,6 +296,8 @@ Unit* MakeNewUnitAtPos(CMPEntityRace::Race race, UnitMovementType movement_type,
 	u->UpdateMovementPoints();
 
 	u->SetPlayer(p);
+
+	UpdateMapVisionForEntity(u, p);
 
 	return u;
 }
@@ -1237,6 +1357,10 @@ City* MakeNewCity(bool city, std::string cityname, CMPEntityRace::Race race, Pla
 
 	c->Initialize();
 
+
+	c->UpdateVisibility();
+
+
 	return c;
 }
 
@@ -1251,6 +1375,9 @@ City* MakeNewCityAtPos(bool city, std::string cityname, CMPEntityRace::Race race
 	c->m_TransformCmp->m_GameWorldSpaceCell[1] = set_y_cell_pos;
 
 	c->Initialize();
+
+
+	c->UpdateVisibility();
 
 	return c;
 
@@ -2128,6 +2255,7 @@ void Game::_loadSpriteResources() {
 	Sprite* c22 = new Sprite("assets/map/overlay_cell/map_cell_border_up_left.png");
 	Sprite* c23 = new Sprite("assets/map/overlay_cell/map_cell_border_up_right.png");
 	Sprite* c24 = new Sprite("assets/unit/unit_rangecell.png");
+	Sprite* c25 = new Sprite("assets/map/overlay_cell/map_cell_fog_of_war.png");
 
 
 
@@ -2156,6 +2284,7 @@ void Game::_loadSpriteResources() {
 	m_SpriteStorage.push_back(c22);
 	m_SpriteStorage.push_back(c23);
 	m_SpriteStorage.push_back(c24);
+	m_SpriteStorage.push_back(c25);
 
 
 	Decal* dec10 = new Decal(c10);
@@ -2173,6 +2302,7 @@ void Game::_loadSpriteResources() {
 	Decal* dec22 = new Decal(c22);
 	Decal* dec23 = new Decal(c23);
 	Decal* dec24 = new Decal(c24);
+	Decal* dec25 = new Decal(c25);
 
 
 	m_SpriteResourceMap.insert(std::make_pair("map_cell_border_down", dec10));
@@ -2190,6 +2320,7 @@ void Game::_loadSpriteResources() {
 	m_SpriteResourceMap.insert(std::make_pair("map_cell_border_up_left", dec22));
 	m_SpriteResourceMap.insert(std::make_pair("map_cell_border_up_right", dec23));
 	m_SpriteResourceMap.insert(std::make_pair("unit_rangecell", dec24));
+	m_SpriteResourceMap.insert(std::make_pair("map_cell_fog_of_war", dec25));
 
 
 
@@ -3553,6 +3684,11 @@ void Renderer::Render2Layer1() {
 
 	Unit* unit = nullptr;
 
+
+	// Testing: Fog of war.
+	Player* curr_player = PlayerTurnCounter::Get()->m_CurrentTurnPlayer;
+
+
 	for (auto it = vec.begin(); it != vec.end(); ++it) {
 
 		unit = reinterpret_cast<Unit*>(*it);
@@ -3563,6 +3699,13 @@ void Renderer::Render2Layer1() {
 		// Do not draw tiles we do not see.
 		if (unit->m_TransformCmp->m_Cell[0] > VISIBLE_MAP_WIDTH ||
 			unit->m_TransformCmp->m_Cell[1] > VISIBLE_MAP_HEIGHT) continue;
+
+
+		// Check whether maptile was explored...
+		// We need to check this, as we draw ALL UNITS and not just players ones...
+		// Here we check whether this maptile is IN fog of war, thus we dont draw units.
+		if (curr_player->m_MapVisibility[unit->m_TransformCmp->m_Cell[0]][unit->m_TransformCmp->m_Cell[1]] == 0 ||
+			curr_player->m_MapVisibility[unit->m_TransformCmp->m_Cell[0]][unit->m_TransformCmp->m_Cell[1]] == 1) continue;
 
 
 
@@ -3589,6 +3732,13 @@ void Renderer::Render2Layer2() {
 
 	GameEntity* entity = nullptr;
 
+
+
+	// Testing: Fog of war.
+	Player* curr_player = PlayerTurnCounter::Get()->m_CurrentTurnPlayer;
+
+
+
 	// First, draw the mapviewressources.
 	for (auto it = vec.begin(); it != vec.end(); ++it) {
 
@@ -3597,6 +3747,12 @@ void Renderer::Render2Layer2() {
 		// Do not draw tiles we do not see.
 		if (entity->m_TransformCmp->m_Cell[0] > VISIBLE_MAP_WIDTH ||
 			entity->m_TransformCmp->m_Cell[1] > VISIBLE_MAP_HEIGHT) continue;
+
+
+		// Check whether maptile was explored...
+		if (curr_player->m_MapVisibility[entity->m_TransformCmp->m_Cell[0]][entity->m_TransformCmp->m_Cell[1]] == 0) continue;
+
+
 
 		// Draw appropriate loaded sprite on position specified.
 		m_Game->DrawDecal(vi2d(entity->m_TransformCmp->m_PosX, entity->m_TransformCmp->m_PosY),
@@ -3625,6 +3781,12 @@ void Renderer::Render2Layer2() {
 			city->m_TransformCmp->m_Cell[1] > VISIBLE_MAP_HEIGHT) continue;
 
 
+		// See whether maptile was explored. This is necessary, as we loop through ALL CITIES,
+		// and not just the players ones.
+		// Furthermore, check whether there are cities IN fog of war, if so, draw them. As we draw them as part of game definition...
+		if (curr_player->m_MapVisibility[city->m_TransformCmp->m_Cell[0]][city->m_TransformCmp->m_Cell[1]] == 0) continue;
+
+
 
 		// First, we draw political region tiles.
 		// Draw political map related borders.
@@ -3639,7 +3801,7 @@ void Renderer::Render2Layer2() {
 			}
 
 		}
-
+		
 
 		// After that we draw city. Thus the city will be drawn oer the regiontiles...
 		// Draw appropriate loaded sprite on position specified.
@@ -3668,11 +3830,21 @@ void Renderer::Render2Layer2() {
 				if (tile->m_TransformCmp->m_Cell[0] > VISIBLE_MAP_WIDTH ||
 					tile->m_TransformCmp->m_Cell[1] > VISIBLE_MAP_HEIGHT) continue;
 
-				// Draw appropriate loaded sprite on position specified.
-				m_Game->DrawDecal(vi2d(tile->m_TransformCmp->m_PosX, tile->m_TransformCmp->m_PosY),
-					m_Game->m_SpriteResourceMap.at(c->m_MapTileBorderDirectionMap.at(tile)), vf2d(1.0f, 1.0f),
-					m_Game->MakeOlcColorFromCityBorderColor(c->m_CityBorderColor));
 
+				// Visibility check....
+				if (curr_player->m_MapVisibility[tile->m_TransformCmp->m_Cell[0]][tile->m_TransformCmp->m_Cell[1]] == 0) continue;
+
+
+				// ... but, we dont want to draw city regions, if city is IN fog of war.
+				if (curr_player->m_MapVisibility[tile->m_TransformCmp->m_Cell[0]][tile->m_TransformCmp->m_Cell[1]] > 1) {
+
+
+
+					// Draw appropriate loaded sprite on position specified.
+					m_Game->DrawDecal(vi2d(tile->m_TransformCmp->m_PosX, tile->m_TransformCmp->m_PosY),
+						m_Game->m_SpriteResourceMap.at(c->m_MapTileBorderDirectionMap.at(tile)), vf2d(1.0f, 1.0f),
+						m_Game->MakeOlcColorFromCityBorderColor(c->m_CityBorderColor));
+				}
 			}
 
 		}
@@ -3754,44 +3926,6 @@ void Renderer::Render2Layer3() {
 	using namespace olc;
 
 	EntitiesStorage* storage = EntitiesStorage::Get();
-	/*
-	std::vector< GameEntity* > vec = *storage->GetMapTilesStorage();
-
-	MapTile* maptile = nullptr;
-	GameEntity* entity = nullptr;
-	Forest* f = nullptr;
-
-
-	m_Game->SetDrawTarget(m_Layer3);
-	m_Game->Clear(olc::BLANK);
-
-	// Render Forests, Hills, etc.
-	for (auto it = vec.begin(); it != vec.end(); ++it) {
-
-		maptile = reinterpret_cast<MapTile*>(*it);
-
-		// Do not draw tiles we do not see.
-		if (maptile->m_TransformCmp->m_Cell[0] > VISIBLE_MAP_WIDTH ||
-			maptile->m_TransformCmp->m_Cell[1] > VISIBLE_MAP_HEIGHT) continue;
-
-
-		if (maptile->m_MapTileEntities->size() > 0) {
-
-
-			for (auto iter = maptile->m_MapTileEntities->begin(); iter != maptile->m_MapTileEntities->end(); ++iter) {
-						
-				//entity = *iter;
-				f = reinterpret_cast<Forest*>(*it);
-
-				// Draw appropriate loaded sprite on position specified.
-				m_Game->DrawDecal(vi2d(f->m_TransformCmp->m_PosX, f->m_TransformCmp->m_PosY),
-										m_Game->m_SpriteResourceMap.at(f->m_GraphicsCmp->m_SpriteName));
-
-			}
-
-		}
-	}
-	*/
 
 	m_Game->SetDrawTarget(m_Layer3);
 	m_Game->Clear(olc::BLANK);
@@ -3800,6 +3934,9 @@ void Renderer::Render2Layer3() {
 	Forest* forest = nullptr;
 	GameEntity* entity = nullptr;
 
+
+	// Testing: Fog of war.
+	Player* curr_player = PlayerTurnCounter::Get()->m_CurrentTurnPlayer;
 
 
 	// Render Forests
@@ -3814,6 +3951,11 @@ void Renderer::Render2Layer3() {
 			maptile->m_TransformCmp->m_Cell[1] > VISIBLE_MAP_HEIGHT) continue;
 
 
+		// We check whether this maptile was explored for current player. If not, dont draw.
+		if (curr_player->m_MapVisibility[maptile->m_TransformCmp->m_Cell[0]][maptile->m_TransformCmp->m_Cell[1]] == 0) continue;
+
+
+
 		if (maptile->m_MapTileEntities->size() > 0) {
 
 			for (auto iter = maptile->m_MapTileEntities->begin(); iter != maptile->m_MapTileEntities->end(); ++iter) {
@@ -3823,7 +3965,6 @@ void Renderer::Render2Layer3() {
 				if (COMPARE_STRINGS(entity->m_IDCmp->m_DynamicTypeName, "Forest") == 0) {
 
 					forest = reinterpret_cast<Forest*>(*iter);
-
 
 
 					// Draw appropriate loaded sprite on position specified.
@@ -3852,6 +3993,9 @@ void Renderer::Render2Layer3() {
 		if (entity->m_TransformCmp->m_Cell[0] > VISIBLE_MAP_WIDTH ||
 			entity->m_TransformCmp->m_Cell[1] > VISIBLE_MAP_HEIGHT) continue;
 
+
+		// We check whether this maptile was explored for current player. If not, dont draw.
+		if (curr_player->m_MapVisibility[maptile->m_TransformCmp->m_Cell[0]][maptile->m_TransformCmp->m_Cell[1]] == 0) continue;
 
 
 
@@ -3893,6 +4037,12 @@ void Renderer::Render2Layer3() {
 			river->m_TransformCmp->m_Cell[1] > VISIBLE_MAP_HEIGHT) continue;
 
 
+
+		// We check whether this maptile was explored for current player. If not, dont draw.
+		if (curr_player->m_MapVisibility[maptile->m_TransformCmp->m_Cell[0]][maptile->m_TransformCmp->m_Cell[1]] == 0) continue;
+
+
+
 		// Draw appropriate loaded sprite on position specified.
 		m_Game->DrawDecal(vi2d(river->m_TransformCmp->m_PosX, river->m_TransformCmp->m_PosY),
 			m_Game->m_SpriteResourceMap.at(river->m_GraphicsCmp->m_SpriteName));
@@ -3916,6 +4066,10 @@ void Renderer::Render2Layer4() {
 	m_Game->SetDrawTarget(m_Layer4);
 	m_Game->Clear(olc::BLANK);
 
+	// Testing: Fog of war.
+	Player* curr_player = PlayerTurnCounter::Get()->m_CurrentTurnPlayer;
+
+
 
 	for (auto it = vec.begin(); it != vec.end(); ++it) {
 
@@ -3925,11 +4079,17 @@ void Renderer::Render2Layer4() {
 		if (maptile->m_TransformCmp->m_Cell[0] > VISIBLE_MAP_WIDTH ||
 			maptile->m_TransformCmp->m_Cell[1] > VISIBLE_MAP_HEIGHT) continue;
 
+		// We check whether this maptile was explored for current player. If not, dont draw.
+		if (curr_player->m_MapVisibility[maptile->m_TransformCmp->m_Cell[0]][maptile->m_TransformCmp->m_Cell[1]] == 0) continue;
+		
 
 		// Draw appropriate loaded sprite on position specified.
 		m_Game->DrawDecal(vi2d(maptile->m_TransformCmp->m_PosX, maptile->m_TransformCmp->m_PosY),
-						  m_Game->m_SpriteResourceMap.at(maptile->m_GraphicsCmp->m_SpriteName));
+			m_Game->m_SpriteResourceMap.at(maptile->m_GraphicsCmp->m_SpriteName));
+
 	}
+
+
 
 	m_Game->EnableLayer(m_Layer4, true);
 	m_Game->SetDrawTarget(nullptr);
@@ -3995,7 +4155,54 @@ void Renderer::RenderLayer0() {
 
 	// Show whos turn it is.
 	DrawCurrentTurnPlayerPanel();
+
+
+
+
+	// Draw FOG OF WAR.
+	DrawFogOfWar();
 	
+}
+
+
+
+void Renderer::DrawFogOfWar() {
+	
+	using namespace olc;
+
+
+
+	Player* curr_player = PlayerTurnCounter::Get()->m_CurrentTurnPlayer;
+
+
+	// For testing, we get maptiles for which to draw fog of war.
+	MapTile* maptile = nullptr;
+
+	for (int i = 0; i < MAP_SIZE; ++i) {
+
+
+		for (int j = 0; j < MAP_SIZE; ++j) {
+
+
+			// Is this cell in fog if war?
+			if (curr_player->m_MapVisibility[i][j] == 1) {
+
+				// If yes, draw fog of war over it.
+
+				maptile = GetMapTileAtWorldPosition(i, j);
+
+				if (maptile) {
+
+
+					// Draw appropriate loaded sprite on position specified.
+					m_Game->DrawDecal(vi2d(maptile->m_TransformCmp->m_PosX, maptile->m_TransformCmp->m_PosY),
+						m_Game->m_SpriteResourceMap.at("map_cell_fog_of_war"));
+				}
+			}
+		}
+	}
+
+
 }
 
 
