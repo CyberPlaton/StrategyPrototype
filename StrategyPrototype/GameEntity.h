@@ -266,12 +266,12 @@ std::string GetColorFromString(std::string color);
 
 // Function SETS maptiles directly around entity as visible for the associated player.
 void UpdateMapVisionForEntity(GameEntity* entt, Player* associated_player);
+
 // Function UNSETS maptiles directly around entity as visible for the associated player.
 void ReverseMapVisionForEntity(GameEntity* entt, Player* associated_player);
 
 void GetPrimaryMapTilesAroundSelf(int xpos, int ypos, std::vector<MapTile*>* storage); // Like tiles directly around self.
 void GetSecondaryMapTilesAroundSelf(int xpos, int ypos, std::vector<MapTile*>* storage); // Like tiles 1 tile away around self.
-
 bool IsPlayersUnit(Player* p, Unit* u);
 
 
@@ -610,6 +610,7 @@ public:
 
 	// Function updates visibility of maptiles around self.
 	void UpdateVisibility();
+	void ResetVisibility();
 
 	// Use this to render current city representation.
 	std::string GetCurrentCitySprite();

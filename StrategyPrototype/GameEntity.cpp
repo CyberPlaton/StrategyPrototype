@@ -2167,8 +2167,15 @@ void City::Update() {
 	_updateCitySizeClass();
 
 	if (m_CitySizeClass != size) {
+
+		// First, reset visibility.
+		ResetVisibility();
+
 		ReclaimRegions();
 		MakeCityBorders();
+
+		// Lastly, update visibility.
+		UpdateVisibility();
 	}
 }
 
@@ -4115,66 +4122,81 @@ void Player::_initMapVisibilityMatrix() {
 }
 
 
+void City::ResetVisibility() {
+
+	// Firstly, reset the visibility for all maptiles.
+	// Needed beacuse we might decrease the borders of the city.
+
+	// First:
+	std::vector<MapTile*> vec1;
+
+	// Iterate through all regions maptiles and set it as visible.
+	for (auto it : m_ClaimedRegions) {
+
+		for (auto itr : it->m_MapTileRegionTiles) {
+
+
+			m_AssociatedPlayer->m_MapVisibility[itr->m_TransformCmp->m_GameWorldSpaceCell[0]][itr->m_TransformCmp->m_GameWorldSpaceCell[1]] -= (m_AssociatedPlayer->m_MapVisibility[itr->m_TransformCmp->m_GameWorldSpaceCell[0]][itr->m_TransformCmp->m_GameWorldSpaceCell[1]] == 0) ? 0 : 1;
+
+
+			vec1.push_back(itr);
+		}
+	}
+
+	m_AssociatedPlayer->m_MapVisibility[m_TransformCmp->m_GameWorldSpaceCell[0]][m_TransformCmp->m_GameWorldSpaceCell[1]] -= (m_AssociatedPlayer->m_MapVisibility[m_TransformCmp->m_GameWorldSpaceCell[0]][m_TransformCmp->m_GameWorldSpaceCell[1]] == 0) ? 0 : 1;
+
+
+	// See how we can make direct neighbors of those maptiles as visible too.
+	// In vec are all maptiles for which we can set them as visible.
+	std::vector<MapTile*> temp1;
+	for (auto it : vec1) {
+
+		GetPrimaryMapTilesAroundSelf(it->m_TransformCmp->m_GameWorldSpaceCell[0], it->m_TransformCmp->m_GameWorldSpaceCell[1], &temp1);
+	}
+
+	// Iterate through those neighbors and set them as visible.
+	for (auto it : temp1) {
+
+		m_AssociatedPlayer->m_MapVisibility[it->m_TransformCmp->m_GameWorldSpaceCell[0]][it->m_TransformCmp->m_GameWorldSpaceCell[1]] -= (m_AssociatedPlayer->m_MapVisibility[it->m_TransformCmp->m_GameWorldSpaceCell[0]][it->m_TransformCmp->m_GameWorldSpaceCell[1]] == 0) ? 0 : 1;
+	}
+
+}
+
+
 void City::UpdateVisibility() {
 
-	/*
-	NOTE:
 
-	Function for city needs to be redone.
+	// Second:
+	// Make new visibility.
+	std::vector<MapTile*> vec;
 
-	We should,
+	// Iterate through all regions maptiles and set it as visible.
+	for (auto it : m_ClaimedRegions) {
 
-	iterate through all region-maptiles,
-	and set visibility for them and
-
-	probabaly for direct neighbors of those maptiles.
-	*/
+		for (auto itr : it->m_MapTileRegionTiles) {
 
 
-	// Get maptiles around self.
-	int own_pos[2];
-	int right[2], left[2], up[2], down[2];
-	int left_up[2], left_down[2], right_up[2], right_down[2];
+			m_AssociatedPlayer->m_MapVisibility[itr->m_TransformCmp->m_GameWorldSpaceCell[0]][itr->m_TransformCmp->m_GameWorldSpaceCell[1]] += (m_AssociatedPlayer->m_MapVisibility[itr->m_TransformCmp->m_GameWorldSpaceCell[0]][itr->m_TransformCmp->m_GameWorldSpaceCell[1]] == 0) ? 2 : 1;
+		
+
+			vec.push_back(itr);
+		}
+	}
+
+	m_AssociatedPlayer->m_MapVisibility[m_TransformCmp->m_GameWorldSpaceCell[0]][m_TransformCmp->m_GameWorldSpaceCell[1]] += (m_AssociatedPlayer->m_MapVisibility[m_TransformCmp->m_GameWorldSpaceCell[0]][m_TransformCmp->m_GameWorldSpaceCell[1]] == 0) ? 2 : 1;
 
 
-	own_pos[0] = this->m_TransformCmp->m_GameWorldSpaceCell[0];
-	own_pos[1] = this->m_TransformCmp->m_GameWorldSpaceCell[1];
+	// See how we can make direct neighbors of those maptiles as visible too.
+	// In vec are all maptiles for which we can set them as visible.
+	std::vector<MapTile*> temp;
+	for (auto it : vec) {
 
-	right[0] = this->m_TransformCmp->m_GameWorldSpaceCell[0] + 1;
-	right[1] = this->m_TransformCmp->m_GameWorldSpaceCell[1];
+		GetPrimaryMapTilesAroundSelf(it->m_TransformCmp->m_GameWorldSpaceCell[0], it->m_TransformCmp->m_GameWorldSpaceCell[1], &temp);
+	}
 
-	left[0] = this->m_TransformCmp->m_GameWorldSpaceCell[0] - 1;
-	left[1] = this->m_TransformCmp->m_GameWorldSpaceCell[1];
+	// Iterate through those neighbors and set them as visible.
+	for (auto it : temp) {
 
-	up[0] = this->m_TransformCmp->m_GameWorldSpaceCell[0];
-	up[1] = this->m_TransformCmp->m_GameWorldSpaceCell[1] - 1;
-
-	down[0] = this->m_TransformCmp->m_GameWorldSpaceCell[0];
-	down[1] = this->m_TransformCmp->m_GameWorldSpaceCell[1] + 1;
-
-	left_up[0] = this->m_TransformCmp->m_GameWorldSpaceCell[0] - 1;
-	left_up[1] = this->m_TransformCmp->m_GameWorldSpaceCell[1] - 1;
-
-	left_down[0] = this->m_TransformCmp->m_GameWorldSpaceCell[0] - 1;
-	left_down[1] = this->m_TransformCmp->m_GameWorldSpaceCell[1] + 1;
-
-	right_up[0] = this->m_TransformCmp->m_GameWorldSpaceCell[0] + 1;
-	right_up[1] = this->m_TransformCmp->m_GameWorldSpaceCell[1] - 1;
-
-	right_down[0] = this->m_TransformCmp->m_GameWorldSpaceCell[0] + 1;
-	right_down[1] = this->m_TransformCmp->m_GameWorldSpaceCell[1] + 1;
-
-
-
-	// Increase reference count for maptiles around self.
-	m_AssociatedPlayer->m_MapVisibility[right[0]][right[1]]++;
-	m_AssociatedPlayer->m_MapVisibility[left[0]][left[1]]++;
-	m_AssociatedPlayer->m_MapVisibility[up[0]][up[1]]++;
-	m_AssociatedPlayer->m_MapVisibility[down[0]][down[1]]++;
-	m_AssociatedPlayer->m_MapVisibility[left_up[0]][left_up[1]]++;
-	m_AssociatedPlayer->m_MapVisibility[left_down[0]][left_down[1]]++;
-	m_AssociatedPlayer->m_MapVisibility[right_up[0]][right_up[1]]++;
-	m_AssociatedPlayer->m_MapVisibility[right_down[0]][right_down[1]]++;
-	m_AssociatedPlayer->m_MapVisibility[own_pos[0]][own_pos[1]]++;
-
+		m_AssociatedPlayer->m_MapVisibility[it->m_TransformCmp->m_GameWorldSpaceCell[0]][it->m_TransformCmp->m_GameWorldSpaceCell[1]] += (m_AssociatedPlayer->m_MapVisibility[it->m_TransformCmp->m_GameWorldSpaceCell[0]][it->m_TransformCmp->m_GameWorldSpaceCell[1]] == 0) ? 2 : 1;
+	}
 }
