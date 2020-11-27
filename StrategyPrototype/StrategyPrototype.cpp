@@ -115,12 +115,16 @@ void ReverseMapVisionForEntity(GameEntity* entt, Player* associated_player) {
 
 	for (auto it : vec) {
 
-		associated_player->m_MapVisibility[it->m_TransformCmp->m_GameWorldSpaceCell[0]][it->m_TransformCmp->m_GameWorldSpaceCell[1]]--;
+		//associated_player->m_MapVisibility[it->m_TransformCmp->m_GameWorldSpaceCell[0]][it->m_TransformCmp->m_GameWorldSpaceCell[1]]--;
+		associated_player->m_MapVisibility[it->m_TransformCmp->m_GameWorldSpaceCell[0]][it->m_TransformCmp->m_GameWorldSpaceCell[1]] -= (associated_player->m_MapVisibility[it->m_TransformCmp->m_GameWorldSpaceCell[0]][it->m_TransformCmp->m_GameWorldSpaceCell[1]] == 1) ? 0 : 1;
+
 	}
 
 
 	// Increase for ownpos.
-	associated_player->m_MapVisibility[entt->m_TransformCmp->m_GameWorldSpaceCell[0]][entt->m_TransformCmp->m_GameWorldSpaceCell[1]]--;
+	//associated_player->m_MapVisibility[entt->m_TransformCmp->m_GameWorldSpaceCell[0]][entt->m_TransformCmp->m_GameWorldSpaceCell[1]]--;
+	associated_player->m_MapVisibility[entt->m_TransformCmp->m_GameWorldSpaceCell[0]][entt->m_TransformCmp->m_GameWorldSpaceCell[1]] -= (associated_player->m_MapVisibility[entt->m_TransformCmp->m_GameWorldSpaceCell[0]][entt->m_TransformCmp->m_GameWorldSpaceCell[1]] == 1) ? 0 : 1;
+
 }
 
 
