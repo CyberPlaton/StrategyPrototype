@@ -1970,6 +1970,7 @@ void CMPCameraInput::_handleMapViewMouse(Camera* cam) {
 
 		tile = GetMaptileAtMousePosition(context->GetMouseX(), context->GetMouseY());
 
+
 		for (auto it : *tile->m_MapTileEntities) {
 
 			if (COMPARE_STRINGS_2(it->m_IDCmp->m_ID, PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlySelectedUnit->m_IDCmp->m_ID) == 0) {

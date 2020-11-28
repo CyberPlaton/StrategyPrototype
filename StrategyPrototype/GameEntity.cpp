@@ -3554,6 +3554,7 @@ void Unit::MoveTo(int x_cell, int y_cell, std::map<MapTile*, int>* storage) {
 	But for now, we test moving directly to destination.
 	*/
 
+
 	// Firstly, check for whether we can reach the maptile.
 	MapTile* maptile = nullptr;
 	bool flag = false;
@@ -3566,6 +3567,15 @@ void Unit::MoveTo(int x_cell, int y_cell, std::map<MapTile*, int>* storage) {
 	}
 
 	if (flag == false) return;
+	/*
+	NOTE: I do not understand the part above. What is it for?
+	
+
+	Answer:
+
+	*/
+
+
 
 	int curr_pos_x, curr_pos_y;
 	curr_pos_x = m_TransformCmp->m_PosX;
@@ -3577,17 +3587,30 @@ void Unit::MoveTo(int x_cell, int y_cell, std::map<MapTile*, int>* storage) {
 
 
 
+	MapTile* old_maptile = nullptr;
+	old_maptile = GetMapTileAtWorldPosition(curr_tile[0], curr_tile[1]);
+
+
 	MapTile* tile = GetMapTileAtWorldPosition(x_cell, y_cell);
 	if (tile == nullptr) return;
 
-	int tile_pos[2] = { tile->m_TransformCmp->m_PosX, tile->m_TransformCmp->m_PosY }; // Destination tilepos in x,y position.
+	// Instant teleportation to that position...
+	m_TransformCmp->m_PosX = tile->m_TransformCmp->m_PosX;
+	m_TransformCmp->m_PosY = tile->m_TransformCmp->m_PosY;
 
-	// Instant teleportation to that position.
-	m_TransformCmp->m_PosX = tile_pos[0];
-	m_TransformCmp->m_PosY = tile_pos[1];
-
+	// Update the gameworld position...
 	m_TransformCmp->m_GameWorldSpaceCell[0] = tile->m_TransformCmp->m_GameWorldSpaceCell[0];
 	m_TransformCmp->m_GameWorldSpaceCell[1] = tile->m_TransformCmp->m_GameWorldSpaceCell[1];
+
+	// .. and the local cell position.
+	m_TransformCmp->m_Cell[0] = tile->m_TransformCmp->m_Cell[0];
+	m_TransformCmp->m_Cell[1] = tile->m_TransformCmp->m_Cell[1];
+
+
+	// Lastly, update the content of the maptiles entities vectors.
+	old_maptile->m_MapTileEntities->erase(std::find(old_maptile->m_MapTileEntities->begin(), old_maptile->m_MapTileEntities->end(), this)); // Delete "this" Unit from vector of old maptile.
+	tile->m_MapTileEntities->push_back(this); // And add "this" Unit to the new maptiles vector.
+
 
 
 
