@@ -4644,9 +4644,23 @@ void Game::AdvanceOneTurn() {
 		for (auto it : *EntitiesStorage::Get()->GetUnitsVec()) {
 
 			unit = reinterpret_cast<Unit*>(it);
+
+			// End this turn objectives.
+			unit->m_AICmp->TryExecuteStateLogic();
+
+
+			// Prepare for next turn.
 			unit->Update();
 			unit->UpdateMovementPoints();
 
+
+
+
+
+
+
+
+			/*
 			cout << APP_SUCCESS_COLOR;
 			cout << endl;
 			cout << "Unit name: " << unit->m_Name << endl;
@@ -4665,23 +4679,7 @@ void Game::AdvanceOneTurn() {
 			for (auto it : *unit->GetUnitAttributes()) {
 				cout << "Attribute \"" << AttributeToString(it.first) << "\" ::= " << it.second << endl;
 			}
-
-		}
-	}
-	else if (m_TimeModeTurnBased == false) {
-
-		_updateForestAI2();
-
-
-		m_TurnCount++;
-
-		YearCounter::Get()->AdvanceOneTurn();
-
-		Unit* unit = nullptr;
-		for (auto it : *EntitiesStorage::Get()->GetUnitsVec()) {
-			
-			unit = reinterpret_cast<Unit*>(it);
-			unit->Update();
+			*/
 		}
 	}
 }

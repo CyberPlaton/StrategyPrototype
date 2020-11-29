@@ -110,6 +110,8 @@ private:
 
 private:
 
+	bool _movementPointReached(int our_xpos, int our_ypos);
+
 };
 
 // ATTACK

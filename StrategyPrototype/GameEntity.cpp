@@ -3281,48 +3281,6 @@ std::vector<MapTile*>* Unit::_getNeighbouringMapTiles(int xpos, int ypos) {
 }
 
 
-/*
-std::vector<MapTile*>* Unit::_getNeighbouringMapTiles(int xpos, int ypos) {
-
-	std::vector<MapTile*>* vec = new std::vector<MapTile*>();
-
-	int up[2], down[2], right[2], left[2];
-
-	up[0] = xpos;
-	up[1] = ypos-1;
-
-	down[0] = xpos;
-	down[1] = ypos+1;
-
-	right[0] = xpos+1;
-	right[1] = ypos;
-
-	left[0] = xpos-1;
-	left[1] = ypos;
-
-	MapTile* tile = nullptr;
-
-	tile = GetMapTileAtWorldPosition(up[0], up[1]);
-	if (tile) vec->push_back(tile);
-	tile = nullptr;
-
-	tile = GetMapTileAtWorldPosition(down[0], down[1]);
-	if (tile) vec->push_back(tile);
-	tile = nullptr;
-
-	tile = GetMapTileAtWorldPosition(right[0], right[1]);
-	if (tile) vec->push_back(tile);
-	tile = nullptr;
-
-	tile = GetMapTileAtWorldPosition(left[0], left[1]);
-	if (tile) vec->push_back(tile);
-	tile = nullptr;
-
-
-	return vec;
-}
-*/
-
 std::vector<MapTile*>* Unit::_getNeighbouringMapTiles(MapTile* maptile) {
 
 	return _getNeighbouringMapTiles(maptile->m_TransformCmp->m_GameWorldSpaceCell[0], maptile->m_TransformCmp->m_GameWorldSpaceCell[1]);
@@ -3631,12 +3589,118 @@ void UnitMoveLogic::executeStateLogic() {
 
 	using namespace std;
 
+	// Movemnt objective in m_MovementObjectives.
+	Unit* unit = this->m_ManagedUnit;
+
+	olc::vi2d own_pos = olc::vi2d(unit->m_TransformCmp->m_GameWorldSpaceCell[0], unit->m_TransformCmp->m_GameWorldSpaceCell[1]);
+	olc::vi2d objective_pos = unit->m_MovementObjectives.front();
+	unit->m_MovementCostStorage = new std::map<MapTile*, int>();
+
+
+	while (unit->GetMovementPoints() > 0) {
+
+		// Updates up front.
+		// We have to update own position as we move on... Else we risk having an endless loop.
+		own_pos = olc::vi2d(unit->m_TransformCmp->m_GameWorldSpaceCell[0], unit->m_TransformCmp->m_GameWorldSpaceCell[1]);
+
+		// We must check whether we reached this movement point and can get next.
+		if (_movementPointReached(own_pos.x, own_pos.y)) {
+
+			// Remove first movement objective.
+			pop_front(unit->m_MovementObjectives);
+
+			if (unit->m_MovementObjectives.size() > 0) {
+
+				// Reset movement objectve.
+				objective_pos = unit->m_MovementObjectives.front();
+			}
+			else { // No movement Points. Quit Move logic.
+				return;
+			}
+		}
+
+
+
+
+
+
+
+		// The ALGORITHM itself.
+		int width = objective_pos.x - own_pos.x;
+		int height = objective_pos.y - own_pos.y;
+
+
+		// Go in direction of breadth..
+		if (width > 0) { // Go right.
+
+			// Move unit.
+			// Movement is done iterative, means 1 tile by 1 tile.
+			unit->DetermineTilesInMovementRange2(unit->m_MovementCostStorage);
+			unit->MoveTo(own_pos.x + 1, own_pos.y);
+
+		}
+		else if (width < 0) { // Go left.
+
+
+			// Move unit.
+			// Movement is done iterative, means 1 tile by 1 tile.
+			unit->DetermineTilesInMovementRange2(unit->m_MovementCostStorage);
+			unit->MoveTo(own_pos.x - 1, own_pos.y);
+
+		}
+		else { // We cant go right or left, so go up or down.
+
+			if (height > 0) { // Go down.
+
+
+				// Move unit.
+			    // Movement is done iterative, means 1 tile by 1 tile.
+				unit->DetermineTilesInMovementRange2(unit->m_MovementCostStorage);
+				unit->MoveTo(own_pos.x, own_pos.y + 1);
+
+			}
+			else if (height < 0) { // Go up.
+
+
+				// Move unit.
+				// Movement is done iterative, means 1 tile by 1 tile.
+				unit->DetermineTilesInMovementRange2(unit->m_MovementCostStorage);
+				unit->MoveTo(own_pos.x, own_pos.y - 1);
+
+			}
+			else { // No possibilities to go. Change state.
+
+
+				if (unit->m_MovementObjectives.size() > 0) unit->m_MovementObjectives.clear();
+
+				unit->m_AICmp->ChangeState(States::STATE_WAIT);
+			}
+		}
+	}
+
 
 
 	cout << color(colors::DARKGREEN);
 	cout << "UnitMoveLogic::executeStateLogic() executed for ";
 	cout << this->m_ManagedUnit->m_Name << white << endl;
 }
+
+
+bool UnitMoveLogic::_movementPointReached(int our_xpos, int our_ypos) {
+
+	Unit* unit = this->m_ManagedUnit;
+	olc::vi2d obj_pos = unit->m_MovementObjectives.front();
+
+	if (our_xpos != obj_pos.x ||
+		our_ypos != obj_pos.y) {
+		return false;
+	}
+
+	return true;
+}
+
+
+
 
 void UnitPatrolLogic::executeStateLogic() {
 
@@ -3693,14 +3757,28 @@ void UnitPatrolLogic::executeStateLogic() {
 			// If something happens during patrol, e.g. another players unit is sighted, we can here adjust what happens.
 
 
+			object->m_MovementObjectives.push_back(olc::vi2d(movePoint[0], movePoint[1]));
 			//object->m_MovementObjectives.push_back(movePoint);
+			
+
+			// Change state and execute movement obj.
+			object->m_AICmp->ChangeState(States::STATE_MOVE);
+			object->m_AICmp->TryExecuteStateLogic();
+
+
+			// Change back to prev. state.
+			object->m_AICmp->ChangeState(States::STATE_PATROL);
+			//object->m_AICmp->TryExecuteStateLogic();
+
+
 
 			/*
 			vi2d left = (p1 - p2);
 			cout << color(colors::CYAN) << object->m_Name << " left to reach patrolpoint ::= " << left.str() << white << endl;
 			*/
 
-			if ((endpoint - p2) == vi2d(0, 0)) m_PatrolPointReached = true;
+			// If our position equals position we aim for, then point reached.
+			if ((p1 - vi2d(object->m_TransformCmp->m_GameWorldSpaceCell[0], object->m_TransformCmp->m_GameWorldSpaceCell[1])) == vi2d(0, 0)) m_PatrolPointReached = true;
 
 		}
 		else {
