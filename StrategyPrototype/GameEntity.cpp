@@ -3044,7 +3044,7 @@ unsigned int  Unit::_determineMovementPoints() {
 	cout << color(colors::CYAN);
 	cout << "Fatigue of " << fatigue << " and Speed of " << speed << " gives ";
 
-	m_MovementPoints = int((fatigue + speed) / (m_Age));
+	m_MovementPoints = int((fatigue + speed)*2 / (m_Age));
 
 
 	cout << m_MovementPoints << " Movement Points." << white << endl;
@@ -3292,11 +3292,6 @@ void Unit::MoveTo(int x_cell, int y_cell, std::map<MapTile*, int>* storage) {
 
 	using namespace std;
 
-	// For fog of war.
-	// Before we move, decrement mapvision reference count for old maptiles.
-	ReverseMapVisionForEntity(this, m_AssociatedPlayer);
-
-
 	/*
 	NOTE:
 	We need to move from one tile to next.
@@ -3328,6 +3323,9 @@ void Unit::MoveTo(int x_cell, int y_cell, std::map<MapTile*, int>* storage) {
 
 	Answer:
 
+	We got in storage the maptiles with according movement costs saved.
+	So we iterate through it to check, whether the maptile we want to move to is in there.
+	Because if not, we cant reach it...
 	*/
 
 
@@ -3341,14 +3339,25 @@ void Unit::MoveTo(int x_cell, int y_cell, std::map<MapTile*, int>* storage) {
 	curr_tile[1] = m_TransformCmp->m_GameWorldSpaceCell[1];
 
 
-
+	// Get position of old maptile. Thats the maptile we were standing on before moving..
 	MapTile* old_maptile = nullptr;
 	old_maptile = GetMapTileAtWorldPosition(curr_tile[0], curr_tile[1]);
 
 
+	// Maptile we want to move to...
 	MapTile* tile = GetMapTileAtWorldPosition(x_cell, y_cell);
 	if (tile == nullptr) return;
 
+
+	// If we are here, then movement is immenent.
+	// Thus we have to update units vision:
+	// For fog of war.
+	// Before we move, decrement mapvision reference count for old maptiles.
+	ReverseMapVisionForEntity(this, m_AssociatedPlayer);
+
+
+
+	// Here we update the Transform component of the unit to be same as that of maptile.
 	// Instant teleportation to that position...
 	m_TransformCmp->m_PosX = tile->m_TransformCmp->m_PosX;
 	m_TransformCmp->m_PosY = tile->m_TransformCmp->m_PosY;
@@ -3360,6 +3369,7 @@ void Unit::MoveTo(int x_cell, int y_cell, std::map<MapTile*, int>* storage) {
 	// .. and the local cell position.
 	m_TransformCmp->m_Cell[0] = tile->m_TransformCmp->m_Cell[0];
 	m_TransformCmp->m_Cell[1] = tile->m_TransformCmp->m_Cell[1];
+
 
 
 	// Lastly, update the content of the maptiles entities vectors.

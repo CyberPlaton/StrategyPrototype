@@ -2930,20 +2930,19 @@ bool Game::OnUserCreate() {
 	*/	
 
 	
+	// NOTE:
+	// We MUST have +1 players...
 	Player* player = new Player("Bogdan", "blue", CMPEntityRace::Race::RACE_HUMAN);
 	storage->AddPlayer(player);
 
+	
 	Player* player2 = new Player("Katharina", "magenta", CMPEntityRace::Race::RACE_ORC);
 	storage->AddPlayer(player2);
-
-	Player* player3 = new Player("Walter", "orange", CMPEntityRace::Race::RACE_HUMAN);
-	storage->AddPlayer(player3);
 
 
 
 	PlayerTurnCounter::Get()->AddPlayer(player);
 	PlayerTurnCounter::Get()->AddPlayer(player2);
-	PlayerTurnCounter::Get()->AddPlayer(player3);
 
 
 	
@@ -2951,14 +2950,8 @@ bool Game::OnUserCreate() {
 	City* city2 = MakeNewCity(true, "Stormgrad", CMPEntityRace::Race::RACE_HUMAN, player, 7, 6, 5);
 	storage->AddGameEntitie(city2);
 
-
 	City* city3 = MakeNewCity(true, "Gral", CMPEntityRace::Race::RACE_ORC, player2, 15, 9, 5);
 	storage->AddGameEntitie(city3);
-
-
-	City* city4 = MakeNewCity(true, "Lorderon", CMPEntityRace::Race::RACE_HUMAN, player3, 15, 2, 5);
-	storage->AddGameEntitie(city4);
-
 
 	// TimeCounter
 	m_TimeCounter->SetTimerForSeconds(1);
