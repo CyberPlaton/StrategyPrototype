@@ -4624,7 +4624,23 @@ void Game::AdvanceOneTurn() {
 	// Let every player make theyre turn,
 	// after it advance one turn for all.
 
+	// Save current player before advancing one turn for execution of AI.
+	Player* curr_player = PlayerTurnCounter::Get()->m_CurrentTurnPlayer;
+
+
 	if (!PlayerTurnCounter::Get()->NextPlayerTurn()) {
+
+		// Execute AI logic for units, cities tec. at the end of this players turn.
+		std::vector<Unit*> units_vec = curr_player->m_PlayerUnits;
+
+
+
+		for (auto it : units_vec) {
+
+			it->m_AICmp->TryExecuteStateLogic();
+		}
+
+
 		return;
 	}
 
@@ -4645,16 +4661,13 @@ void Game::AdvanceOneTurn() {
 
 			unit = reinterpret_cast<Unit*>(it);
 
-			// End this turn objectives.
-			unit->m_AICmp->TryExecuteStateLogic();
-
-
 			// Prepare for next turn.
 			unit->Update();
 			unit->UpdateMovementPoints();
 
 
-
+			// Begin this turn by executing objectives.
+			//unit->m_AICmp->TryExecuteStateLogic();
 
 
 

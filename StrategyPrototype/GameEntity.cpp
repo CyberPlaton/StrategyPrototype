@@ -3585,6 +3585,7 @@ void UnitAttackLogic::executeStateLogic() {
 	cout << this->m_ManagedUnit->m_Name << white << endl;
 }
 
+
 void UnitMoveLogic::executeStateLogic() {
 
 	using namespace std;
@@ -3596,8 +3597,21 @@ void UnitMoveLogic::executeStateLogic() {
 	olc::vi2d objective_pos = unit->m_MovementObjectives.front();
 	unit->m_MovementCostStorage = new std::map<MapTile*, int>();
 
+	int loop_counter = 0;
+	while(unit->GetMovementPoints() > 0) {
 
-	while (unit->GetMovementPoints() > 0) {
+		if (loop_counter > unit->GetMovementPoints()) return;
+
+		// Print debug information.
+		cout << color(colors::DARKMAGENTA);
+		cout << unit->m_Name << " movement points: " << unit->GetMovementPoints() << endl;
+
+		cout << "Movement objectives: " << unit->m_MovementObjectives.size() << white << endl;
+		for (auto it : unit->m_MovementObjectives) {
+			cout << "	Objective: ("<< it.x << ":" << it.y << ")";
+		}
+		cout << white << endl;
+
 
 		// Updates up front.
 		// We have to update own position as we move on... Else we risk having an endless loop.
@@ -3605,6 +3619,7 @@ void UnitMoveLogic::executeStateLogic() {
 
 		// We must check whether we reached this movement point and can get next.
 		if (_movementPointReached(own_pos.x, own_pos.y)) {
+
 
 			// Remove first movement objective.
 			pop_front(unit->m_MovementObjectives);
@@ -3648,37 +3663,34 @@ void UnitMoveLogic::executeStateLogic() {
 			unit->MoveTo(own_pos.x - 1, own_pos.y);
 
 		}
-		else { // We cant go right or left, so go up or down.
+		else if (height > 0) { // Go down. 
 
-			if (height > 0) { // Go down.
+			// Move unit.
+		    // Movement is done iterative, means 1 tile by 1 tile.
+			unit->DetermineTilesInMovementRange2(unit->m_MovementCostStorage);
+			unit->MoveTo(own_pos.x, own_pos.y + 1);
 
-
-				// Move unit.
-			    // Movement is done iterative, means 1 tile by 1 tile.
-				unit->DetermineTilesInMovementRange2(unit->m_MovementCostStorage);
-				unit->MoveTo(own_pos.x, own_pos.y + 1);
-
-			}
-			else if (height < 0) { // Go up.
-
-
-				// Move unit.
-				// Movement is done iterative, means 1 tile by 1 tile.
-				unit->DetermineTilesInMovementRange2(unit->m_MovementCostStorage);
-				unit->MoveTo(own_pos.x, own_pos.y - 1);
-
-			}
-			else { // No possibilities to go. Change state.
-
-
-				if (unit->m_MovementObjectives.size() > 0) unit->m_MovementObjectives.clear();
-
-				unit->m_AICmp->ChangeState(States::STATE_WAIT);
-			}
 		}
-	}
+		else if (height < 0) { // Go up.
+
+			// Move unit.
+			// Movement is done iterative, means 1 tile by 1 tile.
+			unit->DetermineTilesInMovementRange2(unit->m_MovementCostStorage);		
+			unit->MoveTo(own_pos.x, own_pos.y - 1);
+
+		}
+		else { // No possibilities to go. Change state.
+
+			/*
+			if (unit->m_MovementObjectives.size() > 0) unit->m_MovementObjectives.clear();
+			unit->m_AICmp->ChangeState(States::STATE_WAIT);
+			*/
+			return;
+		}
 
 
+		loop_counter++;
+}
 
 	cout << color(colors::DARKGREEN);
 	cout << "UnitMoveLogic::executeStateLogic() executed for ";
@@ -3691,12 +3703,12 @@ bool UnitMoveLogic::_movementPointReached(int our_xpos, int our_ypos) {
 	Unit* unit = this->m_ManagedUnit;
 	olc::vi2d obj_pos = unit->m_MovementObjectives.front();
 
-	if (our_xpos != obj_pos.x ||
-		our_ypos != obj_pos.y) {
-		return false;
+	if (our_xpos == obj_pos.x &
+		our_ypos == obj_pos.y) {
+		return true;
 	}
 
-	return true;
+	return false;
 }
 
 
@@ -3715,10 +3727,11 @@ void UnitPatrolLogic::executeStateLogic() {
 	using namespace olc;
 	using namespace std;
 
+	/*
 	cout << color(colors::DARKGREEN);
 	cout << "UnitPatrolLogic::executeStateLogic() executed for ";
 	cout << this->m_ManagedUnit->m_Name << white << endl;
-
+	*/
 
 
 	Unit* object = m_ManagedUnit;
@@ -3728,10 +3741,17 @@ void UnitPatrolLogic::executeStateLogic() {
 		cout << color(colors::DARKGREEN);
 		cout << "Begin Patroling routine for " << object->m_Name << "." << white << endl;
 
+
 		if (m_PatrolPointReached == false) {
 			
 			vi2d p1 = vi2d(m_PatrolPoints[0].x, m_PatrolPoints[0].y); // Point to reach, coordinates are maptile positions.
 			vi2d p2 = vi2d(object->m_TransformCmp->m_GameWorldSpaceCell[0], object->m_TransformCmp->m_GameWorldSpaceCell[1]); // Where we are.
+
+
+			cout << color(colors::GREEN);
+			cout << "Patrol from (" << p2.x << ":" << p2.y << ")" << " to Patrolpoint (" << p1.x << ":" << p1.y << ")" << white << endl;
+
+
 
 			vi2d endpoint;
 
