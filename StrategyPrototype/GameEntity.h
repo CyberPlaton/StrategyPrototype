@@ -442,7 +442,7 @@ public:
 	// Storage for objectives where the unit has to move to.
 	// Purpose is, that units execute movement objectives to destinations
 	// on turn end autonomously.
-	//std::vector<int[2]> m_MovementObjectives;
+	std::vector<olc::vi2d> m_MovementObjectives;
 
 private:
 	int m_AgeInternal = -1;

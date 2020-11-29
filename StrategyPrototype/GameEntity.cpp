@@ -709,7 +709,7 @@ void Unit::Update() {
 
 	if (m_Age > m_MaxAge) {
 
-		EntitiesStorage::Get()->DeleteGameEntitie(this);
+		Die();
 	}
 
 }
@@ -1784,187 +1784,6 @@ void City::ReclaimRegions() {
 	ClaimRegions();
 }
 
-/*
-void City::ClaimRegions() {
-
-
-	// First, claim tile the city is on.
-	// We assume, cities are not built on claimed tiles...
-	// Be it own claimed tiles or of another player.
-
-	int city_pos[2];
-	city_pos[0] = this->m_TransformCmp->m_GameWorldSpaceCell[0];
-	city_pos[1] = this->m_TransformCmp->m_GameWorldSpaceCell[1];
-
-
-	// Normal
-	int right[2], left[2], up[2], down[2];
-	int right_2[2], left_2[2], up_2[2], down_2[2];
-
-
-	// Diagonal
-	int left_up[2], right_up[2], left_down[2], right_down[2];
-
-
-	// Get according maptile coords for claiming.
-	right[0] = this->m_TransformCmp->m_GameWorldSpaceCell[0] + 1;
-	right[1] = this->m_TransformCmp->m_GameWorldSpaceCell[1];
-
-	left[0] = this->m_TransformCmp->m_GameWorldSpaceCell[0] - 1;
-	left[1] = this->m_TransformCmp->m_GameWorldSpaceCell[1];
-
-	up[0] = this->m_TransformCmp->m_GameWorldSpaceCell[0];
-	up[1] = this->m_TransformCmp->m_GameWorldSpaceCell[1] - 1;
-
-	down[0] = this->m_TransformCmp->m_GameWorldSpaceCell[0];
-	down[1] = this->m_TransformCmp->m_GameWorldSpaceCell[1] + 1;
-
-	right_2[0] = this->m_TransformCmp->m_GameWorldSpaceCell[0] + 2;
-	right_2[1] = this->m_TransformCmp->m_GameWorldSpaceCell[1];
-
-	left_2[0] = this->m_TransformCmp->m_GameWorldSpaceCell[0] - 2;
-	left_2[1] = this->m_TransformCmp->m_GameWorldSpaceCell[1];
-
-	up_2[0] = this->m_TransformCmp->m_GameWorldSpaceCell[0];
-	up_2[1] = this->m_TransformCmp->m_GameWorldSpaceCell[1] - 2;
-
-	down_2[0] = this->m_TransformCmp->m_GameWorldSpaceCell[0];
-	down_2[1] = this->m_TransformCmp->m_GameWorldSpaceCell[1] + 2;
-
-	left_up[0] = this->m_TransformCmp->m_GameWorldSpaceCell[0] - 1;
-	left_up[1] = this->m_TransformCmp->m_GameWorldSpaceCell[1] - 1;
-
-	right_up[0] = this->m_TransformCmp->m_GameWorldSpaceCell[0] + 1;
-	right_up[1] = this->m_TransformCmp->m_GameWorldSpaceCell[1] - 1;
-
-	left_down[0] = this->m_TransformCmp->m_GameWorldSpaceCell[0] - 1;
-	left_down[1] = this->m_TransformCmp->m_GameWorldSpaceCell[1] + 1;
-
-	right_down[0] = this->m_TransformCmp->m_GameWorldSpaceCell[0] + 1;
-	right_down[1] = this->m_TransformCmp->m_GameWorldSpaceCell[1] + 1;
-
-
-	// Now claim associated regions of the maptiles for which we got coords.
-	MapTile* m0, *m1, * m2, * m3, * m4,* m5, * m6,* m7, * m8, * m9, * m10, * m11, * m12;
-	m0 = GetMapTileAtWorldPosition(city_pos[0], city_pos[1]);
-	m1 = GetMapTileAtWorldPosition(right[0], right[1]);
-	m2 = GetMapTileAtWorldPosition(left[0], left[1]);
-	m3 = GetMapTileAtWorldPosition(up[0], up[1]);
-	m4 = GetMapTileAtWorldPosition(down[0], down[1]);
-	m5 = GetMapTileAtWorldPosition(right_2[0], right_2[1]);
-	m6 = GetMapTileAtWorldPosition(left_2[0], left_2[1]);
-	m7 = GetMapTileAtWorldPosition(up_2[0], up_2[1]);
-	m8 = GetMapTileAtWorldPosition(down_2[0], down_2[1]);
-
-
-	// No need for nullptr test here.
-	m_ClaimedRegions.push_back(m0->m_AssociatedRegion);
-
-	// Here we must test whether the tile is valid.
-	if (m1 != nullptr) {
-		
-		if (_isRegionClaimedAlreadyByThisCity(m1->m_AssociatedRegion) == false &&
-			_isRegionClaimedByOtherCity(m1->m_AssociatedRegion) == false) {
-
-			m_ClaimedRegions.push_back(m1->m_AssociatedRegion);
-		}
-	}
-	if (m2 != nullptr) {
-		if (_isRegionClaimedAlreadyByThisCity(m2->m_AssociatedRegion) == false &&
-			_isRegionClaimedByOtherCity(m2->m_AssociatedRegion) == false) {
-
-			m_ClaimedRegions.push_back(m2->m_AssociatedRegion);
-		}
-	}
-	if (m3 != nullptr) {
-		if (_isRegionClaimedAlreadyByThisCity(m3->m_AssociatedRegion) == false &&
-			_isRegionClaimedByOtherCity(m3->m_AssociatedRegion) == false) {
-
-			m_ClaimedRegions.push_back(m3->m_AssociatedRegion);
-		}
-	}
-	if (m4 != nullptr) {
-		if (_isRegionClaimedAlreadyByThisCity(m4->m_AssociatedRegion) == false &&
-			_isRegionClaimedByOtherCity(m4->m_AssociatedRegion) == false) {
-
-			m_ClaimedRegions.push_back(m4->m_AssociatedRegion);
-		}
-	}
-	if (m5 != nullptr) {
-		if (_isRegionClaimedAlreadyByThisCity(m5->m_AssociatedRegion) == false &&
-			_isRegionClaimedByOtherCity(m5->m_AssociatedRegion) == false) {
-
-
-			m_ClaimedRegions.push_back(m5->m_AssociatedRegion);
-		}
-	}
-	if (m6 != nullptr) {
-		if (_isRegionClaimedAlreadyByThisCity(m6->m_AssociatedRegion) == false &&
-			_isRegionClaimedByOtherCity(m6->m_AssociatedRegion) == false) {
-
-			m_ClaimedRegions.push_back(m6->m_AssociatedRegion);
-		}
-	}
-	if (m7 != nullptr) {
-		if (_isRegionClaimedAlreadyByThisCity(m7->m_AssociatedRegion) == false &&
-			_isRegionClaimedByOtherCity(m7->m_AssociatedRegion) == false) {
-
-			m_ClaimedRegions.push_back(m7->m_AssociatedRegion);
-		}
-	}
-	if (m8 != nullptr) {
-		if (_isRegionClaimedAlreadyByThisCity(m8->m_AssociatedRegion) == false &&
-			_isRegionClaimedByOtherCity(m8->m_AssociatedRegion) == false) {
-
-			m_ClaimedRegions.push_back(m8->m_AssociatedRegion);
-		}
-	}
-
-
-	m9 = GetMapTileAtWorldPosition(left_up[0], left_up[1]);
-	m10 = GetMapTileAtWorldPosition(right_up[0], right_up[1]);
-	m11 = GetMapTileAtWorldPosition(left_down[0], left_down[1]);
-	m12 = GetMapTileAtWorldPosition(right_down[0], right_down[1]);
-
-	if (m9 != nullptr) {
-		if (_isRegionClaimedAlreadyByThisCity(m9->m_AssociatedRegion) == false &&
-			_isRegionClaimedByOtherCity(m9->m_AssociatedRegion) == false) {
-
-			m_ClaimedRegions.push_back(m9->m_AssociatedRegion);
-		}
-	}
-	if (m10 != nullptr) {
-		if (_isRegionClaimedAlreadyByThisCity(m10->m_AssociatedRegion) == false &&
-			_isRegionClaimedByOtherCity(m10->m_AssociatedRegion) == false) {
-
-			m_ClaimedRegions.push_back(m10->m_AssociatedRegion);
-		}
-	}
-	if (m11 != nullptr) {
-		if (_isRegionClaimedAlreadyByThisCity(m11->m_AssociatedRegion) == false &&
-			_isRegionClaimedByOtherCity(m11->m_AssociatedRegion) == false) {
-
-			m_ClaimedRegions.push_back(m11->m_AssociatedRegion);
-		}
-	}
-	if (m12 != nullptr) {
-		if (_isRegionClaimedAlreadyByThisCity(m12->m_AssociatedRegion) == false &&
-			_isRegionClaimedByOtherCity(m12->m_AssociatedRegion) == false) {
-
-			m_ClaimedRegions.push_back(m12->m_AssociatedRegion);
-		}
-	}
-
-	_setSpriteForClaimedRegion();
-	
-
-	// Set region owner for claimed regions.
-	for (auto it : m_ClaimedRegions) {
-
-		it->SetAssociatedPlayer(m_AssociatedPlayer);
-	}
-}
-*/
 
 void City::Update() {
 
@@ -3205,18 +3024,6 @@ bool City::_isMapTileClaimedByCity(MapTile* maptile) {
 
 	if (maptile == nullptr) return false;
 
-	/*
-	MapTile* other_tile = nullptr;
-
-	// See whether we have claimed the region that has this maptile.
-	for (auto it : this->m_ClaimedRegions) {
-		for (auto iter : it->m_MapTileRegionTiles) {
-
-			other_tile = iter;
-			if (other_tile == maptile) return true;
-		}
-	}
-	*/
 	
 	for (auto it : this->m_ClaimedRegions) {
 		for (auto iter : it->m_MapTileRegionTiles) {
@@ -3375,88 +3182,6 @@ bool Unit::DetermineTilesInMovementRange2(std::map<MapTile*, int>* storage) {
 }
 
 
-/*
-bool Unit::DetermineTilesInMovementRange2(std::map<MapTile*, int>* storage) {
-
-	using namespace std;
-	cout << APP_COLOR << endl;
-
-	// NOTE:
-	// We associate every maptile with a cost, and store it in given map.
-	// We define the maptile we are standing on, as cost of 0.
-
-	std::vector<MapTile*> first_neighbors = *_getNeighbouringMapTiles(m_TransformCmp->m_GameWorldSpaceCell[0], m_TransformCmp->m_GameWorldSpaceCell[1]);
-
-	// Other tiles neighbors.
-	std::vector<MapTile*> neighbors_vec;
-
-	
-	// First step before recursion, checking immediate neighbors.
-	for (auto it : first_neighbors) { // For each neighbor, do:
-
-		// If we can reach it, insert in storage.
-		if (m_MovementPoints - (it->m_MovementCostCmp->GetRaceModifiedMovementCost(m_EntityRaceCmp->m_EntityRaceString)) >= 0) {
-
-			storage->try_emplace(it, it->m_MovementCostCmp->GetRaceModifiedMovementCost(m_EntityRaceCmp->m_EntityRaceString));
-		}
-	}
-
-	first_neighbors.clear();
-
-
-	// Second step, insert maptile we are standing on as zero cost.
-	storage->try_emplace(GetMapTileAtWorldPosition(m_TransformCmp->m_GameWorldSpaceCell[0], m_TransformCmp->m_GameWorldSpaceCell[1]), 0);
-
-	// Third. Copy evrything to vector. Thus we can push to end and  iterate over EVERY tile.
-	std::vector<MapTile*> copied_vec;
-	for (auto it : *storage) {
-
-		copied_vec.push_back(it.first);
-	}
-
-
-	int cost = 0, parent_cost = 0;
-	int loops = 0;
-
-	// Do algorithm:
-	for (int i = 0; i < copied_vec.size(); ++i) {
-
-
-		neighbors_vec = *_getNeighbouringMapTiles(copied_vec[i]);
-
-
-		for (auto n_itr : neighbors_vec) {
-
-
-			cost = n_itr->m_MovementCostCmp->GetRaceModifiedMovementCost(m_EntityRaceCmp->m_EntityRaceString);
-			parent_cost = storage->at(copied_vec[i]);
-
-
-			if (m_MovementPoints - (cost + parent_cost) >= 0 &&
-				_isMapTileAlreadyInserted(n_itr, storage) == false) {
-
-
-				storage->try_emplace(n_itr, cost + parent_cost);
-
-				// And save particular maptile for recursive processing of neighbors.
-				copied_vec.push_back(n_itr);
-			}
-
-
-		}
-
-
-	}
-
-
-
-	m_MovementCostStorage = storage;
-
-	return true;
-}
-*/
-
-
 
 bool Unit::_isMapTileAlreadyInserted(MapTile* m, std::map<MapTile*, int>* storage) {
 
@@ -3485,6 +3210,78 @@ bool Unit::_isMapTileWeAreStandingOn(MapTile* m) {
 
 
 
+std::vector<MapTile*>* Unit::_getNeighbouringMapTiles(int xpos, int ypos) {
+
+	std::vector<MapTile*>* vec = new std::vector<MapTile*>();
+
+	int up[2], down[2], right[2], left[2];
+	int leftup[2], leftdown[2], rightup[2], rightdown[2];
+
+	up[0] = xpos;
+	up[1] = ypos - 1;
+
+	down[0] = xpos;
+	down[1] = ypos + 1;
+
+	right[0] = xpos + 1;
+	right[1] = ypos;
+
+	left[0] = xpos - 1;
+	left[1] = ypos;
+
+	leftup[0] = xpos - 1;
+	leftup[1] = ypos - 1;
+
+	leftdown[0] = xpos - 1;
+	leftdown[1] = ypos + 1;
+
+	rightup[0] = xpos + 1;
+	rightup[1] = ypos - 1;
+
+	rightdown[0] = xpos + 1;
+	rightdown[1] = ypos + 1;
+
+
+
+	MapTile* tile = nullptr;
+
+	tile = GetMapTileAtWorldPosition(up[0], up[1]);
+	if (tile) vec->push_back(tile);
+	tile = nullptr;
+
+	tile = GetMapTileAtWorldPosition(down[0], down[1]);
+	if (tile) vec->push_back(tile);
+	tile = nullptr;
+
+	tile = GetMapTileAtWorldPosition(right[0], right[1]);
+	if (tile) vec->push_back(tile);
+	tile = nullptr;
+
+	tile = GetMapTileAtWorldPosition(left[0], left[1]);
+	if (tile) vec->push_back(tile);
+	tile = nullptr;
+
+	tile = GetMapTileAtWorldPosition(leftup[0], leftup[1]);
+	if (tile) vec->push_back(tile);
+	tile = nullptr;
+
+	tile = GetMapTileAtWorldPosition(leftdown[0], leftdown[1]);
+	if (tile) vec->push_back(tile);
+	tile = nullptr;
+
+	tile = GetMapTileAtWorldPosition(rightup[0], rightup[1]);
+	if (tile) vec->push_back(tile);
+	tile = nullptr;
+
+	tile = GetMapTileAtWorldPosition(rightdown[0], rightdown[1]);
+	if (tile) vec->push_back(tile);
+	tile = nullptr;
+
+	return vec;
+}
+
+
+/*
 std::vector<MapTile*>* Unit::_getNeighbouringMapTiles(int xpos, int ypos) {
 
 	std::vector<MapTile*>* vec = new std::vector<MapTile*>();
@@ -3524,7 +3321,7 @@ std::vector<MapTile*>* Unit::_getNeighbouringMapTiles(int xpos, int ypos) {
 
 	return vec;
 }
-
+*/
 
 std::vector<MapTile*>* Unit::_getNeighbouringMapTiles(MapTile* maptile) {
 
@@ -3650,7 +3447,7 @@ void Unit::MoveTo(int x_cell, int y_cell, std::map<MapTile*, int>* storage) {
 
 // Unit cease to exist.
 void Unit::Die() {
-
+	EntitiesStorage::Get()->DeleteGameEntitie(this);
 }
 
 
@@ -3890,6 +3687,12 @@ void UnitPatrolLogic::executeStateLogic() {
 			int movePoint[2];
 			movePoint[0] = endpoint.x;
 			movePoint[1] = endpoint.y;
+
+			// Patroling logic orders movement issues to the patroling points, if there are any, else
+			// change state of the unit.
+			// If something happens during patrol, e.g. another players unit is sighted, we can here adjust what happens.
+
+
 			//object->m_MovementObjectives.push_back(movePoint);
 
 			/*
