@@ -2084,6 +2084,29 @@ void CMPCameraInput::_handleMapViewMouse(Camera* cam) {
 			PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlySelectedUnit->DetermineTilesInMovementRange2(context->m_SelectedUnitsMovementTiles);
 		}
 
+
+
+		if (context->GetMouse(1).bReleased && !g_bAddingPatrolPoints) {
+
+			using namespace olc;
+
+			vi2d pos = { 0,0 };
+			pos.x = GetMaptileAtMousePosition(context->GetMouseX(), context->GetMouseY())->m_TransformCmp->m_GameWorldSpaceCell[0];
+			pos.y = GetMaptileAtMousePosition(context->GetMouseX(), context->GetMouseY())->m_TransformCmp->m_GameWorldSpaceCell[1];
+
+			PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlySelectedUnit->MoveTo(pos.x, pos.y);
+
+			// Deselect after movement and clear storage for movement tiles.
+			PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlySelectedUnit = nullptr;
+			if (context->m_SelectedUnitsMovementTiles->size() > 0) {
+
+				context->m_SelectedUnitsMovementTiles->clear();
+
+				delete context->m_SelectedUnitsMovementTiles;
+				context->m_SelectedUnitsMovementTiles = nullptr;
+			}
+		}
+
 		if (context->GetKey(olc::Key::SHIFT).bReleased) {
 			
 			g_bAddingPatrolPoints = false;
@@ -2122,28 +2145,6 @@ void CMPCameraInput::_handleMapViewMouse(Camera* cam) {
 				// For patroling the AI-Unit should himself set AT THE END of a PLAYER TURN "tryExecuteLogic"...
 				// Thus we get an effect like in CIV6.
 				PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlySelectedUnit->m_AICmp->TryExecuteStateLogic();
-			}
-		}
-
-
-		if (context->GetMouse(1).bPressed && !g_bAddingPatrolPoints) {
-
-			using namespace olc;
-
-			vi2d pos = { 0,0 };
-			pos.x = GetMaptileAtMousePosition(context->GetMouseX(), context->GetMouseY())->m_TransformCmp->m_GameWorldSpaceCell[0];
-			pos.y = GetMaptileAtMousePosition(context->GetMouseX(), context->GetMouseY())->m_TransformCmp->m_GameWorldSpaceCell[1];
-
-			PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlySelectedUnit->MoveTo(pos.x, pos.y);
-
-			// Deselect after movement and clear storage for movement tiles.
-			PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlySelectedUnit = nullptr;
-			if (context->m_SelectedUnitsMovementTiles->size() > 0) {
-
-				context->m_SelectedUnitsMovementTiles->clear();
-
-				delete context->m_SelectedUnitsMovementTiles;
-				context->m_SelectedUnitsMovementTiles = nullptr;
 			}
 		}
 	}
