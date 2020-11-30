@@ -3596,6 +3596,236 @@ void UnitAttackLogic::executeStateLogic() {
 }
 
 
+
+olc::vd2d UnitMoveLogic::_getMapTileMiddle(int xpos, int ypos) {
+
+	MapTile* maptile = nullptr;
+	maptile = GetMapTileAtWorldPosition(xpos, ypos);
+
+	if (maptile) {
+
+		double x = (double)maptile->m_TransformCmp->m_PosX + 32;
+		double y = (double)maptile->m_TransformCmp->m_PosY + 32;
+
+		return { x, y };
+	}
+
+	return { 999.0, 999.0 };
+}
+
+
+
+void UnitMoveLogic::executeStateLogic() {
+
+	using namespace std;
+
+	// We have in vec the movement cost tiles.
+	// Iterate through all
+	// and get the one, which is the nearest to the objective maptile position.
+	// To that one we move to.
+
+	// Such we do not take enemy units into account.
+	// Nor do we take some tactical decisions into account.
+
+	
+	int current_smallest_cost = 999; // Saves smallest cost for neighbor iteration.
+
+
+	// Get vector with movement cost maptiles.
+	Unit* unit = this->m_ManagedUnit;
+	unit->m_MovementCostStorage = new std::map<MapTile*, int>();
+	unit->DetermineTilesInMovementRange2(unit->m_MovementCostStorage);
+
+
+	// Get Endpoint.
+	// Go through all maptiles and test which one has least distance to destination.
+	olc::vi2d objective_position = unit->m_MovementObjectives.front(); // Position of the objective.
+	olc::vi2d endpoint = objective_position;
+
+	// For debugging print all movement objectives:
+	cout << color(colors::DARKRED);
+	cout << "Movement Objectives for " << unit->m_Name << " :" << endl;
+	for (auto it : unit->m_MovementObjectives) {
+
+		cout << "(" << it.x << ":" << it.y << ")" << endl;
+	}
+	cout << white << endl;
+
+
+
+
+	double distance = 999.0; // saves the current distance.
+
+	// Find the nearest endpoint to objective.
+	for (auto it : *unit->m_MovementCostStorage) {
+
+		// Try solve with pythogoras´ theorem: sqrt( (x2-x1)^2 + (y2-y1)^2  ) is the distance.
+
+		// To solve the problem, we check which tile has the shortest distance from endpoint.
+		//olc::vi2d tile_pos = { it.first->m_TransformCmp->m_GameWorldSpaceCell[0], it.first->m_TransformCmp->m_GameWorldSpaceCell[1] };
+		//double new_distance = sqrt( pow((objective_position.y-objective_position.x), 2.0) + pow((tile_pos.y-tile_pos.x), 2.0) );
+
+		olc::vd2d tile_pos = _getMapTileMiddle(it.first->m_TransformCmp->m_GameWorldSpaceCell[0], it.first->m_TransformCmp->m_GameWorldSpaceCell[1]);
+		olc::vd2d obj_pos = _getMapTileMiddle(objective_position.x, objective_position.y);
+
+		double new_distance = sqrt(pow((obj_pos.x - tile_pos.x), 2.0) + pow((obj_pos.y - tile_pos.y), 2.0));
+		
+		if (new_distance < distance) {
+
+			distance = new_distance;
+			//endpoint = tile_pos;
+			endpoint = { it.first->m_TransformCmp->m_GameWorldSpaceCell[0] ,it.first->m_TransformCmp->m_GameWorldSpaceCell[1] };
+			
+			cout << APP_ERROR_COLOR;
+			cout << "Current shortest distance has maptile (" << endpoint.x << ":" << endpoint.y << ")" << " of " << distance << white << endl;
+		}
+	}
+
+	
+	// If endpoint is directly reachable, just move there.
+	for (auto it : *unit->m_MovementCostStorage) {
+
+		if (it.first->m_TransformCmp->m_GameWorldSpaceCell[0] == endpoint.x && it.first->m_TransformCmp->m_GameWorldSpaceCell[1] == endpoint.y) {
+
+
+			m_MovementVector.push_back(endpoint);
+			unit->MoveTo(m_MovementVector.front().x, m_MovementVector.front().y);
+
+			// Pop local movement vector and unitwise movement objective.
+			pop_front(m_MovementVector);
+			pop_front(unit->m_MovementObjectives);
+
+			return;
+		}
+	}
+	// Else execute pathfinding algorithm.
+
+	// TODO:
+	// Check whether we need the algorithm below.
+	// It looks like we do not need it.
+
+
+	/*
+	// In endpoint we have our local objective we are moving to.
+	// Start the algorithm.
+	MapTile* currently_chosen_maptile = nullptr;
+	currently_chosen_maptile = GetMapTileAtWorldPosition(endpoint.x, endpoint.y); // This maptile MUST be valid. As its in the movement cost map.
+
+
+	// Maptile with minimal movement cost for current chosen maptile.
+	MapTile* min_neighbor_maptile = nullptr;
+
+	bool logarithm_end = false;
+	while (!logarithm_end) {
+
+		int x = currently_chosen_maptile->m_TransformCmp->m_GameWorldSpaceCell[0];
+		int y = currently_chosen_maptile->m_TransformCmp->m_GameWorldSpaceCell[1];
+
+		// Iterate through all maptiles in vector.
+		for (auto it : *unit->m_MovementCostStorage) {
+
+			// Get only direct neighbors of current chosen maptile, and do algorithm for them...
+			if (_isMaptTileDirectNeighbor(x, y, it.first)) {
+
+
+				// Get maptile if its cost is smaller than current smallest maptile cost.
+				if (!min_neighbor_maptile) { // ..only needed in the beginning.
+
+					min_neighbor_maptile = currently_chosen_maptile;
+				}
+				else if (unit->m_MovementCostStorage->at(min_neighbor_maptile) > unit->m_MovementCostStorage->at(currently_chosen_maptile)) {
+
+					min_neighbor_maptile = currently_chosen_maptile;
+				}
+			}
+		}
+
+
+		// Change the curr. chosen maptile for reiteration...
+		currently_chosen_maptile = min_neighbor_maptile;
+
+
+		// Save minimal movement maptiles in movement vector for moveTo execution.
+		m_MovementVector.push_back(olc::vi2d(currently_chosen_maptile->m_TransformCmp->m_GameWorldSpaceCell[0],
+											 currently_chosen_maptile->m_TransformCmp->m_GameWorldSpaceCell[1]));
+
+		// If true, we reached enpoint so algorithm ends...
+		if ((currently_chosen_maptile->m_TransformCmp->m_GameWorldSpaceCell[0] == endpoint.x) &&
+			(currently_chosen_maptile->m_TransformCmp->m_GameWorldSpaceCell[1] == endpoint.y)) {
+
+			logarithm_end = true;
+		}
+	}
+
+	 
+	// After logarithms end, if m_MovementVector is not empty, execute movements for unit.
+	while (m_MovementVector.size() > 0) {
+
+		cout << color(colors::WHITE);
+		cout << "Movement vector for " << unit->m_Name << " :" << endl;
+		for (auto it : m_MovementVector) {
+
+			cout << "("<< it.x << ":" << it.y << ")" << endl;
+
+		}
+		cout << white << endl;
+
+
+		unit->MoveTo(m_MovementVector.front().x, m_MovementVector.front().y);
+		pop_front(m_MovementVector);
+	}
+	*/
+}
+
+
+
+bool UnitMoveLogic::_isMaptTileDirectNeighbor(int xpos, int ypos, MapTile* maptile) {
+
+	// x and y is position of the to be tested maptile.
+	int x = maptile->m_TransformCmp->m_GameWorldSpaceCell[0];
+	int y = maptile->m_TransformCmp->m_GameWorldSpaceCell[1];
+
+	// We have to test 8 directions...
+	if (x == (xpos + 1) && y == (ypos)) { // right
+
+		return true; // Hes right from us...
+	}
+	else if (x == (xpos - 1) && y == (ypos)) { // left
+
+		return true; // Hes left from us...
+	}
+	else if (x == (xpos) && y == (ypos - 1)) { // up
+
+		return true; // Hes up from us...
+	}
+	else if (x == (xpos) && y == (ypos + 1)) { // down
+
+		return true; // Hes up from us...
+	}
+	else if (x == (xpos - 1) && y == (ypos - 1)) { // left up
+
+		return true; // Hes up from us...
+	}
+	else if (x == (xpos + 1) && y == (ypos - 1)) { // right up
+
+		return true; // Hes up from us...
+	}
+	else if (x == (xpos - 1) && y == (ypos + 1)) { // left down
+
+		return true; // Hes up from us...
+	}
+	else if (x == (xpos + 1) && y == (ypos + 1)) { // right down
+
+		return true; // Hes up from us...
+	}
+	else {
+		return false;
+	}
+}
+
+
+
+/*
 void UnitMoveLogic::executeStateLogic() {
 
 	using namespace std;
@@ -3654,8 +3884,45 @@ void UnitMoveLogic::executeStateLogic() {
 		int width = objective_pos.x - own_pos.x;
 		int height = objective_pos.y - own_pos.y;
 
+		cout << APP_ERROR_COLOR;
+		cout << "Try moving to (" << objective_pos.x << ":" << objective_pos.y << ")" << endl;
+		cout << "Width ::= " << width << " and Height ::=" << height << white << endl;
+
 
 		// Go in direction of breadth..
+		if (width < 0 && height < 0) { // Go diagonally left up
+
+			// Move unit.
+			// Movement is done iterative, means 1 tile by 1 tile.
+			unit->DetermineTilesInMovementRange2(unit->m_MovementCostStorage);
+			unit->MoveTo(own_pos.x - 1, own_pos.y - 1);
+
+		}
+		else if (width > 0 && height > 0) { // Go right up
+
+
+			// Move unit.
+			// Movement is done iterative, means 1 tile by 1 tile.
+			unit->DetermineTilesInMovementRange2(unit->m_MovementCostStorage);
+			unit->MoveTo(own_pos.x + 1, own_pos.y + 1);
+
+		}
+		else if (width < 0 && height > 0) { // Go diagonally left down. 
+
+			// Move unit.
+			// Movement is done iterative, means 1 tile by 1 tile.
+			unit->DetermineTilesInMovementRange2(unit->m_MovementCostStorage);
+			unit->MoveTo(own_pos.x - 1, own_pos.y + 1);
+
+		}
+		else if (width > 0 && height < 0) { // Go diagonally right down
+
+			// Move unit.
+			// Movement is done iterative, means 1 tile by 1 tile.
+			unit->DetermineTilesInMovementRange2(unit->m_MovementCostStorage);
+			unit->MoveTo(own_pos.x + 1, own_pos.y - 1);
+
+		}
 		if (width > 0) { // Go right.
 
 			// Move unit.
@@ -3691,10 +3958,6 @@ void UnitMoveLogic::executeStateLogic() {
 		}
 		else { // No possibilities to go. Change state.
 
-			/*
-			if (unit->m_MovementObjectives.size() > 0) unit->m_MovementObjectives.clear();
-			unit->m_AICmp->ChangeState(States::STATE_WAIT);
-			*/
 			return;
 		}
 
@@ -3706,6 +3969,8 @@ void UnitMoveLogic::executeStateLogic() {
 	cout << "UnitMoveLogic::executeStateLogic() executed for ";
 	cout << this->m_ManagedUnit->m_Name << white << endl;
 }
+*/
+
 
 
 bool UnitMoveLogic::_movementPointReached(int our_xpos, int our_ypos) {
@@ -3777,17 +4042,20 @@ void UnitPatrolLogic::executeStateLogic() {
 			// We are giving the worldmap cell coordinates which we wish to reach.
 			//object->MoveTo(endpoint.x, endpoint.y, m_ManagedUnit->m_MovementCostStorage);
 
+
+			/*
 			// Issue movement order by storing it.
 			int movePoint[2];
 			movePoint[0] = endpoint.x;
 			movePoint[1] = endpoint.y;
+			*/
 
 			// Patroling logic orders movement issues to the patroling points, if there are any, else
 			// change state of the unit.
 			// If something happens during patrol, e.g. another players unit is sighted, we can here adjust what happens.
 
-
-			object->m_MovementObjectives.push_back(olc::vi2d(movePoint[0], movePoint[1]));
+			// Try move directly to patrolpoint...
+			object->m_MovementObjectives.push_back(olc::vi2d(p1.x, p1.y));
 			//object->m_MovementObjectives.push_back(movePoint);
 			
 

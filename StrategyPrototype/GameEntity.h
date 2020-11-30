@@ -107,11 +107,22 @@ public:
 	Unit* m_ManagedUnit = nullptr;
 
 private:
+	// Defines specified movement points of
+	// how and where to the unit must move to.
+	// The logic executes movment in direction of first point,
+	// or defines a new vector if all movement points are done.
+	// 
+	// The endpoint is given by a point from the units "unit->m_MovementObjectives".
+	// If an endpoint is reached we get the next point from "unit->m_MovementObjectives"
+	// and redo the procedure.
+	std::vector<olc::vi2d> m_MovementVector;
 
 private:
 
 	bool _movementPointReached(int our_xpos, int our_ypos);
+	bool _isMaptTileDirectNeighbor(int xpos, int ypos, MapTile* maptile);
 
+	olc::vd2d _getMapTileMiddle(int xpos, int ypos);
 };
 
 // ATTACK
