@@ -492,6 +492,11 @@ private:
 	bool _isMapTileWeAreStandingOn(MapTile* m);
 	bool _isMapTileAlreadyInserted(MapTile* m, std::map<MapTile*, int>* storage);
 
+
+	// Functions updates Attributes based on current data and return result.
+	int _getFatigue();
+	int _getMagicka();
+	int _getHealth();
 };
 
 
