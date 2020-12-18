@@ -171,6 +171,22 @@ struct UnitClass {
 };
 
 
+struct MajorMinorSkills {
+
+	std::string m_MajorSkill1;
+	std::string m_MajorSkill2;
+	std::string m_MajorSkill3;
+	std::string m_MajorSkill4;
+	std::string m_MajorSkill5;
+
+	std::string m_MinorSkill1;
+	std::string m_MinorSkill2;
+	std::string m_MinorSkill3;
+	std::string m_MinorSkill4;
+	std::string m_MinorSkill5;
+};
+
+
 // CLASSES DEFINITIONS
 // 1.) Support classes.
 struct UnitClassArcher : public UnitClass {
@@ -206,6 +222,14 @@ private:
 private:
 	void _defineStats();
 	void _undefStats();
+
+
+	// Function for training skills/attributes defined as Major/Minor for this class.
+	void _trainSkills();
+	void _trainAttributes();
+
+	// Used for training functions.
+	MajorMinorSkills* m_MajorMinorSkillsDefs;
 };
 
 
