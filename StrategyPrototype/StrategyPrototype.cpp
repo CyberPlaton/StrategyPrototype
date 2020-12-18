@@ -2165,7 +2165,7 @@ void CMPCameraInput::_handleMapViewMouse(Camera* cam) {
 
 			// Creating walking unit.
 			Unit* unit = MakeNewUnitAtPos(PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_PlayerEmpireRace, UnitMovementType::UNIT_MOVEMENT_TYPE_WALKING, PlayerTurnCounter::Get()->m_CurrentTurnPlayer,
-				g_sUnitClasses[++g_iUnitClassIndex % 5], "gnome_noble",
+				g_sUnitClasses[++g_iUnitClassIndex % 5], "dwarf_barbarian",
 				tile->m_TransformCmp->m_PosX, tile->m_TransformCmp->m_PosY,
 				tile->m_TransformCmp->m_GameWorldSpaceCell[0], tile->m_TransformCmp->m_GameWorldSpaceCell[1]);
 
@@ -2755,6 +2755,10 @@ void Game::_loadSpriteResources() {
 	Sprite* gnome6 = new Sprite("assets/unit/gnome/gnome_hunter.png");
 	Sprite* gnome7 = new Sprite("assets/unit/gnome/gnome_miner.png");
 	Sprite* gnome8 = new Sprite("assets/unit/gnome/gnome_farmer.png");
+	Sprite* elf = new Sprite("assets/unit/highelf/highelf_paladin.png");
+	Sprite* dwarf = new Sprite("assets/unit/dwarf/dwarf_barbarian.png");
+
+
 
 
 	m_SpriteStorage.push_back(gnome_gyro);
@@ -2770,6 +2774,10 @@ void Game::_loadSpriteResources() {
 
 	m_SpriteStorage.push_back(gnome);
 	m_SpriteStorage.push_back(troll);
+	m_SpriteStorage.push_back(elf);
+	m_SpriteStorage.push_back(dwarf);
+
+
 
 	Decal* d_gnome_gyro = new Decal(gnome_gyro);
 	Decal* d_gnome1 = new Decal(gnome1);
@@ -2783,6 +2791,10 @@ void Game::_loadSpriteResources() {
 
 	Decal* d_gnome = new Decal(gnome);
 	Decal* d_troll = new Decal(troll);
+	Decal* d_elf = new Decal(elf);
+	Decal* d_dwarf = new Decal(dwarf);
+
+
 
 	m_SpriteResourceMap.insert(std::make_pair("gnome_citizen", d_gnome1));
 	m_SpriteResourceMap.insert(std::make_pair("gnome_worker", d_gnome2));
@@ -2797,6 +2809,10 @@ void Game::_loadSpriteResources() {
 
 	
 	m_SpriteResourceMap.insert(std::make_pair("troll_raptor_rider", d_troll));
+	m_SpriteResourceMap.insert(std::make_pair("highelf_paladin", d_elf));
+	m_SpriteResourceMap.insert(std::make_pair("dwarf_barbarian", d_dwarf));
+
+
 
 	/*
 	// Unit ribbons and player color thingies and classes...

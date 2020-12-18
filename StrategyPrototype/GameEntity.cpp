@@ -205,48 +205,62 @@ void Unit::_defineStandardBeginningStats() {
 	_defineRandomUnitTalents();
 }
 
+
 void Unit::_defineDerivedAttributes() {
+
+	_getHealth();
+	_getMagicka();
+	_getFatigue();
+}
+
+
+int Unit::_getFatigue() {
 
 	UnitAttributes* attr = new UnitAttributes();
 	UnitSkills* skills = new UnitSkills();
 
-	// NOTE:
-	// Define derived attributes after standard attributes and
-	// after the birthsign and race were defined...
-
-	using namespace std;
-
-
-	// Define health.
+	// Define Fatigue.
 	// .. define multiplier
-	int health_multiplier = 1;
+	int fatigue_multiplier = 1;
 	if (this->m_EntityRaceCmp->m_EntityRace == CMPEntityRace::Race::RACE_HIGHELF) {
-		health_multiplier -= 0.5f;
+		fatigue_multiplier += 0.2f;
 	}
 	else if (this->m_EntityRaceCmp->m_EntityRace == CMPEntityRace::Race::RACE_ORC) {
-		health_multiplier += 1;
+		fatigue_multiplier += 1;
 	}
 	else if (this->m_EntityRaceCmp->m_EntityRace == CMPEntityRace::Race::RACE_DWARF) {
-		health_multiplier += 1.0f;
+		fatigue_multiplier += 0.7f;
 	}
 	else if (this->m_EntityRaceCmp->m_EntityRace == CMPEntityRace::Race::RACE_TROLL) {
-		health_multiplier += 1;
+		fatigue_multiplier += 1.5f;
+	}
+	else if (this->m_EntityRaceCmp->m_EntityRace == CMPEntityRace::Race::RACE_GNOME) {
+		fatigue_multiplier -= 0.5f;
+	}
+	else if (this->m_EntityRaceCmp->m_EntityRace == CMPEntityRace::Race::RACE_DWARF) {
+		fatigue_multiplier -= 0.5f;
+	}
+	else if (this->m_EntityRaceCmp->m_EntityRace == CMPEntityRace::Race::RACE_GOBLIN) {
+		fatigue_multiplier -= 0.5f;
 	}
 
 
 	int strength = GetUnitAttributes()->at(UnitAttributesEnum::UNIT_ATTRIBUTE_STRENGTH);
 	int endurance = GetUnitAttributes()->at(UnitAttributesEnum::UNIT_ATTRIBUTE_ENDURANCE);
-	
-	int health = int((strength * health_multiplier + endurance) / 2);
-	attr->SetAttribute(GetUnitAttributes(), "Health", health);
+	int athletics = GetUnitSkills()->at(UnitSkillsEnum::UNIT_SKILL_ATHLETICS);
+	int acrobatics = GetUnitSkills()->at(UnitSkillsEnum::UNIT_SKILL_ACROBATICS);
+
+	int fatigue = int(fatigue_multiplier * (int(strength + endurance + (athletics / 2) + (acrobatics / 2)) / 2));
 
 
-	cout << color(colors::CYAN);
-	cout << "Health for " << m_Name << " defined by (" << strength << " * " << health_multiplier << " + " << endurance << ") / 2 = " << health << white << endl;
+	attr->SetAttribute(GetUnitAttributes(), "Fatigue", fatigue);
+	return fatigue;
+}
 
+int Unit::_getMagicka() {
 
-
-	// Define magicka.
+	UnitAttributes* attr = new UnitAttributes();
+	UnitSkills* skills = new UnitSkills();
 
 	// Define multiplier..
 	// .. based on race.
@@ -254,7 +268,7 @@ void Unit::_defineDerivedAttributes() {
 	if (this->m_EntityRaceCmp->m_EntityRace == CMPEntityRace::Race::RACE_HIGHELF) {
 		multiplier += 1;
 	}
-	else if(this->m_EntityRaceCmp->m_EntityRace == CMPEntityRace::Race::RACE_DARKELF) {
+	else if (this->m_EntityRaceCmp->m_EntityRace == CMPEntityRace::Race::RACE_DARKELF) {
 		multiplier += 0.5f;
 	}
 	else if (this->m_EntityRaceCmp->m_EntityRace == CMPEntityRace::Race::RACE_ORC) {
@@ -284,48 +298,45 @@ void Unit::_defineDerivedAttributes() {
 	int intelligence = GetUnitAttributes()->at(UnitAttributesEnum::UNIT_ATTRIBUTE_INTELLIGENCE);
 	int willpower = GetUnitAttributes()->at(UnitAttributesEnum::UNIT_ATTRIBUTE_WILLPOWER);
 
-	int magicka = int(multiplier * (intelligence + willpower)/2);
+	int magicka = int(multiplier * (intelligence + willpower) / 2);
 	attr->SetAttribute(GetUnitAttributes(), "Magicka", magicka);
 
-	cout << color(colors::CYAN);
-	cout << "Magicka for " << m_Name << " defined by " << multiplier << " * (" << intelligence << " + " << willpower << ") / 2 = " << magicka << white << endl;
+	return magicka;
+}
+
+int Unit::_getHealth() {
+
+	UnitAttributes* attr = new UnitAttributes();
+	UnitSkills* skills = new UnitSkills();
 
 
-
-	// Define Fatigue.
+	// Define health.
 	// .. define multiplier
-	int fatigue_multiplier = 1;
+	int health_multiplier = 1;
 	if (this->m_EntityRaceCmp->m_EntityRace == CMPEntityRace::Race::RACE_HIGHELF) {
-		fatigue_multiplier += 0.2f;
+		health_multiplier -= 0.5f;
 	}
 	else if (this->m_EntityRaceCmp->m_EntityRace == CMPEntityRace::Race::RACE_ORC) {
-		fatigue_multiplier += 1;
+		health_multiplier += 1;
 	}
 	else if (this->m_EntityRaceCmp->m_EntityRace == CMPEntityRace::Race::RACE_DWARF) {
-		fatigue_multiplier += 0.7f;
+		health_multiplier += 1.0f;
 	}
 	else if (this->m_EntityRaceCmp->m_EntityRace == CMPEntityRace::Race::RACE_TROLL) {
-		fatigue_multiplier += 1.5f;
-	}
-	else if (this->m_EntityRaceCmp->m_EntityRace == CMPEntityRace::Race::RACE_GNOME) {
-		fatigue_multiplier -= 0.5f;
-	}
-	else if (this->m_EntityRaceCmp->m_EntityRace == CMPEntityRace::Race::RACE_DWARF) {
-		fatigue_multiplier -= 0.5f;
-	}
-	else if (this->m_EntityRaceCmp->m_EntityRace == CMPEntityRace::Race::RACE_GOBLIN) {
-		fatigue_multiplier -= 0.5f;
+		health_multiplier += 1;
 	}
 
 
-	int agility = GetUnitAttributes()->at(UnitAttributesEnum::UNIT_ATTRIBUTE_AGILITY);
-	int fatigue = int(fatigue_multiplier * (int(strength + endurance)/2));
+	int strength = GetUnitAttributes()->at(UnitAttributesEnum::UNIT_ATTRIBUTE_STRENGTH);
+	int endurance = GetUnitAttributes()->at(UnitAttributesEnum::UNIT_ATTRIBUTE_ENDURANCE);
 
-	attr->SetAttribute(GetUnitAttributes(), "Fatigue", fatigue);
+	int health = int((strength * health_multiplier + endurance) / 2);
+	attr->SetAttribute(GetUnitAttributes(), "Health", health);
 
-	cout << color(colors::CYAN);
-	cout << "Fatigue for " << m_Name << " defined by " << fatigue_multiplier << " * (" << " (" << endurance << " + " << strength <<") / 2 ) = " << fatigue << white << endl;
+	return health;
 }
+
+
 
 
 void  Unit::_defineStatsBasedOnUnitBirthsign() {
