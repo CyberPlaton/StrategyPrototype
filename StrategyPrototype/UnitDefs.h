@@ -3,6 +3,7 @@
 
 enum class UnitSkillsEnum;
 enum class UnitAttributesEnum;
+enum class UnitClassTier;
 
 
 std::string SkillToString(UnitSkillsEnum skill);
@@ -13,8 +14,37 @@ UnitSkillsEnum SkillStringtoEnum(std::string skill);
 UnitAttributesEnum AttributeStringtoEnum(std::string attr);
 
 
+int GetMultiplierFromUnitClassTier(UnitClassTier tier);
+
+
+enum class UnitClassTier {
+	UNIT_CLASS_TIER_INVALID = -1,
+	UNIT_CLASS_TIER_0 = 0,
+	UNIT_CLASS_TIER_1 = 1,
+	UNIT_CLASS_TIER_2 = 2,
+	UNIT_CLASS_TIER_3 = 3,
+	UNIT_CLASS_TIER_4 = 4
+};
+
+struct MajorMinorSkills {
+
+	std::string m_MajorAttribute1;
+	std::string m_MajorAttribute2;
+	std::string m_MajorSkill1;
+	std::string m_MajorSkill2;
+	std::string m_MajorSkill3;
+
+	std::string m_MinorSkill1;
+	std::string m_MinorSkill2;
+	std::string m_MinorSkill3;
+	std::string m_MinorSkill4;
+	std::string m_MinorSkill5;
+};
+
+
 enum class UnitSkillsEnum {
 	UNIT_SKILL_INVALID = -1,
+
 	UNIT_SKILL_HEAVY_ARMOR = 0,
 	UNIT_SKILL_MEDIUM_ARMOR = 1,
 	UNIT_SKILL_LIGHT_ARMOR = 2,
@@ -168,23 +198,35 @@ struct UnitClass {
 
 	bool m_ZoneOfControl = false; // Whether this class-unit has a zoc.
 	bool m_IgnoresZoneOfControl = false; // Whether this class-unit ignores another units zoc.
+
+
+	UnitClassTier m_ClassTier = UnitClassTier::UNIT_CLASS_TIER_INVALID;
+
+	// Pointers to units skills and attributes map.
+	std::map<UnitSkillsEnum, int>* m_SkillsMap = nullptr;
+	std::map<UnitAttributesEnum, int>* m_AttrMap = nullptr;
+
+	void _setMajorSkillsAttributes(std::string major_attr1, std::string major_attr2,
+		std::string major_skill1, std::string major_skill2, std::string major_skill3);
+
+	void _setMinorSkillsAttributes(std::string minor_skill1, std::string minor_skill2,
+		std::string minor_skill3, std::string minor_skill4, std::string minor_skill5);
+
+	void _unsetMajorSkillsAttributes(std::string major_attr1, std::string major_attr2,
+		std::string major_skill1, std::string major_skill2, std::string major_skill3);
+
+	void _unsetMinorSkillsAttributes(std::string minor_skill1, std::string minor_skill2,
+		std::string minor_skill3, std::string minor_skill4, std::string minor_skill5);
+
+
+	// Function for training skills/attributes defined as Major/Minor for this class.
+	void _trainSkills();
+	void _trainAttributes();
+
+	// Used for training functions.
+	MajorMinorSkills* m_MajorMinorSkillsDefs;
 };
 
-
-struct MajorMinorSkills {
-
-	std::string m_MajorSkill1;
-	std::string m_MajorSkill2;
-	std::string m_MajorSkill3;
-	std::string m_MajorSkill4;
-	std::string m_MajorSkill5;
-
-	std::string m_MinorSkill1;
-	std::string m_MinorSkill2;
-	std::string m_MinorSkill3;
-	std::string m_MinorSkill4;
-	std::string m_MinorSkill5;
-};
 
 
 // CLASSES DEFINITIONS
@@ -203,6 +245,9 @@ struct UnitClassArcher : public UnitClass {
 		m_UnitClassSpritename = "unit_class_archer";
 		m_UnitClassName = "Archer";
 
+
+		m_ClassTier = UnitClassTier::UNIT_CLASS_TIER_0;
+
 		_defineStats();
 	}
 
@@ -215,21 +260,9 @@ struct UnitClassArcher : public UnitClass {
 
 private:
 
-	// Pointers to units skills and attributes map.
-	std::map<UnitSkillsEnum, int>* m_SkillsMap = nullptr;
-	std::map<UnitAttributesEnum, int>* m_AttrMap= nullptr;
-
 private:
 	void _defineStats();
 	void _undefStats();
-
-
-	// Function for training skills/attributes defined as Major/Minor for this class.
-	void _trainSkills();
-	void _trainAttributes();
-
-	// Used for training functions.
-	MajorMinorSkills* m_MajorMinorSkillsDefs;
 };
 
 
@@ -259,10 +292,6 @@ struct UnitClassSpy : public UnitClass {
 
 
 private:
-
-	// Pointers to units skills and attributes map.
-	std::map<UnitSkillsEnum, int>* m_SkillsMap = nullptr;
-	std::map<UnitAttributesEnum, int>* m_AttrMap = nullptr;
 
 private:
 	void _defineStats();
@@ -297,10 +326,6 @@ struct UnitClassAssassin : public UnitClass {
 
 private:
 
-	// Pointers to units skills and attributes map.
-	std::map<UnitSkillsEnum, int>* m_SkillsMap = nullptr;
-	std::map<UnitAttributesEnum, int>* m_AttrMap = nullptr;
-
 private:
 	void _defineStats();
 	void _undefStats();
@@ -334,14 +359,10 @@ struct UnitClassRogue : public UnitClass {
 
 private:
 
-	// Pointers to units skills and attributes map.
-	std::map<UnitSkillsEnum, int>* m_SkillsMap = nullptr;
-	std::map<UnitAttributesEnum, int>* m_AttrMap = nullptr;
-
-
 private:
 	void _defineStats();
 	void _undefStats();
+
 };
 
 
@@ -371,10 +392,6 @@ struct UnitClassScout : public UnitClass {
 
 
 private:
-
-	// Pointers to units skills and attributes map.
-	std::map<UnitSkillsEnum, int>* m_SkillsMap = nullptr;
-	std::map<UnitAttributesEnum, int>* m_AttrMap = nullptr;
 
 private:
 	void _defineStats();
@@ -410,9 +427,6 @@ struct UnitClassBarbarian : public UnitClass {
 
 private:
 
-	// Pointers to units skills and attributes map.
-	std::map<UnitSkillsEnum, int>* m_SkillsMap = nullptr;
-	std::map<UnitAttributesEnum, int>* m_AttrMap = nullptr;
 
 private:
 	void _defineStats();
@@ -447,10 +461,6 @@ struct UnitClassWarrior : public UnitClass {
 
 private:
 
-	// Pointers to units skills and attributes map.
-	std::map<UnitSkillsEnum, int>* m_SkillsMap = nullptr;
-	std::map<UnitAttributesEnum, int>* m_AttrMap = nullptr;
-
 private:
 	void _defineStats();
 	void _undefStats();
@@ -483,9 +493,6 @@ struct UnitClassKnight : public UnitClass {
 
 private:
 
-	// Pointers to units skills and attributes map.
-	std::map<UnitSkillsEnum, int>* m_SkillsMap = nullptr;
-	std::map<UnitAttributesEnum, int>* m_AttrMap = nullptr;
 
 private:
 	void _defineStats();
@@ -518,10 +525,6 @@ struct UnitClassPaladin : public UnitClass {
 
 
 private:
-
-	// Pointers to units skills and attributes map.
-	std::map<UnitSkillsEnum, int>* m_SkillsMap = nullptr;
-	std::map<UnitAttributesEnum, int>* m_AttrMap = nullptr;
 
 private:
 	void _defineStats();
@@ -558,10 +561,6 @@ struct UnitClassSpellsword : public UnitClass {
 
 private:
 
-	// Pointers to units skills and attributes map.
-	std::map<UnitSkillsEnum, int>* m_SkillsMap = nullptr;
-	std::map<UnitAttributesEnum, int>* m_AttrMap = nullptr;
-
 private:
 	void _defineStats();
 	void _undefStats();
@@ -594,10 +593,6 @@ struct UnitClassBattlemage : public UnitClass {
 
 
 private:
-
-	// Pointers to units skills and attributes map.
-	std::map<UnitSkillsEnum, int>* m_SkillsMap = nullptr;
-	std::map<UnitAttributesEnum, int>* m_AttrMap = nullptr;
 
 private:
 	void _defineStats();
@@ -632,10 +627,6 @@ struct UnitClassNightblade : public UnitClass {
 
 private:
 
-	// Pointers to units skills and attributes map.
-	std::map<UnitSkillsEnum, int>* m_SkillsMap = nullptr;
-	std::map<UnitAttributesEnum, int>* m_AttrMap = nullptr;
-
 private:
 	void _defineStats();
 	void _undefStats();
@@ -668,9 +659,6 @@ struct UnitClassInquisitor : public UnitClass {
 
 private:
 
-	// Pointers to units skills and attributes map.
-	std::map<UnitSkillsEnum, int>* m_SkillsMap = nullptr;
-	std::map<UnitAttributesEnum, int>* m_AttrMap = nullptr;
 
 private:
 	void _defineStats();
@@ -706,13 +694,12 @@ struct UnitClassMage : public UnitClass {
 
 private:
 
-	// Pointers to units skills and attributes map.
-	std::map<UnitSkillsEnum, int>* m_SkillsMap = nullptr;
-	std::map<UnitAttributesEnum, int>* m_AttrMap = nullptr;
+
 
 private:
 	void _defineStats();
 	void _undefStats();
+
 };
 
 
@@ -742,9 +729,6 @@ struct UnitClassSorcerer : public UnitClass {
 
 private:
 
-	// Pointers to units skills and attributes map.
-	std::map<UnitSkillsEnum, int>* m_SkillsMap = nullptr;
-	std::map<UnitAttributesEnum, int>* m_AttrMap = nullptr;
 
 private:
 	void _defineStats();
@@ -778,13 +762,11 @@ struct UnitClassHealer : public UnitClass {
 
 private:
 
-	// Pointers to units skills and attributes map.
-	std::map<UnitSkillsEnum, int>* m_SkillsMap = nullptr;
-	std::map<UnitAttributesEnum, int>* m_AttrMap = nullptr;
 
 private:
 	void _defineStats();
 	void _undefStats();
+
 };
 
 
@@ -833,5 +815,4 @@ private:
 	void _undefStats() {
 
 	}
-
 };

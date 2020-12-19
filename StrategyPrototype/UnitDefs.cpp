@@ -1,5 +1,116 @@
 #include"UnitDefs.h"
 
+void UnitClass::_setMajorSkillsAttributes(std::string major_attr1, std::string major_attr2,
+	std::string major_skill1, std::string major_skill2, std::string major_skill3) {
+
+	UnitAttributes* attr = new UnitAttributes();
+	UnitSkills* skills = new UnitSkills();
+
+	int multiplier = GetMultiplierFromUnitClassTier(m_ClassTier);
+
+	int major_value = 4 * multiplier;
+
+	// Define Major/Minor skill-attribute set.
+	attr->SetAttribute(m_AttrMap, major_attr1, major_value);
+	attr->SetAttribute(m_AttrMap, major_attr2, major_value);
+	skills->SetSkill(m_SkillsMap, major_skill1, major_value);
+	skills->SetSkill(m_SkillsMap, major_skill2, major_value);
+	skills->SetSkill(m_SkillsMap, major_skill3, major_value);
+}
+
+
+void UnitClass::_setMinorSkillsAttributes(std::string minor_skill1, std::string minor_skill2,
+	std::string minor_skill3, std::string minor_skill4, std::string minor_skill5) {
+
+	UnitAttributes* attr = new UnitAttributes();
+	UnitSkills* skills = new UnitSkills();
+
+	int multiplier = GetMultiplierFromUnitClassTier(m_ClassTier);
+
+	int minor_value = 2 * multiplier;
+
+
+	skills->SetSkill(m_SkillsMap, minor_skill1, minor_value);
+	skills->SetSkill(m_SkillsMap, minor_skill2, minor_value);
+	skills->SetSkill(m_SkillsMap, minor_skill3, minor_value);
+	skills->SetSkill(m_SkillsMap, minor_skill4, minor_value);
+	skills->SetSkill(m_SkillsMap, minor_skill5, minor_value);
+}
+
+
+
+void UnitClass::_unsetMajorSkillsAttributes(std::string major_attr1, std::string major_attr2,
+	std::string major_skill1, std::string major_skill2, std::string major_skill3) {
+
+	UnitAttributes* attr = new UnitAttributes();
+	UnitSkills* skills = new UnitSkills();
+
+	int multiplier = GetMultiplierFromUnitClassTier(m_ClassTier);
+
+	int major_value = 4 * multiplier;
+
+	// Define Major/Minor skill-attribute set.
+	attr->UnsetAttribute(m_AttrMap, major_attr1, major_value);
+	attr->UnsetAttribute(m_AttrMap, major_attr2, major_value);
+	skills->UnsetSkill(m_SkillsMap, major_skill1, major_value);
+	skills->UnsetSkill(m_SkillsMap, major_skill2, major_value);
+	skills->UnsetSkill(m_SkillsMap, major_skill3, major_value);
+}
+
+void UnitClass::_unsetMinorSkillsAttributes(std::string minor_skill1, std::string minor_skill2,
+	std::string minor_skill3, std::string minor_skill4, std::string minor_skill5) {
+
+	UnitAttributes* attr = new UnitAttributes();
+	UnitSkills* skills = new UnitSkills();
+
+	int multiplier = GetMultiplierFromUnitClassTier(m_ClassTier);
+
+	int minor_value = 2 * multiplier;
+
+
+	skills->UnsetSkill(m_SkillsMap, minor_skill1, minor_value);
+	skills->UnsetSkill(m_SkillsMap, minor_skill2, minor_value);
+	skills->UnsetSkill(m_SkillsMap, minor_skill3, minor_value);
+	skills->UnsetSkill(m_SkillsMap, minor_skill4, minor_value);
+	skills->UnsetSkill(m_SkillsMap, minor_skill5, minor_value);
+}
+
+// Function for training skills/attributes defined as Major/Minor for this class.
+void UnitClass::_trainSkills() {
+
+}
+
+void UnitClass::_trainAttributes() {
+
+}
+
+
+
+
+int GetMultiplierFromUnitClassTier(UnitClassTier tier) {
+
+	switch (tier) {
+	case UnitClassTier::UNIT_CLASS_TIER_0:
+		return 1;
+		break;
+	case UnitClassTier::UNIT_CLASS_TIER_1:
+		return 2;
+		break;
+	case UnitClassTier::UNIT_CLASS_TIER_2:
+		return 3;
+		break;
+	case UnitClassTier::UNIT_CLASS_TIER_3:
+		return 4;
+		break;
+	case UnitClassTier::UNIT_CLASS_TIER_4:
+		return 5;
+		break;
+	default:
+		return -1;
+		break;
+	}
+}
+
 
 
 std::string SkillToString(UnitSkillsEnum skill) {
@@ -301,820 +412,307 @@ UnitAttributesEnum AttributeStringtoEnum(std::string attr) {
 
 void UnitClassArcher::_defineStats() {
 
-	UnitAttributes* attr = new UnitAttributes();
-	UnitSkills* skills = new UnitSkills();
+	// Define Major/Minor skill-attribute set.
 
-	// Attributes.
-	attr->SetAttribute(m_AttrMap, "Strength", 10);
-	attr->SetAttribute(m_AttrMap, "Agility", 10);
+	_setMajorSkillsAttributes("Strength", "Agility",
+		"Marksman", "Light Armor", "Athletics");
 
-	attr->SetAttribute(m_AttrMap, "Intelligence", 5);
-	attr->SetAttribute(m_AttrMap, "Willpower", 5);
-	attr->SetAttribute(m_AttrMap, "Speed", 5);
-	attr->SetAttribute(m_AttrMap, "Endurance", 5);
-	attr->SetAttribute(m_AttrMap, "Personality", 5);
-
-	// Skills.
-	skills->SetSkill(m_SkillsMap, "Marksman", 10);
-	skills->SetSkill(m_SkillsMap, "Light Armor", 10);
-	skills->SetSkill(m_SkillsMap, "Medium Armor", 5);
-	skills->SetSkill(m_SkillsMap, "Spear", 5);
-	skills->SetSkill(m_SkillsMap, "Long Blade", 10);
-	skills->SetSkill(m_SkillsMap, "Block", 10);
-	skills->SetSkill(m_SkillsMap, "Athletics", 10);
-	skills->SetSkill(m_SkillsMap, "Unarmored", 5);
-	skills->SetSkill(m_SkillsMap, "Restoration", 5);
-
+	_setMinorSkillsAttributes("Unarmored", "Medium Armor", "Block", "Restoration", "Acrobatics");
 }
 
 void UnitClassArcher::_undefStats() {
 
-	UnitAttributes* attr = new UnitAttributes();
-	UnitSkills* skills = new UnitSkills();
+	_unsetMajorSkillsAttributes("Strength", "Agility",
+		"Marksman", "Light Armor", "Athletics");
 
-	// Attributes.
-	// major
-	attr->UnsetAttribute(m_AttrMap, "Strength", 10);
-	attr->UnsetAttribute(m_AttrMap, "Agility", 10);
-
-	// minor
-	attr->UnsetAttribute(m_AttrMap, "Intelligence", 5);
-	attr->UnsetAttribute(m_AttrMap, "Willpower", 5);
-	attr->UnsetAttribute(m_AttrMap, "Speed", 5);
-	attr->UnsetAttribute(m_AttrMap, "Endurance", 5);
-	attr->UnsetAttribute(m_AttrMap, "Personality", 5);
-
-	// Skills.
-	skills->UnsetSkill(m_SkillsMap, "Marksman", 10);
-	skills->UnsetSkill(m_SkillsMap, "Light Armor", 10);
-	skills->UnsetSkill(m_SkillsMap, "Medium Armor", 5);
-	skills->UnsetSkill(m_SkillsMap, "Spear", 5);
-	skills->UnsetSkill(m_SkillsMap, "Long Blade", 10);
-	skills->UnsetSkill(m_SkillsMap, "Block", 10);
-	skills->UnsetSkill(m_SkillsMap, "Athletics", 10);
-	skills->UnsetSkill(m_SkillsMap, "Unarmored", 5);
-	skills->UnsetSkill(m_SkillsMap, "Restoration", 5);
+	_unsetMinorSkillsAttributes("Unarmored", "Medium Armor", "Block", "Restoration", "Acrobatics");
 }
 
 
 void UnitClassSpy::_defineStats() {
 
-	UnitAttributes* attr = new UnitAttributes();
-	UnitSkills* skills = new UnitSkills();
+	// Define Major/Minor skill-attribute set.
 
-	// Attributes.
-	attr->SetAttribute(m_AttrMap, "Strength", 5);
-	attr->SetAttribute(m_AttrMap, "Agility", 10);
-	attr->SetAttribute(m_AttrMap, "Intelligence", 5);
-	attr->SetAttribute(m_AttrMap, "Willpower", 5);
-	attr->SetAttribute(m_AttrMap, "Speed", 5);
-	attr->SetAttribute(m_AttrMap, "Endurance", 5);
-	attr->SetAttribute(m_AttrMap, "Personality", 10);
+	_setMajorSkillsAttributes("Speed", "Agility",
+		"Sneak", "Light Armor", "Unarmored");
 
-	// Skills.
-	skills->SetSkill(m_SkillsMap, "Light Armor", 10);
-	skills->SetSkill(m_SkillsMap, "Marksman", 5);
-	skills->SetSkill(m_SkillsMap, "Athletics", 5);
-	skills->SetSkill(m_SkillsMap, "Sneak", 10);
-	skills->SetSkill(m_SkillsMap, "Unarmored", 10);
+	_setMinorSkillsAttributes("Athelitcs", "Marksman", "Block", "Illusion", "Acrobatics");
 }
-
 
 void UnitClassSpy::_undefStats() {
 
-	UnitAttributes* attr = new UnitAttributes();
-	UnitSkills* skills = new UnitSkills();
+	_unsetMajorSkillsAttributes("Speed", "Agility",
+		"Sneak", "Light Armor", "Unarmored");
 
-	// Attributes.
-	attr->UnsetAttribute(m_AttrMap, "Strength", 5);
-	attr->UnsetAttribute(m_AttrMap, "Agility", 10);
-	attr->UnsetAttribute(m_AttrMap, "Intelligence", 5);
-	attr->UnsetAttribute(m_AttrMap, "Willpower", 5);
-	attr->UnsetAttribute(m_AttrMap, "Speed", 5);
-	attr->UnsetAttribute(m_AttrMap, "Endurance", 5);
-	attr->UnsetAttribute(m_AttrMap, "Personality", 10);
-
-	// Skills.
-	skills->UnsetSkill(m_SkillsMap, "Light Armor", 10);
-	skills->UnsetSkill(m_SkillsMap, "Marksman", 5);
-	skills->UnsetSkill(m_SkillsMap, "Athletics", 5);
-	skills->UnsetSkill(m_SkillsMap, "Sneak", 10);
-	skills->UnsetSkill(m_SkillsMap, "Unarmored", 10);
+	_unsetMinorSkillsAttributes("Athelitcs", "Marksman", "Block", "Illusion", "Acrobatics");
 }
-
 
 void UnitClassAssassin::_defineStats() {
 
-	UnitAttributes* attr = new UnitAttributes();
-	UnitSkills* skills = new UnitSkills();
+	// Define Major/Minor skill-attribute set.
 
-	// Attributes.
-	attr->SetAttribute(m_AttrMap, "Strength", 5);
-	attr->SetAttribute(m_AttrMap, "Agility", 10);
-	attr->SetAttribute(m_AttrMap, "Intelligence", 5);
-	attr->SetAttribute(m_AttrMap, "Willpower", 5);
-	attr->SetAttribute(m_AttrMap, "Speed", 10);
-	attr->SetAttribute(m_AttrMap, "Endurance", 5);
-	attr->SetAttribute(m_AttrMap, "Personality", 5);
+	_setMajorSkillsAttributes("Agility", "Speed",
+		"Sneak", "Light Armor", "Short Blade");
 
-
-	// Skills
-	skills->SetSkill(m_SkillsMap, "Light Armor", 10);
-	skills->SetSkill(m_SkillsMap, "Unarmored", 10);
-	skills->SetSkill(m_SkillsMap, "Short Blade", 10);
-	skills->SetSkill(m_SkillsMap, "Sneak", 10);
-
-	skills->SetSkill(m_SkillsMap, "Block", 5);
+	_setMinorSkillsAttributes("Athletics", "Alchemy", "Block", "Marksman", "Acrobatics");
 }
-
 
 void UnitClassAssassin::_undefStats() {
 
-	UnitAttributes* attr = new UnitAttributes();
-	UnitSkills* skills = new UnitSkills();
+	_unsetMajorSkillsAttributes("Agility", "Speed",
+		"Sneak", "Light Armor", "Short Blade");
 
-	// Attributes.
-	attr->UnsetAttribute(m_AttrMap, "Strength", 5);
-	attr->UnsetAttribute(m_AttrMap, "Agility", 10);
-	attr->UnsetAttribute(m_AttrMap, "Intelligence", 5);
-	attr->UnsetAttribute(m_AttrMap, "Willpower", 5);
-	attr->UnsetAttribute(m_AttrMap, "Speed", 10);
-	attr->UnsetAttribute(m_AttrMap, "Endurance", 5);
-	attr->UnsetAttribute(m_AttrMap, "Personality", 5);
+	_unsetMinorSkillsAttributes("Athletics", "Alchemy", "Block", "Marksman", "Acrobatics");
+}
 
 
-	// Skills
-	skills->UnsetSkill(m_SkillsMap, "Light Armor", 10);
-	skills->UnsetSkill(m_SkillsMap, "Unarmored", 10);
-	skills->UnsetSkill(m_SkillsMap, "Short Blade", 10);
-	skills->UnsetSkill(m_SkillsMap, "Sneak", 10);
-	skills->UnsetSkill(m_SkillsMap, "Block", 5);
+void UnitClassBarbarian::_defineStats() {
+
+	// Define Major/Minor skill-attribute set.
+
+	_setMajorSkillsAttributes("Strength", "Speed",
+		"Blunt Weapon", "Medium Armor", "Athletics");
+
+	_setMinorSkillsAttributes("Unarmored", "Heavy Armor", "Block", "Axe", "Acrobatics");
+}
+
+void UnitClassBarbarian::_undefStats() {
+
+	_unsetMajorSkillsAttributes("Strength", "Speed",
+		"Blunt Weapon", "Medium Armor", "Athletics");
+
+	_unsetMinorSkillsAttributes("Unarmored", "Heavy Armor", "Block", "Axe", "Acrobatics");
+}
+
+
+void UnitClassBattlemage::_defineStats() {
+
+	// Define Major/Minor skill-attribute set.
+
+	_setMajorSkillsAttributes("Strength", "Intelligence",
+		"Heavy Armor", "Destruction", "Axe");
+
+	_setMinorSkillsAttributes("Conjuration", "Alteration", "Block", "Restoration", "Blunt Weapon");
+}
+
+void UnitClassBattlemage::_undefStats() {
+
+	_unsetMajorSkillsAttributes("Strength", "Intelligence",
+		"Heavy Armor", "Destruction", "Axe");
+
+	_unsetMinorSkillsAttributes("Conjuration", "Alteration", "Block", "Restoration", "Blunt Weapon");
+}
+
+
+void UnitClassPaladin::_defineStats() {
+
+	// Define Major/Minor skill-attribute set.
+
+	_setMajorSkillsAttributes("Strength", "Endurance",
+		"Blunt Weapon", "Heavy Armor", "Restoration");
+
+	_setMinorSkillsAttributes("Athletics", "Mysticism", "Block", "Alteration", "Long Blade");
+}
+
+void UnitClassPaladin::_undefStats() {
+
+	_unsetMajorSkillsAttributes("Strength", "Endurance",
+		"Blunt Weapon", "Heavy Armor", "Restoration");
+
+	_unsetMinorSkillsAttributes("Athletics", "Mysticism", "Block", "Alteration", "Long Blade");
+}
+
+
+
+void UnitClassHealer::_defineStats() {
+
+	// Define Major/Minor skill-attribute set.
+
+	_setMajorSkillsAttributes("Intelligence", "Willpower",
+		"Marksman", "Light Armor", "Athletics");
+
+	_setMinorSkillsAttributes("Unarmored", "Light Armor", "Block", "Mysticism", "Destruction");
+}
+
+void UnitClassHealer::_undefStats() {
+
+	_unsetMajorSkillsAttributes("Intelligence", "Willpower",
+		"Marksman", "Light Armor", "Athletics");
+
+	_unsetMinorSkillsAttributes("Unarmored", "Light Armor", "Block", "Mysticism", "Destruction");
+}
+
+
+void UnitClassKnight::_defineStats() {
+
+	// Define Major/Minor skill-attribute set.
+
+	_setMajorSkillsAttributes("Strength", "Endurance",
+		"Restoration", "Heavy Armor", "Long Blade");
+
+	_setMinorSkillsAttributes("Athletics", "Axe", "Block", "Enchant", "Medium Armor");
+}
+
+void UnitClassKnight::_undefStats() {
+
+	_unsetMajorSkillsAttributes("Strength", "Endurance",
+		"Restoration", "Heavy Armor", "Long Blade");
+
+	_unsetMinorSkillsAttributes("Athletics", "Axe", "Block", "Enchant", "Medium Armor");
+}
+
+
+void UnitClassMage::_defineStats() {
+
+	// Define Major/Minor skill-attribute set.
+
+	_setMajorSkillsAttributes("Intelligence", "Willpower",
+		"Alteration", "Illusion", "Destruction");
+
+	_setMinorSkillsAttributes("Unarmored", "Conjuration", "Mysticism", "Restoration", "Blunt Weapon");
+}
+
+void UnitClassMage::_undefStats() {
+
+	_unsetMajorSkillsAttributes("Intelligence", "Willpower",
+		"Alteration", "Illusion", "Destruction");
+
+	_unsetMinorSkillsAttributes("Unarmored", "Conjuration", "Mysticism", "Restoration", "Blunt Weapon");
+}
+
+
+
+
+void UnitClassNightblade::_defineStats() {
+
+	// Define Major/Minor skill-attribute set.
+
+	_setMajorSkillsAttributes("Speed", "Willpower",
+		"Short Blade", "Sneak", "Conjuration");
+
+	_setMinorSkillsAttributes("Light Armor", "Mysticism", "Block", "Athletics", "Acrobatics");
+}
+
+void UnitClassNightblade::_undefStats() {
+
+	_unsetMajorSkillsAttributes("Speed", "Willpower",
+		"Short Blade", "Sneak", "Conjuration");
+
+	_unsetMinorSkillsAttributes("Light Armor", "Mysticism", "Block", "Athletics", "Acrobatics");
 }
 
 
 
 void UnitClassRogue::_defineStats() {
 
-	UnitAttributes* attr = new UnitAttributes();
-	UnitSkills* skills = new UnitSkills();
+	// Define Major/Minor skill-attribute set.
 
-	// Attributes.
-	attr->SetAttribute(m_AttrMap, "Strength", 5);
-	attr->SetAttribute(m_AttrMap, "Agility", 10);
-	attr->SetAttribute(m_AttrMap, "Intelligence", 5);
-	attr->SetAttribute(m_AttrMap, "Willpower", 5);
-	attr->SetAttribute(m_AttrMap, "Speed", 10);
-	attr->SetAttribute(m_AttrMap, "Endurance", 5);
-	attr->SetAttribute(m_AttrMap, "Personality", 5);
+	_setMajorSkillsAttributes("Speed", "Agility",
+		"Short Blade", "Light Armor", "Medium Armor");
 
-
-	// Skills
-	skills->SetSkill(m_SkillsMap, "Light Armor", 10);
-	skills->SetSkill(m_SkillsMap, "Medium Armor", 10);
-
-	skills->SetSkill(m_SkillsMap, "Short Blade", 10);
-	skills->SetSkill(m_SkillsMap, "Axe", 10);
-
-	skills->SetSkill(m_SkillsMap, "Block", 5);
-
+	_setMinorSkillsAttributes("Athletics", "Medium Armor", "Block", "Acrobatics", "Long Blade");
 }
-
 
 void UnitClassRogue::_undefStats() {
 
-	UnitAttributes* attr = new UnitAttributes();
-	UnitSkills* skills = new UnitSkills();
+	_unsetMajorSkillsAttributes("Speed", "Agility",
+		"Short Blade", "Light Armor", "Medium Armor");
 
-	// Attributes.
-	attr->UnsetAttribute(m_AttrMap, "Strength", 5);
-	attr->UnsetAttribute(m_AttrMap, "Agility", 10);
-	attr->UnsetAttribute(m_AttrMap, "Intelligence", 5);
-	attr->UnsetAttribute(m_AttrMap, "Willpower", 5);
-	attr->UnsetAttribute(m_AttrMap, "Speed", 10);
-	attr->UnsetAttribute(m_AttrMap, "Endurance", 5);
-	attr->UnsetAttribute(m_AttrMap, "Personality", 5);
-
-
-	// Skills
-	skills->UnsetSkill(m_SkillsMap, "Light Armor", 10);
-	skills->UnsetSkill(m_SkillsMap, "Medium Armor", 10);
-
-	skills->UnsetSkill(m_SkillsMap, "Short Blade", 10);
-	skills->UnsetSkill(m_SkillsMap, "Axe", 10);
-
-	skills->UnsetSkill(m_SkillsMap, "Block", 5);
+	_unsetMinorSkillsAttributes("Athletics", "Medium Armor", "Block", "Acrobatics", "Long Blade");
 }
 
 
 void UnitClassScout::_defineStats() {
 
-	UnitAttributes* attr = new UnitAttributes();
-	UnitSkills* skills = new UnitSkills();
+	// Define Major/Minor skill-attribute set.
 
-	// Attributes.
-	attr->SetAttribute(m_AttrMap, "Strength", 5);
-	attr->SetAttribute(m_AttrMap, "Agility", 5);
-	attr->SetAttribute(m_AttrMap, "Intelligence", 5);
-	attr->SetAttribute(m_AttrMap, "Willpower", 5);
-	attr->SetAttribute(m_AttrMap, "Speed", 10);
-	attr->SetAttribute(m_AttrMap, "Endurance", 10);
-	attr->SetAttribute(m_AttrMap, "Personality", 5);
+	_setMajorSkillsAttributes("Speed", "Endurance",
+		"Acrobatics", "Unarmored", "Athletics");
 
-
-	// Skills
-	skills->SetSkill(m_SkillsMap, "Athletics", 10);
-	skills->SetSkill(m_SkillsMap, "Acrobatics", 10);
-	skills->SetSkill(m_SkillsMap, "Unarmored", 10);
-
-	skills->SetSkill(m_SkillsMap, "Block", 5);
+	_setMinorSkillsAttributes("Spear", "Short Blade", "Block", "Axe", "Long Blade");
 }
-
 
 void UnitClassScout::_undefStats() {
 
-	UnitAttributes* attr = new UnitAttributes();
-	UnitSkills* skills = new UnitSkills();
+	_unsetMajorSkillsAttributes("Speed", "Endurance",
+		"Acrobatics", "Unarmored", "Athletics");
 
-	// Attributes.
-	attr->UnsetAttribute(m_AttrMap, "Strength", 5);
-	attr->UnsetAttribute(m_AttrMap, "Agility", 5);
-	attr->UnsetAttribute(m_AttrMap, "Intelligence", 5);
-	attr->UnsetAttribute(m_AttrMap, "Willpower", 5);
-	attr->UnsetAttribute(m_AttrMap, "Speed", 10);
-	attr->UnsetAttribute(m_AttrMap, "Endurance", 10);
-	attr->UnsetAttribute(m_AttrMap, "Personality", 5);
-
-
-	// Skills
-	skills->UnsetSkill(m_SkillsMap, "Athletics", 10);
-	skills->UnsetSkill(m_SkillsMap, "Acrobatics", 10);
-	skills->UnsetSkill(m_SkillsMap, "Unarmored", 10);
-
-	skills->UnsetSkill(m_SkillsMap, "Block", 5);
+	_unsetMinorSkillsAttributes("Spear", "Short Blade", "Block", "Axe", "Long Blade");
 }
 
 
 
-void UnitClassBarbarian::_defineStats() {
+void UnitClassSorcerer::_defineStats() {
 
-	UnitAttributes* attr = new UnitAttributes();
-	UnitSkills* skills = new UnitSkills();
+	// Define Major/Minor skill-attribute set.
 
-	// Attributes.
-	attr->SetAttribute(m_AttrMap, "Strength", 10);
-	attr->SetAttribute(m_AttrMap, "Agility", 5);
-	attr->SetAttribute(m_AttrMap, "Intelligence", 5);
-	attr->SetAttribute(m_AttrMap, "Willpower", 5);
-	attr->SetAttribute(m_AttrMap, "Speed", 10);
-	attr->SetAttribute(m_AttrMap, "Endurance", 5);
-	attr->SetAttribute(m_AttrMap, "Personality", 5);
+	_setMajorSkillsAttributes("Endurance", "Intelligence",
+		"Enchant", "Destruction", "Conjuration");
 
-
-	// Skills
-	skills->SetSkill(m_SkillsMap, "Medium Armor", 10);
-	skills->SetSkill(m_SkillsMap, "Blunt Weapon", 10);
-	skills->SetSkill(m_SkillsMap, "Unarmored", 10);
-	skills->SetSkill(m_SkillsMap, "Athletics", 10);
-
-	skills->SetSkill(m_SkillsMap, "Block", 5);
+	_setMinorSkillsAttributes("Mysticism", "Medium Armor", "Alteration", "Restoration", "Blunt Weapon");
 }
 
+void UnitClassSorcerer::_undefStats() {
 
-void UnitClassBarbarian::_undefStats() {
+	_unsetMajorSkillsAttributes("Endurance", "Intelligence",
+		"Enchant", "Destruction", "Conjuration");
 
-	UnitAttributes* attr = new UnitAttributes();
-	UnitSkills* skills = new UnitSkills();
-
-	// Attributes.
-	attr->UnsetAttribute(m_AttrMap, "Strength", 10);
-	attr->UnsetAttribute(m_AttrMap, "Agility", 5);
-	attr->UnsetAttribute(m_AttrMap, "Intelligence", 5);
-	attr->UnsetAttribute(m_AttrMap, "Willpower", 5);
-	attr->UnsetAttribute(m_AttrMap, "Speed", 10);
-	attr->UnsetAttribute(m_AttrMap, "Endurance", 5);
-	attr->UnsetAttribute(m_AttrMap, "Personality", 5);
-
-
-	// Skills
-	skills->UnsetSkill(m_SkillsMap, "Medium Armor", 10);
-	skills->UnsetSkill(m_SkillsMap, "Blunt Weapon", 10);
-	skills->UnsetSkill(m_SkillsMap, "Unarmored", 10);
-	skills->UnsetSkill(m_SkillsMap, "Athletics", 10);
-
-	skills->UnsetSkill(m_SkillsMap, "Block", 5);
-}
-
-
-void UnitClassWarrior::_defineStats() {
-
-	UnitAttributes* attr = new UnitAttributes();
-	UnitSkills* skills = new UnitSkills();
-
-	// Attributes.
-	attr->SetAttribute(m_AttrMap, "Strength", 15);
-	attr->SetAttribute(m_AttrMap, "Agility", 5);
-	attr->SetAttribute(m_AttrMap, "Intelligence", 5);
-	attr->SetAttribute(m_AttrMap, "Willpower", 5);
-	attr->SetAttribute(m_AttrMap, "Speed", 15);
-	attr->SetAttribute(m_AttrMap, "Endurance", 5);
-	attr->SetAttribute(m_AttrMap, "Personality", 5);
-
-
-	// Skills
-	skills->SetSkill(m_SkillsMap, "Medium Armor", 15);
-	skills->SetSkill(m_SkillsMap, "Heavy Armor", 15);
-	skills->SetSkill(m_SkillsMap, "Athletics", 10);
-	skills->SetSkill(m_SkillsMap, "Long Blade", 10);
-
-	skills->SetSkill(m_SkillsMap, "Block", 5);
-}
-
-void UnitClassWarrior::_undefStats() {
-
-	UnitAttributes* attr = new UnitAttributes();
-	UnitSkills* skills = new UnitSkills();
-
-	// Attributes.
-	attr->UnsetAttribute(m_AttrMap, "Strength", 15);
-	attr->UnsetAttribute(m_AttrMap, "Agility", 5);
-	attr->UnsetAttribute(m_AttrMap, "Intelligence", 5);
-	attr->UnsetAttribute(m_AttrMap, "Willpower", 5);
-	attr->UnsetAttribute(m_AttrMap, "Speed", 15);
-	attr->UnsetAttribute(m_AttrMap, "Endurance", 5);
-	attr->UnsetAttribute(m_AttrMap, "Personality", 5);
-
-
-	// Skills
-	skills->UnsetSkill(m_SkillsMap, "Medium Armor", 15);
-	skills->UnsetSkill(m_SkillsMap, "Heavy Armor", 15);
-	skills->UnsetSkill(m_SkillsMap, "Athletics", 10);
-	skills->UnsetSkill(m_SkillsMap, "Long Blade", 10);
-
-	skills->UnsetSkill(m_SkillsMap, "Block", 5);
-}
-
-
-void UnitClassKnight::_defineStats() {
-
-	UnitAttributes* attr = new UnitAttributes();
-	UnitSkills* skills = new UnitSkills();
-
-	// Attributes.
-	attr->SetAttribute(m_AttrMap, "Strength", 20);
-	attr->SetAttribute(m_AttrMap, "Agility", 5);
-	attr->SetAttribute(m_AttrMap, "Intelligence", 5);
-	attr->SetAttribute(m_AttrMap, "Willpower", 5);
-	attr->SetAttribute(m_AttrMap, "Speed", 5);
-	attr->SetAttribute(m_AttrMap, "Endurance", 15);
-	attr->SetAttribute(m_AttrMap, "Personality", 5);
-
-
-	// Skills
-	skills->SetSkill(m_SkillsMap, "Heavy Armor", 15);
-	skills->SetSkill(m_SkillsMap, "Athletics", 5);
-	skills->SetSkill(m_SkillsMap, "Long Blade", 15);
-	skills->SetSkill(m_SkillsMap, "Block", 10);
-	skills->SetSkill(m_SkillsMap, "Axe", 10);
-
-	skills->SetSkill(m_SkillsMap, "Restoration", 10);
-
-}
-
-void UnitClassKnight::_undefStats() {
-
-	UnitAttributes* attr = new UnitAttributes();
-	UnitSkills* skills = new UnitSkills();
-
-	// Attributes.
-	attr->UnsetAttribute(m_AttrMap, "Strength", 20);
-	attr->UnsetAttribute(m_AttrMap, "Agility", 5);
-	attr->UnsetAttribute(m_AttrMap, "Intelligence", 5);
-	attr->UnsetAttribute(m_AttrMap, "Willpower", 5);
-	attr->UnsetAttribute(m_AttrMap, "Speed", 5);
-	attr->UnsetAttribute(m_AttrMap, "Endurance", 15);
-	attr->UnsetAttribute(m_AttrMap, "Personality", 5);
-
-
-	// Skills
-	skills->UnsetSkill(m_SkillsMap, "Heavy Armor", 15);
-	skills->UnsetSkill(m_SkillsMap, "Athletics", 5);
-	skills->UnsetSkill(m_SkillsMap, "Long Blade", 15);
-	skills->UnsetSkill(m_SkillsMap, "Axe", 10);
-	skills->UnsetSkill(m_SkillsMap, "Block", 10);
-
-	skills->UnsetSkill(m_SkillsMap, "Restoration", 10);
-}
-
-
-void UnitClassPaladin::_defineStats() {
-
-	UnitAttributes* attr = new UnitAttributes();
-	UnitSkills* skills = new UnitSkills();
-
-	// Attributes.
-	attr->SetAttribute(m_AttrMap, "Strength", 20);
-	attr->SetAttribute(m_AttrMap, "Agility", 5);
-	attr->SetAttribute(m_AttrMap, "Intelligence", 5);
-	attr->SetAttribute(m_AttrMap, "Willpower", 5);
-	attr->SetAttribute(m_AttrMap, "Speed", 5);
-	attr->SetAttribute(m_AttrMap, "Endurance", 20);
-	attr->SetAttribute(m_AttrMap, "Personality", 5);
-
-
-	// Skills
-	skills->SetSkill(m_SkillsMap, "Heavy Armor", 20);
-	skills->SetSkill(m_SkillsMap, "Athletics", 5);
-	skills->SetSkill(m_SkillsMap, "Long Blade", 20);
-	skills->SetSkill(m_SkillsMap, "Block", 15);
-	skills->SetSkill(m_SkillsMap, "Blunt Weapon", 15);
-
-	skills->SetSkill(m_SkillsMap, "Restoration", 15);
-}
-
-void UnitClassPaladin::_undefStats() {
-
-	UnitAttributes* attr = new UnitAttributes();
-	UnitSkills* skills = new UnitSkills();
-
-	// Attributes.
-	attr->UnsetAttribute(m_AttrMap, "Strength", 20);
-	attr->UnsetAttribute(m_AttrMap, "Agility", 5);
-	attr->UnsetAttribute(m_AttrMap, "Intelligence", 5);
-	attr->UnsetAttribute(m_AttrMap, "Willpower", 5);
-	attr->UnsetAttribute(m_AttrMap, "Speed", 5);
-	attr->UnsetAttribute(m_AttrMap, "Endurance", 20);
-	attr->UnsetAttribute(m_AttrMap, "Personality", 5);
-
-
-	// Skills
-	skills->UnsetSkill(m_SkillsMap, "Heavy Armor", 20);
-	skills->UnsetSkill(m_SkillsMap, "Athletics", 5);
-	skills->UnsetSkill(m_SkillsMap, "Long Blade", 20);
-	skills->UnsetSkill(m_SkillsMap, "Block", 15);
-	skills->UnsetSkill(m_SkillsMap, "Blunt Weapon", 15);
-
-	skills->UnsetSkill(m_SkillsMap, "Restoration", 15);
+	_unsetMinorSkillsAttributes("Mysticism", "Medium Armor", "Alteration", "Restoration", "Blunt Weapon");
 }
 
 
 void UnitClassSpellsword::_defineStats() {
 
-	UnitAttributes* attr = new UnitAttributes();
-	UnitSkills* skills = new UnitSkills();
+	// Define Major/Minor skill-attribute set.
 
-	// Attributes.
-	attr->SetAttribute(m_AttrMap, "Strength", 5);
-	attr->SetAttribute(m_AttrMap, "Agility", 5);
-	attr->SetAttribute(m_AttrMap, "Intelligence", 5);
-	attr->SetAttribute(m_AttrMap, "Willpower", 10);
-	attr->SetAttribute(m_AttrMap, "Speed", 5);
-	attr->SetAttribute(m_AttrMap, "Endurance", 10);
-	attr->SetAttribute(m_AttrMap, "Personality", 5);
+	_setMajorSkillsAttributes("Endurance", "Willpower",
+		"Destruction", "Medium Armor", "Restoration");
 
-
-	// Skills
-	skills->SetSkill(m_SkillsMap, "Medium Armor", 10);
-	skills->SetSkill(m_SkillsMap, "Short Blade", 5);
-	skills->SetSkill(m_SkillsMap, "Block", 10);
-
-	skills->SetSkill(m_SkillsMap, "Restoration", 10);
-	skills->SetSkill(m_SkillsMap, "Destruction", 10);
-	skills->SetSkill(m_SkillsMap, "Alteration", 10);
-
+	_setMinorSkillsAttributes("Alteration", "Heavy Armor", "Block", "Restoration", "Short Blade");
 }
 
 void UnitClassSpellsword::_undefStats() {
 
-	UnitAttributes* attr = new UnitAttributes();
-	UnitSkills* skills = new UnitSkills();
+	_unsetMajorSkillsAttributes("Endurance", "Willpower",
+		"Destruction", "Medium Armor", "Restoration");
 
-	// Attributes.
-	attr->UnsetAttribute(m_AttrMap, "Strength", 5);
-	attr->UnsetAttribute(m_AttrMap, "Agility", 5);
-	attr->UnsetAttribute(m_AttrMap, "Intelligence", 5);
-	attr->UnsetAttribute(m_AttrMap, "Willpower", 10);
-	attr->UnsetAttribute(m_AttrMap, "Speed", 5);
-	attr->UnsetAttribute(m_AttrMap, "Endurance", 10);
-	attr->UnsetAttribute(m_AttrMap, "Personality", 5);
-
-
-	// Skills
-	skills->UnsetSkill(m_SkillsMap, "Medium Armor", 10);
-	skills->UnsetSkill(m_SkillsMap, "Short Blade", 5);
-	skills->UnsetSkill(m_SkillsMap, "Block", 10);
-
-	skills->UnsetSkill(m_SkillsMap, "Restoration", 10);
-	skills->UnsetSkill(m_SkillsMap, "Destruction", 10);
-	skills->UnsetSkill(m_SkillsMap, "Alteration", 10);
+	_unsetMinorSkillsAttributes("Alteration", "Heavy Armor", "Block", "Restoration", "Short Blade");
 }
 
 
-void UnitClassBattlemage::_defineStats() {
+void UnitClassWarrior::_defineStats() {
 
-	UnitAttributes* attr = new UnitAttributes();
-	UnitSkills* skills = new UnitSkills();
+	// Define Major/Minor skill-attribute set.
 
-	// Attributes.
-	attr->SetAttribute(m_AttrMap, "Strength", 10);
-	attr->SetAttribute(m_AttrMap, "Agility", 5);
-	attr->SetAttribute(m_AttrMap, "Intelligence", 10);
-	attr->SetAttribute(m_AttrMap, "Willpower", 5);
-	attr->SetAttribute(m_AttrMap, "Speed", 5);
-	attr->SetAttribute(m_AttrMap, "Endurance", 5);
-	attr->SetAttribute(m_AttrMap, "Personality", 5);
+	_setMajorSkillsAttributes("Strength", "Speed",
+		"Long Blade", "Medium Armor", "Athletics");
 
-
-	// Skills
-	skills->SetSkill(m_SkillsMap, "Heavy Armor", 15);
-	skills->SetSkill(m_SkillsMap, "Axe", 10);
-	skills->SetSkill(m_SkillsMap, "Block", 10);
-
-	skills->SetSkill(m_SkillsMap, "Restoration", 15);
-	skills->SetSkill(m_SkillsMap, "Destruction", 15);
-	skills->SetSkill(m_SkillsMap, "Alteration", 15);
-	skills->SetSkill(m_SkillsMap, "Conjuration", 15);
-
+	_setMinorSkillsAttributes("Blunt Weapon", "Heavy Armor", "Block", "Spear", "Axe");
 }
 
-void UnitClassBattlemage::_undefStats() {
+void UnitClassWarrior::_undefStats() {
 
-	UnitAttributes* attr = new UnitAttributes();
-	UnitSkills* skills = new UnitSkills();
+	_unsetMajorSkillsAttributes("Strength", "Speed",
+		"Long Blade", "Medium Armor", "Athletics");
 
-	// Attributes.
-	attr->UnsetAttribute(m_AttrMap, "Strength", 10);
-	attr->UnsetAttribute(m_AttrMap, "Agility", 5);
-	attr->UnsetAttribute(m_AttrMap, "Intelligence", 10);
-	attr->UnsetAttribute(m_AttrMap, "Willpower", 5);
-	attr->UnsetAttribute(m_AttrMap, "Speed", 5);
-	attr->UnsetAttribute(m_AttrMap, "Endurance", 5);
-	attr->UnsetAttribute(m_AttrMap, "Personality", 5);
-
-
-	// Skills
-	skills->UnsetSkill(m_SkillsMap, "Heavy Armor", 15);
-	skills->UnsetSkill(m_SkillsMap, "Axe", 10);
-	skills->UnsetSkill(m_SkillsMap, "Block", 10);
-
-	skills->UnsetSkill(m_SkillsMap, "Restoration", 15);
-	skills->UnsetSkill(m_SkillsMap, "Destruction", 15);
-	skills->UnsetSkill(m_SkillsMap, "Alteration", 15);
-	skills->UnsetSkill(m_SkillsMap, "Conjuration", 15);
+	_unsetMinorSkillsAttributes("Blunt Weapon", "Heavy Armor", "Block", "Spear", "Axe");
 }
-
-
-void UnitClassNightblade::_defineStats() {
-
-	UnitAttributes* attr = new UnitAttributes();
-	UnitSkills* skills = new UnitSkills();
-
-	// Attributes.
-	attr->SetAttribute(m_AttrMap, "Strength", 5);
-	attr->SetAttribute(m_AttrMap, "Agility", 5);
-	attr->SetAttribute(m_AttrMap, "Intelligence", 5);
-	attr->SetAttribute(m_AttrMap, "Willpower", 15);
-	attr->SetAttribute(m_AttrMap, "Speed", 15);
-	attr->SetAttribute(m_AttrMap, "Endurance", 5);
-	attr->SetAttribute(m_AttrMap, "Personality", 5);
-
-
-	// Skills
-	skills->SetSkill(m_SkillsMap, "Light Armor", 10);
-	skills->SetSkill(m_SkillsMap, "Short Blade", 30);
-	skills->SetSkill(m_SkillsMap, "Block", 10);
-
-	skills->SetSkill(m_SkillsMap, "Mysticism", 20);
-	skills->SetSkill(m_SkillsMap, "Alteration", 15);
-	skills->SetSkill(m_SkillsMap, "Conjuration", 20);
-}
-
-void UnitClassNightblade::_undefStats() {
-
-	UnitAttributes* attr = new UnitAttributes();
-	UnitSkills* skills = new UnitSkills();
-
-	// Attributes.
-	attr->UnsetAttribute(m_AttrMap, "Strength", 5);
-	attr->UnsetAttribute(m_AttrMap, "Agility", 5);
-	attr->UnsetAttribute(m_AttrMap, "Intelligence", 5);
-	attr->UnsetAttribute(m_AttrMap, "Willpower", 15);
-	attr->UnsetAttribute(m_AttrMap, "Speed", 15);
-	attr->UnsetAttribute(m_AttrMap, "Endurance", 5);
-	attr->UnsetAttribute(m_AttrMap, "Personality", 5);
-
-
-	// Skills
-	skills->UnsetSkill(m_SkillsMap, "Light Armor", 10);
-	skills->UnsetSkill(m_SkillsMap, "Short Blade", 30);
-	skills->UnsetSkill(m_SkillsMap, "Block", 10);
-
-	skills->UnsetSkill(m_SkillsMap, "Mysticism", 20);
-	skills->UnsetSkill(m_SkillsMap, "Alteration", 15);
-	skills->UnsetSkill(m_SkillsMap, "Conjuration", 20);
-}
-
 
 
 void UnitClassInquisitor::_defineStats() {
 
-	UnitAttributes* attr = new UnitAttributes();
-	UnitSkills* skills = new UnitSkills();
+	// Define Major/Minor skill-attribute set.
 
-	// Attributes.
-	attr->SetAttribute(m_AttrMap, "Strength", 5);
-	attr->SetAttribute(m_AttrMap, "Agility", 15);
-	attr->SetAttribute(m_AttrMap, "Intelligence", 15);
-	attr->SetAttribute(m_AttrMap, "Willpower", 5);
-	attr->SetAttribute(m_AttrMap, "Speed", 5);
-	attr->SetAttribute(m_AttrMap, "Endurance", 5);
-	attr->SetAttribute(m_AttrMap, "Personality", 5);
+	_setMajorSkillsAttributes("Intelligence", "Agility",
+		"Mysticism", "Light Armor", "Block");
 
-
-	// Skills
-	skills->SetSkill(m_SkillsMap, "Light Armor", 20);
-	skills->SetSkill(m_SkillsMap, "Blunt Weapon", 10);
-	skills->SetSkill(m_SkillsMap, "Block", 20);
-
-	skills->SetSkill(m_SkillsMap, "Mysticism", 20);
-	skills->SetSkill(m_SkillsMap, "Conjuration", 20);
+	_setMinorSkillsAttributes("Conjuration", "Heavy Armor", "Blunt Weapon", "Spear", "Alteration");
 }
 
 void UnitClassInquisitor::_undefStats() {
 
-	UnitAttributes* attr = new UnitAttributes();
-	UnitSkills* skills = new UnitSkills();
+	_unsetMajorSkillsAttributes("Intelligence", "Agility",
+		"Mysticism", "Light Armor", "Block");
 
-	// Attributes.
-	attr->UnsetAttribute(m_AttrMap, "Strength", 5);
-	attr->UnsetAttribute(m_AttrMap, "Agility", 15);
-	attr->UnsetAttribute(m_AttrMap, "Intelligence", 15);
-	attr->UnsetAttribute(m_AttrMap, "Willpower", 5);
-	attr->UnsetAttribute(m_AttrMap, "Speed", 5);
-	attr->UnsetAttribute(m_AttrMap, "Endurance", 5);
-	attr->UnsetAttribute(m_AttrMap, "Personality", 5);
-
-
-	// Skills
-	skills->UnsetSkill(m_SkillsMap, "Light Armor", 20);
-	skills->UnsetSkill(m_SkillsMap, "Blunt Weapon", 10);
-	skills->UnsetSkill(m_SkillsMap, "Block", 20);
-
-	skills->UnsetSkill(m_SkillsMap, "Mysticism", 20);
-	skills->UnsetSkill(m_SkillsMap, "Conjuration", 20);
-}
-
-
-void UnitClassMage::_defineStats() {
-
-	UnitAttributes* attr = new UnitAttributes();
-	UnitSkills* skills = new UnitSkills();
-
-	// Attributes.
-	attr->SetAttribute(m_AttrMap, "Strength", 5);
-	attr->SetAttribute(m_AttrMap, "Agility", 5);
-	attr->SetAttribute(m_AttrMap, "Intelligence", 10);
-	attr->SetAttribute(m_AttrMap, "Willpower", 10);
-	attr->SetAttribute(m_AttrMap, "Speed", 5);
-	attr->SetAttribute(m_AttrMap, "Endurance", 5);
-	attr->SetAttribute(m_AttrMap, "Personality", 5);
-
-
-	// Skills
-	skills->SetSkill(m_SkillsMap, "Mysticism", 10);
-	skills->SetSkill(m_SkillsMap, "Conjuration", 10);
-	skills->SetSkill(m_SkillsMap, "Alteration", 10);
-	skills->SetSkill(m_SkillsMap, "Destruction", 10);
-	skills->SetSkill(m_SkillsMap, "Illusion", 10);
-
-	skills->SetSkill(m_SkillsMap, "Restoration", 5);
-
-}
-
-void UnitClassMage::_undefStats() {
-
-	UnitAttributes* attr = new UnitAttributes();
-	UnitSkills* skills = new UnitSkills();
-
-	// Attributes.
-	attr->UnsetAttribute(m_AttrMap, "Strength", 5);
-	attr->UnsetAttribute(m_AttrMap, "Agility", 5);
-	attr->UnsetAttribute(m_AttrMap, "Intelligence", 10);
-	attr->UnsetAttribute(m_AttrMap, "Willpower", 10);
-	attr->UnsetAttribute(m_AttrMap, "Speed", 5);
-	attr->UnsetAttribute(m_AttrMap, "Endurance", 5);
-	attr->UnsetAttribute(m_AttrMap, "Personality", 5);
-
-
-	// Skills
-	skills->UnsetSkill(m_SkillsMap, "Mysticism", 10);
-	skills->UnsetSkill(m_SkillsMap, "Conjuration", 10);
-	skills->UnsetSkill(m_SkillsMap, "Alteration", 10);
-	skills->UnsetSkill(m_SkillsMap, "Destruction", 10);
-	skills->UnsetSkill(m_SkillsMap, "Illusion", 10);
-
-	skills->UnsetSkill(m_SkillsMap, "Restoration", 5);
-}
-
-
-void UnitClassSorcerer::_defineStats() {
-
-	UnitAttributes* attr = new UnitAttributes();
-	UnitSkills* skills = new UnitSkills();
-
-	// Attributes.
-	attr->SetAttribute(m_AttrMap, "Strength", 5);
-	attr->SetAttribute(m_AttrMap, "Agility", 5);
-	attr->SetAttribute(m_AttrMap, "Intelligence", 10);
-	attr->SetAttribute(m_AttrMap, "Willpower", 5);
-	attr->SetAttribute(m_AttrMap, "Speed", 5);
-	attr->SetAttribute(m_AttrMap, "Endurance", 10);
-	attr->SetAttribute(m_AttrMap, "Personality", 5);
-
-
-	// Skills
-	skills->SetSkill(m_SkillsMap, "Mysticism", 10);
-	skills->SetSkill(m_SkillsMap, "Conjuration", 15);
-	skills->SetSkill(m_SkillsMap, "Alteration", 10);
-	skills->SetSkill(m_SkillsMap, "Destruction", 10);
-	skills->SetSkill(m_SkillsMap, "Enchant", 10);
-
-	skills->SetSkill(m_SkillsMap, "Restoration", 5);
-}
-
-void UnitClassSorcerer::_undefStats() {
-
-	UnitAttributes* attr = new UnitAttributes();
-	UnitSkills* skills = new UnitSkills();
-
-	// Attributes.
-	attr->UnsetAttribute(m_AttrMap, "Strength", 5);
-	attr->UnsetAttribute(m_AttrMap, "Agility", 5);
-	attr->UnsetAttribute(m_AttrMap, "Intelligence", 10);
-	attr->UnsetAttribute(m_AttrMap, "Willpower", 5);
-	attr->UnsetAttribute(m_AttrMap, "Speed", 5);
-	attr->UnsetAttribute(m_AttrMap, "Endurance", 10);
-	attr->UnsetAttribute(m_AttrMap, "Personality", 5);
-
-
-	// Skills
-	skills->UnsetSkill(m_SkillsMap, "Mysticism", 10);
-	skills->UnsetSkill(m_SkillsMap, "Conjuration", 15);
-	skills->UnsetSkill(m_SkillsMap, "Alteration", 10);
-	skills->UnsetSkill(m_SkillsMap, "Destruction", 10);
-	skills->UnsetSkill(m_SkillsMap, "Enchant", 10);
-
-	skills->UnsetSkill(m_SkillsMap, "Restoration", 5);
-}
-
-
-void UnitClassHealer::_defineStats() {
-
-	UnitAttributes* attr = new UnitAttributes();
-	UnitSkills* skills = new UnitSkills();
-
-	// Attributes.
-	attr->SetAttribute(m_AttrMap, "Strength", 5);
-	attr->SetAttribute(m_AttrMap, "Agility", 5);
-	attr->SetAttribute(m_AttrMap, "Intelligence", 10);
-	attr->SetAttribute(m_AttrMap, "Willpower", 15);
-	attr->SetAttribute(m_AttrMap, "Speed", 5);
-	attr->SetAttribute(m_AttrMap, "Endurance", 5);
-	attr->SetAttribute(m_AttrMap, "Personality", 5);
-
-
-	// Skills
-	skills->SetSkill(m_SkillsMap, "Mysticism", 10);
-	skills->SetSkill(m_SkillsMap, "Alteration", 10);
-	skills->SetSkill(m_SkillsMap, "Destruction", 5);
-	skills->SetSkill(m_SkillsMap, "Illusion", 10);
-
-	skills->SetSkill(m_SkillsMap, "Restoration", 15);
-	skills->SetSkill(m_SkillsMap, "Block", 5);
-
-}
-
-void UnitClassHealer::_undefStats() {
-
-	UnitAttributes* attr = new UnitAttributes();
-	UnitSkills* skills = new UnitSkills();
-
-	// Attributes.
-	attr->UnsetAttribute(m_AttrMap, "Strength", 5);
-	attr->UnsetAttribute(m_AttrMap, "Agility", 5);
-	attr->UnsetAttribute(m_AttrMap, "Intelligence", 10);
-	attr->UnsetAttribute(m_AttrMap, "Willpower", 15);
-	attr->UnsetAttribute(m_AttrMap, "Speed", 5);
-	attr->UnsetAttribute(m_AttrMap, "Endurance", 5);
-	attr->UnsetAttribute(m_AttrMap, "Personality", 5);
-
-
-	// Skills
-	skills->UnsetSkill(m_SkillsMap, "Mysticism", 10);
-	skills->UnsetSkill(m_SkillsMap, "Alteration", 10);
-	skills->UnsetSkill(m_SkillsMap, "Destruction", 5);
-	skills->UnsetSkill(m_SkillsMap, "Illusion", 10);
-
-	skills->UnsetSkill(m_SkillsMap, "Restoration", 15);
-	skills->UnsetSkill(m_SkillsMap, "Block", 5);
-
+	_unsetMinorSkillsAttributes("Conjuration", "Heavy Armor", "Blunt Weapon", "Spear", "Alteration");
 }

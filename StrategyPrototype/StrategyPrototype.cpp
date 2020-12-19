@@ -1922,8 +1922,10 @@ void CMPCameraInput::_handleCityViewKeyboard(Camera* cam) {
 
 static int g_iUnitClassIndex = 0;
 static int g_iUnitRaceIndex = 0;
-static std::string g_sUnitClasses[5] = {
-	"Assassin", "Spy", "Warrior", "Sorcerer", "Paladin"
+static std::string g_sUnitClasses[16] = {
+	"Spy", "Archer", "Assassin", "Barbarian", "Battlemage", "Paladin", "Healer",
+	"Knight", "Mage", "Nightblade", "Rogue", "Scout", "Sorcerer", "Spellsword",
+	"Warrior", "Inquisitor"
 };
 
 static CMPEntityRace::Race g_rUnitRaces[8] = {
@@ -2163,9 +2165,16 @@ void CMPCameraInput::_handleMapViewMouse(Camera* cam) {
 			// TESTING PURPOSES:
 			tile = GetMaptileAtMousePosition(context->GetMouseX(), context->GetMouseY());
 
+			int class_storage_size = 16;
+			int class_index = (++g_iUnitClassIndex) % class_storage_size;
+
+			cout << color(colors::RED) << endl;
+			cout << "From  " << g_iUnitClassIndex << " % " << class_storage_size << " ::= " << class_index << white << endl;
+			cout << "Class index ::= " << g_sUnitClasses[class_index] << white << endl;
+
 			// Creating walking unit.
 			Unit* unit = MakeNewUnitAtPos(PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_PlayerEmpireRace, UnitMovementType::UNIT_MOVEMENT_TYPE_WALKING, PlayerTurnCounter::Get()->m_CurrentTurnPlayer,
-				g_sUnitClasses[++g_iUnitClassIndex % 5], "dwarf_barbarian",
+				g_sUnitClasses[class_index], "dwarf_barbarian",
 				tile->m_TransformCmp->m_PosX, tile->m_TransformCmp->m_PosY,
 				tile->m_TransformCmp->m_GameWorldSpaceCell[0], tile->m_TransformCmp->m_GameWorldSpaceCell[1]);
 
@@ -4260,7 +4269,7 @@ void Renderer::DrawUnitStats(Unit* unit) {
 
 
 	// Skills.
-	xpos = 400;
+	xpos = 450;
 	ypos = 0;
 	for (auto it : skills_vec) {
 
