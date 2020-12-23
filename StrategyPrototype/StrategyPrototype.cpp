@@ -300,11 +300,13 @@ Unit* MakeNewUnitAtPos(CMPEntityRace::Race race, UnitMovementType movement_type,
 
 	u->SetBirthsign();
 
+	/*
 	u->SetClass(unit_class);
 
 	u->SetDerivedStats();
 
 	u->UpdateMovementPoints();
+	*/
 
 	u->SetPlayer(p);
 
@@ -1746,6 +1748,13 @@ void CMPCameraInput::_handleMapViewKeyBoard(Camera* cam) {
 			context->m_DebugDrawUnitPositions = (context->m_DebugDrawUnitPositions == true) ? false : true;
 		}
 
+		if (context->GetKey(olc::Key::S).bPressed) {
+			context->m_DebugDrawPlayersTech = (context->m_DebugDrawPlayersTech == true) ? false : true;
+		}
+
+		if (context->GetKey(olc::Key::B).bPressed) {
+			context->m_DebugDrawPlayersBuildings = (context->m_DebugDrawPlayersBuildings == true) ? false : true;
+		}
 
 
 
@@ -2680,6 +2689,16 @@ void Game::_loadSpriteResources() {
 
 
 
+	// Sprites for cities buildings.
+	Sprite* b1 = new Sprite("assets/buildings/test_building.png");
+
+	m_SpriteStorage.push_back(b1);
+
+	Decal* db1 = new Decal(b1);
+
+	m_SpriteResourceMap.insert(std::make_pair("test_building", db1));
+
+
 	// Cityview sprites
 	/*
 	* NOTE:
@@ -2976,6 +2995,10 @@ bool Game::OnUserCreate() {
 	City* city2 = MakeNewCity(true, "Stormgrad", CMPEntityRace::Race::RACE_HUMAN, player, 7, 6, 5);
 	storage->AddGameEntitie(city2);
 
+	BuildingTest* test_building = new BuildingTest(city2, "Test Building", "test_building");
+	city2->AddBuilding(test_building, 1);
+
+
 	City* city3 = MakeNewCity(true, "Gral", CMPEntityRace::Race::RACE_ORC, player2, 15, 9, 5);
 	storage->AddGameEntitie(city3);
 
@@ -3217,6 +3240,23 @@ void Renderer::RenderCityLayer2() {
 
 	m_Game->SetDrawTarget(m_Layer2);
 	m_Game->Clear(olc::BLANK);
+
+	using namespace olc;
+
+	City* city = nullptr;
+	city = m_CurrentViewedCity;
+
+	for (auto it : city->m_CityBuildingsSlots) {
+
+		if (it->m_UsedByBuilding) {
+
+			// Draw appropriate loaded sprite on position specified.
+			m_Game->DrawDecal(vi2d(it->m_AssociatedBuilding->m_TransformCmp->m_PosX, it->m_AssociatedBuilding->m_TransformCmp->m_PosY),
+				m_Game->m_SpriteResourceMap.at(it->m_AssociatedBuilding->m_GraphicsCmp->m_SpriteName));
+
+		}
+	}
+	
 
 
 	m_Game->EnableLayer(m_Layer2, true);
@@ -4229,7 +4269,7 @@ void Renderer::RenderLayer0() {
 
 
 	// Show unit panels and general unit information.
-	DrawUnitPanels();
+	//DrawUnitPanels();
 
 
 
@@ -4242,11 +4282,85 @@ void Renderer::RenderLayer0() {
 		DrawUnitStats(PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlySelectedUnit);
 	}
 
+
+	if (m_Game->m_DebugDrawPlayersTech) {
+		DrawPlayersTechnologies();
+	}
+
+
+	if (m_Game->m_DebugDrawPlayersBuildings) {
+		DrawPlayersBuildingsForCities();
+	}
+}
+
+
+
+
+void Renderer::DrawPlayersBuildingsForCities() {
+
+	Player* p = PlayerTurnCounter::Get()->m_CurrentTurnPlayer;
+
+	using namespace std;
+
+
+	for (auto it : p->m_PlayerCities) {
+
+		cout << color(colors::CYAN);
+		cout << "City: " << it->m_CityName << endl;
+
+
+		cout << " Buildings: " << white << endl;
+		for (auto itr : it->m_CityBuildingsSlots) {
+
+			if (itr->m_UsedByBuilding) {
+
+				cout << color(colors::BLUE);
+				cout << itr->m_SlotNumber << ".) Slot with \"" << itr->m_AssociatedBuilding->m_BuildingName<< "\"."<< white << endl;
+			}
+			else {
+
+				cout << color(colors::BLUE);
+				cout << itr->m_SlotNumber << ".) Slot without building." << white << endl;
+			}
+		}
+
+		cout << endl;
+		cout << endl;
+	}
+
+}
+
+
+
+
+
+void Renderer::DrawPlayersTechnologies() {
+
+	using namespace std;
+
+	Player* p = PlayerTurnCounter::Get()->m_CurrentTurnPlayer;
+	int counter = 1;
+
+	for (auto it : p->m_PlayersTechnologies) {
+
+		if (it.second == 1) {
+			cout << color(colors::DARKGREEN);
+			cout << counter << ".) Technology \"" << it.first << "\" was researched." << white << endl;
+		}
+		else {
+			cout << color(colors::DARKRED);
+			cout << counter << ".) Technology \"" << it.first << "\" was not researched." << white << endl;
+		}
+
+		counter++;
+	}
+	cout << endl;
+	cout << endl;
 }
 
 
 void Renderer::DrawUnitStats(Unit* unit) {
-
+	/*
 	IMGUI* gui = IMGUI::Get();
 
 	std::map<UnitAttributesEnum, int> attr_vec = *unit->GetUnitAttributes();
@@ -4303,7 +4417,7 @@ void Renderer::DrawUnitStats(Unit* unit) {
 	gui->TextButton(++m_IDHelper + GEN_ID + Random(), xpos, ypos, std::to_string(unit->m_Age));
 	ypos += 12;
 
-
+	*/
 }
 
 
@@ -4348,7 +4462,7 @@ void Renderer::DrawFogOfWar() {
 }
 
 
-
+/*
 void Renderer::DrawUnitPanels() {
 
 	using namespace olc;
@@ -4415,7 +4529,7 @@ void Renderer::DrawUnitPanels() {
 		
 	}
 }
-
+*/
 
 
 void Game::_updateForestAI2() {
@@ -4682,7 +4796,7 @@ void Game::AdvanceOneTurn() {
 
 			// Prepare for next turn.
 			unit->Update();
-			unit->UpdateMovementPoints();
+			//unit->UpdateMovementPoints();
 
 
 			// Begin this turn by executing objectives.

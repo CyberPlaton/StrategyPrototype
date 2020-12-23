@@ -88,10 +88,12 @@ public:
 
 	void DrawCityPanels();
 	void DrawYearQuartalPanel();
-	void DrawUnitPanels();
+	//void DrawUnitPanels();
 	void DrawCurrentTurnPlayerPanel();
 	void DrawFogOfWar(); // Consider redo the concept of fog of war. As this function is fairly slow.... and there are better ways.
 	void DrawUnitStats(Unit* unit);
+	void DrawPlayersTechnologies();
+	void DrawPlayersBuildingsForCities(); // Debug function, "draws" to console...
 
 
 	/*
@@ -127,9 +129,9 @@ public:
 	*/
 	void RenderCityLayer0();
 	void RenderCityLayer1();
-	void RenderCityLayer2();
-	void RenderCityLayer3();
-	void RenderCityLayer4();
+	void RenderCityLayer2(); // Buildings.
+	void RenderCityLayer3(); // Mapstuff and city background.
+	void RenderCityLayer4(); // City panels and background.
 
 
 	Camera* m_MainCam = nullptr;
@@ -274,6 +276,9 @@ public:
 	bool m_DebugDrawMapTileInfo = false;
 	bool m_DebugDrawGeneralOptions = false;
 	bool m_DebugDrawUnitPositions = false;
+	bool m_DebugDrawPlayersTech = false;
+	bool m_DebugDrawPlayersBuildings = false;
+
 
 	bool m_TimeModeTurnBased = true;
 

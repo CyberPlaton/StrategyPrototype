@@ -1,6 +1,53 @@
 #pragma once
 #include"Platform.h"
 
+// NEW
+enum class UnitTier {
+	UNIT_TIER_INVALID = -1,
+	UNIT_TIER_1 = 1,
+	UNIT_TIER_2 = 2,
+	UNIT_TIER_3 = 3,
+};
+
+enum class UnitLevel {
+	UNIT_LEVEL_INVALID = -1,
+	UNIT_LEVEL_1 = 1,
+	UNIT_LEVEL_2 = 2,
+	UNIT_LEVEL_3 = 3,
+	UNIT_LEVEL_4 = 4,
+	UNIT_LEVEL_5 = 5,
+	UNIT_LEVEL_6 = 6,
+	UNIT_LEVEL_7 = 7,
+	UNIT_LEVEL_8 = 8,
+	UNIT_LEVEL_9 = 9,
+	UNIT_LEVEL_10 = 10
+};
+
+struct UnitStats { // Define maximal health, magicka and fatigue.
+	
+	size_t m_Health = -1;
+	size_t m_Magicka = -1;
+	size_t m_Fatigue = -1;
+};
+
+
+struct UnitBase {
+
+
+	UnitTier m_UnitTier = UnitTier::UNIT_TIER_INVALID;
+	UnitLevel m_UnitLevel = UnitLevel::UNIT_LEVEL_INVALID;
+	UnitStats* m_UnitStats = nullptr;
+};
+
+
+
+
+
+
+
+// OLD
+
+/*
 enum class UnitSkillsEnum;
 enum class UnitAttributesEnum;
 enum class UnitClassTier;
@@ -178,19 +225,6 @@ struct UnitAttributes {
 
 
 
-/*
-NOTE: 
-
-On definition we add to unit skills a defined amount of classskills value,
-same with attributes.
-
-On class change the unit looses same amount of value as we set it.
-
-Major skills, like the primary ones, give a bonus of 10 to skills.
-Minor skills, like the secondary ones, give a bonus of 5 to skills.
-
-Major and minor attributes do the same.
-*/
 struct UnitClass {
 
 	std::string m_UnitClassSpritename = "NULL";
@@ -816,3 +850,4 @@ private:
 
 	}
 };
+*/

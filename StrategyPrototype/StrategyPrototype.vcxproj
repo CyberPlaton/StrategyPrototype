@@ -89,6 +89,7 @@
     <ClCompile Include="Platform.cpp" />
     <ClCompile Include="Resources.cpp" />
     <ClCompile Include="StrategyPrototype.cpp" />
+    <ClCompile Include="TechnologyTree.cpp" />
     <ClCompile Include="UnitDefs.cpp" />
     <ClCompile Include="UnitHelpers.cpp" />
     <ClCompile Include="YearCounter.cpp" />
@@ -103,6 +104,7 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="Resources.h" />
     <ClInclude Include="StrategyPrototype.h" />
+    <ClInclude Include="TechnologyTree.h" />
     <ClInclude Include="UnitDefs.h" />
     <ClInclude Include="UnitHelpers.h" />
     <ClInclude Include="YearCounter.h" />

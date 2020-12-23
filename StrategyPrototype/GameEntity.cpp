@@ -4,6 +4,31 @@ EntitiesStorage* EntitiesStorage::m_EntitiesStorage = nullptr;
 WorldMap* WorldMap::m_WorldMapInstance = nullptr;
 
 
+void Player::_initStandardResearchedTech() {
+
+	TechnologyTree* tech_tree = TechnologyTree::Get();
+
+	CMPEntityRace race = m_PlayerEmpireRace;
+
+	// Insert all defined technologies for player sepcific race.
+	for (auto it : tech_tree->GetTechnologyMap()) {
+
+		if (COMPARE_STRINGS(it.second->m_TechRace, "All") == 0 ||
+			COMPARE_STRINGS_2(it.second->m_TechRace, race.m_EntityRaceString) == 0) {
+
+			m_PlayersTechnologies.emplace(it.first, 0);
+		}
+	}
+
+
+	// Define researched techs for players.
+	m_PlayersTechnologies.at("Wood Working") = 1;
+	m_PlayersTechnologies.at("Honor") = 1;
+	m_PlayersTechnologies.at("Ceremony") = 1;
+	m_PlayersTechnologies.at("Wisemen Circle") = 1;
+}
+
+
 void Unit::_defineUnitName() {
 
 	switch (m_EntityRaceCmp->m_EntityRace) {
@@ -47,7 +72,7 @@ void Unit::_defineUnitName() {
 
 }
 
-
+/*
 bool Unit::SetDerivedStats() {
 
 	if (this->m_EntityRaceCmp == nullptr) return false;
@@ -61,7 +86,9 @@ bool Unit::SetDerivedStats() {
 
 	return true;
 }
+*/
 
+/*
 void Unit::_defineRandomUnitTalents() {
 
 	// NOTE:
@@ -148,6 +175,7 @@ void Unit::_defineRandomUnitTalents() {
 	}
 
 }
+*/
 
 GameEntity::~GameEntity() {
 
@@ -161,6 +189,7 @@ GameEntity::~GameEntity() {
 }
 
 
+/*
 void Unit::_defineStandardBeginningStats() {
 
 	GetUnitSkills()->insert(std::make_pair(UnitSkillsEnum::UNIT_SKILL_HEAVY_ARMOR, 8));
@@ -204,16 +233,18 @@ void Unit::_defineStandardBeginningStats() {
 	
 	_defineRandomUnitTalents();
 }
+*/
 
-
+/*
 void Unit::_defineDerivedAttributes() {
 
 	_getHealth();
 	_getMagicka();
 	_getFatigue();
 }
+*/
 
-
+/*
 int Unit::_getFatigue() {
 
 	UnitAttributes* attr = new UnitAttributes();
@@ -335,10 +366,10 @@ int Unit::_getHealth() {
 
 	return health;
 }
+*/
 
 
-
-
+/*
 void  Unit::_defineStatsBasedOnUnitBirthsign() {
 
 
@@ -524,8 +555,9 @@ void  Unit::_defineStatsBasedOnUnitBirthsign() {
 		skills->SetSkill(GetUnitSkills(), "Destruction", 25);
 	}
 }
+*/
 
-
+/*
 void Unit::_defineStatsBasedOnUnitRace() {
 
 	UnitAttributes* attr = new UnitAttributes();
@@ -690,6 +722,7 @@ void Unit::_defineStatsBasedOnUnitRace() {
 		}
 	}
 }
+*/
 
 
 void Unit::_defineMaxAge() {
@@ -755,6 +788,8 @@ void Unit::_determineUnitRibbonColor() {
 	}
 }
 
+
+/*
 bool Unit::SetClass(std::string c) {
 
 	// First, make sure we reset the class setting.
@@ -820,6 +855,7 @@ bool Unit::SetClass(std::string c) {
 	if (m_UnitClass != nullptr) return true;
 	else return false;
 }
+*/
 
 
 bool Forest::IsCityOnForest() {
@@ -1818,6 +1854,221 @@ void City::Update() {
 		UpdateVisibility();
 	}
 }
+
+
+
+
+void City::_defineCityBuildingsSlots() {
+
+	CityType city_type = m_CityType;
+	CityLandscapeType landscape_type = *m_CityLandscapeType;
+	bool flag = false;
+
+	switch (city_type) {
+
+	case CityType::CITY_TYPE_CITY:
+		flag = true;
+		break;
+
+
+	case CityType::CITY_TYPE_FORT:
+		flag = false;
+		break;
+
+	default:
+		return;
+	}
+
+	// Define...
+	if (flag) { // City...
+		switch (landscape_type) {
+		case CityLandscapeType::CITY_LANDSCAPE_FOREST:
+			if (m_CoastalCity) {
+
+				m_CityBuildingsSlots.push_back(new BuildingSlot(0, 0, 12, City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_PORT));
+				m_CityBuildingsSlots.push_back(new BuildingSlot(0, 0, 13, City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_PORT));
+
+			}
+
+			// 9 standard slots.
+			for (int i = 1; i <= 9; i++) {
+				m_CityBuildingsSlots.push_back(new BuildingSlot(512, 512, i, City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD));
+			}
+
+			// 2 special slots.
+			m_CityBuildingsSlots.push_back(new BuildingSlot(0, 0, 10, City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_SPECIAL));
+			m_CityBuildingsSlots.push_back(new BuildingSlot(0, 0, 11, City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_SPECIAL));
+
+
+
+			break;
+
+		case CityLandscapeType::CITY_LANDSCAPE_HILLS:
+			if (m_CoastalCity) {
+
+				m_CityBuildingsSlots.push_back(new BuildingSlot(0, 0, 12, City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_PORT));
+				m_CityBuildingsSlots.push_back(new BuildingSlot(0, 0, 13, City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_PORT));
+
+			}
+
+
+			// 9 standard slots.
+			for (int i = 1; i <= 9; i++) {
+				m_CityBuildingsSlots.push_back(new BuildingSlot(0, 0, i, City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD));
+			}
+
+			// 2 special slots.
+			m_CityBuildingsSlots.push_back(new BuildingSlot(0, 0, 10, City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_SPECIAL));
+			m_CityBuildingsSlots.push_back(new BuildingSlot(0, 0, 11, City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_SPECIAL));
+
+
+
+			break;
+
+		case CityLandscapeType::CITY_LANDSCAPE_PLAIN:
+			if (m_CoastalCity) {
+
+				m_CityBuildingsSlots.push_back(new BuildingSlot(0, 0, 12, City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_PORT));
+				m_CityBuildingsSlots.push_back(new BuildingSlot(0, 0, 13, City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_PORT));
+
+			}
+
+
+			// 9 standard slots.
+			for (int i = 1; i <= 9; i++) {
+				m_CityBuildingsSlots.push_back(new BuildingSlot(0, 0, i, City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD));
+			}
+
+			// 2 special slots.
+			m_CityBuildingsSlots.push_back(new BuildingSlot(0, 0, 10, City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_SPECIAL));
+			m_CityBuildingsSlots.push_back(new BuildingSlot(0, 0, 11, City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_SPECIAL));
+
+
+
+			break;
+
+
+
+		default:
+			return;
+		}
+
+	}
+	else { // Fort...
+		switch (landscape_type) {
+		case CityLandscapeType::CITY_LANDSCAPE_FOREST:
+			if (m_CoastalCity) {
+
+				m_CityBuildingsSlots.push_back(new BuildingSlot(0, 0, 7, City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_PORT));
+				m_CityBuildingsSlots.push_back(new BuildingSlot(0, 0, 8, City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_PORT));
+
+			}
+
+
+			// 4 standard slots.
+			for (int i = 1; i <= 4; i++) {
+				m_CityBuildingsSlots.push_back(new BuildingSlot(0, 0, i, City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD));
+			}
+
+			// 2 special slots.
+			m_CityBuildingsSlots.push_back(new BuildingSlot(0, 0, 5, City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_SPECIAL));
+			m_CityBuildingsSlots.push_back(new BuildingSlot(0, 0, 6, City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_SPECIAL));
+
+
+
+			break;
+
+		case CityLandscapeType::CITY_LANDSCAPE_HILLS:
+			if (m_CoastalCity) {
+
+				m_CityBuildingsSlots.push_back(new BuildingSlot(0, 0, 7, City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_PORT));
+				m_CityBuildingsSlots.push_back(new BuildingSlot(0, 0, 8, City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_PORT));
+
+			}
+
+
+			// 4 standard slots.
+			for (int i = 1; i <= 4; i++) {
+				m_CityBuildingsSlots.push_back(new BuildingSlot(0, 0, i, City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD));
+			}
+
+			// 2 special slots.
+			m_CityBuildingsSlots.push_back(new BuildingSlot(0, 0, 5, City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_SPECIAL));
+			m_CityBuildingsSlots.push_back(new BuildingSlot(0, 0, 6, City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_SPECIAL));
+
+
+
+			break;
+
+		case CityLandscapeType::CITY_LANDSCAPE_PLAIN:
+			if (m_CoastalCity) {
+
+				m_CityBuildingsSlots.push_back(new BuildingSlot(0, 0, 7, City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_PORT));
+				m_CityBuildingsSlots.push_back(new BuildingSlot(0, 0, 8, City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_PORT));
+
+			}
+
+
+			// 4 standard slots.
+			for (int i = 1; i <= 4; i++) {
+				m_CityBuildingsSlots.push_back(new BuildingSlot(0, 0, i, City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD));
+			}
+
+			// 2 special slots.
+			m_CityBuildingsSlots.push_back(new BuildingSlot(0, 0, 5, City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_SPECIAL));
+			m_CityBuildingsSlots.push_back(new BuildingSlot(0, 0, 6, City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_SPECIAL));
+
+
+
+
+			break;
+
+		case CityLandscapeType::CITY_LANDSCAPE_MOUNTAINS:
+			if (m_CoastalCity) {
+
+				m_CityBuildingsSlots.push_back(new BuildingSlot(0, 0, 7, City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_PORT));
+				m_CityBuildingsSlots.push_back(new BuildingSlot(0, 0, 8, City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_PORT));
+
+			}
+
+
+
+			// 4 standard slots.
+			for (int i = 1; i <= 4; i++) {
+				m_CityBuildingsSlots.push_back(new BuildingSlot(0, 0, i, City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD));
+			}
+
+			// 2 special slots.
+			m_CityBuildingsSlots.push_back(new BuildingSlot(0, 0, 5, City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_SPECIAL));
+			m_CityBuildingsSlots.push_back(new BuildingSlot(0, 0, 6, City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_SPECIAL));
+
+
+
+
+			break;
+
+
+		default:
+			return;
+		}
+	}
+}
+
+
+void City::AddBuilding(Building* building, int slot) {
+
+	for (auto it : m_CityBuildingsSlots) {
+		if (it->m_SlotNumber == slot) {
+			it->m_AssociatedBuilding = building;
+			it->m_UsedByBuilding = true;
+
+			building->m_TransformCmp->m_PosX = it->m_XPos;
+			building->m_TransformCmp->m_PosY = it->m_YPos;
+
+		}
+	}
+}
+
 
 
 
@@ -3045,6 +3296,7 @@ bool City::_isMapTileClaimedByCity(MapTile* maptile) {
 	return false;
 }
 
+/*
 unsigned int  Unit::_determineMovementPoints() {
 
 	using namespace std;
@@ -3067,7 +3319,7 @@ void  Unit::_resetMovementPoints() {
 
 	m_MovementPoints = _determineMovementPoints();
 }
-
+*/
 
 
 bool Unit::CanMoveOnMapTile(MapTile* tile) {

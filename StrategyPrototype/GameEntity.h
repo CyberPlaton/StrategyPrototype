@@ -5,6 +5,7 @@
 #include"UnitDefs.h"
 #include"UnitHelpers.h"
 #include"olcPixelGameEngine.h"
+#include"TechnologyTree.h"
 
 
 // CLASSES DECLARATIONS.
@@ -347,12 +348,13 @@ public:
 
 		_defineMaxAge();
 
-
+		/*
 		m_UnitSkillsMap = new std::map<UnitSkillsEnum, int>();
 		m_UnitAttributesMap = new std::map<UnitAttributesEnum, int>();
+		*/
 
 		// Stats and Skills.
-		_defineStandardBeginningStats();
+		//_defineStandardBeginningStats();
 
 		// Define name.
 		_defineUnitName();
@@ -401,12 +403,16 @@ public:
 	~Unit() = default;
 
 	void Update();
+
+	/*
 	void UpdateMovementPoints() {
 		_resetMovementPoints();
 	}
+	*/
 
-	bool SetDerivedStats();
-	bool SetClass(std::string c);
+	//bool SetDerivedStats();
+	//bool SetClass(std::string c);
+
 	bool SetBirthsign() {
 		m_Birthsign = YearCounter::Get()->GetCurrentBirthsign();
 
@@ -424,7 +430,7 @@ public:
 
 	bool CanMoveOnMapTile(MapTile* tile);
 
-
+	/*
 	std::map<UnitSkillsEnum, int>* GetUnitSkills() {
 		return m_UnitSkillsMap;
 	}
@@ -432,6 +438,8 @@ public:
 	std::map<UnitAttributesEnum, int>* GetUnitAttributes() {
 		return m_UnitAttributesMap;
 	}
+	*/
+
 
 
 	// All units are at least 14 Years old.
@@ -443,7 +451,7 @@ public:
 	std::string m_Name;
 	std::string m_Birthsign = "NULL"; // Defined by year-quartal in which unit was "born".
 
-	UnitClass* m_UnitClass = nullptr;
+	//UnitClass* m_UnitClass = nullptr;
 	Player* m_AssociatedPlayer = nullptr;
 	std::string m_UnitPlayerColor = "NULL";
 
@@ -462,9 +470,11 @@ private:
 
 	int m_MovementPoints = 0;
 
+	/*
 	// Units skills and attributes.
 	std::map<UnitSkillsEnum, int>* m_UnitSkillsMap;
 	std::map<UnitAttributesEnum, int>* m_UnitAttributesMap;
+	*/
 
 private:
 	void _determineUnitRibbonColor();
@@ -474,16 +484,16 @@ private:
 		m_UnitMovementType = type;
 	}
 
-	void _defineRandomUnitTalents(); // Defines randomized bonuses to attributes and skills.
-	void _defineStandardBeginningStats(); // All skills and attributes start at 5.
-	void _defineStatsBasedOnUnitRace(); // Based on race give bonuses or minuses to stats or skills.
-	void _defineStatsBasedOnUnitBirthsign(); // Gives bonuses and minuses based on the birthsign of unit.
-	void _defineDerivedAttributes();
+	//void _defineRandomUnitTalents(); // Defines randomized bonuses to attributes and skills.
+	//void _defineStandardBeginningStats(); // All skills and attributes start at 5.
+	//void _defineStatsBasedOnUnitRace(); // Based on race give bonuses or minuses to stats or skills.
+	//void _defineStatsBasedOnUnitBirthsign(); // Gives bonuses and minuses based on the birthsign of unit.
+	//void _defineDerivedAttributes();
 
 	void _defineUnitName();
 
-	unsigned int _determineMovementPoints();
-	void _resetMovementPoints();
+	//unsigned int _determineMovementPoints();
+	//void _resetMovementPoints();
 
 
 	// Based on given position returns a vector of neighboring maptiles.
@@ -494,9 +504,9 @@ private:
 
 
 	// Functions updates Attributes based on current data and return result.
-	int _getFatigue();
-	int _getMagicka();
-	int _getHealth();
+	//int _getFatigue();
+	//int _getMagicka();
+	//int _getHealth();
 };
 
 
@@ -567,11 +577,13 @@ struct MapRessource : public GameEntity{
 };
 
 
+class Building;
 class City : public GameEntity {
 public:
 
 	// Defines the type of landscape 
 	// the city is built upon.
+	// Note: no cities can be built on mountains, only forts.
 	enum class CityLandscapeType {
 		CITY_LANDSCAPE_INVALID = -1,
 		CITY_LANDSCAPE_HILLS = 0,
@@ -608,11 +620,47 @@ public:
 		CITY_BORDERCOLOR_BLACK = 7
 	};
 
+
+	enum class CityBuildingSlotType {
+		CITY_BUILDING_SLOT_TYPE_INVALID = -1,
+		CITY_BUILDING_SLOT_TYPE_STANDARD = 0,
+		CITY_BUILDING_SLOT_TYPE_SPECIAL = 1,
+		CITY_BUILDING_SLOT_TYPE_PORT = 2
+	};
+
 	struct CitySpritesHolder {
 		std::string m_SmallCitySprite;
 		std::string m_NormalCitySprite;
 		std::string m_BigCitySprite;
 		std::string m_HugeCitySprite;
+	};
+
+	struct BuildingSlot {
+		BuildingSlot(int xpos, int ypos, int slot_number,
+			City::CityBuildingSlotType slot_type) {
+
+			m_XPos = xpos;
+			m_YPos = ypos;
+			m_Width = SPRITES_WIDTH_AND_HEIGHT;
+			m_Height = SPRITES_WIDTH_AND_HEIGHT;
+
+			m_SlotNumber = slot_number;
+			m_SlotType = slot_type;
+		}
+
+
+		int m_XPos;
+		int m_YPos;
+		int m_Width;
+		int m_Height;
+
+		int m_SlotNumber = -1;
+
+		City::CityBuildingSlotType m_SlotType;
+
+		bool m_UsedByBuilding = false;
+
+		Building* m_AssociatedBuilding = nullptr;
 	};
 
 public:
@@ -629,6 +677,9 @@ public:
 		ClaimRegions();
 		MakeCityBorders();
 		_deriveCityLandscapeType();
+
+
+		_defineCityBuildingsSlots(); // Must be after landscape definition.
 	}
 
 	// Function updates visibility of maptiles around self.
@@ -658,6 +709,8 @@ public:
 	}
 
 
+	void AddBuilding(Building* building, int slot);
+
 	CMPEntityRace* m_CityRaceCmp = nullptr;
 	std::string m_CityName;
 	unsigned int m_CitySize;
@@ -685,7 +738,28 @@ public:
 
 	CityBorderColor m_CityBorderColor = CityBorderColor::CITY_BORDERCOLOR_INVALID; // For appropriate coloring of borders.
 
+
+	// City buildings slots.
+	// NOTE:
+	// Every city has 9 standard slots, as most buildins are standard.
+	// Then they have 2 special slots. And if by water 2 port slots.
+	//
+	// Every fort has 4 standard slots. 2 special slots. And if by water 2 port slots.
+	//
+	// For now we do not disitinct between slots for hill- , forest- and plain cities...
+	//
+	// Slots are numbered:
+	// City: 
+	// 1-9 standard, 10-11 special, 12-13 port.
+	//
+	// Fort:
+	// 1-4 standard, 5-6 special, 7-8 port.
+	std::vector<BuildingSlot*> m_CityBuildingsSlots;
+
 private:
+
+	// Functions for buildings.
+	void _defineCityBuildingsSlots();
 
 	// Function defines the m_CityLandscapeType based on the tile on which
 	// this city is built upon. 
@@ -1024,6 +1098,65 @@ private:
 		}
 	}
 };
+
+
+// Standard baseclass for all buildings.
+class Building : public GameEntity {
+public:
+	virtual ~Building(){}
+
+
+	City* m_AssociatedCity = nullptr;
+	Player* m_AssociatedPlayer = nullptr;
+	std::string m_BuildingName;
+private:
+	std::vector<std::string> m_TechRequirements;
+
+
+private:
+
+
+	virtual void _setRequierementsForBuilding(){}
+};
+
+
+
+
+class BuildingTest : public Building {
+public:
+
+	BuildingTest(City* associated_city, std::string building_name, std::string sprite_path) {
+
+
+		m_GraphicsCmp = new CMPGraphics();
+		m_GraphicsCmp->m_DrawingLayer = "todo";
+		m_GraphicsCmp->m_SpriteName = sprite_path;
+
+		m_IDCmp->m_DynamicTypeName = "Building";
+
+
+		m_BuildingName = building_name;
+
+		m_AssociatedCity = associated_city;
+		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
+
+		_setRequierementsForBuilding();
+	}
+
+
+private:
+
+
+private:
+	void _setRequierementsForBuilding() override {
+
+	}
+};
+
+
+
+
+
 
 
 class Hills : public GameEntity {
@@ -2095,6 +2228,9 @@ public:
 		m_PlayerName = playername;
 		m_PlayerColor = playercolor;
 		m_PlayerEmpireRace = race;
+
+
+		_initStandardResearchedTech();
 	}
 
 	void AddCity(City* c) {
@@ -2113,10 +2249,15 @@ public:
 
 	CMPEntityRace::Race m_PlayerEmpireRace;
 
+
 	Unit* m_CurrentlySelectedUnit = nullptr;
 
 	// FogOfWar related.
 	int m_MapVisibility[MAP_SIZE][MAP_SIZE];
+
+	// Technology
+	std::map<std::string, int> m_PlayersTechnologies; // 1 for researched, 0 for not researched.
+
 private:
 
 
@@ -2126,4 +2267,6 @@ private:
 
 	bool _isMapTileSurroundedByOwnTiles(MapTile* tile);
 	bool _belongMapTileToThisPlayer(MapTile* tile);
+
+	void _initStandardResearchedTech();
 };

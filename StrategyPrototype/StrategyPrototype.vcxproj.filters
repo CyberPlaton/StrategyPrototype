@@ -40,6 +40,9 @@
     <ClCompile Include="UnitHelpers.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="TechnologyTree.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ColorConsole.h">
@@ -76,6 +79,9 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="UnitHelpers.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TechnologyTree.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

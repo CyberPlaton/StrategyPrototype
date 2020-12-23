@@ -1,5 +1,12 @@
 #include"UnitDefs.h"
 
+
+
+
+
+/*
+// OLD
+
 void UnitClass::_setMajorSkillsAttributes(std::string major_attr1, std::string major_attr2,
 	std::string major_skill1, std::string major_skill2, std::string major_skill3) {
 
@@ -529,7 +536,7 @@ void UnitClassHealer::_defineStats() {
 	// Define Major/Minor skill-attribute set.
 
 	_setMajorSkillsAttributes("Intelligence", "Willpower",
-		"Marksman", "Light Armor", "Athletics");
+		"Restoration", "Alteration", "Illusion");
 
 	_setMinorSkillsAttributes("Unarmored", "Light Armor", "Block", "Mysticism", "Destruction");
 }
@@ -537,7 +544,7 @@ void UnitClassHealer::_defineStats() {
 void UnitClassHealer::_undefStats() {
 
 	_unsetMajorSkillsAttributes("Intelligence", "Willpower",
-		"Marksman", "Light Armor", "Athletics");
+		"Restoration", "Alteration", "Illusion");
 
 	_unsetMinorSkillsAttributes("Unarmored", "Light Armor", "Block", "Mysticism", "Destruction");
 }
@@ -610,7 +617,7 @@ void UnitClassRogue::_defineStats() {
 	_setMajorSkillsAttributes("Speed", "Agility",
 		"Short Blade", "Light Armor", "Medium Armor");
 
-	_setMinorSkillsAttributes("Athletics", "Medium Armor", "Block", "Acrobatics", "Long Blade");
+	_setMinorSkillsAttributes("Athletics", "Axe", "Block", "Acrobatics", "Long Blade");
 }
 
 void UnitClassRogue::_undefStats() {
@@ -618,7 +625,7 @@ void UnitClassRogue::_undefStats() {
 	_unsetMajorSkillsAttributes("Speed", "Agility",
 		"Short Blade", "Light Armor", "Medium Armor");
 
-	_unsetMinorSkillsAttributes("Athletics", "Medium Armor", "Block", "Acrobatics", "Long Blade");
+	_unsetMinorSkillsAttributes("Athletics", "Axe", "Block", "Acrobatics", "Long Blade");
 }
 
 
@@ -629,7 +636,7 @@ void UnitClassScout::_defineStats() {
 	_setMajorSkillsAttributes("Speed", "Endurance",
 		"Acrobatics", "Unarmored", "Athletics");
 
-	_setMinorSkillsAttributes("Spear", "Short Blade", "Block", "Axe", "Long Blade");
+	_setMinorSkillsAttributes("Spear", "Short Blade", "Block", "Axe", "Sneak");
 }
 
 void UnitClassScout::_undefStats() {
@@ -637,7 +644,7 @@ void UnitClassScout::_undefStats() {
 	_unsetMajorSkillsAttributes("Speed", "Endurance",
 		"Acrobatics", "Unarmored", "Athletics");
 
-	_unsetMinorSkillsAttributes("Spear", "Short Blade", "Block", "Axe", "Long Blade");
+	_unsetMinorSkillsAttributes("Spear", "Short Blade", "Block", "Axe", "Sneak");
 }
 
 
@@ -716,3 +723,4 @@ void UnitClassInquisitor::_undefStats() {
 
 	_unsetMinorSkillsAttributes("Conjuration", "Heavy Armor", "Blunt Weapon", "Spear", "Alteration");
 }
+*/
