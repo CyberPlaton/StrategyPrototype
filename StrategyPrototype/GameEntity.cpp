@@ -1892,7 +1892,7 @@ void City::_defineCityBuildingsSlots() {
 
 			// 9 standard slots.
 			for (int i = 1; i <= 9; i++) {
-				m_CityBuildingsSlots.push_back(new BuildingSlot(512, 512, i, City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD));
+				m_CityBuildingsSlots.push_back(new BuildingSlot(512, 536, i, City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD));
 			}
 
 			// 2 special slots.

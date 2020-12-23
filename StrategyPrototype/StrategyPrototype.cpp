@@ -2690,13 +2690,13 @@ void Game::_loadSpriteResources() {
 
 
 	// Sprites for cities buildings.
-	Sprite* b1 = new Sprite("assets/buildings/test_building.png");
+	Sprite* b1 = new Sprite("assets/buildings/wooden_house.png");
 
 	m_SpriteStorage.push_back(b1);
 
 	Decal* db1 = new Decal(b1);
 
-	m_SpriteResourceMap.insert(std::make_pair("test_building", db1));
+	m_SpriteResourceMap.insert(std::make_pair("wooden_house", db1));
 
 
 	// Cityview sprites
@@ -2995,7 +2995,7 @@ bool Game::OnUserCreate() {
 	City* city2 = MakeNewCity(true, "Stormgrad", CMPEntityRace::Race::RACE_HUMAN, player, 7, 6, 5);
 	storage->AddGameEntitie(city2);
 
-	BuildingTest* test_building = new BuildingTest(city2, "Test Building", "test_building");
+	BuildingTest* test_building = new BuildingTest(city2, "Test Building", "wooden_house");
 	city2->AddBuilding(test_building, 1);
 
 
