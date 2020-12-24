@@ -1100,47 +1100,58 @@ private:
 };
 
 
+struct BuildingRequierements {
+	City::CityBuildingSlotType m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_INVALID;
+	std::vector<std::string> m_TechnologyRequirements;
+	std::vector<std::string> m_PresentBuildingsRequirements;
+	std::string m_RaceRequirement;
+	int m_PopulationCountRequirement = 0;
+};
+
 // Standard baseclass for all buildings.
 class Building : public GameEntity {
 public:
 	virtual ~Building(){}
 
+	BuildingRequierements* GetRequirements() { return m_Requirements; }
 
 	City* m_AssociatedCity = nullptr;
 	Player* m_AssociatedPlayer = nullptr;
 	std::string m_BuildingName;
+
+	// Buildings can have special requierements, like a technology be researched
+	// or another building already in city present or building be built on special slot type.
+	BuildingRequierements* m_Requirements = nullptr;
+
 private:
-	std::vector<std::string> m_TechRequirements;
 
-
-private:
-
-
-	virtual void _setRequierementsForBuilding(){}
 };
 
 
 
-
-class BuildingTest : public Building {
+class BuildingShack : public Building {
 public:
 
-	BuildingTest(City* associated_city, std::string building_name, std::string sprite_path) {
-
+	BuildingShack(City* associated_city) {
 
 		m_GraphicsCmp = new CMPGraphics();
-		m_GraphicsCmp->m_DrawingLayer = "todo";
-		m_GraphicsCmp->m_SpriteName = sprite_path;
+		m_GraphicsCmp->m_DrawingLayer = "Layer2";
+		m_GraphicsCmp->m_SpriteName = "shack";
 
 		m_IDCmp->m_DynamicTypeName = "Building";
 
 
-		m_BuildingName = building_name;
+		m_BuildingName = "Shack";
 
 		m_AssociatedCity = associated_city;
 		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
 
-		_setRequierementsForBuilding();
+	
+		// Define req.
+		m_Requirements = new BuildingRequierements();
+		m_Requirements->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
+		m_Requirements->m_RaceRequirement = "All";
+		
 	}
 
 
@@ -1148,11 +1159,392 @@ private:
 
 
 private:
-	void _setRequierementsForBuilding() override {
 
-	}
 };
 
+
+class BuildingWoodenHouse : public Building {
+public:
+
+	BuildingWoodenHouse(City* associated_city) {
+
+		m_GraphicsCmp = new CMPGraphics();
+		m_GraphicsCmp->m_DrawingLayer = "Layer2";
+		m_GraphicsCmp->m_SpriteName = "wooden_house";
+
+		m_IDCmp->m_DynamicTypeName = "Building";
+
+
+		m_BuildingName = "Wooden House";
+
+		m_AssociatedCity = associated_city;
+		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
+
+
+		// Define req.
+		m_Requirements = new BuildingRequierements();
+		m_Requirements->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
+		m_Requirements->m_RaceRequirement = "All";
+		m_Requirements->m_TechnologyRequirements.push_back("Wood Working");
+	}
+
+
+private:
+
+
+private:
+
+};
+
+
+
+class BuildingStoneHouse : public Building {
+public:
+
+	BuildingStoneHouse(City* associated_city) {
+
+		m_GraphicsCmp = new CMPGraphics();
+		m_GraphicsCmp->m_DrawingLayer = "Layer2";
+		m_GraphicsCmp->m_SpriteName = "stone_house";
+
+		m_IDCmp->m_DynamicTypeName = "Building";
+
+
+		m_BuildingName = "Stone House";
+
+		m_AssociatedCity = associated_city;
+		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
+
+
+		// Define req.
+		m_Requirements = new BuildingRequierements();
+		m_Requirements->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
+		m_Requirements->m_RaceRequirement = "All";
+		m_Requirements->m_TechnologyRequirements.push_back("Stone Working");
+	}
+
+
+private:
+
+
+private:
+
+};
+
+
+
+class BuildingBrickHouse : public Building {
+public:
+
+	BuildingBrickHouse(City* associated_city) {
+
+		m_GraphicsCmp = new CMPGraphics();
+		m_GraphicsCmp->m_DrawingLayer = "Layer2";
+		m_GraphicsCmp->m_SpriteName = "brick_house";
+
+		m_IDCmp->m_DynamicTypeName = "Building";
+
+
+		m_BuildingName = "Brick House";
+
+		m_AssociatedCity = associated_city;
+		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
+
+
+		// Define req.
+		m_Requirements = new BuildingRequierements();
+		m_Requirements->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
+		m_Requirements->m_RaceRequirement = "All";
+		m_Requirements->m_TechnologyRequirements.push_back("Brick Working");
+	}
+
+
+private:
+
+
+private:
+
+};
+
+
+class BuildingStorage : public Building {
+public:
+
+	BuildingStorage(City* associated_city) {
+
+		m_GraphicsCmp = new CMPGraphics();
+		m_GraphicsCmp->m_DrawingLayer = "Layer2";
+		m_GraphicsCmp->m_SpriteName = "storage";
+
+		m_IDCmp->m_DynamicTypeName = "Building";
+
+
+		m_BuildingName = "Underground Storage";
+
+		m_AssociatedCity = associated_city;
+		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
+
+
+		// Define req.
+		m_Requirements = new BuildingRequierements();
+		m_Requirements->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
+		m_Requirements->m_RaceRequirement = "All";
+	}
+
+
+private:
+
+
+private:
+
+};
+
+
+class BuildingWoodenWarehouse : public Building {
+public:
+
+	BuildingWoodenWarehouse(City* associated_city) {
+
+		m_GraphicsCmp = new CMPGraphics();
+		m_GraphicsCmp->m_DrawingLayer = "Layer2";
+		m_GraphicsCmp->m_SpriteName = "wooden_storage";
+
+		m_IDCmp->m_DynamicTypeName = "Building";
+
+
+		m_BuildingName = "Wooden Warehouse";
+
+		m_AssociatedCity = associated_city;
+		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
+
+
+		// Define req.
+		m_Requirements = new BuildingRequierements();
+		m_Requirements->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
+		m_Requirements->m_RaceRequirement = "All";
+		m_Requirements->m_TechnologyRequirements.push_back("Wood Working");
+
+	}
+
+
+private:
+
+
+private:
+
+};
+
+
+
+class BuildingStoneWarehouse : public Building {
+public:
+
+	BuildingStoneWarehouse(City* associated_city) {
+
+		m_GraphicsCmp = new CMPGraphics();
+		m_GraphicsCmp->m_DrawingLayer = "Layer2";
+		m_GraphicsCmp->m_SpriteName = "stone_storage";
+
+		m_IDCmp->m_DynamicTypeName = "Building";
+
+
+		m_BuildingName = "Stone Warehouse";
+
+		m_AssociatedCity = associated_city;
+		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
+
+
+		// Define req.
+		m_Requirements = new BuildingRequierements();
+		m_Requirements->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
+		m_Requirements->m_RaceRequirement = "All";
+		m_Requirements->m_TechnologyRequirements.push_back("Stone Working");
+		m_Requirements->m_TechnologyRequirements.push_back("Pottery");
+
+
+	}
+
+
+private:
+
+
+private:
+
+};
+
+
+class BuildingBrickWarehouse : public Building {
+public:
+
+	BuildingBrickWarehouse(City* associated_city) {
+
+		m_GraphicsCmp = new CMPGraphics();
+		m_GraphicsCmp->m_DrawingLayer = "Layer2";
+		m_GraphicsCmp->m_SpriteName = "brick_storage";
+
+		m_IDCmp->m_DynamicTypeName = "Building";
+
+
+		m_BuildingName = "Brick Warehouse";
+
+		m_AssociatedCity = associated_city;
+		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
+
+
+		// Define req.
+		m_Requirements = new BuildingRequierements();
+		m_Requirements->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
+		m_Requirements->m_RaceRequirement = "All";
+		m_Requirements->m_TechnologyRequirements.push_back("Brick Working");
+	}
+
+
+private:
+
+
+private:
+
+};
+
+
+class BuildingWisemenHut : public Building {
+public:
+
+	BuildingWisemenHut(City* associated_city) {
+
+		m_GraphicsCmp = new CMPGraphics();
+		m_GraphicsCmp->m_DrawingLayer = "Layer2";
+		m_GraphicsCmp->m_SpriteName = "wisemen_hut";
+
+		m_IDCmp->m_DynamicTypeName = "Building";
+
+
+		m_BuildingName = "Wisemen Hut";
+
+		m_AssociatedCity = associated_city;
+		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
+
+
+		// Define req.
+		m_Requirements = new BuildingRequierements();
+		m_Requirements->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
+		m_Requirements->m_RaceRequirement = "All";
+		m_Requirements->m_TechnologyRequirements.push_back("Wisemen Circle");
+	}
+
+
+private:
+
+
+private:
+
+};
+
+
+class BuildingWoodenSchool : public Building {
+public:
+
+	BuildingWoodenSchool(City* associated_city) {
+
+		m_GraphicsCmp = new CMPGraphics();
+		m_GraphicsCmp->m_DrawingLayer = "Layer2";
+		m_GraphicsCmp->m_SpriteName = "wooden_school";
+
+		m_IDCmp->m_DynamicTypeName = "Building";
+
+
+		m_BuildingName = "Small School";
+
+		m_AssociatedCity = associated_city;
+		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
+
+
+		// Define req.
+		m_Requirements = new BuildingRequierements();
+		m_Requirements->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
+		m_Requirements->m_RaceRequirement = "All";
+		m_Requirements->m_TechnologyRequirements.push_back("Alphabet");
+		m_Requirements->m_PopulationCountRequirement = 5;
+	}
+
+
+private:
+
+
+private:
+
+};
+
+
+class BuildingStoneSchool : public Building {
+public:
+
+	BuildingStoneSchool(City* associated_city) {
+
+		m_GraphicsCmp = new CMPGraphics();
+		m_GraphicsCmp->m_DrawingLayer = "Layer2";
+		m_GraphicsCmp->m_SpriteName = "stone_school";
+
+		m_IDCmp->m_DynamicTypeName = "Building";
+
+
+		m_BuildingName = "Big School";
+
+		m_AssociatedCity = associated_city;
+		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
+
+
+		// Define req.
+		m_Requirements = new BuildingRequierements();
+		m_Requirements->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
+		m_Requirements->m_RaceRequirement = "All";
+		m_Requirements->m_TechnologyRequirements.push_back("Writing");
+		m_Requirements->m_PopulationCountRequirement = 10;
+	}
+
+
+private:
+
+
+private:
+
+};
+
+
+
+class BuildingBrickSchool : public Building {
+public:
+
+	BuildingBrickSchool(City* associated_city) {
+
+		m_GraphicsCmp = new CMPGraphics();
+		m_GraphicsCmp->m_DrawingLayer = "Layer2";
+		m_GraphicsCmp->m_SpriteName = "brick_school";
+
+		m_IDCmp->m_DynamicTypeName = "Building";
+
+
+		m_BuildingName = "College";
+
+		m_AssociatedCity = associated_city;
+		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
+
+
+		// Define req.
+		m_Requirements = new BuildingRequierements();
+		m_Requirements->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
+		m_Requirements->m_RaceRequirement = "All";
+		m_Requirements->m_TechnologyRequirements.push_back("Literature");
+		m_Requirements->m_PopulationCountRequirement = 20;
+	}
+
+
+private:
+
+
+private:
+
+};
 
 
 

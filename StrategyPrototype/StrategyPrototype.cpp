@@ -1971,6 +1971,8 @@ void CMPCameraInput::_handleMapViewMouse(Camera* cam) {
 
 		}
 	}
+
+
 	
 	MapTile* tile = nullptr;
 	City* city = nullptr;
@@ -2228,7 +2230,17 @@ void Game::DrawSelectedUnitsMovementTiles() {
 
 void CMPCameraInput::_handleCityViewMouse(Camera* cam) {
 
+	using namespace std;
+
+
 	Game* context = cam->m_Game;
+
+
+	// Show mouse position.
+	int mouse_x = context->GetMouseX();
+	int mouse_y = context->GetMouseY();
+	cout << color(colors::RED);
+	cout << "Mouse Position (" << mouse_x << ":" << mouse_y << ")" << white << endl;
 
 
 }
@@ -2691,12 +2703,60 @@ void Game::_loadSpriteResources() {
 
 	// Sprites for cities buildings.
 	Sprite* b1 = new Sprite("assets/buildings/wooden_house.png");
+	Sprite* b2 = new Sprite("assets/buildings/shack.png");
+	Sprite* b3 = new Sprite("assets/buildings/stone_house.png");
+	Sprite* b4 = new Sprite("assets/buildings/brick_house.png");
+	Sprite* b5 = new Sprite("assets/buildings/storage.png");
+	Sprite* b6 = new Sprite("assets/buildings/wooden_storage.png");
+	Sprite* b7 = new Sprite("assets/buildings/stone_storage.png");
+	Sprite* b8 = new Sprite("assets/buildings/brick_storage.png");
+	Sprite* b9 = new Sprite("assets/buildings/wisemen_hut.png");
+	Sprite* b10 = new Sprite("assets/buildings/wooden_school.png");
+	Sprite* b11 = new Sprite("assets/buildings/stone_school.png");
+
+
+
 
 	m_SpriteStorage.push_back(b1);
+	m_SpriteStorage.push_back(b2);
+	m_SpriteStorage.push_back(b3);
+	m_SpriteStorage.push_back(b4);
+	m_SpriteStorage.push_back(b5);
+	m_SpriteStorage.push_back(b6);
+	m_SpriteStorage.push_back(b7);
+	m_SpriteStorage.push_back(b8);
+	m_SpriteStorage.push_back(b9);
+	m_SpriteStorage.push_back(b10);
+	m_SpriteStorage.push_back(b11);
+
+
+
 
 	Decal* db1 = new Decal(b1);
+	Decal* db2 = new Decal(b2);
+	Decal* db3 = new Decal(b3);
+	Decal* db4 = new Decal(b4);
+	Decal* db5 = new Decal(b5);
+	Decal* db6 = new Decal(b6);
+	Decal* db7 = new Decal(b7);
+	Decal* db8 = new Decal(b8);
+	Decal* db9 = new Decal(b9);
+	Decal* db10 = new Decal(b10);
+	Decal* db11 = new Decal(b11);
+
 
 	m_SpriteResourceMap.insert(std::make_pair("wooden_house", db1));
+	m_SpriteResourceMap.insert(std::make_pair("shack", db2));
+	m_SpriteResourceMap.insert(std::make_pair("stone_house", db3));
+	m_SpriteResourceMap.insert(std::make_pair("brick_house", db4));
+	m_SpriteResourceMap.insert(std::make_pair("storage", db5));
+	m_SpriteResourceMap.insert(std::make_pair("wooden_storage", db6));
+	m_SpriteResourceMap.insert(std::make_pair("stone_storage", db7));
+	m_SpriteResourceMap.insert(std::make_pair("brick_storage", db8));
+	m_SpriteResourceMap.insert(std::make_pair("wisemen_hut", db9));
+	m_SpriteResourceMap.insert(std::make_pair("wooden_school", db10));
+	m_SpriteResourceMap.insert(std::make_pair("stone_school", db11));
+
 
 
 	// Cityview sprites
@@ -2995,8 +3055,17 @@ bool Game::OnUserCreate() {
 	City* city2 = MakeNewCity(true, "Stormgrad", CMPEntityRace::Race::RACE_HUMAN, player, 7, 6, 5);
 	storage->AddGameEntitie(city2);
 
-	BuildingTest* test_building = new BuildingTest(city2, "Test Building", "wooden_house");
-	city2->AddBuilding(test_building, 1);
+	city2->AddBuilding(new BuildingWoodenHouse(city2), 1);
+	city2->AddBuilding(new BuildingWoodenSchool(city2), 2);
+	city2->AddBuilding(new BuildingWoodenWarehouse(city2), 3);
+	city2->AddBuilding(new BuildingWoodenHouse(city2), 4);
+	city2->AddBuilding(new BuildingWoodenHouse(city2), 5);
+	city2->AddBuilding(new BuildingWoodenHouse(city2), 6);
+	city2->AddBuilding(new BuildingWoodenHouse(city2), 7);
+	city2->AddBuilding(new BuildingWoodenHouse(city2), 8);
+	city2->AddBuilding(new BuildingWoodenHouse(city2), 9);
+
+
 
 
 	City* city3 = MakeNewCity(true, "Gral", CMPEntityRace::Race::RACE_ORC, player2, 15, 9, 5);

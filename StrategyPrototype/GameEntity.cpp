@@ -1891,9 +1891,17 @@ void City::_defineCityBuildingsSlots() {
 			}
 
 			// 9 standard slots.
-			for (int i = 1; i <= 9; i++) {
-				m_CityBuildingsSlots.push_back(new BuildingSlot(512, 536, i, City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD));
-			}
+			m_CityBuildingsSlots.push_back(new BuildingSlot(190, 360, 1, City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD));
+			m_CityBuildingsSlots.push_back(new BuildingSlot(320, 345, 2, City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD));
+			m_CityBuildingsSlots.push_back(new BuildingSlot(445, 345, 3, City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD));
+			m_CityBuildingsSlots.push_back(new BuildingSlot(130, 415, 4, City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD));
+			m_CityBuildingsSlots.push_back(new BuildingSlot(250, 415, 5, City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD));
+			m_CityBuildingsSlots.push_back(new BuildingSlot(380, 400, 6, City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD));
+			m_CityBuildingsSlots.push_back(new BuildingSlot(195, 475, 7, City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD));
+			m_CityBuildingsSlots.push_back(new BuildingSlot(325, 475, 8, City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD));
+			m_CityBuildingsSlots.push_back(new BuildingSlot(512, 536, 9, City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD));
+
+
 
 			// 2 special slots.
 			m_CityBuildingsSlots.push_back(new BuildingSlot(0, 0, 10, City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_SPECIAL));
