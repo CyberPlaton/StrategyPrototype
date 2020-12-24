@@ -2713,8 +2713,7 @@ void Game::_loadSpriteResources() {
 	Sprite* b9 = new Sprite("assets/buildings/wisemen_hut.png");
 	Sprite* b10 = new Sprite("assets/buildings/wooden_school.png");
 	Sprite* b11 = new Sprite("assets/buildings/stone_school.png");
-
-
+	Sprite* b12 = new Sprite("assets/buildings/brick_school.png");
 
 
 	m_SpriteStorage.push_back(b1);
@@ -2728,6 +2727,7 @@ void Game::_loadSpriteResources() {
 	m_SpriteStorage.push_back(b9);
 	m_SpriteStorage.push_back(b10);
 	m_SpriteStorage.push_back(b11);
+	m_SpriteStorage.push_back(b12);
 
 
 
@@ -2743,6 +2743,8 @@ void Game::_loadSpriteResources() {
 	Decal* db9 = new Decal(b9);
 	Decal* db10 = new Decal(b10);
 	Decal* db11 = new Decal(b11);
+	Decal* db12 = new Decal(b12);
+
 
 
 	m_SpriteResourceMap.insert(std::make_pair("wooden_house", db1));
@@ -2756,6 +2758,7 @@ void Game::_loadSpriteResources() {
 	m_SpriteResourceMap.insert(std::make_pair("wisemen_hut", db9));
 	m_SpriteResourceMap.insert(std::make_pair("wooden_school", db10));
 	m_SpriteResourceMap.insert(std::make_pair("stone_school", db11));
+	m_SpriteResourceMap.insert(std::make_pair("brick_school", db12));
 
 
 
@@ -3055,15 +3058,15 @@ bool Game::OnUserCreate() {
 	City* city2 = MakeNewCity(true, "Stormgrad", CMPEntityRace::Race::RACE_HUMAN, player, 7, 6, 5);
 	storage->AddGameEntitie(city2);
 
-	city2->AddBuilding(new BuildingWoodenHouse(city2), 1);
-	city2->AddBuilding(new BuildingWoodenSchool(city2), 2);
-	city2->AddBuilding(new BuildingWoodenWarehouse(city2), 3);
-	city2->AddBuilding(new BuildingWoodenHouse(city2), 4);
-	city2->AddBuilding(new BuildingWoodenHouse(city2), 5);
-	city2->AddBuilding(new BuildingWoodenHouse(city2), 6);
-	city2->AddBuilding(new BuildingWoodenHouse(city2), 7);
-	city2->AddBuilding(new BuildingWoodenHouse(city2), 8);
-	city2->AddBuilding(new BuildingWoodenHouse(city2), 9);
+	city2->AddBuilding(new BuildingBrickHouse(city2), 1);
+	city2->AddBuilding(new BuildingBrickSchool(city2), 2);
+	city2->AddBuilding(new BuildingBrickWarehouse(city2), 3);
+	city2->AddBuilding(new BuildingBrickHouse(city2), 4);
+	city2->AddBuilding(new BuildingBrickHouse(city2), 5);
+	city2->AddBuilding(new BuildingBrickHouse(city2), 6);
+	city2->AddBuilding(new BuildingBrickHouse(city2), 7);
+	city2->AddBuilding(new BuildingBrickHouse(city2), 8);
+	city2->AddBuilding(new BuildingBrickHouse(city2), 9);
 
 
 
