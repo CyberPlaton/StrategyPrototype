@@ -2073,6 +2073,9 @@ void City::AddBuilding(Building* building, int slot) {
 			building->m_TransformCmp->m_PosX = it->m_XPos;
 			building->m_TransformCmp->m_PosY = it->m_YPos;
 
+
+			// Finally, store the building in citystorage.
+			m_PresentUnitsVector.push_back(building);
 		}
 	}
 }
@@ -3675,7 +3678,7 @@ void Unit::MoveTo(int x_cell, int y_cell, std::map<MapTile*, int>* storage) {
 		// for storage of units...
 		// if map, then we need to have NON-SIMILAR keys...
 		//city->m_PresentUnitsMap.emplace(this->m_Name, this);
-		city->m_PresentUnitsMap.push_back(this);
+		city->m_PresentUnitsVector.push_back(this);
 		
 		cout << APP_COLOR << endl;
 		cout << "Unit " << this->m_Name << " entered " << city->m_CityName << " ." << white << endl;

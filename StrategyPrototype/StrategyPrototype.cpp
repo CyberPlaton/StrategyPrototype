@@ -138,9 +138,9 @@ void ReverseMapVisionForEntity(GameEntity* entt, Player* associated_player) {
 
 bool IsUnitInCityOrFort(City* city, Unit* unit) {
 
-	std::vector<GameEntity*>::iterator it = std::find(city->m_PresentUnitsMap.begin(), city->m_PresentUnitsMap.end(), unit);
+	std::vector<GameEntity*>::iterator it = std::find(city->m_PresentUnitsVector.begin(), city->m_PresentUnitsVector.end(), unit);
 
-	if (it == city->m_PresentUnitsMap.end()) return false;
+	if (it == city->m_PresentUnitsVector.end()) return false;
 	else return true;
 }
 
@@ -157,7 +157,7 @@ bool IsUnitInCityOrFort(Unit* unit) {
 
 
 
-		for (auto itr = city->m_PresentUnitsMap.begin(); itr != city->m_PresentUnitsMap.end(); ++itr) {
+		for (auto itr = city->m_PresentUnitsVector.begin(); itr != city->m_PresentUnitsVector.end(); ++itr) {
 
 			city_unit = reinterpret_cast<Unit*>(*itr);
 
@@ -1918,12 +1918,12 @@ void CMPCameraInput::_handleCityViewKeyboard(Camera* cam) {
 
 	Game* context = cam->m_Game;
 
-
+	// CLOSE CityView.
 	if (context->GetKey(olc::Key::ESCAPE).bReleased) {
 
 		context->m_Renderer->ChangeRenderMode();
 		context->m_Renderer->SetCurrentViewedCity(nullptr); // Reset city which we now view.
-
+		PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlyViewedCity = nullptr;
 	}
 
 }
@@ -2231,18 +2231,40 @@ void Game::DrawSelectedUnitsMovementTiles() {
 void CMPCameraInput::_handleCityViewMouse(Camera* cam) {
 
 	using namespace std;
+	using namespace olc;
 
 
 	Game* context = cam->m_Game;
+	PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlyViewedCity = context->m_Renderer->m_CurrentViewedCity;
 
 
 	// Show mouse position.
 	int mouse_x = context->GetMouseX();
 	int mouse_y = context->GetMouseY();
-	cout << color(colors::RED);
-	cout << "Mouse Position (" << mouse_x << ":" << mouse_y << ")" << white << endl;
+	//cout << color(colors::RED);
+	//cout << "Mouse Position (" << mouse_x << ":" << mouse_y << ")" << white << endl;
 
 
+	// Reset hovered unit for re-iteration.
+	PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlyHoveredEntityInCity = nullptr;
+
+	// Show over what unit or house the user is hovering.
+	// First, save it as GameEntity..
+	for (auto it : context->m_Renderer->m_CurrentViewedCity->m_PresentUnitsVector) {
+
+		// Check for box collision.
+		if (it->m_TransformCmp->m_PosX <= mouse_x &&
+			(it->m_TransformCmp->m_PosX + it->m_TransformCmp->m_Width) >= mouse_x
+			&&
+			it->m_TransformCmp->m_PosY <= mouse_y &&
+			(it->m_TransformCmp->m_PosY + it->m_TransformCmp->m_Height) >= mouse_y) {
+
+			// Collision with mouse and sprite box...
+
+			PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlyHoveredEntityInCity = it;
+
+		}
+	}
 }
 
 
@@ -2714,6 +2736,13 @@ void Game::_loadSpriteResources() {
 	Sprite* b10 = new Sprite("assets/buildings/wooden_school.png");
 	Sprite* b11 = new Sprite("assets/buildings/stone_school.png");
 	Sprite* b12 = new Sprite("assets/buildings/brick_school.png");
+	Sprite* b13 = new Sprite("assets/buildings/shrine.png");
+	Sprite* b14 = new Sprite("assets/buildings/magick_school.png");
+	Sprite* b15 = new Sprite("assets/buildings/magick_college.png");
+	Sprite* b16 = new Sprite("assets/buildings/inventors_hut.png");
+	Sprite* b17 = new Sprite("assets/buildings/small_workshop.png");
+	Sprite* b18 = new Sprite("assets/buildings/big_workshop.png");
+
 
 
 	m_SpriteStorage.push_back(b1);
@@ -2728,6 +2757,12 @@ void Game::_loadSpriteResources() {
 	m_SpriteStorage.push_back(b10);
 	m_SpriteStorage.push_back(b11);
 	m_SpriteStorage.push_back(b12);
+	m_SpriteStorage.push_back(b13);
+	m_SpriteStorage.push_back(b14);
+	m_SpriteStorage.push_back(b15);
+	m_SpriteStorage.push_back(b16);
+	m_SpriteStorage.push_back(b17);
+	m_SpriteStorage.push_back(b18);
 
 
 
@@ -2744,6 +2779,12 @@ void Game::_loadSpriteResources() {
 	Decal* db10 = new Decal(b10);
 	Decal* db11 = new Decal(b11);
 	Decal* db12 = new Decal(b12);
+	Decal* db13 = new Decal(b13);
+	Decal* db14 = new Decal(b14);
+	Decal* db15 = new Decal(b15);
+	Decal* db16 = new Decal(b16);
+	Decal* db17 = new Decal(b17);
+	Decal* db18 = new Decal(b18);
 
 
 
@@ -2759,6 +2800,13 @@ void Game::_loadSpriteResources() {
 	m_SpriteResourceMap.insert(std::make_pair("wooden_school", db10));
 	m_SpriteResourceMap.insert(std::make_pair("stone_school", db11));
 	m_SpriteResourceMap.insert(std::make_pair("brick_school", db12));
+	m_SpriteResourceMap.insert(std::make_pair("shrine", db13));
+	m_SpriteResourceMap.insert(std::make_pair("magick_school", db14));
+	m_SpriteResourceMap.insert(std::make_pair("magick_college", db15));
+	m_SpriteResourceMap.insert(std::make_pair("inventors_hut", db16));
+	m_SpriteResourceMap.insert(std::make_pair("small_workshop", db17));
+	m_SpriteResourceMap.insert(std::make_pair("big_workshop", db18));
+
 
 
 
@@ -3058,15 +3106,15 @@ bool Game::OnUserCreate() {
 	City* city2 = MakeNewCity(true, "Stormgrad", CMPEntityRace::Race::RACE_HUMAN, player, 7, 6, 5);
 	storage->AddGameEntitie(city2);
 
-	city2->AddBuilding(new BuildingBrickHouse(city2), 1);
+	city2->AddBuilding(new BuildingWoodenSchool(city2), 1);
 	city2->AddBuilding(new BuildingBrickSchool(city2), 2);
-	city2->AddBuilding(new BuildingBrickWarehouse(city2), 3);
-	city2->AddBuilding(new BuildingBrickHouse(city2), 4);
-	city2->AddBuilding(new BuildingBrickHouse(city2), 5);
-	city2->AddBuilding(new BuildingBrickHouse(city2), 6);
-	city2->AddBuilding(new BuildingBrickHouse(city2), 7);
-	city2->AddBuilding(new BuildingBrickHouse(city2), 8);
-	city2->AddBuilding(new BuildingBrickHouse(city2), 9);
+	city2->AddBuilding(new BuildingStoneSchool(city2), 3);
+	city2->AddBuilding(new BuildingShrine(city2), 4);
+	city2->AddBuilding(new BuildingMagickSchool(city2), 5);
+	city2->AddBuilding(new BuildingMagickCollege(city2), 6);
+	city2->AddBuilding(new BuildingInventorsHut(city2), 7);
+	city2->AddBuilding(new BuildingSmallWorkshop(city2), 8);
+	city2->AddBuilding(new BuildingBigWorkshop(city2), 9);
 
 
 
@@ -3213,14 +3261,14 @@ void Renderer::DrawCityPanels() {
 			city->m_TransformCmp->m_PosY + SPRITES_WIDTH_AND_HEIGHT - 16, "city_panel", city->GetCityLandscapeTypeString());
 		
 
-		Game::Get()->DrawStringDecal(olc::vi2d(city->m_TransformCmp->m_PosX - 16, city->m_TransformCmp->m_PosY + SPRITES_WIDTH_AND_HEIGHT),
-			cityname, olc::BLACK);
+Game::Get()->DrawStringDecal(olc::vi2d(city->m_TransformCmp->m_PosX - 16, city->m_TransformCmp->m_PosY + SPRITES_WIDTH_AND_HEIGHT),
+	cityname, olc::BLACK);
 
 
-		Game::Get()->DrawStringDecal(olc::vi2d(city->m_TransformCmp->m_PosX + SPRITES_WIDTH_AND_HEIGHT, city->m_TransformCmp->m_PosY + SPRITES_WIDTH_AND_HEIGHT),
-			citysize, olc::BLACK);
+Game::Get()->DrawStringDecal(olc::vi2d(city->m_TransformCmp->m_PosX + SPRITES_WIDTH_AND_HEIGHT, city->m_TransformCmp->m_PosY + SPRITES_WIDTH_AND_HEIGHT),
+	citysize, olc::BLACK);
 	}
-	
+
 }
 
 
@@ -3297,11 +3345,41 @@ void Renderer::RenderCityLayer0() {
 void Renderer::RenderCityLayer1() {
 
 	using namespace olc;
+	using namespace std;
 
 	m_Game->SetDrawTarget(m_Layer1);
 	m_Game->Clear(olc::BLANK);
 
 
+	m_Game->FillRect(2, 690, 702, 50, olc::GREEN);
+
+	// Draw name of hovered entity...
+	GameEntity* entt = nullptr;
+	Unit* unit = nullptr;
+	Building* building = nullptr;
+	entt = PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlyHoveredEntityInCity;
+
+	if (entt) {
+
+		if (COMPARE_STRINGS(entt->m_IDCmp->m_DynamicTypeName, "Unit") == 0) {
+
+			unit = static_cast<Unit*>(entt);
+
+
+			std::string out = "Unit: " + unit->m_Name;
+			m_Game->DrawString(4, 695, out, olc::RED);
+		}
+		else if (COMPARE_STRINGS(entt->m_IDCmp->m_DynamicTypeName, "Building") == 0){
+		
+			// NOTE:
+			// a reinterpret_cast does not work here,
+			// but a static_cast does perfectly as intended.
+			building = static_cast<Building*>(entt);
+
+			std::string out = "Building: " + building->m_BuildingName;
+			m_Game->DrawString(4, 695, out, olc::RED);
+		}
+	}
 
 	m_Game->EnableLayer(m_Layer1, true);
 	m_Game->SetDrawTarget(nullptr);
@@ -4388,11 +4466,15 @@ void Renderer::DrawPlayersBuildingsForCities() {
 
 				cout << color(colors::BLUE);
 				cout << itr->m_SlotNumber << ".) Slot with \"" << itr->m_AssociatedBuilding->m_BuildingName<< "\"."<< white << endl;
+				cout << color(colors::DARKGREEN);
+				cout << "Position (" << itr->m_AssociatedBuilding->m_TransformCmp->m_PosX <<":" << itr->m_AssociatedBuilding->m_TransformCmp->m_PosY <<")" << white << endl;
 			}
 			else {
 
 				cout << color(colors::BLUE);
 				cout << itr->m_SlotNumber << ".) Slot without building." << white << endl;
+				cout << color(colors::DARKGREEN);
+				cout << "Position (" << itr->m_XPos << ":" << itr->m_YPos << ")" << white << endl;
 			}
 		}
 

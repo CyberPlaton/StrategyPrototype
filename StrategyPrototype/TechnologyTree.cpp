@@ -16,6 +16,8 @@ void TechnologyTree::_initMap() {
 	m_TechnologiesMap.emplace("Engineering", new technologies::technical::TechEngineering());
 	m_TechnologiesMap.emplace("Wood Working", new technologies::technical::TechWoodWorking());
 	m_TechnologiesMap.emplace("Brick Making", new technologies::technical::TechBrickMaking());
+	m_TechnologiesMap.emplace("Tool Making", new technologies::technical::TechToolMaking());
+
 
 
 	m_TechnologiesMap.emplace("Honor", new technologies::military::TechHonor());

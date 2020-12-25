@@ -67,6 +67,7 @@ namespace technologies {
 	struct TechEngineering;
 	struct TechWoodWorking;
 	struct TechBrickMaking;
+	struct TechToolMaking;
 
 	struct TechHonor;
 	struct TechWarriorCode;
@@ -1622,10 +1623,36 @@ namespace technologies {
 
 				// Children: what can be researched after it.
 				m_TechChildren.push_back("Architecture");
+				m_TechChildren.push_back("Tool Making");
+
 			};
 
 		};
 
+
+		struct TechToolMaking : public Technology {
+			TechToolMaking() {
+				m_TechTier = TechTier::TECH_TIER_1;
+				m_TechClass = TechClass::TECH_CLASS_TECHNICAL;
+
+				m_TechParent = "Masonry"; // It is the root.
+
+				// Requierements...
+				m_TechRequirements.push_back("");
+
+
+
+				m_ResearchPointsNeeded = 10;
+				m_ResearchPointsCurrentlyIncested = 0;
+
+				m_TechRace = "All"; // All races can research.
+
+				// Children: what can be researched after it.
+				m_TechChildren.push_back("");
+
+			};
+
+		};
 
 
 

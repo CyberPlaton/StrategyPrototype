@@ -722,8 +722,7 @@ public:
 	bool m_CoastalCity = false; // Defines the layout in cityview, and is set at initialization.
 
 	std::map<std::string, CityRessource*> m_CityRessourcesMap;
-	//std::map<std::string, GameEntity*> m_PresentUnitsMap;
-	std::vector<GameEntity*> m_PresentUnitsMap;
+	std::vector<GameEntity*> m_PresentUnitsVector;
 
 	std::vector<MapTileRegion*> m_ClaimedRegions;
 	std::string m_ClaimedRegionsSpriteName;
@@ -1134,6 +1133,9 @@ public:
 
 	BuildingShack(City* associated_city) {
 
+		m_TransformCmp->m_Height = SPRITES_WIDTH_AND_HEIGHT;
+		m_TransformCmp->m_Width = SPRITES_WIDTH_AND_HEIGHT;
+
 		m_GraphicsCmp = new CMPGraphics();
 		m_GraphicsCmp->m_DrawingLayer = "Layer2";
 		m_GraphicsCmp->m_SpriteName = "shack";
@@ -1167,6 +1169,9 @@ class BuildingWoodenHouse : public Building {
 public:
 
 	BuildingWoodenHouse(City* associated_city) {
+
+		m_TransformCmp->m_Height = SPRITES_WIDTH_AND_HEIGHT;
+		m_TransformCmp->m_Width = SPRITES_WIDTH_AND_HEIGHT;
 
 		m_GraphicsCmp = new CMPGraphics();
 		m_GraphicsCmp->m_DrawingLayer = "Layer2";
@@ -1203,6 +1208,9 @@ public:
 
 	BuildingStoneHouse(City* associated_city) {
 
+		m_TransformCmp->m_Height = SPRITES_WIDTH_AND_HEIGHT;
+		m_TransformCmp->m_Width = SPRITES_WIDTH_AND_HEIGHT;
+
 		m_GraphicsCmp = new CMPGraphics();
 		m_GraphicsCmp->m_DrawingLayer = "Layer2";
 		m_GraphicsCmp->m_SpriteName = "stone_house";
@@ -1238,6 +1246,9 @@ public:
 
 	BuildingBrickHouse(City* associated_city) {
 
+		m_TransformCmp->m_Height = SPRITES_WIDTH_AND_HEIGHT;
+		m_TransformCmp->m_Width = SPRITES_WIDTH_AND_HEIGHT;
+
 		m_GraphicsCmp = new CMPGraphics();
 		m_GraphicsCmp->m_DrawingLayer = "Layer2";
 		m_GraphicsCmp->m_SpriteName = "brick_house";
@@ -1272,6 +1283,9 @@ public:
 
 	BuildingStorage(City* associated_city) {
 
+		m_TransformCmp->m_Height = SPRITES_WIDTH_AND_HEIGHT;
+		m_TransformCmp->m_Width = SPRITES_WIDTH_AND_HEIGHT;
+
 		m_GraphicsCmp = new CMPGraphics();
 		m_GraphicsCmp->m_DrawingLayer = "Layer2";
 		m_GraphicsCmp->m_SpriteName = "storage";
@@ -1304,6 +1318,9 @@ class BuildingWoodenWarehouse : public Building {
 public:
 
 	BuildingWoodenWarehouse(City* associated_city) {
+
+		m_TransformCmp->m_Height = SPRITES_WIDTH_AND_HEIGHT;
+		m_TransformCmp->m_Width = SPRITES_WIDTH_AND_HEIGHT;
 
 		m_GraphicsCmp = new CMPGraphics();
 		m_GraphicsCmp->m_DrawingLayer = "Layer2";
@@ -1340,6 +1357,9 @@ class BuildingStoneWarehouse : public Building {
 public:
 
 	BuildingStoneWarehouse(City* associated_city) {
+
+		m_TransformCmp->m_Height = SPRITES_WIDTH_AND_HEIGHT;
+		m_TransformCmp->m_Width = SPRITES_WIDTH_AND_HEIGHT;
 
 		m_GraphicsCmp = new CMPGraphics();
 		m_GraphicsCmp->m_DrawingLayer = "Layer2";
@@ -1378,6 +1398,9 @@ public:
 
 	BuildingBrickWarehouse(City* associated_city) {
 
+		m_TransformCmp->m_Height = SPRITES_WIDTH_AND_HEIGHT;
+		m_TransformCmp->m_Width = SPRITES_WIDTH_AND_HEIGHT;
+
 		m_GraphicsCmp = new CMPGraphics();
 		m_GraphicsCmp->m_DrawingLayer = "Layer2";
 		m_GraphicsCmp->m_SpriteName = "brick_storage";
@@ -1411,6 +1434,9 @@ class BuildingWisemenHut : public Building {
 public:
 
 	BuildingWisemenHut(City* associated_city) {
+
+		m_TransformCmp->m_Height = SPRITES_WIDTH_AND_HEIGHT;
+		m_TransformCmp->m_Width = SPRITES_WIDTH_AND_HEIGHT;
 
 		m_GraphicsCmp = new CMPGraphics();
 		m_GraphicsCmp->m_DrawingLayer = "Layer2";
@@ -1446,6 +1472,9 @@ public:
 
 	BuildingWoodenSchool(City* associated_city) {
 
+		m_TransformCmp->m_Height = SPRITES_WIDTH_AND_HEIGHT;
+		m_TransformCmp->m_Width = SPRITES_WIDTH_AND_HEIGHT;
+
 		m_GraphicsCmp = new CMPGraphics();
 		m_GraphicsCmp->m_DrawingLayer = "Layer2";
 		m_GraphicsCmp->m_SpriteName = "wooden_school";
@@ -1480,6 +1509,9 @@ class BuildingStoneSchool : public Building {
 public:
 
 	BuildingStoneSchool(City* associated_city) {
+
+		m_TransformCmp->m_Height = SPRITES_WIDTH_AND_HEIGHT;
+		m_TransformCmp->m_Width = SPRITES_WIDTH_AND_HEIGHT;
 
 		m_GraphicsCmp = new CMPGraphics();
 		m_GraphicsCmp->m_DrawingLayer = "Layer2";
@@ -1517,6 +1549,9 @@ public:
 
 	BuildingBrickSchool(City* associated_city) {
 
+		m_TransformCmp->m_Height = SPRITES_WIDTH_AND_HEIGHT;
+		m_TransformCmp->m_Width = SPRITES_WIDTH_AND_HEIGHT;
+
 		m_GraphicsCmp = new CMPGraphics();
 		m_GraphicsCmp->m_DrawingLayer = "Layer2";
 		m_GraphicsCmp->m_SpriteName = "brick_school";
@@ -1548,6 +1583,234 @@ private:
 
 
 
+class BuildingShrine : public Building {
+public:
+
+	BuildingShrine(City* associated_city) {
+
+		m_TransformCmp->m_Height = SPRITES_WIDTH_AND_HEIGHT;
+		m_TransformCmp->m_Width = SPRITES_WIDTH_AND_HEIGHT;
+
+		m_GraphicsCmp = new CMPGraphics();
+		m_GraphicsCmp->m_DrawingLayer = "Layer2";
+		m_GraphicsCmp->m_SpriteName = "shrine";
+
+		m_IDCmp->m_DynamicTypeName = "Building";
+
+
+		m_BuildingName = "Shrine";
+
+		m_AssociatedCity = associated_city;
+		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
+
+
+		// Define req.
+		m_Requirements = new BuildingRequierements();
+		m_Requirements->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
+		m_Requirements->m_RaceRequirement = "All";
+		m_Requirements->m_TechnologyRequirements.push_back("Ceremony");
+		m_Requirements->m_PopulationCountRequirement = 0;
+	}
+
+
+private:
+
+
+private:
+
+};
+
+
+class BuildingMagickSchool : public Building {
+public:
+
+	BuildingMagickSchool(City* associated_city) {
+
+		m_TransformCmp->m_Height = SPRITES_WIDTH_AND_HEIGHT;
+		m_TransformCmp->m_Width = SPRITES_WIDTH_AND_HEIGHT;
+
+		m_GraphicsCmp = new CMPGraphics();
+		m_GraphicsCmp->m_DrawingLayer = "Layer2";
+		m_GraphicsCmp->m_SpriteName = "magick_school";
+
+		m_IDCmp->m_DynamicTypeName = "Building";
+
+
+		m_BuildingName = "Magick School";
+
+		m_AssociatedCity = associated_city;
+		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
+
+
+		// Define req.
+		m_Requirements = new BuildingRequierements();
+		m_Requirements->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
+		m_Requirements->m_RaceRequirement = "All";
+		m_Requirements->m_TechnologyRequirements.push_back("Elementalism");
+		m_Requirements->m_PopulationCountRequirement = 5;
+	}
+
+
+private:
+
+
+private:
+
+};
+
+
+class BuildingMagickCollege : public Building {
+public:
+
+	BuildingMagickCollege(City* associated_city) {
+
+		m_TransformCmp->m_Height = SPRITES_WIDTH_AND_HEIGHT;
+		m_TransformCmp->m_Width = SPRITES_WIDTH_AND_HEIGHT;
+
+		m_GraphicsCmp = new CMPGraphics();
+		m_GraphicsCmp->m_DrawingLayer = "Layer2";
+		m_GraphicsCmp->m_SpriteName = "magick_college";
+
+		m_IDCmp->m_DynamicTypeName = "Building";
+
+
+		m_BuildingName = "Magick College";
+
+		m_AssociatedCity = associated_city;
+		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
+
+
+		// Define req.
+		m_Requirements = new BuildingRequierements();
+		m_Requirements->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
+		m_Requirements->m_RaceRequirement = "All";
+		m_Requirements->m_TechnologyRequirements.push_back("Polytheism");
+		m_Requirements->m_PopulationCountRequirement = 15;
+	}
+
+
+private:
+
+
+private:
+
+};
+
+
+class BuildingInventorsHut : public Building {
+public:
+
+	BuildingInventorsHut(City* associated_city) {
+
+		m_TransformCmp->m_Height = SPRITES_WIDTH_AND_HEIGHT;
+		m_TransformCmp->m_Width = SPRITES_WIDTH_AND_HEIGHT;
+
+		m_GraphicsCmp = new CMPGraphics();
+		m_GraphicsCmp->m_DrawingLayer = "Layer2";
+		m_GraphicsCmp->m_SpriteName = "inventors_hut";
+
+		m_IDCmp->m_DynamicTypeName = "Building";
+
+
+		m_BuildingName = "Inventors Hut";
+
+		m_AssociatedCity = associated_city;
+		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
+
+
+		// Define req.
+		m_Requirements = new BuildingRequierements();
+		m_Requirements->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
+		m_Requirements->m_RaceRequirement = "All";
+		m_Requirements->m_TechnologyRequirements.push_back("Wood Working");
+		m_Requirements->m_PopulationCountRequirement = 5;
+	}
+
+
+private:
+
+
+private:
+
+};
+
+
+class BuildingSmallWorkshop : public Building {
+public:
+
+	BuildingSmallWorkshop(City* associated_city) {
+
+		m_TransformCmp->m_Height = SPRITES_WIDTH_AND_HEIGHT;
+		m_TransformCmp->m_Width = SPRITES_WIDTH_AND_HEIGHT;
+
+		m_GraphicsCmp = new CMPGraphics();
+		m_GraphicsCmp->m_DrawingLayer = "Layer2";
+		m_GraphicsCmp->m_SpriteName = "small_workshop";
+
+		m_IDCmp->m_DynamicTypeName = "Building";
+
+
+		m_BuildingName = "Small Workshop";
+
+		m_AssociatedCity = associated_city;
+		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
+
+
+		// Define req.
+		m_Requirements = new BuildingRequierements();
+		m_Requirements->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
+		m_Requirements->m_RaceRequirement = "All";
+		m_Requirements->m_TechnologyRequirements.push_back("Architecture");
+		m_Requirements->m_TechnologyRequirements.push_back("Tool Making");
+		m_Requirements->m_PopulationCountRequirement = 15;
+	}
+
+
+private:
+
+
+private:
+
+};
+
+
+class BuildingBigWorkshop : public Building {
+public:
+
+	BuildingBigWorkshop(City* associated_city) {
+
+		m_TransformCmp->m_Height = SPRITES_WIDTH_AND_HEIGHT;
+		m_TransformCmp->m_Width = SPRITES_WIDTH_AND_HEIGHT;
+
+		m_GraphicsCmp = new CMPGraphics();
+		m_GraphicsCmp->m_DrawingLayer = "Layer2";
+		m_GraphicsCmp->m_SpriteName = "big_workshop";
+
+		m_IDCmp->m_DynamicTypeName = "Building";
+
+
+		m_BuildingName = "Big Workshop";
+
+		m_AssociatedCity = associated_city;
+		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
+
+
+		// Define req.
+		m_Requirements = new BuildingRequierements();
+		m_Requirements->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
+		m_Requirements->m_RaceRequirement = "All";
+		m_Requirements->m_TechnologyRequirements.push_back("Iron Working");
+		m_Requirements->m_TechnologyRequirements.push_back("Brick Working");
+		m_Requirements->m_PopulationCountRequirement = 20;
+	}
+
+
+private:
+
+
+private:
+
+};
 
 
 
@@ -2641,8 +2904,14 @@ public:
 
 	CMPEntityRace::Race m_PlayerEmpireRace;
 
-
+	// Currently selected unit in mapview.
 	Unit* m_CurrentlySelectedUnit = nullptr;
+
+	// The city, in which the player is currently "in".
+	City* m_CurrentlyViewedCity = nullptr;
+
+	// Currently hovered over entity in cityview.
+	GameEntity* m_CurrentlyHoveredEntityInCity = nullptr;
 
 	// FogOfWar related.
 	int m_MapVisibility[MAP_SIZE][MAP_SIZE];
