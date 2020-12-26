@@ -337,6 +337,8 @@ public:
 		m_TransformCmp->m_GameWorldSpaceCell[0] = set_x_cell;
 		m_TransformCmp->m_GameWorldSpaceCell[1] = set_y_cell;
 
+		m_TransformCmp->m_Height = SPRITES_WIDTH_AND_HEIGHT;
+		m_TransformCmp->m_Width = SPRITES_WIDTH_AND_HEIGHT;
 
 
 		m_GraphicsCmp = new CMPGraphics();
@@ -710,6 +712,9 @@ public:
 
 
 	void AddBuilding(Building* building, int slot);
+	void RemoveBuilding(Building* building);
+	void AddUnit(Unit* unit);
+	void RemoveUnit(Unit* unit);
 
 	CMPEntityRace* m_CityRaceCmp = nullptr;
 	std::string m_CityName;
@@ -1811,6 +1816,88 @@ private:
 private:
 
 };
+
+
+
+class BuildingChampionsHut : public Building {
+public:
+
+	BuildingChampionsHut(City* associated_city) {
+
+		m_TransformCmp->m_Height = SPRITES_WIDTH_AND_HEIGHT;
+		m_TransformCmp->m_Width = SPRITES_WIDTH_AND_HEIGHT;
+
+		m_GraphicsCmp = new CMPGraphics();
+		m_GraphicsCmp->m_DrawingLayer = "Layer2";
+		m_GraphicsCmp->m_SpriteName = "champions_hut";
+
+		m_IDCmp->m_DynamicTypeName = "Building";
+
+
+		m_BuildingName = "Champions Hut";
+
+		m_AssociatedCity = associated_city;
+		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
+
+
+		// Define req.
+		m_Requirements = new BuildingRequierements();
+		m_Requirements->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
+		m_Requirements->m_RaceRequirement = "All";
+		m_Requirements->m_TechnologyRequirements.push_back("Honor");
+		m_Requirements->m_PopulationCountRequirement = 5;
+	}
+
+
+private:
+
+
+private:
+
+};
+
+
+class BuildingWarriorSchool : public Building {
+public:
+
+	BuildingWarriorSchool(City* associated_city) {
+
+		m_TransformCmp->m_Height = SPRITES_WIDTH_AND_HEIGHT;
+		m_TransformCmp->m_Width = SPRITES_WIDTH_AND_HEIGHT;
+
+		m_GraphicsCmp = new CMPGraphics();
+		m_GraphicsCmp->m_DrawingLayer = "Layer2";
+		m_GraphicsCmp->m_SpriteName = "warrior_school";
+
+		m_IDCmp->m_DynamicTypeName = "Building";
+
+
+		m_BuildingName = "Warrior School";
+
+		m_AssociatedCity = associated_city;
+		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
+
+
+		// Define req.
+		m_Requirements = new BuildingRequierements();
+		m_Requirements->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
+		m_Requirements->m_RaceRequirement = "All";
+		m_Requirements->m_TechnologyRequirements.push_back("Warfare Theory");
+		m_Requirements->m_PopulationCountRequirement = 10;
+	}
+
+
+private:
+
+
+private:
+
+};
+
+
+
+
+
 
 
 

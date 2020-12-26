@@ -2081,6 +2081,38 @@ void City::AddBuilding(Building* building, int slot) {
 }
 
 
+void City::AddUnit(Unit* unit) {
+
+	// Finally, store the building in citystorage.
+	m_PresentUnitsVector.push_back(unit);
+
+	m_CitySize += 1;
+
+	Update();
+}
+
+
+void City::RemoveUnit(Unit* unit) {
+
+	std::vector<GameEntity*>::iterator it = std::find(m_PresentUnitsVector.begin(), m_PresentUnitsVector.end(), unit);
+
+	if (it != m_PresentUnitsVector.end()) {
+
+		m_PresentUnitsVector.erase(it);
+	}
+}
+
+
+void City::RemoveBuilding(Building* building) {
+
+	std::vector<GameEntity*>::iterator it = std::find(m_PresentUnitsVector.begin(), m_PresentUnitsVector.end(), building);
+
+	if (it != m_PresentUnitsVector.end()) {
+
+		m_PresentUnitsVector.erase(it);
+	}
+}
+
 
 
 void City::_deriveCityLandscapeType() {

@@ -2259,12 +2259,32 @@ void CMPCameraInput::_handleCityViewMouse(Camera* cam) {
 			it->m_TransformCmp->m_PosY <= mouse_y &&
 			(it->m_TransformCmp->m_PosY + it->m_TransformCmp->m_Height) >= mouse_y) {
 
-			// Collision with mouse and sprite box...
 
+			// Collision with mouse and sprite box...
 			PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlyHoveredEntityInCity = it;
 
 		}
 	}
+
+
+
+
+	// TESTING:
+	// Drag and Drop units.
+	// We depend on hovering from above -> if we hover over a unit, then we can select it and drag somewhere...
+	if (context->GetMouse(0).bHeld) { // Holding left mousebutton.
+
+		if (PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlyHoveredEntityInCity) {
+
+			if (COMPARE_STRINGS(PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlyHoveredEntityInCity->m_IDCmp->m_DynamicTypeName, "Unit") == 0) {
+
+				PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlyHoveredEntityInCity->m_TransformCmp->m_PosX = mouse_x - int(SPRITES_WIDTH_AND_HEIGHT / 2);
+				PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlyHoveredEntityInCity->m_TransformCmp->m_PosY = mouse_y - int(SPRITES_WIDTH_AND_HEIGHT / 2);
+			}
+		}
+	}
+
+
 }
 
 
@@ -2742,6 +2762,9 @@ void Game::_loadSpriteResources() {
 	Sprite* b16 = new Sprite("assets/buildings/inventors_hut.png");
 	Sprite* b17 = new Sprite("assets/buildings/small_workshop.png");
 	Sprite* b18 = new Sprite("assets/buildings/big_workshop.png");
+	Sprite* b19 = new Sprite("assets/buildings/champions_hut.png");
+	Sprite* b20 = new Sprite("assets/buildings/warrior_school.png");
+
 
 
 
@@ -2763,6 +2786,8 @@ void Game::_loadSpriteResources() {
 	m_SpriteStorage.push_back(b16);
 	m_SpriteStorage.push_back(b17);
 	m_SpriteStorage.push_back(b18);
+	m_SpriteStorage.push_back(b19);
+	m_SpriteStorage.push_back(b20);
 
 
 
@@ -2785,6 +2810,8 @@ void Game::_loadSpriteResources() {
 	Decal* db16 = new Decal(b16);
 	Decal* db17 = new Decal(b17);
 	Decal* db18 = new Decal(b18);
+	Decal* db19 = new Decal(b19);
+	Decal* db20 = new Decal(b20);
 
 
 
@@ -2806,6 +2833,8 @@ void Game::_loadSpriteResources() {
 	m_SpriteResourceMap.insert(std::make_pair("inventors_hut", db16));
 	m_SpriteResourceMap.insert(std::make_pair("small_workshop", db17));
 	m_SpriteResourceMap.insert(std::make_pair("big_workshop", db18));
+	m_SpriteResourceMap.insert(std::make_pair("champions_hut", db19));
+	m_SpriteResourceMap.insert(std::make_pair("warrior_school", db20));
 
 
 
@@ -2882,74 +2911,14 @@ void Game::_loadSpriteResources() {
 
 
 	// Units.
+	Sprite* unit = new Sprite("assets/unit/human/human_citizen.png");
 
-	Sprite* gnome_gyro = new Sprite("assets/unit/gnome/gnome_gyrocopter.png");
-	Sprite* gnome = new Sprite("assets/unit/gnome/gnome_mechafighter.png");
-	Sprite* troll = new Sprite("assets/unit/troll/troll_raptor_rider.png");
-	Sprite* gnome1 = new Sprite("assets/unit/gnome/gnome_citizen.png");
-	Sprite* gnome2 = new Sprite("assets/unit/gnome/gnome_worker.png");
-	Sprite* gnome3 = new Sprite("assets/unit/gnome/gnome_noble.png");
-	Sprite* gnome4 = new Sprite("assets/unit/gnome/gnome_priest.png");
-	Sprite* gnome5 = new Sprite("assets/unit/gnome/gnome_fisher.png");
-	Sprite* gnome6 = new Sprite("assets/unit/gnome/gnome_hunter.png");
-	Sprite* gnome7 = new Sprite("assets/unit/gnome/gnome_miner.png");
-	Sprite* gnome8 = new Sprite("assets/unit/gnome/gnome_farmer.png");
-	Sprite* elf = new Sprite("assets/unit/highelf/highelf_paladin.png");
-	Sprite* dwarf = new Sprite("assets/unit/dwarf/dwarf_barbarian.png");
+	m_SpriteStorage.push_back(unit);
 
 
+	Decal* dunit = new Decal(unit);
 
-
-	m_SpriteStorage.push_back(gnome_gyro);
-	m_SpriteStorage.push_back(gnome1);
-	m_SpriteStorage.push_back(gnome2);
-	m_SpriteStorage.push_back(gnome3);
-	m_SpriteStorage.push_back(gnome4);
-	m_SpriteStorage.push_back(gnome5);
-	m_SpriteStorage.push_back(gnome6);
-	m_SpriteStorage.push_back(gnome7);
-	m_SpriteStorage.push_back(gnome8);
-
-
-	m_SpriteStorage.push_back(gnome);
-	m_SpriteStorage.push_back(troll);
-	m_SpriteStorage.push_back(elf);
-	m_SpriteStorage.push_back(dwarf);
-
-
-
-	Decal* d_gnome_gyro = new Decal(gnome_gyro);
-	Decal* d_gnome1 = new Decal(gnome1);
-	Decal* d_gnome2 = new Decal(gnome2);
-	Decal* d_gnome3 = new Decal(gnome3);
-	Decal* d_gnome4 = new Decal(gnome4);
-	Decal* d_gnome5 = new Decal(gnome5);
-	Decal* d_gnome6 = new Decal(gnome6);
-	Decal* d_gnome7 = new Decal(gnome7);
-	Decal* d_gnome8 = new Decal(gnome8);
-
-	Decal* d_gnome = new Decal(gnome);
-	Decal* d_troll = new Decal(troll);
-	Decal* d_elf = new Decal(elf);
-	Decal* d_dwarf = new Decal(dwarf);
-
-
-
-	m_SpriteResourceMap.insert(std::make_pair("gnome_citizen", d_gnome1));
-	m_SpriteResourceMap.insert(std::make_pair("gnome_worker", d_gnome2));
-	m_SpriteResourceMap.insert(std::make_pair("gnome_noble", d_gnome3));
-	m_SpriteResourceMap.insert(std::make_pair("gnome_priest", d_gnome4));
-	m_SpriteResourceMap.insert(std::make_pair("gnome_fisher", d_gnome5));
-	m_SpriteResourceMap.insert(std::make_pair("gnome_hunter", d_gnome6));
-	m_SpriteResourceMap.insert(std::make_pair("gnome_miner", d_gnome7));
-	m_SpriteResourceMap.insert(std::make_pair("gnome_farmer", d_gnome8));
-	m_SpriteResourceMap.insert(std::make_pair("gnome_mechafighter", d_gnome));
-	m_SpriteResourceMap.insert(std::make_pair("gnome_gyrocopter", d_gnome_gyro));
-
-	
-	m_SpriteResourceMap.insert(std::make_pair("troll_raptor_rider", d_troll));
-	m_SpriteResourceMap.insert(std::make_pair("highelf_paladin", d_elf));
-	m_SpriteResourceMap.insert(std::make_pair("dwarf_barbarian", d_dwarf));
+	m_SpriteResourceMap.insert(std::make_pair("human_citizen", dunit));
 
 
 
@@ -3106,8 +3075,8 @@ bool Game::OnUserCreate() {
 	City* city2 = MakeNewCity(true, "Stormgrad", CMPEntityRace::Race::RACE_HUMAN, player, 7, 6, 5);
 	storage->AddGameEntitie(city2);
 
-	city2->AddBuilding(new BuildingWoodenSchool(city2), 1);
-	city2->AddBuilding(new BuildingBrickSchool(city2), 2);
+	city2->AddBuilding(new BuildingChampionsHut(city2), 1);
+	city2->AddBuilding(new BuildingWarriorSchool(city2), 2);
 	city2->AddBuilding(new BuildingStoneSchool(city2), 3);
 	city2->AddBuilding(new BuildingShrine(city2), 4);
 	city2->AddBuilding(new BuildingMagickSchool(city2), 5);
@@ -3117,6 +3086,8 @@ bool Game::OnUserCreate() {
 	city2->AddBuilding(new BuildingBigWorkshop(city2), 9);
 
 
+	Unit* citizen = new Unit(CMPEntityRace::Race::RACE_HUMAN, UnitMovementType::UNIT_MOVEMENT_TYPE_WALKING, "human_citizen", 340, 482, 0, 0);
+	city2->AddUnit(citizen);
 
 
 	City* city3 = MakeNewCity(true, "Gral", CMPEntityRace::Race::RACE_ORC, player2, 15, 9, 5);
@@ -3380,6 +3351,23 @@ void Renderer::RenderCityLayer1() {
 			m_Game->DrawString(4, 695, out, olc::RED);
 		}
 	}
+
+
+
+	// Draw Units ovr buildings etc.
+	for (auto it : m_CurrentViewedCity->m_PresentUnitsVector) {
+
+		if (COMPARE_STRINGS(it->m_IDCmp->m_DynamicTypeName, "Unit") == 0) {
+
+
+			// Draw unit at his position in city.
+			m_Game->DrawDecal(vi2d(it->m_TransformCmp->m_PosX, it->m_TransformCmp->m_PosY),
+				m_Game->m_SpriteResourceMap.at(it->m_GraphicsCmp->m_SpriteName));
+		}
+	}
+
+	
+
 
 	m_Game->EnableLayer(m_Layer1, true);
 	m_Game->SetDrawTarget(nullptr);
