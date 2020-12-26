@@ -294,15 +294,15 @@ std::string GetColorFromString(std::string color) {
 }
 
 
-Unit* MakeNewUnitAtPos(CMPEntityRace::Race race, UnitMovementType movement_type, Player* p, std::string unit_class, std::string spritename, int xpos, int ypos, int x_cell, int y_cell) {
+Unit* MakeNewUnitAtPos(CMPEntityRace::Race race, UnitMovementType movement_type, Player* p, std::string unit_class, int xpos, int ypos, int x_cell, int y_cell) {
 
-	Unit* u = new Unit(race, movement_type, spritename, xpos, ypos, x_cell, y_cell);
+	Unit* u = new Unit(race, movement_type, xpos, ypos, x_cell, y_cell);
 
 	u->SetBirthsign();
 
-	/*
 	u->SetClass(unit_class);
-
+	
+	/*
 	u->SetDerivedStats();
 
 	u->UpdateMovementPoints();
@@ -314,6 +314,34 @@ Unit* MakeNewUnitAtPos(CMPEntityRace::Race race, UnitMovementType movement_type,
 
 	return u;
 }
+
+
+
+Unit* SpawnCitizenInCity(City* city, int xpos, int ypos){
+
+	using namespace std;
+
+	Unit* unit = new Unit(city->m_CityRaceCmp->m_EntityRace, UnitMovementType::UNIT_MOVEMENT_TYPE_WALKING,
+		xpos, ypos,
+		city->m_TransformCmp->m_GameWorldSpaceCell[0], city->m_TransformCmp->m_GameWorldSpaceCell[1]);
+
+
+	unit->SetBirthsign();
+	unit->SetClass("Citizen");
+	unit->SetPlayer(city->m_AssociatedPlayer);
+	UpdateMapVisionForEntity(unit, city->m_AssociatedPlayer);
+
+	city->AddUnit(unit);
+
+	cout << color(colors::DARKMAGENTA);
+	cout << "Unit Spawned: " << unit->m_Name << endl;
+	cout << "City: " << city->m_CityName << white << endl;
+	
+
+	return unit;
+}
+
+
 
 
 Unit* GetUnitAtMapTileFromMousePosition(int xpos, int ypos) {
@@ -1926,27 +1954,15 @@ void CMPCameraInput::_handleCityViewKeyboard(Camera* cam) {
 		PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlyViewedCity = nullptr;
 	}
 
+
+
+	// Spawning new citizen on click.
+	if (context->GetKey(olc::Key::ENTER).bReleased) {
+
+		SpawnCitizenInCity(PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlyViewedCity, 700, 640);
+	}
 }
 
-
-static int g_iUnitClassIndex = 0;
-static int g_iUnitRaceIndex = 0;
-static std::string g_sUnitClasses[16] = {
-	"Spy", "Archer", "Assassin", "Barbarian", "Battlemage", "Paladin", "Healer",
-	"Knight", "Mage", "Nightblade", "Rogue", "Scout", "Sorcerer", "Spellsword",
-	"Warrior", "Inquisitor"
-};
-
-static CMPEntityRace::Race g_rUnitRaces[8] = {
-	CMPEntityRace::Race::RACE_DARKELF,
-	CMPEntityRace::Race::RACE_HIGHELF,
-	CMPEntityRace::Race::RACE_HUMAN,
-	CMPEntityRace::Race::RACE_ORC,
-	CMPEntityRace::Race::RACE_GNOME,
-	CMPEntityRace::Race::RACE_TROLL,
-	CMPEntityRace::Race::RACE_GOBLIN,
-	CMPEntityRace::Race::RACE_DWARF
-};
 
 
 static bool g_bAddingPatrolPoints = false;
@@ -2176,16 +2192,10 @@ void CMPCameraInput::_handleMapViewMouse(Camera* cam) {
 			// TESTING PURPOSES:
 			tile = GetMaptileAtMousePosition(context->GetMouseX(), context->GetMouseY());
 
-			int class_storage_size = 16;
-			int class_index = (++g_iUnitClassIndex) % class_storage_size;
-
-			cout << color(colors::RED) << endl;
-			cout << "From  " << g_iUnitClassIndex << " % " << class_storage_size << " ::= " << class_index << white << endl;
-			cout << "Class index ::= " << g_sUnitClasses[class_index] << white << endl;
 
 			// Creating walking unit.
 			Unit* unit = MakeNewUnitAtPos(PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_PlayerEmpireRace, UnitMovementType::UNIT_MOVEMENT_TYPE_WALKING, PlayerTurnCounter::Get()->m_CurrentTurnPlayer,
-				g_sUnitClasses[class_index], "dwarf_barbarian",
+				"Citizen",
 				tile->m_TransformCmp->m_PosX, tile->m_TransformCmp->m_PosY,
 				tile->m_TransformCmp->m_GameWorldSpaceCell[0], tile->m_TransformCmp->m_GameWorldSpaceCell[1]);
 
@@ -2244,6 +2254,45 @@ void CMPCameraInput::_handleCityViewMouse(Camera* cam) {
 	//cout << color(colors::RED);
 	//cout << "Mouse Position (" << mouse_x << ":" << mouse_y << ")" << white << endl;
 
+	// Get Maptile we are hovering over.
+	// Utility, draw maptiles positions over mouse pos.
+	MapTile* hovered_maptile = nullptr;
+	City* city = context->m_Renderer->m_CurrentViewedCity;
+	int cx = 992 - 32;
+	int cy = 360 - 32;
+
+	// We can get position of maptile in cityview by adding maptile position with this offset.
+	int offsetx = cx - city->m_TransformCmp->m_PosX;
+	int offsety = cy - city->m_TransformCmp->m_PosY;
+
+	for (auto it = city->m_ClaimedRegions.begin(); it != city->m_ClaimedRegions.end(); ++it) {
+
+		MapTileRegion* region = *it;
+
+		for (auto itr : region->m_MapTileRegionTiles) {
+
+			MapTile* tile = itr;
+
+			// Check for collision of mouse position and tile dimensions...
+			if (tile->m_TransformCmp->m_PosX + offsetx <= mouse_x &&
+				(tile->m_TransformCmp->m_PosX + tile->m_TransformCmp->m_Width + offsetx) >= mouse_x
+				&&
+				tile->m_TransformCmp->m_PosY + offsety <= mouse_y &&
+				(tile->m_TransformCmp->m_PosY + tile->m_TransformCmp->m_Height + offsety) >= mouse_y) {
+
+
+				// Print result.
+				cout << color(colors::RED);
+				cout << "Hovered Maptile: ("<< tile->m_TransformCmp->m_PosX + offsetx << ":"<< tile->m_TransformCmp->m_PosY + offsety << ")" << white << endl;
+
+				hovered_maptile = tile;
+			}
+
+		}		
+	}
+
+
+
 
 	// Reset hovered unit for re-iteration.
 	PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlyHoveredEntityInCity = nullptr;
@@ -2284,6 +2333,80 @@ void CMPCameraInput::_handleCityViewMouse(Camera* cam) {
 		}
 	}
 
+
+	// Change unit specialization on release over valid spot.
+	if (hovered_maptile) {
+
+		Unit* unit = nullptr;
+		if (PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlyHoveredEntityInCity != nullptr) {
+
+			if (context->GetMouse(0).bReleased) {
+
+				if (COMPARE_STRINGS(PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlyHoveredEntityInCity->m_IDCmp->m_DynamicTypeName, "Unit") == 0) {
+
+					unit = static_cast<Unit*>(PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlyHoveredEntityInCity);
+				}
+
+
+
+
+				// Check fir maptile type and possible working classes...
+
+				// Check for woodcutter.
+				for (auto it : *hovered_maptile->m_MapTileEntities) {
+
+					if (COMPARE_STRINGS(it->m_IDCmp->m_DynamicTypeName, "Forest") == 0) {
+
+						unit->ChangeClass("Woodcutter");
+						unit->m_TransformCmp->m_PosX = hovered_maptile->m_TransformCmp->m_PosX + offsetx;
+						unit->m_TransformCmp->m_PosY = hovered_maptile->m_TransformCmp->m_PosY + offsety;
+						return;
+					}
+				}
+
+				// Check for farmer...
+				if (hovered_maptile->m_MapTileType == MapTile::MapTileType::MAPTILE_TYPE_TEMPERATE) {
+
+					unit->ChangeClass("Farmer");
+
+					unit->m_TransformCmp->m_PosX = hovered_maptile->m_TransformCmp->m_PosX + offsetx;
+					unit->m_TransformCmp->m_PosY = hovered_maptile->m_TransformCmp->m_PosY + offsety;
+					return;
+				}
+
+
+
+
+				// In case all is not aplicable, reset position of unit to "garrison".
+				if (unit) {
+					unit->m_TransformCmp->m_PosX = 700;
+					unit->m_TransformCmp->m_PosY = 650;
+				}
+				return;
+			}
+		}
+	}
+	else {
+
+
+		Unit* unit = nullptr;
+		if (PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlyHoveredEntityInCity != nullptr) {
+
+			if (context->GetMouse(0).bReleased) {
+
+				if (COMPARE_STRINGS(PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlyHoveredEntityInCity->m_IDCmp->m_DynamicTypeName, "Unit") == 0) {
+
+					unit = static_cast<Unit*>(PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlyHoveredEntityInCity);
+				}
+
+				// In case all is not aplicable, reset position of unit to "garrison".
+				if (unit) {
+					unit->m_TransformCmp->m_PosX = 700;
+					unit->m_TransformCmp->m_PosY = 650;
+				}
+			}
+		}
+	}
 
 }
 
@@ -2912,14 +3035,116 @@ void Game::_loadSpriteResources() {
 
 	// Units.
 	Sprite* unit = new Sprite("assets/unit/human/human_citizen.png");
+	Sprite* unit2 = new Sprite("assets/unit/human/human_farmer.png");
+	Sprite* unit3 = new Sprite("assets/unit/human/human_woodcutter.png");
+	Sprite* unit4 = new Sprite("assets/unit/orc/orc_citizen.png");
+	Sprite* unit5 = new Sprite("assets/unit/orc/orc_farmer.png");
+	Sprite* unit6 = new Sprite("assets/unit/orc/orc_woodcutter.png");
+	Sprite* unit7 = new Sprite("assets/unit/highelf/highelf_citizen.png");
+	Sprite* unit8 = new Sprite("assets/unit/highelf/highelf_farmer.png");
+	Sprite* unit9 = new Sprite("assets/unit/highelf/highelf_woodcutter.png");
+	Sprite* unit10 = new Sprite("assets/unit/darkelf/darkelf_citizen.png");
+	Sprite* unit11 = new Sprite("assets/unit/darkelf/darkelf_farmer.png");
+	Sprite* unit12 = new Sprite("assets/unit/darkelf/darkelf_woodcutter.png");
+	Sprite* unit13 = new Sprite("assets/unit/dwarf/dwarf_citizen.png");
+	Sprite* unit14 = new Sprite("assets/unit/dwarf/dwarf_farmer.png");
+	Sprite* unit15 = new Sprite("assets/unit/dwarf/dwarf_woodcutter.png");
+	Sprite* unit16 = new Sprite("assets/unit/gnome/gnome_citizen.png");
+	Sprite* unit17 = new Sprite("assets/unit/gnome/gnome_farmer.png");
+	Sprite* unit18 = new Sprite("assets/unit/gnome/gnome_woodcutter.png");
+	Sprite* unit19 = new Sprite("assets/unit/goblin/goblin_citizen.png");
+	Sprite* unit20 = new Sprite("assets/unit/goblin/goblin_farmer.png");
+	Sprite* unit21 = new Sprite("assets/unit/goblin/goblin_woodcutter.png");
+	Sprite* unit22 = new Sprite("assets/unit/troll/troll_citizen.png");
+	Sprite* unit23 = new Sprite("assets/unit/troll/troll_farmer.png");
+	Sprite* unit24 = new Sprite("assets/unit/troll/troll_woodcutter.png");
+
+
+
 
 	m_SpriteStorage.push_back(unit);
+	m_SpriteStorage.push_back(unit2);
+	m_SpriteStorage.push_back(unit3);
+	m_SpriteStorage.push_back(unit4);
+	m_SpriteStorage.push_back(unit5);
+	m_SpriteStorage.push_back(unit6);
+	m_SpriteStorage.push_back(unit7);
+	m_SpriteStorage.push_back(unit8);
+	m_SpriteStorage.push_back(unit9);
+	m_SpriteStorage.push_back(unit10);
+	m_SpriteStorage.push_back(unit11);
+	m_SpriteStorage.push_back(unit12);
+	m_SpriteStorage.push_back(unit13);
+	m_SpriteStorage.push_back(unit14);
+	m_SpriteStorage.push_back(unit15);
+	m_SpriteStorage.push_back(unit16);
+	m_SpriteStorage.push_back(unit17);
+	m_SpriteStorage.push_back(unit18);
+	m_SpriteStorage.push_back(unit19);
+	m_SpriteStorage.push_back(unit20);
+	m_SpriteStorage.push_back(unit21);
+	m_SpriteStorage.push_back(unit22);
+	m_SpriteStorage.push_back(unit23);
+	m_SpriteStorage.push_back(unit24);
 
 
 	Decal* dunit = new Decal(unit);
+	Decal* dunit2 = new Decal(unit2);
+	Decal* dunit3 = new Decal(unit3);
+	Decal* dunit4 = new Decal(unit4);
+	Decal* dunit5 = new Decal(unit5);
+	Decal* dunit6 = new Decal(unit6);
+	Decal* dunit7 = new Decal(unit7);
+	Decal* dunit8 = new Decal(unit8);
+	Decal* dunit9 = new Decal(unit9);
+	Decal* dunit10 = new Decal(unit10);
+	Decal* dunit11 = new Decal(unit11);
+	Decal* dunit12 = new Decal(unit12);
+	Decal* dunit13 = new Decal(unit13);
+	Decal* dunit14 = new Decal(unit14);
+	Decal* dunit15 = new Decal(unit15);
+	Decal* dunit16 = new Decal(unit16);
+	Decal* dunit17 = new Decal(unit17);
+	Decal* dunit18 = new Decal(unit18);
+	Decal* dunit19 = new Decal(unit19);
+	Decal* dunit20 = new Decal(unit20);
+	Decal* dunit21 = new Decal(unit21);
+	Decal* dunit22 = new Decal(unit22);
+	Decal* dunit23 = new Decal(unit23);
+	Decal* dunit24 = new Decal(unit24);
+
 
 	m_SpriteResourceMap.insert(std::make_pair("human_citizen", dunit));
+	m_SpriteResourceMap.insert(std::make_pair("human_farmer", dunit2));
+	m_SpriteResourceMap.insert(std::make_pair("human_woodcutter", dunit3));
 
+	m_SpriteResourceMap.insert(std::make_pair("orc_citizen", dunit4));
+	m_SpriteResourceMap.insert(std::make_pair("orc_farmer", dunit5));
+	m_SpriteResourceMap.insert(std::make_pair("orc_woodcutter", dunit6));
+
+	m_SpriteResourceMap.insert(std::make_pair("highelf_citizen", dunit7));
+	m_SpriteResourceMap.insert(std::make_pair("highelf_farmer", dunit8));
+	m_SpriteResourceMap.insert(std::make_pair("highelf_woodcutter", dunit9));
+
+	m_SpriteResourceMap.insert(std::make_pair("darkelf_citizen", dunit10));
+	m_SpriteResourceMap.insert(std::make_pair("darkelf_farmer", dunit11));
+	m_SpriteResourceMap.insert(std::make_pair("darkelf_woodcutter", dunit12));
+
+	m_SpriteResourceMap.insert(std::make_pair("dwarf_citizen", dunit13));
+	m_SpriteResourceMap.insert(std::make_pair("dwarf_farmer", dunit14));
+	m_SpriteResourceMap.insert(std::make_pair("dwarf_citizen", dunit15));
+
+	m_SpriteResourceMap.insert(std::make_pair("gnome_citizen", dunit16));
+	m_SpriteResourceMap.insert(std::make_pair("gnome_farmer", dunit17));
+	m_SpriteResourceMap.insert(std::make_pair("gnome_citizen", dunit18));
+
+	m_SpriteResourceMap.insert(std::make_pair("goblin_citizen", dunit19));
+	m_SpriteResourceMap.insert(std::make_pair("goblin_farmer", dunit20));
+	m_SpriteResourceMap.insert(std::make_pair("goblin_woodcutter", dunit21));
+
+	m_SpriteResourceMap.insert(std::make_pair("troll_citizen", dunit22));
+	m_SpriteResourceMap.insert(std::make_pair("troll_farmer", dunit23));
+	m_SpriteResourceMap.insert(std::make_pair("troll_woodcutter", dunit24));
 
 
 	/*
@@ -3084,10 +3309,6 @@ bool Game::OnUserCreate() {
 	city2->AddBuilding(new BuildingInventorsHut(city2), 7);
 	city2->AddBuilding(new BuildingSmallWorkshop(city2), 8);
 	city2->AddBuilding(new BuildingBigWorkshop(city2), 9);
-
-
-	Unit* citizen = new Unit(CMPEntityRace::Race::RACE_HUMAN, UnitMovementType::UNIT_MOVEMENT_TYPE_WALKING, "human_citizen", 340, 482, 0, 0);
-	city2->AddUnit(citizen);
 
 
 	City* city3 = MakeNewCity(true, "Gral", CMPEntityRace::Race::RACE_ORC, player2, 15, 9, 5);

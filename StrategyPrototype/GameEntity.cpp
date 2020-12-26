@@ -741,7 +741,12 @@ void Unit::_defineMaxAge() {
 	}
 }
 
+
+
 void Unit::Update() {
+
+	// Reset Movement Points.
+	m_MovementPoints = 6;
 
 	int x = m_AgeInternal; // Flag.
 	m_AgeInternal = (m_AgeInternal + 1) % 4;
@@ -755,8 +760,108 @@ void Unit::Update() {
 
 		Die();
 	}
-
 }
+
+
+bool Unit::SetBirthsign() {
+	m_Birthsign = YearCounter::Get()->GetCurrentBirthsign();
+
+	return (COMPARE_STRINGS(m_Birthsign, "") == 0) ? false : true;
+}
+
+
+bool Unit::SetPlayer(Player* p) {
+	m_AssociatedPlayer = p;
+	if (m_AssociatedPlayer) _determineUnitRibbonColor();
+
+	return (m_AssociatedPlayer == nullptr) ? false : true;
+}
+
+
+void Unit::MoveTo(int x_cell, int y_cell) {
+	this->MoveTo(x_cell, y_cell, m_MovementCostStorage);
+}
+
+
+
+Unit::Unit(CMPEntityRace::Race race, UnitMovementType movement_type, int xpos, int ypos, int set_x_cell, int set_y_cell) {
+
+	m_IDCmp->m_DynamicTypeName = "Unit";
+
+	_setUnitMovementType(movement_type);
+
+	m_TransformCmp->m_PosX = xpos;
+	m_TransformCmp->m_PosY = ypos;
+	m_TransformCmp->m_GameWorldSpaceCell[0] = set_x_cell;
+	m_TransformCmp->m_GameWorldSpaceCell[1] = set_y_cell;
+
+	m_TransformCmp->m_Height = SPRITES_WIDTH_AND_HEIGHT;
+	m_TransformCmp->m_Width = SPRITES_WIDTH_AND_HEIGHT;
+
+
+	m_GraphicsCmp = new CMPGraphics();
+	m_GraphicsCmp->m_DrawingLayer = "layer1";
+
+	m_EntityRaceCmp = new CMPEntityRace(race);
+
+	_defineMaxAge();
+
+	/*
+	m_UnitSkillsMap = new std::map<UnitSkillsEnum, int>();
+	m_UnitAttributesMap = new std::map<UnitAttributesEnum, int>();
+	*/
+
+	// Stats and Skills.
+	//_defineStandardBeginningStats();
+
+	// Define name.
+	_defineUnitName();
+
+	// Define AI for unit.
+	m_AICmp = new CMPArtificialIntelligence(this);
+
+	// We need to map according state functions first, else we get errors.
+	// Like:
+	// forest->m_AICmp->MapState("state_search", new ForestSearch(*forest->m_AICmp));
+
+	_mapStates();
+	m_AICmp->ChangeState(States::STATE_WAIT);
+}
+
+
+bool Unit::SetClass(std::string classname) {
+
+	if (COMPARE_STRINGS(classname, "Citizen") == 0) {
+		m_UnitClass = new UnitCitizen();
+	}
+	else if (COMPARE_STRINGS(classname, "Scout") == 0) {
+		//m_UnitClass = new UnitScout();
+	}
+	else if (COMPARE_STRINGS(classname, "Woodcutter") == 0) {
+		m_UnitClass = new UnitWoodCutter();
+	}
+	else if (COMPARE_STRINGS(classname, "Farmer") == 0) {
+		m_UnitClass = new UnitFarmer();
+	}
+	else {
+		return false;
+	}
+
+	// Lastly, set according sprite for unit.
+	_setSpriteBasedOnClassAndRace();
+	return true;
+}
+
+
+bool Unit::ChangeClass(std::string classname) {
+
+	// First, delete previous class.
+	delete m_UnitClass;
+
+	// Set new class.
+	return SetClass(classname);
+}
+
 
 void Unit::_determineUnitRibbonColor() {
 	if (COMPARE_STRINGS(m_AssociatedPlayer->m_PlayerColor, "red") == 0) {
@@ -786,6 +891,59 @@ void Unit::_determineUnitRibbonColor() {
 	else {
 		m_UnitPlayerColor = "NULL"; // Indicates an error.
 	}
+}
+
+
+void Unit::_setSpriteBasedOnClassAndRace() {
+
+	std::string sprite;
+	
+	switch (m_EntityRaceCmp->m_EntityRace){
+	case CMPEntityRace::Race::RACE_INVALID:
+		return;
+		break;
+	case CMPEntityRace::Race::RACE_HUMAN:
+		sprite = "human_";
+		break;
+	case CMPEntityRace::Race::RACE_TROLL:
+		sprite = "troll_";
+		break;
+	case CMPEntityRace::Race::RACE_DWARF:
+		sprite = "dwarf_";
+		break;
+	case CMPEntityRace::Race::RACE_ORC:
+		sprite = "orc_";
+		break;
+	case CMPEntityRace::Race::RACE_HIGHELF:
+		sprite = "highelf_";
+		break;
+	case CMPEntityRace::Race::RACE_DARKELF:
+		sprite = "darkelf_";
+		break;
+	case CMPEntityRace::Race::RACE_GOBLIN:
+		sprite = "goblin_";
+		break;
+	case CMPEntityRace::Race::RACE_GNOME:
+		sprite = "gnome_";
+		break;
+	default:
+		break;
+	}
+
+
+	if (COMPARE_STRINGS(m_UnitClass->m_UnitClassName, "Woodcutter") == 0) {
+		sprite += "woodcutter";
+	}
+	else if (COMPARE_STRINGS(m_UnitClass->m_UnitClassName, "Farmer") == 0) {
+		sprite += "farmer";
+
+	}
+	else if (COMPARE_STRINGS(m_UnitClass->m_UnitClassName, "Citizen") == 0) {
+		sprite += "citizen";
+
+	}
+
+	m_GraphicsCmp->m_SpriteName = sprite;
 }
 
 
@@ -2113,6 +2271,21 @@ void City::RemoveBuilding(Building* building) {
 	}
 }
 
+
+void Unit::_mapStates() {
+
+	if (m_AICmp) {
+
+		m_AICmp->MapState("state_flee", new UnitFleeLogic(*m_AICmp));
+		m_AICmp->MapState("state_search", new UnitSearchLogic(*m_AICmp));
+		m_AICmp->MapState("state_die", new UnitDieLogic(*m_AICmp));
+		m_AICmp->MapState("state_defend", new UnitDefendLogic(*m_AICmp));
+		m_AICmp->MapState("state_attack", new UnitAttackLogic(*m_AICmp));
+		m_AICmp->MapState("state_move", new UnitMoveLogic(*m_AICmp));
+		m_AICmp->MapState("state_patrol", new UnitPatrolLogic(*m_AICmp));
+		m_AICmp->MapState("state_wait", new UnitWaitLogic(*m_AICmp));
+	}
+}
 
 
 void City::_deriveCityLandscapeType() {

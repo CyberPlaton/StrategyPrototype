@@ -274,7 +274,8 @@ bool IsUnitInCityOrFort(Unit* unit);
 bool IsUnitInCityOrFort(City* city, Unit* unit);
 River* MakeNewRiver(std::string spritename, int x_cell_pos, int y_cell_pos);
 
-Unit* MakeNewUnitAtPos(CMPEntityRace::Race race, UnitMovementType movement_type, Player* p, std::string unit_class, std::string spritename, int xpos, int ypos, int x_cell, int y_cell);
+Unit* SpawnCitizenInCity(City* city, int xpos, int ypos);
+Unit* MakeNewUnitAtPos(CMPEntityRace::Race race, UnitMovementType movement_type, Player* p, std::string unit_class, int xpos, int ypos, int x_cell, int y_cell);
 Unit* GetUnitAtMapTileFromMousePosition(int xpos, int ypos);
 std::string GetColorFromString(std::string color);
 
@@ -326,69 +327,24 @@ public:
 
 class Unit : public GameEntity {
 public:
-	Unit(CMPEntityRace::Race race, UnitMovementType movement_type, std::string spritename, int xpos, int ypos, int set_x_cell, int set_y_cell) {
-
-		m_IDCmp->m_DynamicTypeName = "Unit";
-	
-		_setUnitMovementType(movement_type);
-
-		m_TransformCmp->m_PosX = xpos;
-		m_TransformCmp->m_PosY = ypos;
-		m_TransformCmp->m_GameWorldSpaceCell[0] = set_x_cell;
-		m_TransformCmp->m_GameWorldSpaceCell[1] = set_y_cell;
-
-		m_TransformCmp->m_Height = SPRITES_WIDTH_AND_HEIGHT;
-		m_TransformCmp->m_Width = SPRITES_WIDTH_AND_HEIGHT;
-
-
-		m_GraphicsCmp = new CMPGraphics();
-		m_GraphicsCmp->m_DrawingLayer = "layer1";
-		m_GraphicsCmp->m_SpriteName = spritename;
-
-
-		m_EntityRaceCmp = new CMPEntityRace(race);
-
-		_defineMaxAge();
-
-		/*
-		m_UnitSkillsMap = new std::map<UnitSkillsEnum, int>();
-		m_UnitAttributesMap = new std::map<UnitAttributesEnum, int>();
-		*/
-
-		// Stats and Skills.
-		//_defineStandardBeginningStats();
-
-		// Define name.
-		_defineUnitName();
-
-		// Define AI for unit.
-		m_AICmp = new CMPArtificialIntelligence(this);
-
-		// We need to map according state functions first, else we get errors.
-		// Like:
-		// forest->m_AICmp->MapState("state_search", new ForestSearch(*forest->m_AICmp));
-
-		m_AICmp->MapState("state_flee", new UnitFleeLogic(*m_AICmp));
-		m_AICmp->MapState("state_search", new UnitSearchLogic(*m_AICmp));
-		m_AICmp->MapState("state_die", new UnitDieLogic(*m_AICmp));
-		m_AICmp->MapState("state_defend", new UnitDefendLogic(*m_AICmp));
-		m_AICmp->MapState("state_attack", new UnitAttackLogic(*m_AICmp));
-		m_AICmp->MapState("state_move", new UnitMoveLogic(*m_AICmp));
-		m_AICmp->MapState("state_patrol", new UnitPatrolLogic(*m_AICmp));
-		m_AICmp->MapState("state_wait", new UnitWaitLogic(*m_AICmp));
-
-		m_AICmp->ChangeState(States::STATE_WAIT);
-	}
-
+	Unit(CMPEntityRace::Race race, UnitMovementType movement_type, int xpos, int ypos, int set_x_cell, int set_y_cell);
 
 	// Unit specific, all classes wide functionality.
+	//
+	//
+
+	bool SetBirthsign();
+	bool SetPlayer(Player* p);
+	unsigned int GetMovementPoints() { return m_MovementPoints; }
+	bool CanMoveOnMapTile(MapTile* tile);
+	bool SetClass(std::string classname);
+	bool ChangeClass(std::string classname);
 
 	// Move unit to a location.
 	// Storage has the movement cost definitions for this particular unit.
 	void MoveTo(int x_cell, int y_cell, std::map<MapTile*, int>* storage);
-	void MoveTo(int x_cell, int y_cell) {
-		this->MoveTo(x_cell, y_cell, m_MovementCostStorage);
-	}
+	void MoveTo(int x_cell, int y_cell);
+
 
 	// Saves maptiles to which this unit can go in current turn.
 	// It returns the reachable maptiles, so we can draw them in main function.
@@ -401,9 +357,10 @@ public:
 
 
 	// Standard functions.
-
 	~Unit() = default;
 
+	// Function for calling after every turn.
+	// It updates current age of unit and reset movement points.
 	void Update();
 
 	/*
@@ -414,23 +371,6 @@ public:
 
 	//bool SetDerivedStats();
 	//bool SetClass(std::string c);
-
-	bool SetBirthsign() {
-		m_Birthsign = YearCounter::Get()->GetCurrentBirthsign();
-
-		return (COMPARE_STRINGS(m_Birthsign, "") == 0) ? false : true;
-	}
-
-	bool SetPlayer(Player* p) {
-		m_AssociatedPlayer = p;
-		if (m_AssociatedPlayer) _determineUnitRibbonColor();
-
-		return (m_AssociatedPlayer == nullptr) ? false : true;
-	}
-
-	unsigned int GetMovementPoints() { return m_MovementPoints; }
-
-	bool CanMoveOnMapTile(MapTile* tile);
 
 	/*
 	std::map<UnitSkillsEnum, int>* GetUnitSkills() {
@@ -466,6 +406,11 @@ public:
 	// Purpose is, that units execute movement objectives to destinations
 	// on turn end autonomously.
 	std::vector<olc::vi2d> m_MovementObjectives;
+
+
+
+	// UnitRelated structs for more functionality.
+	UnitBase* m_UnitClass = nullptr;
 
 private:
 	int m_AgeInternal = -1;
@@ -505,11 +450,18 @@ private:
 	bool _isMapTileAlreadyInserted(MapTile* m, std::map<MapTile*, int>* storage);
 
 
+	void _mapStates();
+
 	// Functions updates Attributes based on current data and return result.
 	//int _getFatigue();
 	//int _getMagicka();
 	//int _getHealth();
+
+
+
+	void _setSpriteBasedOnClassAndRace();
 };
+
 
 
 
@@ -2249,6 +2201,10 @@ public:
 		m_MapTileName = name;
 		m_TransformCmp->m_PosX = xpos;
 		m_TransformCmp->m_PosY = ypos;
+
+		m_TransformCmp->m_Height = SPRITES_WIDTH_AND_HEIGHT;
+		m_TransformCmp->m_Width = SPRITES_WIDTH_AND_HEIGHT;
+
 		
 		m_GraphicsCmp = new CMPGraphics();
 		m_GraphicsCmp->m_DrawingLayer = layer;

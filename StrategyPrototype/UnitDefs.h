@@ -33,11 +33,66 @@ struct UnitStats { // Define maximal health, magicka and fatigue.
 
 struct UnitBase {
 
+	std::string m_UnitClassName;
 
 	UnitTier m_UnitTier = UnitTier::UNIT_TIER_INVALID;
 	UnitLevel m_UnitLevel = UnitLevel::UNIT_LEVEL_INVALID;
 	UnitStats* m_UnitStats = nullptr;
 };
+
+
+struct UnitCitizen : public UnitBase {
+	UnitCitizen() {
+
+		m_UnitClassName = "Citizen";
+
+		m_UnitTier = UnitTier::UNIT_TIER_1;
+		m_UnitLevel = UnitLevel::UNIT_LEVEL_1;
+
+
+		m_UnitStats = new UnitStats();
+		m_UnitStats->m_Fatigue = 6;
+		m_UnitStats->m_Magicka = 0;
+		m_UnitStats->m_Health = 10;
+	}
+};
+
+
+
+struct UnitWoodCutter : public UnitBase {
+	UnitWoodCutter() {
+
+		m_UnitClassName = "Woodcutter";
+
+		m_UnitTier = UnitTier::UNIT_TIER_1;
+		m_UnitLevel = UnitLevel::UNIT_LEVEL_1;
+
+
+		m_UnitStats = new UnitStats();
+		m_UnitStats->m_Fatigue = 6;
+		m_UnitStats->m_Magicka = 0;
+		m_UnitStats->m_Health = 10;
+	}
+};
+
+
+
+struct UnitFarmer : public UnitBase {
+	UnitFarmer() {
+
+		m_UnitClassName = "Farmer";
+
+		m_UnitTier = UnitTier::UNIT_TIER_1;
+		m_UnitLevel = UnitLevel::UNIT_LEVEL_1;
+
+
+		m_UnitStats = new UnitStats();
+		m_UnitStats->m_Fatigue = 6;
+		m_UnitStats->m_Magicka = 0;
+		m_UnitStats->m_Health = 10;
+	}
+};
+
 
 
 
