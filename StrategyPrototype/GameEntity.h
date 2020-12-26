@@ -668,6 +668,9 @@ public:
 	void AddUnit(Unit* unit);
 	void RemoveUnit(Unit* unit);
 
+	bool AddCitizenToJobless(GameEntity* unit);
+	void RemoveCitizenFromJoblessVector(GameEntity* unit);
+
 	CMPEntityRace* m_CityRaceCmp = nullptr;
 	std::string m_CityName;
 	unsigned int m_CitySize;
@@ -680,6 +683,9 @@ public:
 
 	std::map<std::string, CityRessource*> m_CityRessourcesMap;
 	std::vector<GameEntity*> m_PresentUnitsVector;
+
+	// Special for PresentUnits that dont have a job, say citizens.
+	std::vector<GameEntity*> m_JoblessCitizens; // At a time, only 10 citizens can be without job, after we do not spawn new ones.
 
 	std::vector<MapTileRegion*> m_ClaimedRegions;
 	std::string m_ClaimedRegionsSpriteName;

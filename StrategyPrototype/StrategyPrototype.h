@@ -262,6 +262,8 @@ public:
 
 	void AdvanceOneTurn();
 
+	bool AddSpriteToStorage(std::string path, std::string spritename);
+
 	Renderer* m_Renderer;
 	WorldMap* m_WorldMap;
 

@@ -783,6 +783,47 @@ void Unit::MoveTo(int x_cell, int y_cell) {
 }
 
 
+void City::RemoveCitizenFromJoblessVector(GameEntity* unit) {
+
+	std::vector<GameEntity*>::iterator it = std::find(m_JoblessCitizens.begin(), m_JoblessCitizens.end(), unit);
+
+	if (it != m_JoblessCitizens.end()) {
+
+		m_JoblessCitizens.erase(it);
+	}
+}
+
+bool City::AddCitizenToJobless(GameEntity* unit) {
+
+	if (m_JoblessCitizens.size() < 10) {
+
+		if (m_JoblessCitizens.size() == 0) {
+
+			unit->m_TransformCmp->m_PosX = 702;
+			unit->m_TransformCmp->m_PosY = 650;
+			this->m_JoblessCitizens.push_back(unit);
+		}
+		else {
+
+			int xpos = 0, ypos = 0;
+			for (auto it : this->m_JoblessCitizens) {
+				xpos = it->m_TransformCmp->m_PosX;
+				ypos = it->m_TransformCmp->m_PosY;
+			}
+
+			unit->m_TransformCmp->m_PosX = 32 + xpos;
+			unit->m_TransformCmp->m_PosY = ypos;
+			this->m_JoblessCitizens.push_back(unit);
+		}
+
+
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
 
 Unit::Unit(CMPEntityRace::Race race, UnitMovementType movement_type, int xpos, int ypos, int set_x_cell, int set_y_cell) {
 

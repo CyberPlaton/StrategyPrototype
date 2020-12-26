@@ -1942,29 +1942,6 @@ void CMPCameraInput::_handleMapViewKeyBoard(Camera* cam) {
 }
 
 
-void CMPCameraInput::_handleCityViewKeyboard(Camera* cam) {
-
-	Game* context = cam->m_Game;
-
-	// CLOSE CityView.
-	if (context->GetKey(olc::Key::ESCAPE).bReleased) {
-
-		context->m_Renderer->ChangeRenderMode();
-		context->m_Renderer->SetCurrentViewedCity(nullptr); // Reset city which we now view.
-		PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlyViewedCity = nullptr;
-	}
-
-
-
-	// Spawning new citizen on click.
-	if (context->GetKey(olc::Key::ENTER).bReleased) {
-
-		SpawnCitizenInCity(PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlyViewedCity, 700, 640);
-	}
-}
-
-
-
 static bool g_bAddingPatrolPoints = false;
 void CMPCameraInput::_handleMapViewMouse(Camera* cam) {
 
@@ -2360,6 +2337,8 @@ void CMPCameraInput::_handleCityViewMouse(Camera* cam) {
 						unit->ChangeClass("Woodcutter");
 						unit->m_TransformCmp->m_PosX = hovered_maptile->m_TransformCmp->m_PosX + offsetx;
 						unit->m_TransformCmp->m_PosY = hovered_maptile->m_TransformCmp->m_PosY + offsety;
+
+						city->RemoveCitizenFromJoblessVector(unit);
 						return;
 					}
 				}
@@ -2371,6 +2350,8 @@ void CMPCameraInput::_handleCityViewMouse(Camera* cam) {
 
 					unit->m_TransformCmp->m_PosX = hovered_maptile->m_TransformCmp->m_PosX + offsetx;
 					unit->m_TransformCmp->m_PosY = hovered_maptile->m_TransformCmp->m_PosY + offsety;
+
+					city->RemoveCitizenFromJoblessVector(unit);
 					return;
 				}
 
@@ -2408,6 +2389,40 @@ void CMPCameraInput::_handleCityViewMouse(Camera* cam) {
 		}
 	}
 
+}
+
+
+
+
+void CMPCameraInput::_handleCityViewKeyboard(Camera* cam) {
+
+	Game* context = cam->m_Game;
+
+	if (PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlyViewedCity == nullptr) return;
+	City* city = PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlyViewedCity;
+
+
+
+
+	// CLOSE CityView.
+	if (context->GetKey(olc::Key::ESCAPE).bReleased) {
+
+		context->m_Renderer->ChangeRenderMode();
+		context->m_Renderer->SetCurrentViewedCity(nullptr); // Reset city which we now view.
+		PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlyViewedCity = nullptr;
+	}
+
+
+
+	// Spawning new citizen on click.
+	if (context->GetKey(olc::Key::ENTER).bReleased) {
+
+		if (city->m_JoblessCitizens.size() < 10) { // Need to check...
+
+			Unit* u = SpawnCitizenInCity(city, 0, 0);
+			city->AddCitizenToJobless(u);
+		}
+	}
 }
 
 
@@ -2781,6 +2796,9 @@ void Game::_loadSpriteResources() {
 
 
 
+
+
+	////////////////////////////////////////////////////////////////
 	// Load cities
 	Sprite* city1 = new Sprite("assets/city/orc/city_orc_huge.png");
 	Sprite* city2 = new Sprite("assets/city/human/city_human_huge.png");
@@ -2866,6 +2884,8 @@ void Game::_loadSpriteResources() {
 
 
 
+
+	////////////////////////////////////////////////////////////////////
 	// Sprites for cities buildings.
 	Sprite* b1 = new Sprite("assets/buildings/wooden_house.png");
 	Sprite* b2 = new Sprite("assets/buildings/shack.png");
@@ -2962,6 +2982,9 @@ void Game::_loadSpriteResources() {
 
 
 
+
+
+	/////////////////////////////////////////////////////////////////////////////////////
 	// Cityview sprites
 	/*
 	* NOTE:
@@ -2974,8 +2997,6 @@ void Game::_loadSpriteResources() {
 
 	m_SpriteResourceMap.insert(std::make_pair("city_human_normal_cityview", dcityview1));
 	*/
-
-
 
 	// Cityview Backgrounds.
 	Sprite* back1 = new Sprite("assets/background/city/background_city_forest_temperate.png");
@@ -3033,6 +3054,10 @@ void Game::_loadSpriteResources() {
 
 
 
+
+
+
+	////////////////////////////////////////////////////////////////////////////
 	// Units.
 	Sprite* unit = new Sprite("assets/unit/human/human_citizen.png");
 	Sprite* unit2 = new Sprite("assets/unit/human/human_farmer.png");
@@ -3145,32 +3170,6 @@ void Game::_loadSpriteResources() {
 	m_SpriteResourceMap.insert(std::make_pair("troll_citizen", dunit22));
 	m_SpriteResourceMap.insert(std::make_pair("troll_farmer", dunit23));
 	m_SpriteResourceMap.insert(std::make_pair("troll_woodcutter", dunit24));
-
-
-	/*
-	// Unit ribbons and player color thingies and classes...
-	Sprite* player_color1 = new Sprite("assets/unit/unit_player_color_red.png");
-	Sprite* player_color2 = new Sprite("assets/unit/unit_player_color_blue.png");
-	Sprite* player_color3 = new Sprite("assets/unit/unit_player_color_magenta.png");
-
-	Sprite* class1 = new Sprite("assets/unit/unit_class_archer.png");
-
-
-
-	Decal* d_player_color1 = new Decal(player_color1);
-	Decal* d_player_color2 = new Decal(player_color2);
-	Decal* d_player_color3 = new Decal(player_color3);
-
-	Decal* dclass1 = new Decal(class1);
-
-
-
-	m_SpriteResourceMap.insert(std::make_pair("unit_player_color_red", d_player_color1));
-	m_SpriteResourceMap.insert(std::make_pair("unit_player_color_blue", d_player_color2));
-	m_SpriteResourceMap.insert(std::make_pair("unit_player_color_magenta", d_player_color3));
-
-	m_SpriteResourceMap.insert(std::make_pair("unit_class_archer", dclass1));
-	*/
 }
 
 
@@ -3186,6 +3185,23 @@ bool IMGUI::AddSprite(std::string path, std::string spritename) {
 	Decal* d = new Decal(s);
 	IMGUI::Get()->m_IMGUIDecalMap.insert(std::make_pair(spritename, d));
 	
+}
+
+
+bool Game::AddSpriteToStorage(std::string path, std::string spritename) {
+
+	using namespace olc;
+
+	Sprite* s = new Sprite(path);
+	if (!s) return false;
+
+	m_SpriteStorage.push_back(s);
+
+
+	Decal* d = new Decal(s);
+	m_SpriteResourceMap.insert(std::make_pair(spritename, d));
+
+	return (d);
 }
 
 
