@@ -38,6 +38,57 @@ struct UnitBase {
 	UnitTier m_UnitTier = UnitTier::UNIT_TIER_INVALID;
 	UnitLevel m_UnitLevel = UnitLevel::UNIT_LEVEL_INVALID;
 	UnitStats* m_UnitStats = nullptr;
+	std::vector<std::string> m_TechnologyRequirements;
+
+
+	std::string LevelToString() {
+
+		int level = -1;
+		switch (m_UnitLevel) {
+		case UnitLevel::UNIT_LEVEL_1:
+			level = 1;
+				break;
+		case UnitLevel::UNIT_LEVEL_2:
+			level = 2;
+
+			break;
+		case UnitLevel::UNIT_LEVEL_3:
+			level = 3;
+
+			break;
+		case UnitLevel::UNIT_LEVEL_4:
+			level = 4;
+
+			break;
+		case UnitLevel::UNIT_LEVEL_5:
+			level = 5;
+
+			break;
+		case UnitLevel::UNIT_LEVEL_6:
+			level = 6;
+
+			break;
+		case UnitLevel::UNIT_LEVEL_7:
+			level = 7;
+
+			break;
+		case UnitLevel::UNIT_LEVEL_8:
+			level = 8;
+
+			break;
+		case UnitLevel::UNIT_LEVEL_9:
+			level = 9;
+
+			break;
+		case UnitLevel::UNIT_LEVEL_10:
+			level = 10;
+
+			break;
+
+		}
+
+		return (std::to_string(level));
+	}
 };
 
 
@@ -72,6 +123,9 @@ struct UnitWoodCutter : public UnitBase {
 		m_UnitStats->m_Fatigue = 6;
 		m_UnitStats->m_Magicka = 0;
 		m_UnitStats->m_Health = 10;
+
+
+		m_TechnologyRequirements.push_back("Wood Working");
 	}
 };
 
@@ -90,13 +144,112 @@ struct UnitFarmer : public UnitBase {
 		m_UnitStats->m_Fatigue = 6;
 		m_UnitStats->m_Magicka = 0;
 		m_UnitStats->m_Health = 10;
+
+		// No tech req.
+	}
+};
+
+
+struct UnitHunter : public UnitBase {
+	UnitHunter() {
+
+		m_UnitClassName = "Hunter";
+
+		m_UnitTier = UnitTier::UNIT_TIER_1;
+		m_UnitLevel = UnitLevel::UNIT_LEVEL_1;
+
+
+		m_UnitStats = new UnitStats();
+		m_UnitStats->m_Fatigue = 6;
+		m_UnitStats->m_Magicka = 0;
+		m_UnitStats->m_Health = 10;
+
+		m_TechnologyRequirements.push_back("Hunting");
+
+	}
+};
+
+
+struct UnitFisher : public UnitBase {
+	UnitFisher() {
+
+		m_UnitClassName = "Fisher";
+
+		m_UnitTier = UnitTier::UNIT_TIER_1;
+		m_UnitLevel = UnitLevel::UNIT_LEVEL_1;
+
+
+		m_UnitStats = new UnitStats();
+		m_UnitStats->m_Fatigue = 6;
+		m_UnitStats->m_Magicka = 0;
+		m_UnitStats->m_Health = 10;
+
+
+		m_TechnologyRequirements.push_back("Fishing");
 	}
 };
 
 
 
+struct UnitClayMiner : public UnitBase {
+	UnitClayMiner() {
+
+		m_UnitClassName = "Clayminer";
+
+		m_UnitTier = UnitTier::UNIT_TIER_1;
+		m_UnitLevel = UnitLevel::UNIT_LEVEL_1;
 
 
+		m_UnitStats = new UnitStats();
+		m_UnitStats->m_Fatigue = 6;
+		m_UnitStats->m_Magicka = 0;
+		m_UnitStats->m_Health = 10;
+
+
+		m_TechnologyRequirements.push_back("Pottery");
+	}
+};
+
+
+struct UnitBronzeMiner : public UnitBase {
+	UnitBronzeMiner() {
+
+		m_UnitClassName = "Bronze Miner";
+
+		m_UnitTier = UnitTier::UNIT_TIER_1;
+		m_UnitLevel = UnitLevel::UNIT_LEVEL_1;
+
+
+		m_UnitStats = new UnitStats();
+		m_UnitStats->m_Fatigue = 6;
+		m_UnitStats->m_Magicka = 0;
+		m_UnitStats->m_Health = 10;
+
+
+		m_TechnologyRequirements.push_back("Bronze Working");
+	}
+};
+
+
+
+struct UnitIronMiner : public UnitBase {
+	UnitIronMiner() {
+
+		m_UnitClassName = "Iron Miner";
+
+		m_UnitTier = UnitTier::UNIT_TIER_1;
+		m_UnitLevel = UnitLevel::UNIT_LEVEL_1;
+
+
+		m_UnitStats = new UnitStats();
+		m_UnitStats->m_Fatigue = 6;
+		m_UnitStats->m_Magicka = 0;
+		m_UnitStats->m_Health = 10;
+
+
+		m_TechnologyRequirements.push_back("Iron Working");
+	}
+};
 
 
 

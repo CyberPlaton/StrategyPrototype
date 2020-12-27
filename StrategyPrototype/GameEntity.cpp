@@ -884,6 +884,12 @@ bool Unit::SetClass(std::string classname) {
 	else if (COMPARE_STRINGS(classname, "Farmer") == 0) {
 		m_UnitClass = new UnitFarmer();
 	}
+	else if (COMPARE_STRINGS(classname, "Hunter") == 0) {
+		m_UnitClass = new UnitHunter();
+	}
+	else if (COMPARE_STRINGS(classname, "Fisher") == 0) {
+		m_UnitClass = new UnitFisher();
+	}
 	else {
 		return false;
 	}
@@ -981,6 +987,14 @@ void Unit::_setSpriteBasedOnClassAndRace() {
 	}
 	else if (COMPARE_STRINGS(m_UnitClass->m_UnitClassName, "Citizen") == 0) {
 		sprite += "citizen";
+
+	}
+	else if (COMPARE_STRINGS(m_UnitClass->m_UnitClassName, "Fisher") == 0) {
+		sprite += "fisher";
+
+	}
+	else if (COMPARE_STRINGS(m_UnitClass->m_UnitClassName, "Hunter") == 0) {
+		sprite += "hunter";
 
 	}
 

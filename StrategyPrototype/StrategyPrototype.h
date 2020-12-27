@@ -21,6 +21,40 @@ private:
 	void _handleMapViewMouse(Camera* cam);
 	void _handleCityViewMouse(Camera* cam);
 
+
+
+	// Functions related to drag-and-drop units and giving them professions.
+	int m_EntityPrevXpos;
+	int m_EntityPrevYpos;
+	Unit* m_DraggedUnit = nullptr;
+
+	// Maptile offset for currentview city.
+	int m_OffsetX;
+	int m_OffsetY;
+
+
+	void _storePrevPos(GameEntity* entt) {
+		m_EntityPrevXpos = entt->m_TransformCmp->m_PosX;
+		m_EntityPrevYpos = entt->m_TransformCmp->m_PosY;
+	}
+
+	void _resetPrevPos() {
+		m_EntityPrevXpos = 0;
+		m_EntityPrevYpos = 0;
+	}
+
+
+	bool _tryGivingUnitAProfession(Unit* unit);
+	GameEntity* _hoveringOverEntity(int xpos, int ypos, std::string& entityType);
+	Unit* _isUnitPresentOnMaptile(MapTile* maptile);
+	bool _hasPlayerUnitTechRequirements(Unit* unit, Player* p);
+	bool _doesPlayerWantToResetProfession();
+	bool _hasUnitAProfessionAlready(Unit* unit);
+	void _giveUnitPositionAlignedToMaptile(Unit* unit, MapTile* maptile);
+
+	// Functions for checking appropriate "ressources" on maptile for selecting profession.
+	std::vector<std::string> _getPossibleProfessionsOnMaptile(MapTile* maptile);
+	bool _isMaptileAlreadyWorked(MapTile* maptile);
 };
 
 

@@ -2215,6 +2215,135 @@ void Game::DrawSelectedUnitsMovementTiles() {
 
 
 
+
+void CMPCameraInput::_handleCityViewMouse(Camera* cam) {
+
+	using namespace std;
+	using namespace olc;
+
+	Game* context = cam->m_Game;
+	PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlyViewedCity = context->m_Renderer->m_CurrentViewedCity;
+
+	// Show mouse position.
+	int mouse_x = context->GetMouseX();
+	int mouse_y = context->GetMouseY();
+
+	// Compute offset of maptile position in cityview for getting right maptile down below..
+	City* city = PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlyViewedCity;
+	int cx = 992 - 32;
+	int cy = 360 - 32;
+
+	// We can get position of maptile in cityview by adding maptile position with this offset.
+	int offsetx = cx - city->m_TransformCmp->m_PosX;
+	int offsety = cy - city->m_TransformCmp->m_PosY;
+	m_OffsetX = offsetx;
+	m_OffsetY = offsety;
+
+
+	// Reset the hovered over entity for re-iteration.
+	PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlyHoveredEntityInCity = nullptr;
+
+	std::string type;
+	PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlyHoveredEntityInCity = _hoveringOverEntity(mouse_x, mouse_y, type);
+
+
+	if (context->GetMouse(0).bPressed) {
+
+		cout << "LMB Pressed" << white << endl;
+
+		GameEntity* entt = nullptr;
+		std::string entt_type;
+
+		entt = _hoveringOverEntity(mouse_x, mouse_y, entt_type);
+		if (entt != nullptr &&
+			COMPARE_STRINGS(entt_type, "Unit") == 0) { // We are hovering over a unit...
+
+			// and we have pressed the left mouse button.
+			// Save prevpos of unit for later.
+			_storePrevPos(entt);
+
+
+			// Save hovered over unit specific for player.
+			PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlyHoveredEntityInCity = entt;
+		}
+	}
+
+
+	if (context->GetMouse(0).bHeld &&
+		PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlyHoveredEntityInCity != nullptr ||
+		
+		m_DraggedUnit != nullptr) {
+
+		// From here, deal with dragged unit directly in handler,
+		// as such save this unit to ours.
+		if (!m_DraggedUnit) {
+
+			m_DraggedUnit = static_cast<Unit*>(PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlyHoveredEntityInCity);
+		}
+
+
+		// drag unit...
+		m_DraggedUnit->m_TransformCmp->m_PosX = mouse_x - int(SPRITES_WIDTH_AND_HEIGHT / 2);
+		m_DraggedUnit->m_TransformCmp->m_PosY = mouse_y - int(SPRITES_WIDTH_AND_HEIGHT / 2);
+
+	}
+
+
+	// Releasing LMB after dragging is done.
+	if (context->GetMouse(0).bReleased && m_DraggedUnit) {
+
+		cout << "LMB Released" << white << endl;
+
+		// Try give unit a class based on position we set him and...
+		if (!_tryGivingUnitAProfession(m_DraggedUnit)) {
+
+			// ...reset things.
+			m_DraggedUnit->m_TransformCmp->m_PosX = m_EntityPrevXpos;
+			m_DraggedUnit->m_TransformCmp->m_PosY = m_EntityPrevYpos;
+			m_DraggedUnit = nullptr;
+
+			_resetPrevPos();
+		}
+		else {
+
+			// Giving profession was successful, so let go the dragging and reset for next drag-and-drop.
+			m_DraggedUnit = nullptr;
+			_resetPrevPos();
+		}
+	}
+
+}
+
+
+GameEntity* CMPCameraInput::_hoveringOverEntity(int xpos, int ypos, std::string& entityType) {
+
+	// If we hover over an Entity, we give back a referece and save in "entityType"
+	// the dynamictypename of this Entity.
+
+	// Go through all entities...
+	for (auto it : PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlyViewedCity->m_PresentUnitsVector) {
+
+		// Check for collision of mouse position and tile dimensions...
+		if (it->m_TransformCmp->m_PosX <= xpos &&
+			(it->m_TransformCmp->m_PosX + it->m_TransformCmp->m_Width) >= xpos
+			&&
+			it->m_TransformCmp->m_PosY <= ypos &&
+			(it->m_TransformCmp->m_PosY + it->m_TransformCmp->m_Height) >= ypos) {
+
+			// True.
+			entityType = it->m_IDCmp->m_DynamicTypeName;
+			return it;
+		}
+
+	}
+
+
+
+	return nullptr;
+}
+
+
+/*
 void CMPCameraInput::_handleCityViewMouse(Camera* cam) {
 
 	using namespace std;
@@ -2244,28 +2373,28 @@ void CMPCameraInput::_handleCityViewMouse(Camera* cam) {
 
 	for (auto it = city->m_ClaimedRegions.begin(); it != city->m_ClaimedRegions.end(); ++it) {
 
-		MapTileRegion* region = *it;
+MapTileRegion* region = *it;
 
-		for (auto itr : region->m_MapTileRegionTiles) {
+for (auto itr : region->m_MapTileRegionTiles) {
 
-			MapTile* tile = itr;
+	MapTile* tile = itr;
 
-			// Check for collision of mouse position and tile dimensions...
-			if (tile->m_TransformCmp->m_PosX + offsetx <= mouse_x &&
-				(tile->m_TransformCmp->m_PosX + tile->m_TransformCmp->m_Width + offsetx) >= mouse_x
-				&&
-				tile->m_TransformCmp->m_PosY + offsety <= mouse_y &&
-				(tile->m_TransformCmp->m_PosY + tile->m_TransformCmp->m_Height + offsety) >= mouse_y) {
+	// Check for collision of mouse position and tile dimensions...
+	if (tile->m_TransformCmp->m_PosX + offsetx <= mouse_x &&
+		(tile->m_TransformCmp->m_PosX + tile->m_TransformCmp->m_Width + offsetx) >= mouse_x
+		&&
+		tile->m_TransformCmp->m_PosY + offsety <= mouse_y &&
+		(tile->m_TransformCmp->m_PosY + tile->m_TransformCmp->m_Height + offsety) >= mouse_y) {
 
 
-				// Print result.
-				cout << color(colors::RED);
-				cout << "Hovered Maptile: ("<< tile->m_TransformCmp->m_PosX + offsetx << ":"<< tile->m_TransformCmp->m_PosY + offsety << ")" << white << endl;
+		// Print result.
+		//cout << color(colors::RED);
+		//cout << "Hovered Maptile: ("<< tile->m_TransformCmp->m_PosX + offsetx << ":"<< tile->m_TransformCmp->m_PosY + offsety << ")" << white << endl;
 
-				hovered_maptile = tile;
-			}
+		hovered_maptile = tile;
+	}
 
-		}		
+}
 	}
 
 
@@ -2294,15 +2423,22 @@ void CMPCameraInput::_handleCityViewMouse(Camera* cam) {
 
 
 
-
 	// TESTING:
 	// Drag and Drop units.
 	// We depend on hovering from above -> if we hover over a unit, then we can select it and drag somewhere...
+
+	// For resetting unit position.
+	static int prev_xpos, prev_ypos;
+
 	if (context->GetMouse(0).bHeld) { // Holding left mousebutton.
 
 		if (PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlyHoveredEntityInCity) {
 
 			if (COMPARE_STRINGS(PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlyHoveredEntityInCity->m_IDCmp->m_DynamicTypeName, "Unit") == 0) {
+
+				prev_xpos = PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlyHoveredEntityInCity->m_TransformCmp->m_PosX;
+				prev_ypos = PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlyHoveredEntityInCity->m_TransformCmp->m_PosY;
+
 
 				PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlyHoveredEntityInCity->m_TransformCmp->m_PosX = mouse_x - int(SPRITES_WIDTH_AND_HEIGHT / 2);
 				PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlyHoveredEntityInCity->m_TransformCmp->m_PosY = mouse_y - int(SPRITES_WIDTH_AND_HEIGHT / 2);
@@ -2313,6 +2449,7 @@ void CMPCameraInput::_handleCityViewMouse(Camera* cam) {
 
 	// Change unit specialization on release over valid spot.
 	if (hovered_maptile) {
+
 
 		Unit* unit = nullptr;
 		if (PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlyHoveredEntityInCity != nullptr) {
@@ -2327,39 +2464,201 @@ void CMPCameraInput::_handleCityViewMouse(Camera* cam) {
 
 
 
-				// Check fir maptile type and possible working classes...
+				// Check for maptile type and possible working classes...
 
 				// Check for woodcutter.
 				for (auto it : *hovered_maptile->m_MapTileEntities) {
 
+
 					if (COMPARE_STRINGS(it->m_IDCmp->m_DynamicTypeName, "Forest") == 0) {
 
-						unit->ChangeClass("Woodcutter");
-						unit->m_TransformCmp->m_PosX = hovered_maptile->m_TransformCmp->m_PosX + offsetx;
-						unit->m_TransformCmp->m_PosY = hovered_maptile->m_TransformCmp->m_PosY + offsety;
+						std::string answer;
+						if (COMPARE_STRINGS(unit->m_UnitClass->m_UnitClassName, "Citizen") == 0) { // Everything, but not a citizen.
 
-						city->RemoveCitizenFromJoblessVector(unit);
-						return;
+
+							bool hunter = false;
+							std::string unit_type;
+							cout << color(colors::RED);
+							cout << "Hunter or Woodcutter ??";
+							cin >> unit_type;
+							if (COMPARE_STRINGS(unit_type, "Hunter") == 0) hunter = true;
+
+							if (hunter) {
+
+								unit->ChangeClass("Hunter");
+								unit->m_TransformCmp->m_PosX = hovered_maptile->m_TransformCmp->m_PosX + offsetx;
+								unit->m_TransformCmp->m_PosY = hovered_maptile->m_TransformCmp->m_PosY + offsety;
+
+								city->RemoveCitizenFromJoblessVector(unit);
+								return;
+							}
+							else {
+
+								unit->ChangeClass("Woodcutter");
+								unit->m_TransformCmp->m_PosX = hovered_maptile->m_TransformCmp->m_PosX + offsetx;
+								unit->m_TransformCmp->m_PosY = hovered_maptile->m_TransformCmp->m_PosY + offsety;
+
+								city->RemoveCitizenFromJoblessVector(unit);
+								return;
+							}
+
+
+
+						}
+						else {
+
+							cout << color(colors::RED);
+							cout << "Are you sure to give unit a new class? With it units level will be reset. [Y]es or [N]o." << white << endl;
+							cin >> answer;
+
+							if (COMPARE_STRINGS(answer, "Yes") == 0 ||
+								COMPARE_STRINGS(answer, "Y") == 0 ||
+								COMPARE_STRINGS(answer, "y") == 0) {
+
+
+
+								bool hunter = false;
+								std::string unit_type;
+								cout << color(colors::RED);
+								cout << "Hunter or Woodcutter ??";
+								cin >> unit_type;
+								if (COMPARE_STRINGS(unit_type, "Hunter") == 0) hunter = true;
+
+								if (hunter) {
+
+									unit->ChangeClass("Hunter");
+									unit->m_TransformCmp->m_PosX = hovered_maptile->m_TransformCmp->m_PosX + offsetx;
+									unit->m_TransformCmp->m_PosY = hovered_maptile->m_TransformCmp->m_PosY + offsety;
+
+									city->RemoveCitizenFromJoblessVector(unit);
+									return;
+								}
+								else {
+
+									unit->ChangeClass("Woodcutter");
+									unit->m_TransformCmp->m_PosX = hovered_maptile->m_TransformCmp->m_PosX + offsetx;
+									unit->m_TransformCmp->m_PosY = hovered_maptile->m_TransformCmp->m_PosY + offsety;
+
+									city->RemoveCitizenFromJoblessVector(unit);
+									return;
+								}
+							}
+							else {
+								unit->m_TransformCmp->m_PosX = prev_xpos;
+								unit->m_TransformCmp->m_PosY = prev_ypos;
+								return;
+							}
+
+
+						}
+
+
+
+
 					}
 				}
 
 				// Check for farmer...
 				if (hovered_maptile->m_MapTileType == MapTile::MapTileType::MAPTILE_TYPE_TEMPERATE) {
 
-					unit->ChangeClass("Farmer");
 
-					unit->m_TransformCmp->m_PosX = hovered_maptile->m_TransformCmp->m_PosX + offsetx;
-					unit->m_TransformCmp->m_PosY = hovered_maptile->m_TransformCmp->m_PosY + offsety;
+					std::string answer;
+					if (COMPARE_STRINGS(unit->m_UnitClass->m_UnitClassName, "Citizen") == 0) {
 
-					city->RemoveCitizenFromJoblessVector(unit);
-					return;
+
+						unit->ChangeClass("Farmer");
+
+						unit->m_TransformCmp->m_PosX = hovered_maptile->m_TransformCmp->m_PosX + offsetx;
+						unit->m_TransformCmp->m_PosY = hovered_maptile->m_TransformCmp->m_PosY + offsety;
+
+						city->RemoveCitizenFromJoblessVector(unit);
+						return;
+					}
+					else {	// Everything, but not a citizen.
+
+						cout << color(colors::RED);
+						cout << "Are you sure to give unit a new class? With it units level will be reset. [Y]es or [N]o." << white << endl;
+						cin >> answer;
+
+
+						if (COMPARE_STRINGS(answer, "Yes") == 0 ||
+							COMPARE_STRINGS(answer, "Y") == 0 ||
+							COMPARE_STRINGS(answer, "y") == 0) {
+
+							unit->ChangeClass("Farmer");
+
+							unit->m_TransformCmp->m_PosX = hovered_maptile->m_TransformCmp->m_PosX + offsetx;
+							unit->m_TransformCmp->m_PosY = hovered_maptile->m_TransformCmp->m_PosY + offsety;
+
+							city->RemoveCitizenFromJoblessVector(unit);
+							return;
+
+						}
+						else {
+							unit->m_TransformCmp->m_PosX = prev_xpos;
+							unit->m_TransformCmp->m_PosY = prev_ypos;
+							return;
+						}
+
+					}
+
+
 				}
 
+
+				// Check for fisher...
+				if (hovered_maptile->m_MapTileType == MapTile::MapTileType::MAPTILE_TYPE_WATER_SHALLOW) {
+
+
+					std::string answer;
+					if (COMPARE_STRINGS(unit->m_UnitClass->m_UnitClassName, "Citizen") == 0) {
+
+
+						unit->ChangeClass("Fisher");
+
+						unit->m_TransformCmp->m_PosX = hovered_maptile->m_TransformCmp->m_PosX + offsetx;
+						unit->m_TransformCmp->m_PosY = hovered_maptile->m_TransformCmp->m_PosY + offsety;
+
+						city->RemoveCitizenFromJoblessVector(unit);
+						return;
+						return;
+					}
+					else {	// Everything, but not a citizen.
+
+						cout << color(colors::RED);
+						cout << "Are you sure to give unit a new class? With it units level will be reset. [Y]es or [N]o." << white << endl;
+						cin >> answer;
+
+
+						if (COMPARE_STRINGS(answer, "Yes") == 0 ||
+							COMPARE_STRINGS(answer, "Y") == 0 ||
+							COMPARE_STRINGS(answer, "y") == 0) {
+
+							unit->ChangeClass("Fisher");
+
+							unit->m_TransformCmp->m_PosX = hovered_maptile->m_TransformCmp->m_PosX + offsetx;
+							unit->m_TransformCmp->m_PosY = hovered_maptile->m_TransformCmp->m_PosY + offsety;
+
+							city->RemoveCitizenFromJoblessVector(unit);
+							return;
+
+						}
+						else {
+							unit->m_TransformCmp->m_PosX = prev_xpos;
+							unit->m_TransformCmp->m_PosY = prev_ypos;
+							return;
+						}
+
+					}
+
+
+				}
 
 
 
 				// In case all is not aplicable, reset position of unit to "garrison".
 				if (unit) {
+
 					unit->m_TransformCmp->m_PosX = 700;
 					unit->m_TransformCmp->m_PosY = 650;
 				}
@@ -2390,8 +2689,324 @@ void CMPCameraInput::_handleCityViewMouse(Camera* cam) {
 	}
 
 }
+*/
 
 
+
+bool CMPCameraInput::_tryGivingUnitAProfession(Unit* unit) {
+
+	int mouse_x = Game::Get()->GetMouseX();
+	int mouse_y = Game::Get()->GetMouseY();
+
+	// Get maptile in question for information..
+	MapTile* maptile = nullptr;
+	for (auto it : PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlyViewedCity->m_ClaimedRegions) {
+
+		for (auto itr : it->m_MapTileRegionTiles) {
+
+			// We check for collision of maptile and mouseposition and not the unit to get the right maptile..
+			/*
+			if (itr->m_TransformCmp->m_PosX + m_OffsetX == unit->m_TransformCmp->m_PosX &&
+				itr->m_TransformCmp->m_PosY + m_OffsetY == unit->m_TransformCmp->m_PosY) {
+
+				maptile = itr;
+			}
+			*/
+
+			if (maptile) break;
+
+			if (itr->m_TransformCmp->m_PosX + m_OffsetX <= mouse_x &&
+				itr->m_TransformCmp->m_PosX + m_OffsetX + SPRITES_WIDTH_AND_HEIGHT >= mouse_x &&
+
+				itr->m_TransformCmp->m_PosY + m_OffsetY <= mouse_y &&
+				itr->m_TransformCmp->m_PosY + m_OffsetY + SPRITES_WIDTH_AND_HEIGHT >= mouse_y) {
+
+				maptile = itr;
+			}
+		}
+	}
+
+	if (!maptile) return false;
+
+
+	// Check whether there is another unit on maptile present.
+	if (_isMaptileAlreadyWorked(maptile) == false) { // Maptile is free and no other unit.
+
+		std::vector<std::string> vec = _getPossibleProfessionsOnMaptile(maptile);
+
+		// Iterate through possible professions and let user choose one or give directly a profession.
+		if (vec.size() == 0) { // No possible professions found.
+			m_DraggedUnit->m_TransformCmp->m_PosX = m_EntityPrevXpos;
+
+			m_DraggedUnit->m_TransformCmp->m_PosY = m_EntityPrevYpos;
+
+			// Reset dragged unit for reiteration in mousehandler.
+			m_DraggedUnit = nullptr;
+			return false;
+		}
+		else if (vec.size() == 1) { // Give profession directly.
+
+			if (_hasUnitAProfessionAlready(unit)) {
+				if (_doesPlayerWantToResetProfession()) {
+
+					// User wants to reset profession, so give unit a new profession and let him work..
+					unit->ChangeClass(vec.at(0)); // Only available profession.
+					unit->m_AssociatedPlayer->m_CurrentlyViewedCity->RemoveCitizenFromJoblessVector(unit); // Remove from jobless if he was there.
+					_giveUnitPositionAlignedToMaptile(unit, maptile);
+
+					return true;
+				}
+				else { // User does not want to reset profession, so abort dragging.
+
+					m_DraggedUnit->m_TransformCmp->m_PosX = m_EntityPrevXpos;
+					m_DraggedUnit->m_TransformCmp->m_PosY = m_EntityPrevYpos;
+
+					// dragged unit is reseted in returned to function...
+					return false;
+				}
+			}
+			else { // Citizen has no profession so give him directly the only one available.
+
+				// User wants to reset profession, so give unit a new profession and let him work..
+				unit->ChangeClass(vec.at(0)); // Only available profession.
+				unit->m_AssociatedPlayer->m_CurrentlyViewedCity->RemoveCitizenFromJoblessVector(unit); // Remove from jobless if he was there.
+				_giveUnitPositionAlignedToMaptile(unit, maptile);
+
+				// dragged unit is reseted in returned to function...
+				return true;
+			}
+
+		}
+		else { // Let user choose one profession..
+
+			bool change_profession = false;
+			bool has_profession = false;
+			if (_hasUnitAProfessionAlready(unit)) {
+				change_profession = _doesPlayerWantToResetProfession();
+			}
+
+			if (has_profession == false || change_profession == true) { // ..If he wants to.
+			
+				using namespace std;
+				int index = 0;
+				for (auto it : vec) {
+
+					cout << color(colors::DARKYELLOW);
+					cout << index + 1 << ".) Profession: \"" << it << "\"." << white << endl;
+
+					index++;
+				}
+
+				cout << color(colors::DARKRED);
+				cout << "Please type number of profession to choose it for your unit." << white << endl;
+
+				try { // Safety check for invalid input.
+
+					int choosen_number = -1;
+					cin >> choosen_number;
+					choosen_number--;
+
+					unit->ChangeClass(vec.at(choosen_number));
+					unit->m_AssociatedPlayer->m_CurrentlyViewedCity->RemoveCitizenFromJoblessVector(unit); // Remove from jobless if he was there.
+
+					// Position unit to be directly over choosen maptile.
+					_giveUnitPositionAlignedToMaptile(unit, maptile);
+
+					return true;
+
+				}
+				catch (const char* err) {
+
+					cout << color(colors::RED);
+					cout << err << white << endl;
+
+					// Reset...
+					m_DraggedUnit->m_TransformCmp->m_PosX = m_EntityPrevXpos;
+					m_DraggedUnit->m_TransformCmp->m_PosY = m_EntityPrevYpos;
+
+					// Reset dragged unit for reiteration in mousehandler.
+					//m_DraggedUnit = nullptr;
+					// dragged unit is reset in returned function...
+					return false;
+				}
+			}
+			else {
+
+				// Player reconsidered giving unit new profession and does not want to proceed.
+
+				// Thus, reset position of dragged unit back.
+				m_DraggedUnit->m_TransformCmp->m_PosX = m_EntityPrevXpos;
+				m_DraggedUnit->m_TransformCmp->m_PosY = m_EntityPrevYpos;
+				return false;
+			}
+
+		}
+
+		return true;
+	}
+	else { // Maptile is not free, so send unit back to first position.
+
+		m_DraggedUnit->m_TransformCmp->m_PosX = m_EntityPrevXpos;
+		m_DraggedUnit->m_TransformCmp->m_PosY = m_EntityPrevYpos;
+
+
+		// reseting dragged unit is done in returned function...
+		return false;
+	}
+}
+
+bool CMPCameraInput::_isMaptileAlreadyWorked(MapTile* maptile) {
+
+
+	for (auto it : PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlyViewedCity->m_PresentUnitsVector) {
+
+		if ((maptile->m_TransformCmp->m_PosX + m_OffsetX) == it->m_TransformCmp->m_PosX &&
+			(maptile->m_TransformCmp->m_PosY + m_OffsetY) == it->m_TransformCmp->m_PosY) {
+
+			return true;
+		}
+	}
+
+	return false;
+}
+
+void CMPCameraInput::_giveUnitPositionAlignedToMaptile(Unit* unit, MapTile* maptile) {
+
+	unit->m_TransformCmp->m_PosX = maptile->m_TransformCmp->m_PosX + m_OffsetX;
+	unit->m_TransformCmp->m_PosY = maptile->m_TransformCmp->m_PosY + m_OffsetY;
+}
+
+bool CMPCameraInput::_hasUnitAProfessionAlready(Unit* unit) {
+
+	if (COMPARE_STRINGS(unit->m_UnitClass->m_UnitClassName, "Citizen") == 0) {
+		return false;
+	}
+	return true;
+}
+
+bool CMPCameraInput::_doesPlayerWantToResetProfession() {
+
+	using namespace std;
+
+	cout << color(colors::DARKRED);
+	cout << "You are about to replace a units profession." << endl;
+	cout << "Do you want to proceed?" << endl;
+	cout << "[Y]es or [N]o" << white << endl;
+
+	std::string answer;
+	cin >> answer;
+
+	if (COMPARE_STRINGS(answer, "Yes") == 0 ||
+		COMPARE_STRINGS(answer, "Y") == 0 ||
+		COMPARE_STRINGS(answer, "yes") == 0 ||
+		COMPARE_STRINGS(answer, "y") == 0) {
+		return true;
+
+	}
+	else {
+		return false;
+	}
+
+}
+
+std::vector<std::string> CMPCameraInput::_getPossibleProfessionsOnMaptile(MapTile* maptile) {
+
+	std::vector<std::string> vec;
+
+	for (auto entt = maptile->m_MapTileEntities->begin(); entt != maptile->m_MapTileEntities->end(); ++entt) {
+
+		GameEntity* e = *entt;
+
+		// Check for basetype entities on maptile, like forests...
+		if (COMPARE_STRINGS(e->m_IDCmp->m_DynamicTypeName, "Forest") == 0) {
+			vec.push_back("Hunter");
+			vec.push_back("Woodcutter");
+		}
+		
+		if (COMPARE_STRINGS(e->m_IDCmp->m_DynamicTypeName, "Hills") == 0) {
+			vec.push_back("Miner");
+		}
+		
+		if (COMPARE_STRINGS(e->m_IDCmp->m_DynamicTypeName, "Mountains") == 0) {
+			vec.push_back("Miner");
+		}
+
+		// Check for possible ressources on maptile like deer and bears...
+		// TODO:
+
+	}
+
+	// Check for maptile type self as possible ressource...
+	if (maptile->m_MapTileType == MapTile::MapTileType::MAPTILE_TYPE_WATER_SHALLOW) {
+		vec.push_back("Fisher");
+	}
+	if (maptile->m_MapTileType == MapTile::MapTileType::MAPTILE_TYPE_TEMPERATE) {
+		vec.push_back("Farmer");
+		vec.push_back("Clayminer");
+
+	}
+	if (maptile->m_MapTileType == MapTile::MapTileType::MAPTILE_TYPE_JUNGLE) {
+		vec.push_back("Farmer");
+		vec.push_back("Clayminer");
+
+	}
+	if (maptile->m_MapTileType == MapTile::MapTileType::MAPTILE_TYPE_SAVANNAH) {
+		vec.push_back("Farmer");
+		vec.push_back("Clayminer");
+
+	}
+	if (maptile->m_MapTileType == MapTile::MapTileType::MAPTILE_TYPE_TUNDRA) {
+		vec.push_back("Farmer");
+	}
+
+
+	// Return vector without duplicates..
+	std::vector<std::string> return_vec;
+	for (auto it : vec) {
+
+		// Check whether a profession is already contained in return_vec.
+		std::vector<std::string>::iterator itr = std::find(return_vec.begin(), return_vec.end(), it);
+
+		if (itr == return_vec.end()) { // Not found...
+
+			return_vec.push_back(it);
+		}
+	}
+
+	return return_vec;
+}
+
+Unit* CMPCameraInput::_isUnitPresentOnMaptile(MapTile* maptile) {
+
+	for (auto it : PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlyViewedCity->m_PresentUnitsVector) {
+
+		if (it->m_TransformCmp->m_PosX == maptile->m_TransformCmp->m_PosX &&
+			it->m_TransformCmp->m_PosY == maptile->m_TransformCmp->m_PosY) {
+
+			return static_cast<Unit*>(it);
+		}
+	}
+
+	return nullptr;
+}
+
+
+bool CMPCameraInput::_hasPlayerUnitTechRequirements(Unit* unit, Player* p) {
+
+	if (unit->m_UnitClass->m_TechnologyRequirements.size() == 0) return true;
+	else {
+
+		for (auto it : unit->m_UnitClass->m_TechnologyRequirements) {
+
+			for (auto itr : p->m_PlayersTechnologies) {
+
+				if (COMPARE_STRINGS_2(it, itr.first) == 0) return true;
+			}
+		}
+	}
+
+	return false;
+}
 
 
 void CMPCameraInput::_handleCityViewKeyboard(Camera* cam) {
@@ -3170,6 +3785,55 @@ void Game::_loadSpriteResources() {
 	m_SpriteResourceMap.insert(std::make_pair("troll_citizen", dunit22));
 	m_SpriteResourceMap.insert(std::make_pair("troll_farmer", dunit23));
 	m_SpriteResourceMap.insert(std::make_pair("troll_woodcutter", dunit24));
+
+
+	AddSpriteToStorage("assets/unit/darkelf/darkelf_hunter.png", "darkelf_hunter");
+	AddSpriteToStorage("assets/unit/dwarf/dwarf_hunter.png", "dwarf_hunter");
+	AddSpriteToStorage("assets/unit/gnome/gnome_hunter.png", "gnome_hunter");
+	AddSpriteToStorage("assets/unit/goblin/goblin_hunter.png", "goblin_hunter");
+	AddSpriteToStorage("assets/unit/highelf/highelf_hunter.png", "highelf_hunter");
+	AddSpriteToStorage("assets/unit/human/human_hunter.png", "human_hunter");
+	AddSpriteToStorage("assets/unit/orc/orc_hunter.png", "orc_hunter");
+	AddSpriteToStorage("assets/unit/troll/troll_hunter.png", "troll_hunter");
+
+	AddSpriteToStorage("assets/unit/darkelf/darkelf_fisher.png", "darkelf_fisher");
+	AddSpriteToStorage("assets/unit/dwarf/dwarf_fisher.png", "dwarf_hunter");
+	AddSpriteToStorage("assets/unit/gnome/gnome_fisher.png", "gnome_fisher");
+	AddSpriteToStorage("assets/unit/goblin/goblin_fisher.png", "goblin_fisher");
+	AddSpriteToStorage("assets/unit/highelf/highelf_fisher.png", "highelf_fisher");
+	AddSpriteToStorage("assets/unit/human/human_fisher.png", "human_fisher");
+	AddSpriteToStorage("assets/unit/orc/orc_fisher.png", "orc_fisher");
+	AddSpriteToStorage("assets/unit/troll/troll_fisher.png", "troll_fisher");
+
+
+	AddSpriteToStorage("assets/unit/darkelf/darkelf_clayminer.png", "darkelf_clayminer");
+	AddSpriteToStorage("assets/unit/dwarf/dwarf_clayminer.png", "dwarf_clayminer");
+	AddSpriteToStorage("assets/unit/gnome/gnome_clayminer.png", "gnome_clayminer");
+	AddSpriteToStorage("assets/unit/goblin/goblin_clayminer.png", "goblin_clayminer");
+	AddSpriteToStorage("assets/unit/highelf/highelf_clayminer.png", "highelf_clayminer");
+	AddSpriteToStorage("assets/unit/human/human_clayminer.png", "human_clayminer");
+	AddSpriteToStorage("assets/unit/orc/orc_clayminer.png", "orc_clayminer");
+	AddSpriteToStorage("assets/unit/troll/troll_clayminer.png", "troll_clayminer");
+
+
+	AddSpriteToStorage("assets/unit/darkelf/darkelf_miner.png", "darkelf_miner");
+	AddSpriteToStorage("assets/unit/dwarf/dwarf_miner.png", "dwarf_miner");
+	AddSpriteToStorage("assets/unit/gnome/gnome_miner.png", "gnome_miner");
+	AddSpriteToStorage("assets/unit/goblin/goblin_miner.png", "goblin_miner");
+	AddSpriteToStorage("assets/unit/highelf/highelf_miner.png", "highelf_miner");
+	AddSpriteToStorage("assets/unit/human/human_miner.png", "human_miner");
+	AddSpriteToStorage("assets/unit/orc/orc_miner.png", "orc_miner");
+	AddSpriteToStorage("assets/unit/troll/troll_miner.png", "troll_miner");
+
+
+	AddSpriteToStorage("assets/unit/darkelf/darkelf_gatherer.png", "darkelf_gatherer");
+	AddSpriteToStorage("assets/unit/dwarf/dwarf_gatherer.png", "dwarf_gatherer");
+	AddSpriteToStorage("assets/unit/gnome/gnome_gatherer.png", "gnome_gatherer");
+	AddSpriteToStorage("assets/unit/goblin/goblin_gatherer.png", "goblin_gatherer");
+	AddSpriteToStorage("assets/unit/highelf/highelf_gatherer.png", "highelf_gatherer");
+	AddSpriteToStorage("assets/unit/human/human_gatherer.png", "human_gatherer");
+	AddSpriteToStorage("assets/unit/orc/orc_gatherer.png", "orc_gatherer");
+	AddSpriteToStorage("assets/unit/troll/troll_gatherer.png", "troll_gatherer");
 }
 
 
@@ -3574,7 +4238,7 @@ void Renderer::RenderCityLayer1() {
 			unit = static_cast<Unit*>(entt);
 
 
-			std::string out = "Unit: " + unit->m_Name;
+			std::string out = "Unit: " + unit->m_Name + " Class: " + unit->m_UnitClass->m_UnitClassName + " Level: " + unit->m_UnitClass->LevelToString();
 			m_Game->DrawString(4, 695, out, olc::RED);
 		}
 		else if (COMPARE_STRINGS(entt->m_IDCmp->m_DynamicTypeName, "Building") == 0){
