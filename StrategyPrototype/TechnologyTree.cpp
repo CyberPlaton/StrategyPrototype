@@ -83,8 +83,11 @@ void TechnologyTree::_initMap() {
 	m_TechnologiesMap.emplace("Code Of Laws", new technologies::civilian::TechCodeOfLaws());
 	m_TechnologiesMap.emplace("Diplomatic Service", new technologies::civilian::TechDiplomaticService());
 	m_TechnologiesMap.emplace("Guilds", new technologies::civilian::TechGuilds());
-
-
-
+	m_TechnologiesMap.emplace("Farming", new technologies::civilian::TechFarming());
+	m_TechnologiesMap.emplace("Jewelry Making", new technologies::civilian::TechJewelryMaking());
+	m_TechnologiesMap.emplace("Pottery", new technologies::civilian::TechPottery());
+	m_TechnologiesMap.emplace("Salting", new technologies::civilian::TechSalting());
+	m_TechnologiesMap.emplace("Beverage Making", new technologies::civilian::TechBeverageMaking());
+	m_TechnologiesMap.emplace("Alcohol Brewing", new technologies::civilian::TechAlcoholBrewing());
 
 }

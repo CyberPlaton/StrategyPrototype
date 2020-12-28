@@ -55,6 +55,7 @@ struct Technology {
 
 namespace technologies {
 
+	// Technical
 	struct TechSmelting;
 	struct TechMetallurgy;
 	struct TechIronWorking;
@@ -69,6 +70,7 @@ namespace technologies {
 	struct TechBrickMaking;
 	struct TechToolMaking;
 
+	// Military
 	struct TechHonor;
 	struct TechWarriorCode;
 	struct TechWarfareTheory;
@@ -93,8 +95,7 @@ namespace technologies {
 	struct TechAntiCavalryCavalry;
 	struct TechHeavyAntiCavalryCavalry;
 
-
-
+	// Magickal
 	struct TechMedicine;
 	struct TechMedication;
 	struct TechIllusion;
@@ -111,6 +112,7 @@ namespace technologies {
 	struct TechConjuration;
 	struct TechEnchantement;
 
+	// Civilian
 	struct TechWisemenCircle;
 	struct TechCouncil;
 	struct TechPhilosophy;
@@ -130,6 +132,12 @@ namespace technologies {
 	struct TechCodeOfLaws;
 	struct TechDiplomaticService;
 	struct TechGuilds;
+	struct TechAlcoholBrewing;
+	struct TechBeverageMaking;
+	struct TechSalting;
+	struct TechPottery;
+	struct TechJewelryMaking;
+	struct TechFarming;
 
 
 
@@ -696,6 +704,91 @@ namespace technologies {
 
 	namespace civilian {
 
+		struct TechPottery : public Technology {
+			TechPottery() {
+				m_TechTier = TechTier::TECH_TIER_1;
+				m_TechClass = TechClass::TECH_CLASS_CIVILIAN;
+
+				m_TechParent = ""; // It is the root.
+
+				// Has no requirements.
+				m_TechRequirements.push_back("");
+
+
+				m_ResearchPointsNeeded = 10;
+				m_ResearchPointsCurrentlyIncested = 0;
+
+				m_TechRace = "All"; // All races can research.
+
+				// Children: what can be researched after it.
+				m_TechChildren.push_back("Salting");
+			}
+		};
+
+		struct TechSalting : public Technology {
+			TechSalting() {
+				m_TechTier = TechTier::TECH_TIER_1;
+				m_TechClass = TechClass::TECH_CLASS_CIVILIAN;
+
+				m_TechParent = "Pottery"; // It is the root.
+
+				// Has no requirements.
+				m_TechRequirements.push_back("");
+
+
+				m_ResearchPointsNeeded = 10;
+				m_ResearchPointsCurrentlyIncested = 0;
+
+				m_TechRace = "All"; // All races can research.
+
+				// Children: what can be researched after it.
+				m_TechChildren.push_back("");
+			}
+		};
+
+		struct TechBeverageMaking : public Technology {
+			TechBeverageMaking() {
+				m_TechTier = TechTier::TECH_TIER_1;
+				m_TechClass = TechClass::TECH_CLASS_CIVILIAN;
+
+				m_TechParent = "Pottery"; // It is the root.
+
+				// Has no requirements.
+				m_TechRequirements.push_back("");
+
+
+				m_ResearchPointsNeeded = 10;
+				m_ResearchPointsCurrentlyIncested = 0;
+
+				m_TechRace = "All"; // All races can research.
+
+				// Children: what can be researched after it.
+				m_TechChildren.push_back("Alcohol Brewing");
+			}
+		};
+
+		struct TechAlcoholBrewing : public Technology {
+			TechAlcoholBrewing() {
+				m_TechTier = TechTier::TECH_TIER_1;
+				m_TechClass = TechClass::TECH_CLASS_CIVILIAN;
+
+				m_TechParent = "Beverage Making"; // It is the root.
+
+				// Has no requirements.
+				m_TechRequirements.push_back("");
+
+
+				m_ResearchPointsNeeded = 10;
+				m_ResearchPointsCurrentlyIncested = 0;
+
+				m_TechRace = "All"; // All races can research.
+
+				// Children: what can be researched after it.
+				m_TechChildren.push_back("");
+			}
+		};
+
+
 		struct TechWisemenCircle : public Technology {
 			TechWisemenCircle() {
 				m_TechTier = TechTier::TECH_TIER_1;
@@ -977,6 +1070,26 @@ namespace technologies {
 		};
 
 
+		struct TechJewelryMaking : public Technology {
+			TechJewelryMaking() {
+				m_TechTier = TechTier::TECH_TIER_1;
+				m_TechClass = TechClass::TECH_CLASS_CIVILIAN;
+
+				m_TechParent = "Currency"; // It is the root.
+
+				// Has no requirements.
+				m_TechRequirements.push_back("");
+
+
+				m_ResearchPointsNeeded = 10;
+				m_ResearchPointsCurrentlyIncested = 0;
+
+				m_TechRace = "All"; // All races can research.
+
+				// Children: what can be researched after it.
+				m_TechChildren.push_back("");
+			}
+		};
 
 
 		struct TechTrade : public Technology {
@@ -1023,7 +1136,26 @@ namespace technologies {
 			}
 		};
 
+		struct TechClothing : public Technology {
+			TechClothing() {
+				m_TechTier = TechTier::TECH_TIER_1;
+				m_TechClass = TechClass::TECH_CLASS_CIVILIAN;
 
+				m_TechParent = "Hunting"; // It is the root.
+
+				// Has no requirements.
+				m_TechRequirements.push_back("");
+
+
+				m_ResearchPointsNeeded = 10;
+				m_ResearchPointsCurrentlyIncested = 0;
+
+				m_TechRace = "All"; // All races can research.
+
+				// Children: what can be researched after it.
+				m_TechChildren.push_back("");
+			}
+		};
 
 
 
@@ -1048,7 +1180,26 @@ namespace technologies {
 			}
 		};
 
+		struct TechFarming : public Technology {
+			TechFarming() {
+				m_TechTier = TechTier::TECH_TIER_1;
+				m_TechClass = TechClass::TECH_CLASS_CIVILIAN;
 
+				m_TechParent = "Animal Husbandry"; // It is the root.
+
+				// Has no requirements.
+				m_TechRequirements.push_back("");
+
+
+				m_ResearchPointsNeeded = 10;
+				m_ResearchPointsCurrentlyIncested = 0;
+
+				m_TechRace = "All"; // All races can research.
+
+				// Children: what can be researched after it.
+				m_TechChildren.push_back("");
+			}
+		};
 
 		struct TechAnimalMounting : public Technology {
 			TechAnimalMounting() {

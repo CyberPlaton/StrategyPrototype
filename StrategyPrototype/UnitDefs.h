@@ -252,6 +252,44 @@ struct UnitIronMiner : public UnitBase {
 };
 
 
+struct UnitMalachiteMiner : public UnitBase {
+	UnitMalachiteMiner() {
+
+		m_UnitClassName = "Malachite Miner";
+
+		m_UnitTier = UnitTier::UNIT_TIER_1;
+		m_UnitLevel = UnitLevel::UNIT_LEVEL_1;
+
+
+		m_UnitStats = new UnitStats();
+		m_UnitStats->m_Fatigue = 6;
+		m_UnitStats->m_Magicka = 0;
+		m_UnitStats->m_Health = 10;
+
+
+		m_TechnologyRequirements.push_back("Smelting");
+	}
+};
+
+
+struct UnitAdamantiumMiner : public UnitBase {
+	UnitAdamantiumMiner() {
+
+		m_UnitClassName = "Adamantium Miner";
+
+		m_UnitTier = UnitTier::UNIT_TIER_1;
+		m_UnitLevel = UnitLevel::UNIT_LEVEL_1;
+
+
+		m_UnitStats = new UnitStats();
+		m_UnitStats->m_Fatigue = 6;
+		m_UnitStats->m_Magicka = 0;
+		m_UnitStats->m_Health = 10;
+
+
+		m_TechnologyRequirements.push_back("Smelting");
+	}
+};
 
 // OLD
 
