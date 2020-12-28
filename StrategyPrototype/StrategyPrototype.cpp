@@ -3834,6 +3834,36 @@ void Game::_loadSpriteResources() {
 	AddSpriteToStorage("assets/unit/human/human_gatherer.png", "human_gatherer");
 	AddSpriteToStorage("assets/unit/orc/orc_gatherer.png", "orc_gatherer");
 	AddSpriteToStorage("assets/unit/troll/troll_gatherer.png", "troll_gatherer");
+
+
+	AddSpriteToStorage("assets/unit/darkelf/darkelf_brickburner.png", "darkelf_brickburner");
+	AddSpriteToStorage("assets/unit/dwarf/dwarf_brickburner.png", "dwarf_brickburner");
+	AddSpriteToStorage("assets/unit/gnome/gnome_brickburner.png", "gnome_brickburner");
+	AddSpriteToStorage("assets/unit/goblin/goblin_brickburner.png", "goblin_brickburner");
+	AddSpriteToStorage("assets/unit/highelf/highelf_brickburner.png", "highelf_brickburner");
+	AddSpriteToStorage("assets/unit/human/human_brickburner.png", "human_brickburner");
+	AddSpriteToStorage("assets/unit/orc/orc_brickburner.png", "orc_brickburner");
+	AddSpriteToStorage("assets/unit/troll/troll_brickburner.png", "troll_brickburner");
+
+
+	AddSpriteToStorage("assets/unit/darkelf/darkelf_carpenter.png", "darkelf_carpenter");
+	AddSpriteToStorage("assets/unit/dwarf/dwarf_carpenter.png", "dwarf_carpenter");
+	AddSpriteToStorage("assets/unit/gnome/gnome_carpenter.png", "gnome_carpenter");
+	AddSpriteToStorage("assets/unit/goblin/goblin_carpenter.png", "goblin_carpenter");
+	AddSpriteToStorage("assets/unit/highelf/highelf_carpenter.png", "highelf_carpenter");
+	AddSpriteToStorage("assets/unit/human/human_carpenter.png", "human_carpenter");
+	AddSpriteToStorage("assets/unit/orc/orc_carpenter.png", "orc_carpenter");
+	AddSpriteToStorage("assets/unit/troll/troll_carpenter.png", "troll_carpenter");
+
+
+	AddSpriteToStorage("assets/unit/darkelf/darkelf_mason.png", "darkelf_mason");
+	AddSpriteToStorage("assets/unit/dwarf/dwarf_mason.png", "dwarf_mason");
+	AddSpriteToStorage("assets/unit/gnome/gnome_mason.png", "gnome_mason");
+	AddSpriteToStorage("assets/unit/goblin/goblin_mason.png", "goblin_mason");
+	AddSpriteToStorage("assets/unit/highelf/highelf_mason.png", "highelf_mason");
+	AddSpriteToStorage("assets/unit/human/human_mason.png", "human_mason");
+	AddSpriteToStorage("assets/unit/orc/orc_mason.png", "orc_mason");
+	AddSpriteToStorage("assets/unit/troll/troll_mason.png", "troll_mason");
 }
 
 
