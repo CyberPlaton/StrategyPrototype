@@ -3864,6 +3864,71 @@ void Game::_loadSpriteResources() {
 	AddSpriteToStorage("assets/unit/human/human_mason.png", "human_mason");
 	AddSpriteToStorage("assets/unit/orc/orc_mason.png", "orc_mason");
 	AddSpriteToStorage("assets/unit/troll/troll_mason.png", "troll_mason");
+
+
+	// Warriors and Fighters and Mages.
+	AddSpriteToStorage("assets/unit/darkelf/darkelf_archer.png", "darkelf_archer");
+	AddSpriteToStorage("assets/unit/dwarf/dwarf_archer.png", "dwarf_archer");
+	AddSpriteToStorage("assets/unit/gnome/gnome_archer.png", "gnome_archer");
+	AddSpriteToStorage("assets/unit/goblin/goblin_archer.png", "goblin_archer");
+	AddSpriteToStorage("assets/unit/highelf/highelf_archer.png", "highelf_archer");
+	AddSpriteToStorage("assets/unit/human/human_archer.png", "human_archer");
+	AddSpriteToStorage("assets/unit/orc/orc_archer.png", "orc_archer");
+	AddSpriteToStorage("assets/unit/troll/troll_archer.png", "troll_archer");
+
+	AddSpriteToStorage("assets/unit/darkelf/darkelf_crossbowman_iron.png", "darkelf_crossbowman_iron");
+	AddSpriteToStorage("assets/unit/dwarf/dwarf_crossbowman_iron.png", "dwarf_crossbowman_iron");
+	AddSpriteToStorage("assets/unit/gnome/gnome_crossbowman_iron.png", "gnome_crossbowman_iron");
+	AddSpriteToStorage("assets/unit/goblin/goblin_crossbowman_iron.png", "goblin_crossbowman_iron");
+	AddSpriteToStorage("assets/unit/highelf/highelf_crossbowman_iron.png", "highelf_crossbowman_iron");
+	AddSpriteToStorage("assets/unit/human/human_crossbowman_iron.png", "human_crossbowman_iron");
+	AddSpriteToStorage("assets/unit/orc/orc_crossbowman_iron.png", "orc_crossbowman_iron");
+	AddSpriteToStorage("assets/unit/troll/troll_crossbowman_iron.png", "troll_crossbowman_iron");
+
+	AddSpriteToStorage("assets/unit/darkelf/darkelf_heavy_spearman_iron.png", "darkelf_heavy_spearman_iron");
+	AddSpriteToStorage("assets/unit/dwarf/dwarf_heavy_spearman_iron.png", "dwarf_heavy_spearman_iron");
+	AddSpriteToStorage("assets/unit/gnome/gnome_heavy_spearman_iron.png", "gnome_heavy_spearman_iron");
+	AddSpriteToStorage("assets/unit/goblin/goblin_heavy_spearman_iron.png", "goblin_heavy_spearman_iron");
+	AddSpriteToStorage("assets/unit/highelf/highelf_heavy_spearman_iron.png", "highelf_heavy_spearman_iron");
+	AddSpriteToStorage("assets/unit/human/human_heavy_spearman_iron.png", "human_heavy_spearman_iron");
+	AddSpriteToStorage("assets/unit/orc/orc_heavy_spearman_iron.png", "orc_heavy_spearman_iron");
+	AddSpriteToStorage("assets/unit/troll/troll_heavy_spearman_iron.png", "troll_heavy_spearman_iron");
+
+	AddSpriteToStorage("assets/unit/darkelf/darkelf_heavy_spearman_bronze.png", "darkelf_heavy_spearman_bronze");
+	AddSpriteToStorage("assets/unit/dwarf/dwarf_heavy_spearman_bronze.png", "dwarf_heavy_spearman_bronze");
+	AddSpriteToStorage("assets/unit/gnome/gnome_heavy_spearman_bronze.png", "gnome_heavy_spearman_bronze");
+	AddSpriteToStorage("assets/unit/goblin/goblin_heavy_spearman_bronze.png", "goblin_heavy_spearman_bronze");
+	AddSpriteToStorage("assets/unit/highelf/highelf_heavy_spearman_bronze.png", "highelf_heavy_spearman_bronze");
+	AddSpriteToStorage("assets/unit/human/human_heavy_spearman_bronze.png", "human_heavy_spearman_bronze");
+	AddSpriteToStorage("assets/unit/orc/orc_heavy_spearman_bronze.png", "orc_heavy_spearman_bronze");
+	AddSpriteToStorage("assets/unit/troll/troll_heavy_spearman_bronze.png", "troll_heavy_spearman_bronze");
+
+	AddSpriteToStorage("assets/unit/darkelf/darkelf_spearman_leather.png", "darkelf_spearman_leather");
+	AddSpriteToStorage("assets/unit/dwarf/dwarf_spearman_leather.png", "dwarf_spearman_leather");
+	AddSpriteToStorage("assets/unit/gnome/gnome_spearman_leather.png", "gnome_spearman_leather");
+	AddSpriteToStorage("assets/unit/goblin/goblin_spearman_leather.png", "goblin_spearman_leather");
+	AddSpriteToStorage("assets/unit/highelf/highelf_spearman_leather.png", "highelf_spearman_leather");
+	AddSpriteToStorage("assets/unit/human/human_spearman_leather.png", "human_spearman_leather");
+	AddSpriteToStorage("assets/unit/orc/orc_spearman_leather.png", "orc_spearman_leather");
+	AddSpriteToStorage("assets/unit/troll/troll_spearman_leather.png", "troll_spearman_leather");
+
+	AddSpriteToStorage("assets/unit/darkelf/darkelf_swordman_iron.png", "darkelf_swordman_iron");
+	AddSpriteToStorage("assets/unit/dwarf/dwarf_swordman_iron.png", "dwarf_swordman_iron");
+	AddSpriteToStorage("assets/unit/gnome/gnome_swordman_iron.png", "gnome_swordman_iron");
+	AddSpriteToStorage("assets/unit/goblin/goblin_swordman_iron.png", "goblin_swordman_iron");
+	AddSpriteToStorage("assets/unit/highelf/highelf_swordman_iron.png", "highelf_swordman_iron");
+	AddSpriteToStorage("assets/unit/human/human_swordman_iron.png", "human_swordman_iron");
+	AddSpriteToStorage("assets/unit/orc/orc_swordman_iron.png", "orc_swordman_iron");
+	AddSpriteToStorage("assets/unit/troll/troll_swordman_iron.png", "troll_swordman_iron");
+
+	AddSpriteToStorage("assets/unit/darkelf/darkelf_swordman_bronze.png", "darkelf_swordman_bronze");
+	AddSpriteToStorage("assets/unit/dwarf/dwarf_swordman_bronze.png", "dwarf_swordman_bronze");
+	AddSpriteToStorage("assets/unit/gnome/gnome_swordman_bronze.png", "gnome_swordman_bronze");
+	AddSpriteToStorage("assets/unit/goblin/goblin_swordman_bronze.png", "goblin_swordman_bronze");
+	AddSpriteToStorage("assets/unit/highelf/highelf_swordman_bronze.png", "highelf_swordman_bronze");
+	AddSpriteToStorage("assets/unit/human/human_swordman_bronze.png", "human_swordman_bronze");
+	AddSpriteToStorage("assets/unit/orc/orc_swordman_bronze.png", "orc_swordman_bronze");
+	AddSpriteToStorage("assets/unit/troll/troll_swordman_bronze.png", "troll_swordman_bronze");
 }
 
 
