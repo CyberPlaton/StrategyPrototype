@@ -22,6 +22,7 @@
 #define TURN_TIME_MODIFIER 4
 #define SPRITES_WIDTH_AND_HEIGHT 64
 #define MAP_SIZE 20 // Defines the size of the map. Would be convenient to set it dynamically.
+#define TECH_TREE_COUNT 4 // civilian, military, magick and technical.
 
 #define VISIBLE_MAP_WIDTH 14
 #define VISIBLE_MAP_HEIGHT 11

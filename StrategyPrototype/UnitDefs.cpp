@@ -1,6 +1,38 @@
 #include"UnitDefs.h"
 
+static std::map<std::string, std::string> g_TechnologyRequirementsMap;
 
+
+std::string GetTechnologyRequirementsForUnit(UnitBase* unit) {
+
+	return g_TechnologyRequirementsMap.at(unit->m_UnitClassName);
+}
+
+std::string GetTechnologyRequirementsForUnit(std::string tech) {
+
+	return g_TechnologyRequirementsMap.at(tech);
+}
+
+void InitializeUnitTechnologyRequirements() {
+
+	g_TechnologyRequirementsMap.emplace("Citizen", "All");; // Means available for all with no tech.
+	g_TechnologyRequirementsMap.emplace("Woodcutter", "Wood Working");; // Means available for all with no tech.
+	g_TechnologyRequirementsMap.emplace("Farmer", "Farming");; // Means available for all with no tech.
+	g_TechnologyRequirementsMap.emplace("Hunter", "Hunting");; // Means available for all with no tech.
+	g_TechnologyRequirementsMap.emplace("Fisher", "Fishing");; // Means available for all with no tech.
+	g_TechnologyRequirementsMap.emplace("Clayminer", "All");; // Means available for all with no tech.
+	g_TechnologyRequirementsMap.emplace("Bronze Miner", "All");; // Means available for all with no tech.
+	g_TechnologyRequirementsMap.emplace("Iron Miner", "All");; // Means available for all with no tech.
+	g_TechnologyRequirementsMap.emplace("Malachite Miner", "All");; // Means available for all with no tech.
+	g_TechnologyRequirementsMap.emplace("Adamantium Miner", "All");; // Means available for all with no tech.
+	g_TechnologyRequirementsMap.emplace("Salt Miner", "All");; // Means available for all with no tech.
+	g_TechnologyRequirementsMap.emplace("Stone Miner", "All");; // Means available for all with no tech.
+	g_TechnologyRequirementsMap.emplace("Carpenter", "Wood Working");; // Means available for all with no tech.
+	g_TechnologyRequirementsMap.emplace("Brick Burner", "Brick Making");; // Means available for all with no tech.
+	g_TechnologyRequirementsMap.emplace("Gatherer", "All");
+	g_TechnologyRequirementsMap.emplace("Mason", "Stone Working");
+
+}
 
 
 /*

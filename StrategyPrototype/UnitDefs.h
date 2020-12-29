@@ -1,6 +1,13 @@
 #pragma once
 #include"Platform.h"
 
+struct UnitBase;
+
+std::string GetTechnologyRequirementsForUnit(UnitBase* unit);
+std::string GetTechnologyRequirementsForUnit(std::string tech);
+void InitializeUnitTechnologyRequirements();
+
+
 // NEW
 enum class UnitTier {
 	UNIT_TIER_INVALID = -1,
@@ -30,7 +37,8 @@ struct UnitStats { // Define maximal health, magicka and fatigue.
 	size_t m_Fatigue = -1;
 };
 
-
+// NOTE:
+// Tech requirements are stored separetely in "g_TechnologyRequirementsMap".
 struct UnitBase {
 
 	std::string m_UnitClassName;
@@ -38,8 +46,6 @@ struct UnitBase {
 	UnitTier m_UnitTier = UnitTier::UNIT_TIER_INVALID;
 	UnitLevel m_UnitLevel = UnitLevel::UNIT_LEVEL_INVALID;
 	UnitStats* m_UnitStats = nullptr;
-	std::vector<std::string> m_TechnologyRequirements;
-
 
 	std::string LevelToString() {
 
@@ -123,9 +129,6 @@ struct UnitWoodCutter : public UnitBase {
 		m_UnitStats->m_Fatigue = 6;
 		m_UnitStats->m_Magicka = 0;
 		m_UnitStats->m_Health = 10;
-
-
-		m_TechnologyRequirements.push_back("Wood Working");
 	}
 };
 
@@ -145,7 +148,6 @@ struct UnitFarmer : public UnitBase {
 		m_UnitStats->m_Magicka = 0;
 		m_UnitStats->m_Health = 10;
 
-		// No tech req.
 	}
 };
 
@@ -164,8 +166,6 @@ struct UnitHunter : public UnitBase {
 		m_UnitStats->m_Magicka = 0;
 		m_UnitStats->m_Health = 10;
 
-		m_TechnologyRequirements.push_back("Hunting");
-
 	}
 };
 
@@ -183,9 +183,6 @@ struct UnitFisher : public UnitBase {
 		m_UnitStats->m_Fatigue = 6;
 		m_UnitStats->m_Magicka = 0;
 		m_UnitStats->m_Health = 10;
-
-
-		m_TechnologyRequirements.push_back("Fishing");
 	}
 };
 
@@ -206,7 +203,6 @@ struct UnitClayMiner : public UnitBase {
 		m_UnitStats->m_Health = 10;
 
 
-		m_TechnologyRequirements.push_back("Pottery");
 	}
 };
 
@@ -225,8 +221,6 @@ struct UnitBronzeMiner : public UnitBase {
 		m_UnitStats->m_Magicka = 0;
 		m_UnitStats->m_Health = 10;
 
-
-		m_TechnologyRequirements.push_back("Bronze Working");
 	}
 };
 
@@ -246,8 +240,6 @@ struct UnitIronMiner : public UnitBase {
 		m_UnitStats->m_Magicka = 0;
 		m_UnitStats->m_Health = 10;
 
-
-		m_TechnologyRequirements.push_back("Iron Working");
 	}
 };
 
@@ -265,9 +257,6 @@ struct UnitMalachiteMiner : public UnitBase {
 		m_UnitStats->m_Fatigue = 6;
 		m_UnitStats->m_Magicka = 0;
 		m_UnitStats->m_Health = 10;
-
-
-		m_TechnologyRequirements.push_back("Smelting");
 	}
 };
 
@@ -285,9 +274,104 @@ struct UnitAdamantiumMiner : public UnitBase {
 		m_UnitStats->m_Fatigue = 6;
 		m_UnitStats->m_Magicka = 0;
 		m_UnitStats->m_Health = 10;
+	}
+};
+
+struct UnitSaltMiner : public UnitBase { // Mines salt from salt deposits...
+	UnitSaltMiner() {
+
+		m_UnitClassName = "Salt Miner";
+
+		m_UnitTier = UnitTier::UNIT_TIER_1;
+		m_UnitLevel = UnitLevel::UNIT_LEVEL_1;
 
 
-		m_TechnologyRequirements.push_back("Smelting");
+		m_UnitStats = new UnitStats();
+		m_UnitStats->m_Fatigue = 6;
+		m_UnitStats->m_Magicka = 0;
+		m_UnitStats->m_Health = 10;
+	}
+};
+
+struct UnitStoneMiner : public UnitBase { // Unit Mines raw stone from stone deposits..
+	UnitStoneMiner() {
+
+		m_UnitClassName = "Stone Miner";
+
+		m_UnitTier = UnitTier::UNIT_TIER_1;
+		m_UnitLevel = UnitLevel::UNIT_LEVEL_1;
+
+
+		m_UnitStats = new UnitStats();
+		m_UnitStats->m_Fatigue = 6;
+		m_UnitStats->m_Magicka = 0;
+		m_UnitStats->m_Health = 10;
+
+	}
+};
+
+struct UnitCarpenter : public UnitBase {
+	UnitCarpenter() {
+
+		m_UnitClassName = "Carpenter";
+
+		m_UnitTier = UnitTier::UNIT_TIER_1;
+		m_UnitLevel = UnitLevel::UNIT_LEVEL_1;
+
+
+		m_UnitStats = new UnitStats();
+		m_UnitStats->m_Fatigue = 6;
+		m_UnitStats->m_Magicka = 0;
+		m_UnitStats->m_Health = 10;
+	}
+};
+
+struct UnitBrickBurner : public UnitBase {
+	UnitBrickBurner() {
+
+		m_UnitClassName = "Brick Burner";
+
+		m_UnitTier = UnitTier::UNIT_TIER_1;
+		m_UnitLevel = UnitLevel::UNIT_LEVEL_1;
+
+
+		m_UnitStats = new UnitStats();
+		m_UnitStats->m_Fatigue = 6;
+		m_UnitStats->m_Magicka = 0;
+		m_UnitStats->m_Health = 10;
+	}
+};
+
+struct UnitGatherer : public UnitBase { // This unit type gathers all types of fruits and as such food.
+										// A gatherer for wine and hops is introduced below.
+	UnitGatherer() {
+
+		m_UnitClassName = "Gatherer";
+
+		m_UnitTier = UnitTier::UNIT_TIER_1;
+		m_UnitLevel = UnitLevel::UNIT_LEVEL_1;
+
+
+		m_UnitStats = new UnitStats();
+		m_UnitStats->m_Fatigue = 6;
+		m_UnitStats->m_Magicka = 0;
+		m_UnitStats->m_Health = 10;
+	}
+};
+
+struct UnitMason : public UnitBase { // Mason makes stoneblocks from raw stone.
+	UnitMason() {
+
+		m_UnitClassName = "Mason";
+
+		m_UnitTier = UnitTier::UNIT_TIER_1;
+		m_UnitLevel = UnitLevel::UNIT_LEVEL_1;
+
+
+		m_UnitStats = new UnitStats();
+		m_UnitStats->m_Fatigue = 6;
+		m_UnitStats->m_Magicka = 0;
+		m_UnitStats->m_Health = 10;
 	}
 };
 

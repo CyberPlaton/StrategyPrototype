@@ -2731,7 +2731,7 @@ bool CMPCameraInput::_tryGivingUnitAProfession(Unit* unit) {
 
 	// Check whether there is another unit on maptile present.
 	if (_isMaptileAlreadyWorked(maptile) == false) { // Maptile is free and no other unit.
-
+		
 		std::vector<std::string> vec = _getPossibleProfessionsOnMaptile(maptile);
 
 		// Iterate through possible professions and let user choose one or give directly a profession.
@@ -2749,12 +2749,25 @@ bool CMPCameraInput::_tryGivingUnitAProfession(Unit* unit) {
 			if (_hasUnitAProfessionAlready(unit)) {
 				if (_doesPlayerWantToResetProfession()) {
 
-					// User wants to reset profession, so give unit a new profession and let him work..
-					unit->ChangeClass(vec.at(0)); // Only available profession.
-					unit->m_AssociatedPlayer->m_CurrentlyViewedCity->RemoveCitizenFromJoblessVector(unit); // Remove from jobless if he was there.
-					_giveUnitPositionAlignedToMaptile(unit, maptile);
 
-					return true;
+					if (_hasPlayerUnitTechRequirements(vec.at(0), PlayerTurnCounter::Get()->m_CurrentTurnPlayer)) {
+
+						// User wants to reset profession, so give unit a new profession and let him work..
+						unit->ChangeClass(vec.at(0)); // Only available profession.
+						unit->m_AssociatedPlayer->m_CurrentlyViewedCity->RemoveCitizenFromJoblessVector(unit); // Remove from jobless if he was there.
+						_giveUnitPositionAlignedToMaptile(unit, maptile);
+
+						return true;
+					}
+					else {
+
+						// Player has not researched needed technoology yet..
+						m_DraggedUnit->m_TransformCmp->m_PosX = m_EntityPrevXpos;
+						m_DraggedUnit->m_TransformCmp->m_PosY = m_EntityPrevYpos;
+
+						// dragged unit is reseted in returned to function...
+						return false;
+					}
 				}
 				else { // User does not want to reset profession, so abort dragging.
 
@@ -2767,13 +2780,25 @@ bool CMPCameraInput::_tryGivingUnitAProfession(Unit* unit) {
 			}
 			else { // Citizen has no profession so give him directly the only one available.
 
-				// User wants to reset profession, so give unit a new profession and let him work..
-				unit->ChangeClass(vec.at(0)); // Only available profession.
-				unit->m_AssociatedPlayer->m_CurrentlyViewedCity->RemoveCitizenFromJoblessVector(unit); // Remove from jobless if he was there.
-				_giveUnitPositionAlignedToMaptile(unit, maptile);
 
-				// dragged unit is reseted in returned to function...
-				return true;
+				if (_hasPlayerUnitTechRequirements(vec.at(0), PlayerTurnCounter::Get()->m_CurrentTurnPlayer)) {
+
+					// User wants to reset profession, so give unit a new profession and let him work..
+					unit->ChangeClass(vec.at(0)); // Only available profession.
+					unit->m_AssociatedPlayer->m_CurrentlyViewedCity->RemoveCitizenFromJoblessVector(unit); // Remove from jobless if he was there.
+					_giveUnitPositionAlignedToMaptile(unit, maptile);
+
+					return true;
+				}
+				else {
+
+					// Player has not researched needed technoology yet..
+					m_DraggedUnit->m_TransformCmp->m_PosX = m_EntityPrevXpos;
+					m_DraggedUnit->m_TransformCmp->m_PosY = m_EntityPrevYpos;
+
+					// dragged unit is reseted in returned to function...
+					return false;
+				}
 			}
 
 		}
@@ -2789,13 +2814,38 @@ bool CMPCameraInput::_tryGivingUnitAProfession(Unit* unit) {
 			
 				using namespace std;
 				int index = 0;
+
+				std::vector<std::string> available_professions_vec;
+
+				// Determine professions which are tech. available for player.
 				for (auto it : vec) {
+					if (_hasPlayerUnitTechRequirements(it, PlayerTurnCounter::Get()->m_CurrentTurnPlayer)) {
+
+						available_professions_vec.push_back(it);
+					}
+				}
+
+				// Display only those which are available...
+				for (auto it : available_professions_vec) {
 
 					cout << color(colors::DARKYELLOW);
 					cout << index + 1 << ".) Profession: \"" << it << "\"." << white << endl;
 
 					index++;
 				}
+
+				// Check whether there are any available jobs for players current tech stage, else break.
+				if (available_professions_vec.size() == 0) {
+
+					// Reset...
+					m_DraggedUnit->m_TransformCmp->m_PosX = m_EntityPrevXpos;
+					m_DraggedUnit->m_TransformCmp->m_PosY = m_EntityPrevYpos;
+
+					// dragged unit is reset in returned function...
+					return false;
+				}
+
+
 
 				cout << color(colors::DARKRED);
 				cout << "Please type number of profession to choose it for your unit." << white << endl;
@@ -2806,7 +2856,7 @@ bool CMPCameraInput::_tryGivingUnitAProfession(Unit* unit) {
 					cin >> choosen_number;
 					choosen_number--;
 
-					unit->ChangeClass(vec.at(choosen_number));
+					unit->ChangeClass(available_professions_vec.at(choosen_number));
 					unit->m_AssociatedPlayer->m_CurrentlyViewedCity->RemoveCitizenFromJoblessVector(unit); // Remove from jobless if he was there.
 
 					// Position unit to be directly over choosen maptile.
@@ -2913,6 +2963,12 @@ std::vector<std::string> CMPCameraInput::_getPossibleProfessionsOnMaptile(MapTil
 
 	std::vector<std::string> vec;
 
+	// Some flags.
+	bool has_forest = false;
+	bool has_hills = false;
+	bool has_mountains = false;
+
+
 	for (auto entt = maptile->m_MapTileEntities->begin(); entt != maptile->m_MapTileEntities->end(); ++entt) {
 
 		GameEntity* e = *entt;
@@ -2921,14 +2977,32 @@ std::vector<std::string> CMPCameraInput::_getPossibleProfessionsOnMaptile(MapTil
 		if (COMPARE_STRINGS(e->m_IDCmp->m_DynamicTypeName, "Forest") == 0) {
 			vec.push_back("Hunter");
 			vec.push_back("Woodcutter");
+			vec.push_back("Gatherer");
+
+
+			has_forest = true;
 		}
 		
 		if (COMPARE_STRINGS(e->m_IDCmp->m_DynamicTypeName, "Hills") == 0) {
-			vec.push_back("Miner");
+			vec.push_back("Bronze Miner");
+			vec.push_back("Iron Miner");
+			vec.push_back("Malachite Miner");
+			vec.push_back("Adamantium Miner");
+			vec.push_back("Salt Miner");
+			vec.push_back("Stone Miner");
+
+			has_hills = true;
 		}
 		
 		if (COMPARE_STRINGS(e->m_IDCmp->m_DynamicTypeName, "Mountains") == 0) {
-			vec.push_back("Miner");
+			vec.push_back("Bronze Miner");
+			vec.push_back("Iron Miner");
+			vec.push_back("Malachite Miner");
+			vec.push_back("Adamantium Miner");
+			vec.push_back("Salt Miner");
+			vec.push_back("Stone Miner");
+
+			has_mountains = true;
 		}
 
 		// Check for possible ressources on maptile like deer and bears...
@@ -2940,23 +3014,36 @@ std::vector<std::string> CMPCameraInput::_getPossibleProfessionsOnMaptile(MapTil
 	if (maptile->m_MapTileType == MapTile::MapTileType::MAPTILE_TYPE_WATER_SHALLOW) {
 		vec.push_back("Fisher");
 	}
-	if (maptile->m_MapTileType == MapTile::MapTileType::MAPTILE_TYPE_TEMPERATE) {
+	if (maptile->m_MapTileType == MapTile::MapTileType::MAPTILE_TYPE_TEMPERATE && 
+		(!has_forest && !has_hills && !has_mountains)) { // only if it is a clear grass maptile.
+
+		vec.push_back("Farmer");
+		vec.push_back("Clayminer");
+		vec.push_back("Gatherer");
+
+	}
+	if (maptile->m_MapTileType == MapTile::MapTileType::MAPTILE_TYPE_JUNGLE &&
+		(!has_forest && !has_hills && !has_mountains)) { // only if its a clear jungle grass tile..
+
 		vec.push_back("Farmer");
 		vec.push_back("Clayminer");
 
 	}
-	if (maptile->m_MapTileType == MapTile::MapTileType::MAPTILE_TYPE_JUNGLE) {
+	if (maptile->m_MapTileType == MapTile::MapTileType::MAPTILE_TYPE_SAVANNAH && 
+		(!has_forest && !has_hills && !has_mountains)) { // Only if its a clear savannah grass tile..
+
 		vec.push_back("Farmer");
 		vec.push_back("Clayminer");
+		vec.push_back("Gatherer");
+
 
 	}
-	if (maptile->m_MapTileType == MapTile::MapTileType::MAPTILE_TYPE_SAVANNAH) {
-		vec.push_back("Farmer");
-		vec.push_back("Clayminer");
+	if (maptile->m_MapTileType == MapTile::MapTileType::MAPTILE_TYPE_TUNDRA && 
+		(!has_forest && !has_hills && !has_mountains)) { // only if its a clear tudnra tile...
 
-	}
-	if (maptile->m_MapTileType == MapTile::MapTileType::MAPTILE_TYPE_TUNDRA) {
 		vec.push_back("Farmer");
+		vec.push_back("Gatherer");
+
 	}
 
 
@@ -2991,17 +3078,16 @@ Unit* CMPCameraInput::_isUnitPresentOnMaptile(MapTile* maptile) {
 }
 
 
-bool CMPCameraInput::_hasPlayerUnitTechRequirements(Unit* unit, Player* p) {
+bool CMPCameraInput::_hasPlayerUnitTechRequirements(std::string tech, Player* p) {
 
-	if (unit->m_UnitClass->m_TechnologyRequirements.size() == 0) return true;
-	else {
+	if (COMPARE_STRINGS(GetTechnologyRequirementsForUnit(tech), "All") == 0) return true; // Means, tech has no requirements and as such is available.
 
-		for (auto it : unit->m_UnitClass->m_TechnologyRequirements) {
 
-			for (auto itr : p->m_PlayersTechnologies) {
+	for (auto itr : p->m_PlayersTechnologies) {
 
-				if (COMPARE_STRINGS_2(it, itr.first) == 0) return true;
-			}
+		if (itr.second == 1) { // Lookup only for already researched techs.
+
+			if (COMPARE_STRINGS_2(GetTechnologyRequirementsForUnit(tech), itr.first) == 0) return true;
 		}
 	}
 
@@ -3978,6 +4064,7 @@ void Game::_initialize() {
 	_loadSpriteResources();
 	_initializeMap();
 
+	InitializeUnitTechnologyRequirements();
 }
 
 
@@ -5679,28 +5766,28 @@ void Game::_updateForestAI2() {
 	GameEntity* entity = nullptr;
 	
 
-	cout << color(colors::BLUE) << endl << endl;
-	cout << "Executing _updateForestAI2()." << white << endl;
+	//cout << color(colors::BLUE) << endl << endl;
+	//cout << "Executing _updateForestAI2()." << white << endl;
 
 	for (auto it = vec.begin(); it != vec.end(); ++it) {
 		try {
 
 			entity = *it;
-
-			cout << APP_COLOR;
-			cout << "Executing state logic for " << entity->m_IDCmp->m_DynamicTypeName << " at position "
-				<< entity->m_TransformCmp->m_GameWorldSpaceCell[0] << " : " << entity->m_TransformCmp->m_GameWorldSpaceCell[1] << white << endl;
+			
+			//cout << APP_COLOR;
+			//cout << "Executing state logic for " << entity->m_IDCmp->m_DynamicTypeName << " at position "
+			//	<< entity->m_TransformCmp->m_GameWorldSpaceCell[0] << " : " << entity->m_TransformCmp->m_GameWorldSpaceCell[1] << white << endl;
 
 			if (!entity->m_AICmp->TryExecuteStateLogic()) {
 
-					cout << APP_ERROR_COLOR
-					 << " was unsuccessfull." << white << endl << endl;
+				//		cout << APP_ERROR_COLOR
+				//	 << " was unsuccessfull." << white << endl << endl;
 
 			}
 			else {
 
-				cout << APP_SUCCESS_COLOR
-					 << " was successfull." << white << endl << endl;
+				//cout << APP_SUCCESS_COLOR
+				//	 << " was successfull." << white << endl << endl;
 			}
 		}
 		catch (char* err) {
@@ -5918,6 +6005,13 @@ void Game::AdvanceOneTurn() {
 
 	if (m_AdvanceOneTurn) {
 
+		// For each player, try unlock one of the base techs after everyone has done theyre turns.
+		for (auto it : PlayerTurnCounter::Get()->m_InGamePlayers) {
+
+			it->RandomlyResearchBaseTechnology();
+		}
+
+
 		_updateForestAI2();
 
 		m_TurnCount++;
@@ -5934,36 +6028,6 @@ void Game::AdvanceOneTurn() {
 
 			// Prepare for next turn.
 			unit->Update();
-			//unit->UpdateMovementPoints();
-
-
-			// Begin this turn by executing objectives.
-			//unit->m_AICmp->TryExecuteStateLogic();
-
-
-
-
-
-			/*
-			cout << APP_SUCCESS_COLOR;
-			cout << endl;
-			cout << "Unit name: " << unit->m_Name << endl;
-			cout << "Unit race: " << unit->m_EntityRaceCmp->m_EntityRaceString << endl;
-			cout << "Unit class: " << unit->m_UnitClass->m_UnitClassName << endl;
-			cout << "Unit birthsign: " << unit->m_Birthsign << endl;
-			cout << "Unit stats: " << endl;
-			cout << endl;
-
-			for (auto it : *unit->GetUnitSkills()) {
-				cout << "Skill \"" << SkillToString(it.first) << "\" ::= " << it.second << endl;
-			}
-
-			cout << endl;
-
-			for (auto it : *unit->GetUnitAttributes()) {
-				cout << "Attribute \"" << AttributeToString(it.first) << "\" ::= " << it.second << endl;
-			}
-			*/
 		}
 	}
 }

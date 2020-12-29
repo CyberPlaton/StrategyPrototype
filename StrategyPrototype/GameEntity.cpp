@@ -3,8 +3,100 @@
 EntitiesStorage* EntitiesStorage::m_EntitiesStorage = nullptr;
 WorldMap* WorldMap::m_WorldMapInstance = nullptr;
 
+void Player::RandomlyResearchBaseTechnology() {
+
+	using namespace std;
+
+	// Check whether all tech trees are unlocked.
+	if (m_PlayersTechnologies.at("Ceremony") == 1 &&
+		m_PlayersTechnologies.at("Honor") == 1 &&
+		m_PlayersTechnologies.at("Wood Working") == 1 &&
+		m_PlayersTechnologies.at("Wisemen Circle") == 1) {
+
+		return; // Everything set up, do  nothing.
+	}
+
+
+	// First, determine randomly which tech tree to unlock.
+	int r = Random() % TECH_TREE_COUNT; // 0-3.
+
+	switch (r) {
+	case 0: // Check for magicka
+		if (m_PlayersTechnologies.at("Ceremony") == 1) { // Already researched, do nothing.
+			return;
+		}
+		else {
+			int r2 = Random() % 100;
+
+			if (r2 >= 90) {
+				m_PlayersTechnologies.at("Ceremony") = 1;
+
+				cout << color(colors::GREEN);
+				cout << "\"" << m_PlayerName << "s\" Empire managed to unlock a base technologie: \"Ceremony\".\n" << endl;
+				cout << "This makes research in \"Magicka\" possible.\n" << white << endl;
+			}
+		}
+		break;
+
+	case 1: // Technical
+		if (m_PlayersTechnologies.at("Wood Working") == 1) { // Already researched, do nothing.
+			return;
+		}
+		else {
+			int r2 = Random() % 100;
+
+			if (r2 >= 90) {
+				m_PlayersTechnologies.at("Wood Working") = 1;
+
+				cout << color(colors::GREEN);
+				cout << "\"" << m_PlayerName << "s\" Empire managed to unlock a base technologie: \"Wood Working\".\n" << endl;
+				cout << "This makes research in \"Technical\" possible.\n" << white << endl;
+			}
+		}
+		break;
+
+	case 2: // Military
+		if (m_PlayersTechnologies.at("Honor") == 1) { // Already researched, do nothing.
+			return;
+		}
+		else {
+			int r2 = Random() % 100;
+
+			if (r2 >= 90) {
+				m_PlayersTechnologies.at("Honor") = 1;
+
+				cout << color(colors::GREEN);
+				cout << "\"" << m_PlayerName << "s\" Empire managed to unlock a base technologie: \"Honor\".\n" << endl;
+				cout << "This makes research in \"Military\" possible.\n" << white << endl;
+			}
+		}
+		break;
+
+	case 3: // Civilian
+		if (m_PlayersTechnologies.at("Wisemen Circle") == 1) { // Already researched, do nothing.
+			return;
+		}
+		else {
+			int r2 = Random() % 100;
+
+			if (r2 >= 90) {
+				m_PlayersTechnologies.at("Wisemen Circle") = 1;
+
+				cout << color(colors::GREEN);
+				cout << "\"" << m_PlayerName << "s\" Empire managed to unlock a base technologie: \"Wisemen Circle\".\n" << endl;
+				cout << "This makes research in \"Civilian\" possible.\n" << white << endl;
+			}
+		}
+		break;
+
+	default:
+		break;
+	}
+}
 
 void Player::_initStandardResearchedTech() {
+
+	using namespace std;
 
 	TechnologyTree* tech_tree = TechnologyTree::Get();
 
@@ -21,11 +113,97 @@ void Player::_initStandardResearchedTech() {
 	}
 
 
-	// Define researched techs for players.
-	m_PlayersTechnologies.at("Wood Working") = 1;
-	m_PlayersTechnologies.at("Honor") = 1;
-	m_PlayersTechnologies.at("Ceremony") = 1;
-	m_PlayersTechnologies.at("Wisemen Circle") = 1;
+	// Define researched techs for players based on race...
+
+	switch (m_PlayerEmpireRace) {
+	case CMPEntityRace::Race::RACE_DARKELF:
+
+		// Darkelfs are magically oriented race..
+		// In that they are going more into warfare.
+		m_PlayersTechnologies.at("Ceremony") = 1;
+		m_PlayersTechnologies.at("Mysticism") = 1;
+		m_PlayersTechnologies.at("Elementalism") = 1;
+
+		// And as such they get no bonuses for other techs.
+
+		break;
+
+
+	case CMPEntityRace::Race::RACE_DWARF:
+
+		// Dwarfs are more merchants type,
+		// and basically non-violent aligned.
+		m_PlayersTechnologies.at("Bartering") = 1;
+		m_PlayersTechnologies.at("Currency") = 1;
+
+		break;
+
+	case CMPEntityRace::Race::RACE_GNOME:
+
+		// Gnomes are technically inclined.
+		m_PlayersTechnologies.at("Wood Working") = 1;
+		m_PlayersTechnologies.at("Stone Working") = 1;
+
+
+		break;
+	
+	case CMPEntityRace::Race::RACE_GOBLIN:
+
+		// Goblins are technically inclined.
+		m_PlayersTechnologies.at("Wood Working") = 1;
+		m_PlayersTechnologies.at("Stone Working") = 1;
+
+
+		break;
+	
+	case CMPEntityRace::Race::RACE_HIGHELF:
+
+		// Highelfs are magically inclined and more "holy"-like...
+		m_PlayersTechnologies.at("Ceremony") = 1;
+		m_PlayersTechnologies.at("Mysticism") = 1;
+		m_PlayersTechnologies.at("Restoration") = 1;
+
+
+		break;
+	
+	case CMPEntityRace::Race::RACE_HUMAN:
+
+		// Humans are militaristic inclined, but more "good"..
+		m_PlayersTechnologies.at("Honor") = 1;
+
+		// As humans are more "good" they are more civilized...
+		m_PlayersTechnologies.at("Wisemen Circle") = 1;
+
+
+		break;
+	
+	case CMPEntityRace::Race::RACE_ORC:
+
+		// Orcs are militaristic but more "evil"...
+		// Thus they do not receive a civilized bonus, but more bonuses for warfare...
+		m_PlayersTechnologies.at("Honor") = 1;
+		m_PlayersTechnologies.at("Warrior Code") = 1;
+
+		m_PlayersTechnologies.at("Hunting") = 1;
+
+
+		break;
+	
+	case CMPEntityRace::Race::RACE_TROLL:
+
+		// Trolls are more merchants type and aggressive against others..
+		// Thus they receive a bonus to "civilian" and "military".
+		m_PlayersTechnologies.at("Bartering") = 1;
+		m_PlayersTechnologies.at("Currency") = 1;
+
+		break;
+
+
+	default:
+		cout << color(colors::RED);
+		cout << "Race for Player \"" << m_PlayerName << "\" was not set." << white << endl;
+		return;
+	}
 }
 
 
@@ -890,6 +1068,44 @@ bool Unit::SetClass(std::string classname) {
 	else if (COMPARE_STRINGS(classname, "Fisher") == 0) {
 		m_UnitClass = new UnitFisher();
 	}
+	else if (COMPARE_STRINGS(classname, "Brick Burner") == 0) {
+		m_UnitClass = new UnitBrickBurner();
+	}
+	else if (COMPARE_STRINGS(classname, "Carpenter") == 0) {
+		m_UnitClass = new UnitCarpenter();
+	}
+	else if (COMPARE_STRINGS(classname, "Gatherer") == 0) {
+		m_UnitClass = new UnitGatherer();
+	}
+
+	else if (COMPARE_STRINGS(classname, "Bronze Miner") == 0) {
+		m_UnitClass = new UnitBronzeMiner();
+	}
+	else if (COMPARE_STRINGS(classname, "Iron Miner") == 0) {
+		m_UnitClass = new UnitIronMiner();
+	}
+	else if (COMPARE_STRINGS(classname, "Malachite Miner") == 0) {
+		m_UnitClass = new UnitMalachiteMiner();
+	}
+	else if (COMPARE_STRINGS(classname, "Adamantium Miner") == 0) {
+		m_UnitClass = new UnitAdamantiumMiner();
+	}
+	else if (COMPARE_STRINGS(classname, "Stone Miner") == 0) {
+		m_UnitClass = new UnitStoneMiner();
+	}
+	else if (COMPARE_STRINGS(classname, "Salt Miner") == 0) {
+		m_UnitClass = new UnitSaltMiner();
+	}
+	else if (COMPARE_STRINGS(classname, "Clayminer") == 0) {
+		m_UnitClass = new UnitClayMiner();
+	}
+
+	else if (COMPARE_STRINGS(classname, "Mason") == 0) {
+		m_UnitClass = new UnitMason();
+	}
+
+
+
 	else {
 		return false;
 	}
@@ -996,6 +1212,40 @@ void Unit::_setSpriteBasedOnClassAndRace() {
 	else if (COMPARE_STRINGS(m_UnitClass->m_UnitClassName, "Hunter") == 0) {
 		sprite += "hunter";
 
+	}
+	else if (COMPARE_STRINGS(m_UnitClass->m_UnitClassName, "Brick Burner") == 0) {
+		sprite += "brickburner";
+	}
+	else if (COMPARE_STRINGS(m_UnitClass->m_UnitClassName, "Carpenter") == 0) {
+		sprite += "crapenter";
+	}
+	else if (COMPARE_STRINGS(m_UnitClass->m_UnitClassName, "Gatherer") == 0) {
+		sprite += "gatherer";
+	}
+
+	else if (COMPARE_STRINGS(m_UnitClass->m_UnitClassName, "Bronze Miner") == 0) {
+		sprite += "miner";
+	}
+	else if (COMPARE_STRINGS(m_UnitClass->m_UnitClassName, "Iron Miner") == 0) {
+		sprite += "miner";
+	}
+	else if (COMPARE_STRINGS(m_UnitClass->m_UnitClassName, "Malachite Miner") == 0) {
+		sprite += "miner";
+	}
+	else if (COMPARE_STRINGS(m_UnitClass->m_UnitClassName, "Adamantium Miner") == 0) {
+		sprite += "miner";
+	}
+	else if (COMPARE_STRINGS(m_UnitClass->m_UnitClassName, "Stone Miner") == 0) {
+		sprite += "miner";
+	}
+	else if (COMPARE_STRINGS(m_UnitClass->m_UnitClassName, "Salt Miner") == 0) {
+		sprite += "miner";
+	}
+	else if (COMPARE_STRINGS(m_UnitClass->m_UnitClassName, "Clayminer") == 0) {
+		sprite += "clayminer";
+	}
+	else if (COMPARE_STRINGS(m_UnitClass->m_UnitClassName, "Mason") == 0) {
+		sprite += "mason";
 	}
 
 	m_GraphicsCmp->m_SpriteName = sprite;

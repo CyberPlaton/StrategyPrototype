@@ -2945,6 +2945,10 @@ public:
 		m_PlayerUnits.push_back(u);
 	}
 
+	// Function researches randomly one of the base technologies of tech trees.
+	void RandomlyResearchBaseTechnology();
+
+
 	std::string m_PlayerName;
 	std::string m_PlayerColor;
 	std::vector<City*> m_PlayerCities;
@@ -2978,5 +2982,6 @@ private:
 	bool _isMapTileSurroundedByOwnTiles(MapTile* tile);
 	bool _belongMapTileToThisPlayer(MapTile* tile);
 
+	// This function is based on the race of the player.
 	void _initStandardResearchedTech();
 };

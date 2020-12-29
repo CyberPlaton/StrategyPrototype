@@ -47,7 +47,7 @@ private:
 	bool _tryGivingUnitAProfession(Unit* unit);
 	GameEntity* _hoveringOverEntity(int xpos, int ypos, std::string& entityType);
 	Unit* _isUnitPresentOnMaptile(MapTile* maptile);
-	bool _hasPlayerUnitTechRequirements(Unit* unit, Player* p);
+	bool _hasPlayerUnitTechRequirements(std::string tech, Player* p);
 	bool _doesPlayerWantToResetProfession();
 	bool _hasUnitAProfessionAlready(Unit* unit);
 	void _giveUnitPositionAlignedToMaptile(Unit* unit, MapTile* maptile);
