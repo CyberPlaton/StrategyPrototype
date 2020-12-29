@@ -1,4 +1,8 @@
 #pragma once
+// This is a personal academic project. Dear PVS-Studio, please check it.
+
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 #include"Platform.h"
 
 enum class TechClass {
@@ -50,6 +54,8 @@ struct Technology {
 	int m_ResearchPointsCurrentlyIncested = -1;
 
 	std::string m_TechRace;
+
+	std::string m_TechName;
 };
 
 

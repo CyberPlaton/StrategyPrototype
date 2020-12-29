@@ -1,4 +1,8 @@
 #pragma once
+// This is a personal academic project. Dear PVS-Studio, please check it.
+
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 #include"Platform.h"
 
 struct UnitBase;
@@ -6,7 +10,7 @@ struct UnitBase;
 std::string GetTechnologyRequirementsForUnit(UnitBase* unit);
 std::string GetTechnologyRequirementsForUnit(std::string tech);
 void InitializeUnitTechnologyRequirements();
-
+void DeinitializeUnitTechnologyRequirements();
 
 // NEW
 enum class UnitTier {

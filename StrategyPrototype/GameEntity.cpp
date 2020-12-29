@@ -1,7 +1,241 @@
+// This is a personal academic project. Dear PVS-Studio, please check it.
+
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 #include "GameEntity.h"
 
 EntitiesStorage* EntitiesStorage::m_EntitiesStorage = nullptr;
 WorldMap* WorldMap::m_WorldMapInstance = nullptr;
+
+// Map stores tech. requirements for a given building.
+static std::map<std::string, BuildingTechRequirementsVec*> g_pBuildingTechRequirementsMap; 
+
+void DeinitializeBuildingTechnologyRequirements(){
+
+	g_pBuildingTechRequirementsMap.clear();
+}
+
+void InitializeBuildingTechnologyRequirements() {
+
+	BuildingTechRequirementsVec *vec = new BuildingTechRequirementsVec();
+	g_pBuildingTechRequirementsMap.emplace("Shack", vec); // vec has size == 0, thus no req.
+
+
+	vec = nullptr;
+	vec = new BuildingTechRequirementsVec();
+
+	vec->push_back("Wood Working");
+	g_pBuildingTechRequirementsMap.emplace("Wooden House", vec);
+
+
+
+	vec = nullptr;
+	vec = new BuildingTechRequirementsVec();
+
+	vec->push_back("Stone Working");
+	g_pBuildingTechRequirementsMap.emplace("Stone House", vec);
+
+
+
+	vec = nullptr;
+	vec = new BuildingTechRequirementsVec();
+
+	g_pBuildingTechRequirementsMap.emplace("Underground Storage", vec);
+
+
+
+	vec = nullptr;
+	vec = new BuildingTechRequirementsVec();
+
+	vec->push_back("Wood Working");
+	g_pBuildingTechRequirementsMap.emplace("Wooden House", vec);
+
+
+
+
+	vec = nullptr;
+	vec = new BuildingTechRequirementsVec();
+
+	vec->push_back("Wood Working");
+	g_pBuildingTechRequirementsMap.emplace("Wooden Warehouse", vec);
+
+
+
+	vec = nullptr;
+	vec = new BuildingTechRequirementsVec();
+
+	vec->push_back("Stone Working");
+	vec->push_back("Pottery");
+	g_pBuildingTechRequirementsMap.emplace("Stone Warehouse", vec);
+
+
+
+
+	vec = nullptr;
+	vec = new BuildingTechRequirementsVec();
+
+	vec->push_back("Brick Working");
+	g_pBuildingTechRequirementsMap.emplace("Brick Warehouse", vec);
+
+
+
+	vec = nullptr;
+	vec = new BuildingTechRequirementsVec();
+
+	vec->push_back("Wisemen Circle");
+	g_pBuildingTechRequirementsMap.emplace("Wisemen Hut", vec);
+
+
+
+	vec = nullptr;
+	vec = new BuildingTechRequirementsVec();
+
+	vec->push_back("Alphabet");
+	g_pBuildingTechRequirementsMap.emplace("Small School", vec);
+
+
+
+	vec = nullptr;
+	vec = new BuildingTechRequirementsVec();
+
+	vec->push_back("Writing");
+	g_pBuildingTechRequirementsMap.emplace("Big School", vec);
+
+
+
+	vec = nullptr;
+	vec = new BuildingTechRequirementsVec();
+
+	vec->push_back("Literture");
+	g_pBuildingTechRequirementsMap.emplace("College", vec);
+
+
+
+	vec = nullptr;
+	vec = new BuildingTechRequirementsVec();
+
+	vec->push_back("Ceremony");
+	g_pBuildingTechRequirementsMap.emplace("Shrine", vec);
+
+
+
+	vec = nullptr;
+	vec = new BuildingTechRequirementsVec();
+
+	vec->push_back("Elementalism");
+	g_pBuildingTechRequirementsMap.emplace("Magick School", vec);
+
+
+
+	vec = nullptr;
+	vec = new BuildingTechRequirementsVec();
+
+	vec->push_back("Polytheism");
+	g_pBuildingTechRequirementsMap.emplace("Magick College", vec);
+
+
+
+	vec = nullptr;
+	vec = new BuildingTechRequirementsVec();
+
+	vec->push_back("Wood Working");
+	g_pBuildingTechRequirementsMap.emplace("Inventors Hut", vec);
+
+
+
+	vec = nullptr;
+	vec = new BuildingTechRequirementsVec();
+
+	vec->push_back("Architecture");
+	vec->push_back("Tool Making");
+	g_pBuildingTechRequirementsMap.emplace("Small Workshop", vec);
+
+
+
+	vec = nullptr;
+	vec = new BuildingTechRequirementsVec();
+
+	vec->push_back("Iron Working");
+	vec->push_back("Brick Making");
+	g_pBuildingTechRequirementsMap.emplace("Big Workshop", vec);
+
+
+
+
+	vec = nullptr;
+	vec = new BuildingTechRequirementsVec();
+
+	vec->push_back("Honor");
+	g_pBuildingTechRequirementsMap.emplace("Champions Hut", vec);
+
+
+
+
+	vec = nullptr;
+	vec = new BuildingTechRequirementsVec();
+
+	vec->push_back("Warfare Theory");
+	g_pBuildingTechRequirementsMap.emplace("Warrior School", vec);
+}
+
+BuildingTechRequirementsVec *GetTechnologyRequirementsForBuilding(std::string building_name) {
+
+	try {
+		return g_pBuildingTechRequirementsMap.at(building_name);
+	}
+	catch (const char* err) {
+		// print error.
+	}
+}
+
+BuildingTechRequirementsVec *GetTechnologyRequirementsForBuilding(Building* b) {
+
+	try {
+		return g_pBuildingTechRequirementsMap.at(b->m_BuildingName);
+
+	}
+	catch (const char* err) {
+		// print error.
+	}
+}
+
+
+std::vector<std::string>* GetAvailableBuildingsForTechnology(Technology* t) {
+
+	std::vector<std::string>* vec = new std::vector<std::string>();
+
+	for (auto it : g_pBuildingTechRequirementsMap) {
+
+		for (auto itr : *it.second) {
+
+			if (COMPARE_STRINGS_2(t->m_TechName, itr) == 0) {
+
+				vec->push_back(it.first);
+			}
+		}
+	}
+
+	return vec;
+}
+
+std::vector<std::string>* GetAvailableBuildingsForTechnology(std::string t) {
+
+	std::vector<std::string>* vec = new std::vector<std::string>();
+
+	for (auto it : g_pBuildingTechRequirementsMap) {
+
+		for (auto itr : *it.second) {
+
+			if (COMPARE_STRINGS_2(t, itr) == 0) {
+
+				vec->push_back(it.first);
+			}
+		}
+	}
+
+	return vec;
+}
+
 
 void Player::RandomlyResearchBaseTechnology() {
 

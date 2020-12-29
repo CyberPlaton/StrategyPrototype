@@ -1,4 +1,8 @@
 #pragma once
+// This is a personal academic project. Dear PVS-Studio, please check it.
+
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 #include"Components.h"
 #include"FiniteStateMachine.h"
 #include"YearCounter.h"
@@ -288,7 +292,6 @@ void ReverseMapVisionForEntity(GameEntity* entt, Player* associated_player);
 void GetPrimaryMapTilesAroundSelf(int xpos, int ypos, std::vector<MapTile*>* storage); // Like tiles directly around self.
 void GetSecondaryMapTilesAroundSelf(int xpos, int ypos, std::vector<MapTile*>* storage); // Like tiles 1 tile away around self.
 bool IsPlayersUnit(Player* p, Unit* u);
-
 
 
 enum class TileImprovementLevel {
@@ -1062,20 +1065,19 @@ private:
 };
 
 
-struct BuildingRequierements {
+struct BuildingRequirements {
 	City::CityBuildingSlotType m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_INVALID;
-	std::vector<std::string> m_TechnologyRequirements;
-	std::vector<std::string> m_PresentBuildingsRequirements;
 	std::string m_RaceRequirement;
 	int m_PopulationCountRequirement = 0;
 };
+
 
 // Standard baseclass for all buildings.
 class Building : public GameEntity {
 public:
 	virtual ~Building(){}
 
-	BuildingRequierements* GetRequirements() { return m_Requirements; }
+	BuildingRequirements* GetRequirements() { return m_Requirements; }
 
 	City* m_AssociatedCity = nullptr;
 	Player* m_AssociatedPlayer = nullptr;
@@ -1083,11 +1085,21 @@ public:
 
 	// Buildings can have special requierements, like a technology be researched
 	// or another building already in city present or building be built on special slot type.
-	BuildingRequierements* m_Requirements = nullptr;
+	BuildingRequirements* m_Requirements = nullptr;
 
 private:
 
 };
+
+
+typedef std::vector<std::string> BuildingTechRequirementsVec; // For static tech. map.
+void InitializeBuildingTechnologyRequirements();
+void DeinitializeBuildingTechnologyRequirements();
+BuildingTechRequirementsVec* GetTechnologyRequirementsForBuilding(std::string building_name);
+BuildingTechRequirementsVec* GetTechnologyRequirementsForBuilding(Building* b);
+std::vector<std::string>* GetAvailableBuildingsForTechnology(Technology* t);
+std::vector<std::string>* GetAvailableBuildingsForTechnology(std::string t);
+
 
 
 
@@ -1113,7 +1125,7 @@ public:
 
 	
 		// Define req.
-		m_Requirements = new BuildingRequierements();
+		m_Requirements = new BuildingRequirements();
 		m_Requirements->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
 		m_Requirements->m_RaceRequirement = "All";
 		
@@ -1150,10 +1162,9 @@ public:
 
 
 		// Define req.
-		m_Requirements = new BuildingRequierements();
+		m_Requirements = new BuildingRequirements();
 		m_Requirements->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
 		m_Requirements->m_RaceRequirement = "All";
-		m_Requirements->m_TechnologyRequirements.push_back("Wood Working");
 	}
 
 
@@ -1188,10 +1199,9 @@ public:
 
 
 		// Define req.
-		m_Requirements = new BuildingRequierements();
+		m_Requirements = new BuildingRequirements();
 		m_Requirements->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
 		m_Requirements->m_RaceRequirement = "All";
-		m_Requirements->m_TechnologyRequirements.push_back("Stone Working");
 	}
 
 
@@ -1226,10 +1236,9 @@ public:
 
 
 		// Define req.
-		m_Requirements = new BuildingRequierements();
+		m_Requirements = new BuildingRequirements();
 		m_Requirements->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
 		m_Requirements->m_RaceRequirement = "All";
-		m_Requirements->m_TechnologyRequirements.push_back("Brick Working");
 	}
 
 
@@ -1263,7 +1272,7 @@ public:
 
 
 		// Define req.
-		m_Requirements = new BuildingRequierements();
+		m_Requirements = new BuildingRequirements();
 		m_Requirements->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
 		m_Requirements->m_RaceRequirement = "All";
 	}
@@ -1299,11 +1308,9 @@ public:
 
 
 		// Define req.
-		m_Requirements = new BuildingRequierements();
+		m_Requirements = new BuildingRequirements();
 		m_Requirements->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
 		m_Requirements->m_RaceRequirement = "All";
-		m_Requirements->m_TechnologyRequirements.push_back("Wood Working");
-
 	}
 
 
@@ -1338,13 +1345,9 @@ public:
 
 
 		// Define req.
-		m_Requirements = new BuildingRequierements();
+		m_Requirements = new BuildingRequirements();
 		m_Requirements->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
 		m_Requirements->m_RaceRequirement = "All";
-		m_Requirements->m_TechnologyRequirements.push_back("Stone Working");
-		m_Requirements->m_TechnologyRequirements.push_back("Pottery");
-
-
 	}
 
 
@@ -1378,10 +1381,9 @@ public:
 
 
 		// Define req.
-		m_Requirements = new BuildingRequierements();
+		m_Requirements = new BuildingRequirements();
 		m_Requirements->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
 		m_Requirements->m_RaceRequirement = "All";
-		m_Requirements->m_TechnologyRequirements.push_back("Brick Working");
 	}
 
 
@@ -1415,10 +1417,9 @@ public:
 
 
 		// Define req.
-		m_Requirements = new BuildingRequierements();
+		m_Requirements = new BuildingRequirements();
 		m_Requirements->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
 		m_Requirements->m_RaceRequirement = "All";
-		m_Requirements->m_TechnologyRequirements.push_back("Wisemen Circle");
 	}
 
 
@@ -1452,10 +1453,9 @@ public:
 
 
 		// Define req.
-		m_Requirements = new BuildingRequierements();
+		m_Requirements = new BuildingRequirements();
 		m_Requirements->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
 		m_Requirements->m_RaceRequirement = "All";
-		m_Requirements->m_TechnologyRequirements.push_back("Alphabet");
 		m_Requirements->m_PopulationCountRequirement = 5;
 	}
 
@@ -1490,10 +1490,9 @@ public:
 
 
 		// Define req.
-		m_Requirements = new BuildingRequierements();
+		m_Requirements = new BuildingRequirements();
 		m_Requirements->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
 		m_Requirements->m_RaceRequirement = "All";
-		m_Requirements->m_TechnologyRequirements.push_back("Writing");
 		m_Requirements->m_PopulationCountRequirement = 10;
 	}
 
@@ -1529,10 +1528,9 @@ public:
 
 
 		// Define req.
-		m_Requirements = new BuildingRequierements();
+		m_Requirements = new BuildingRequirements();
 		m_Requirements->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
 		m_Requirements->m_RaceRequirement = "All";
-		m_Requirements->m_TechnologyRequirements.push_back("Literature");
 		m_Requirements->m_PopulationCountRequirement = 20;
 	}
 
@@ -1568,11 +1566,10 @@ public:
 
 
 		// Define req.
-		m_Requirements = new BuildingRequierements();
+		m_Requirements = new BuildingRequirements();
 		m_Requirements->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
 		m_Requirements->m_RaceRequirement = "All";
-		m_Requirements->m_TechnologyRequirements.push_back("Ceremony");
-		m_Requirements->m_PopulationCountRequirement = 0;
+		m_Requirements->m_PopulationCountRequirement = 5;
 	}
 
 
@@ -1606,11 +1603,10 @@ public:
 
 
 		// Define req.
-		m_Requirements = new BuildingRequierements();
+		m_Requirements = new BuildingRequirements();
 		m_Requirements->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
 		m_Requirements->m_RaceRequirement = "All";
-		m_Requirements->m_TechnologyRequirements.push_back("Elementalism");
-		m_Requirements->m_PopulationCountRequirement = 5;
+		m_Requirements->m_PopulationCountRequirement = 10;
 	}
 
 
@@ -1644,11 +1640,10 @@ public:
 
 
 		// Define req.
-		m_Requirements = new BuildingRequierements();
+		m_Requirements = new BuildingRequirements();
 		m_Requirements->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
 		m_Requirements->m_RaceRequirement = "All";
-		m_Requirements->m_TechnologyRequirements.push_back("Polytheism");
-		m_Requirements->m_PopulationCountRequirement = 15;
+		m_Requirements->m_PopulationCountRequirement = 20;
 	}
 
 
@@ -1682,10 +1677,9 @@ public:
 
 
 		// Define req.
-		m_Requirements = new BuildingRequierements();
+		m_Requirements = new BuildingRequirements();
 		m_Requirements->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
 		m_Requirements->m_RaceRequirement = "All";
-		m_Requirements->m_TechnologyRequirements.push_back("Wood Working");
 		m_Requirements->m_PopulationCountRequirement = 5;
 	}
 
@@ -1720,11 +1714,9 @@ public:
 
 
 		// Define req.
-		m_Requirements = new BuildingRequierements();
+		m_Requirements = new BuildingRequirements();
 		m_Requirements->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
 		m_Requirements->m_RaceRequirement = "All";
-		m_Requirements->m_TechnologyRequirements.push_back("Architecture");
-		m_Requirements->m_TechnologyRequirements.push_back("Tool Making");
 		m_Requirements->m_PopulationCountRequirement = 15;
 	}
 
@@ -1759,11 +1751,9 @@ public:
 
 
 		// Define req.
-		m_Requirements = new BuildingRequierements();
+		m_Requirements = new BuildingRequirements();
 		m_Requirements->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
 		m_Requirements->m_RaceRequirement = "All";
-		m_Requirements->m_TechnologyRequirements.push_back("Iron Working");
-		m_Requirements->m_TechnologyRequirements.push_back("Brick Working");
 		m_Requirements->m_PopulationCountRequirement = 20;
 	}
 
@@ -1799,10 +1789,9 @@ public:
 
 
 		// Define req.
-		m_Requirements = new BuildingRequierements();
+		m_Requirements = new BuildingRequirements();
 		m_Requirements->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
 		m_Requirements->m_RaceRequirement = "All";
-		m_Requirements->m_TechnologyRequirements.push_back("Honor");
 		m_Requirements->m_PopulationCountRequirement = 5;
 	}
 
@@ -1837,10 +1826,9 @@ public:
 
 
 		// Define req.
-		m_Requirements = new BuildingRequierements();
+		m_Requirements = new BuildingRequirements();
 		m_Requirements->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
 		m_Requirements->m_RaceRequirement = "All";
-		m_Requirements->m_TechnologyRequirements.push_back("Warfare Theory");
 		m_Requirements->m_PopulationCountRequirement = 10;
 	}
 

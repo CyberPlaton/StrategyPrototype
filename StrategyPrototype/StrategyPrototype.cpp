@@ -1,3 +1,7 @@
+// This is a personal academic project. Dear PVS-Studio, please check it.
+
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 #include"StrategyPrototype.h"
 
 Game* Game::m_Game = nullptr;
@@ -5,6 +9,14 @@ static olc::vf2d g_vi2dCameraPosition = olc::vf2d(0.0f, 0.0f);
 static int ColorValue = 0;
 
 PlayerTurnCounter* PlayerTurnCounter::g_pPlayerTurnCounter = nullptr;
+
+bool Game::OnUserDestroy(){
+
+	DeinitializeUnitTechnologyRequirements();
+	DeinitializeBuildingTechnologyRequirements();
+
+	return true;
+}
 
 bool IsPlayersUnit(Player* p, Unit* u) {
 
@@ -4103,6 +4115,7 @@ void Game::_initialize() {
 	_initializeMap();
 
 	InitializeUnitTechnologyRequirements();
+	InitializeBuildingTechnologyRequirements();
 }
 
 
@@ -5768,7 +5781,12 @@ void Renderer::DrawPlayersBuildingsForCities() {
 
 void Renderer::DrawPlayersTechnologies() {
 
+	// Plus draw buildings that can be build with according tech.
+	// TODO: draw units that can be build with according tech.
+
 	using namespace std;
+
+	std::vector<std::string> *vec;
 
 	Player* p = PlayerTurnCounter::Get()->m_CurrentTurnPlayer;
 	int counter = 1;
@@ -5778,13 +5796,35 @@ void Renderer::DrawPlayersTechnologies() {
 		if (it.second == 1) {
 			cout << color(colors::DARKGREEN);
 			cout << counter << ".) Technology \"" << it.first << "\" was researched." << white << endl;
+
+			// print buildings defined for tech
+			cout << color(colors::YELLOW);
+			cout << "Available Buildings for \"" << it.first << "\":" << endl;
+			vec = GetAvailableBuildingsForTechnology(it.first);
+			for (auto itr : *vec) {
+
+				cout << color(colors::DARKCYAN);
+				cout << "\"" <<  itr << "\"" << white << endl;
+			}
 		}
 		else {
 			cout << color(colors::DARKRED);
 			cout << counter << ".) Technology \"" << it.first << "\" was not researched." << white << endl;
+		
+			// print buildings defined for tech
+			cout << color(colors::YELLOW);
+			cout << "Available Buildings for \"" << it.first << "\":" << endl;
+			vec = GetAvailableBuildingsForTechnology(it.first);
+			for (auto itr : *vec) {
+
+				cout << color(colors::DARKCYAN);
+				cout << "\"" << itr << "\"" << white << endl;
+			}
 		}
 
 		counter++;
+		cout << endl;
+
 	}
 	cout << endl;
 	cout << endl;

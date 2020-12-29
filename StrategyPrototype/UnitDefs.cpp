@@ -1,3 +1,7 @@
+// This is a personal academic project. Dear PVS-Studio, please check it.
+
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 #include"UnitDefs.h"
 
 static std::map<std::string, std::string> g_TechnologyRequirementsMap;
@@ -11,6 +15,12 @@ std::string GetTechnologyRequirementsForUnit(UnitBase* unit) {
 std::string GetTechnologyRequirementsForUnit(std::string tech) {
 
 	return g_TechnologyRequirementsMap.at(tech);
+}
+
+
+void DeinitializeUnitTechnologyRequirements() {
+
+	g_TechnologyRequirementsMap.clear();
 }
 
 void InitializeUnitTechnologyRequirements() {

@@ -1,4 +1,8 @@
 #pragma once
+// This is a personal academic project. Dear PVS-Studio, please check it.
+
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 #include"olcPixelGameEngine.h"
 #include"Platform.h"
 #include"ColorConsole.h"
@@ -288,6 +292,7 @@ public:
 
 	bool OnUserCreate() override;
 	bool OnUserUpdate(float fElapsedTime) override;
+	bool OnUserDestroy() override;
 
 	olc::Pixel* RandomColor();
 	olc::Pixel MakeOlcColorFromCityBorderColor(City::CityBorderColor color);
