@@ -3714,14 +3714,39 @@ void Game::_loadSpriteResources() {
 
 	// Cityview Backgrounds.
 	AddSpriteToStorage("assets/background/city/city_background_forest_temperate.png", "city_background_forest_temperate");
+	AddSpriteToStorage("assets/background/city/city_background_forest_jungle.png", "city_background_forest_jungle");
+	AddSpriteToStorage("assets/background/city/city_background_forest_tundra.png", "city_background_forest_tundra");
+	AddSpriteToStorage("assets/background/city/city_background_forest_savannah.png", "city_background_forest_savannah");
+
 	AddSpriteToStorage("assets/background/city/city_background_hills.png", "city_background_hills");
-	AddSpriteToStorage("assets/background/city/city_background_human_no_water.png", "city_background_human_no_water");
-	AddSpriteToStorage("assets/background/city/city_background_human_with_water.png", "city_background_human_with_water");
 	AddSpriteToStorage("assets/background/city/city_background_river_no_water.png", "city_background_river_no_water");
 	AddSpriteToStorage("assets/background/city/city_background_river_with_water.png", "city_background_river_with_water");
 	AddSpriteToStorage("assets/background/city/city_background_wooden_wall_no_water.png", "city_background_wooden_wall_no_water");
 	AddSpriteToStorage("assets/background/city/city_background_wooden_wall_with_water.png", "city_background_wooden_wall_with_water");
 
+	AddSpriteToStorage("assets/background/city/human/city_background_human_no_water.png", "city_background_human_no_water");
+	AddSpriteToStorage("assets/background/city/human/city_background_human_with_water.png", "city_background_human_with_water");
+
+	AddSpriteToStorage("assets/background/city/darkelf/city_background_darkelf_no_water.png", "city_background_darkelf_no_water");
+	AddSpriteToStorage("assets/background/city/darkelf/city_background_darkelf_with_water.png", "city_background_darkelf_with_water");
+
+	AddSpriteToStorage("assets/background/city/highelf/city_background_highelf_no_water.png", "city_background_highelf_no_water");
+	AddSpriteToStorage("assets/background/city/highelf/city_background_highelf_with_water.png", "city_background_highelf_with_water");
+
+	AddSpriteToStorage("assets/background/city/dwarf/city_background_dwarf_no_water.png", "city_background_dwarf_no_water");
+	AddSpriteToStorage("assets/background/city/dwarf/city_background_dwarf_with_water.png", "city_background_dwarf_with_water");
+
+	AddSpriteToStorage("assets/background/city/orc/city_background_orc_no_water.png", "city_background_orc_no_water");
+	AddSpriteToStorage("assets/background/city/orc/city_background_orc_with_water.png", "city_background_orc_with_water");
+
+	AddSpriteToStorage("assets/background/city/gnome/city_background_gnome_no_water.png", "city_background_gnome_no_water");
+	AddSpriteToStorage("assets/background/city/gnome/city_background_gnome_with_water.png", "city_background_gnome_with_water");
+
+	AddSpriteToStorage("assets/background/city/goblin/city_background_goblin_no_water.png", "city_background_goblin_no_water");
+	AddSpriteToStorage("assets/background/city/goblin/city_background_goblin_with_water.png", "city_background_goblin_with_water");
+
+	AddSpriteToStorage("assets/background/city/troll/city_background_troll_no_water.png", "city_background_troll_no_water");
+	AddSpriteToStorage("assets/background/city/troll/city_background_troll_with_water.png", "city_background_troll_with_water");
 
 
 
@@ -4193,7 +4218,7 @@ bool Game::OnUserCreate() {
 
 
 
-	City* city3 = MakeNewCity(true, "Gral", CMPEntityRace::Race::RACE_ORC, player2, 15, 9, 5);
+	City* city3 = MakeNewCity(true, "Gral", CMPEntityRace::Race::RACE_ORC, player2, 16, 7, 5);
 	storage->AddGameEntitie(city3);
 
 	// TimeCounter
@@ -4768,7 +4793,27 @@ void Renderer::RenderCityLayer4() {
 	std::string environment_background;
 	bool env_flag = true;
 	if (COMPARE_STRINGS(environment, "forest") == 0) {
-		environment_background = base + "forest_temperate";
+
+		// Check for appropriate forest type...
+		MapTile* tile = GetMapTileAtWorldPosition(m_CurrentViewedCity->m_TransformCmp->m_GameWorldSpaceCell[0], m_CurrentViewedCity->m_TransformCmp->m_GameWorldSpaceCell[1]);
+
+		switch (tile->m_MapTileType) {
+		case MapTile::MapTileType::MAPTILE_TYPE_JUNGLE:
+			environment_background = base + "forest_jungle";
+			break;
+		case MapTile::MapTileType::MAPTILE_TYPE_SAVANNAH:
+			environment_background = base + "forest_savannah";
+			break;
+		case MapTile::MapTileType::MAPTILE_TYPE_TUNDRA:
+			environment_background = base + "forest_tundra";
+			break;
+		case MapTile::MapTileType::MAPTILE_TYPE_TEMPERATE:
+			environment_background = base + "forest_temperate";
+			break;
+		default:
+			// Give out some error message.
+			return;
+		}
 	}
 	else if (COMPARE_STRINGS(environment, "hills") == 0) {
 		environment_background = base + "hills";
@@ -4780,6 +4825,7 @@ void Renderer::RenderCityLayer4() {
 	if (env_flag) {
 		m_Game->DrawDecal(vf2d(2, 2), m_Game->m_SpriteResourceMap.at(environment_background));
 	}
+
 
 
 	// 4.2. Draw river if present.
