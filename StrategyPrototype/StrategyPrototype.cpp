@@ -2228,6 +2228,10 @@ void CMPCameraInput::_handleCityViewMouse(Camera* cam) {
 	int mouse_x = context->GetMouseX();
 	int mouse_y = context->GetMouseY();
 
+	cout << color(colors::DARKMAGENTA);
+	cout << "Mouse ("<< mouse_x << ":" << mouse_y << ")" << white << endl;
+
+
 	// Compute offset of maptile position in cityview for getting right maptile down below..
 	City* city = PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlyViewedCity;
 	int cx = 992 - 32;
@@ -2255,6 +2259,7 @@ void CMPCameraInput::_handleCityViewMouse(Camera* cam) {
 		std::string entt_type;
 
 		entt = _hoveringOverEntity(mouse_x, mouse_y, entt_type);
+
 		if (entt != nullptr &&
 			COMPARE_STRINGS(entt_type, "Unit") == 0) { // We are hovering over a unit...
 
@@ -2269,10 +2274,17 @@ void CMPCameraInput::_handleCityViewMouse(Camera* cam) {
 	}
 
 
-	if (context->GetMouse(0).bHeld &&
-		PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlyHoveredEntityInCity != nullptr ||
+	if (context->GetMouse(0).bHeld && // Holding mouse ...
+
+		PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlyHoveredEntityInCity != nullptr && // .. over an entity...
+
+		(COMPARE_STRINGS(PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlyHoveredEntityInCity->m_IDCmp->m_DynamicTypeName, "Unit") == 0) // .. that is of type "unit", and not "building"...
 		
-		m_DraggedUnit != nullptr) {
+		||
+		
+		m_DraggedUnit != nullptr) { // Or we are already dragging a "unit".
+
+
 
 		// From here, deal with dragged unit directly in handler,
 		// as such save this unit to ours.
@@ -2282,10 +2294,11 @@ void CMPCameraInput::_handleCityViewMouse(Camera* cam) {
 		}
 
 
-		// drag unit...
-		m_DraggedUnit->m_TransformCmp->m_PosX = mouse_x - int(SPRITES_WIDTH_AND_HEIGHT / 2);
-		m_DraggedUnit->m_TransformCmp->m_PosY = mouse_y - int(SPRITES_WIDTH_AND_HEIGHT / 2);
-
+		if (m_DraggedUnit) {
+			// drag unit...
+			m_DraggedUnit->m_TransformCmp->m_PosX = mouse_x - int(SPRITES_WIDTH_AND_HEIGHT / 2);
+			m_DraggedUnit->m_TransformCmp->m_PosY = mouse_y - int(SPRITES_WIDTH_AND_HEIGHT / 2);
+		}
 	}
 
 
@@ -3700,34 +3713,14 @@ void Game::_loadSpriteResources() {
 	*/
 
 	// Cityview Backgrounds.
-	Sprite* back1 = new Sprite("assets/background/city/background_city_forest_temperate.png");
-	Sprite* back2 = new Sprite("assets/background/city/background_city_orc_normal.png");
-	Sprite* back3 = new Sprite("assets/background/city/background_city_human_normal.png");
-	Sprite* back4 = new Sprite("assets/background/city/background_city_hills.png");
-	Sprite* back5 = new Sprite("assets/background/city/background_city_human_river.png");
-
-
-
-
-	m_SpriteStorage.push_back(back1);
-	m_SpriteStorage.push_back(back2);
-	m_SpriteStorage.push_back(back3);
-	m_SpriteStorage.push_back(back4);
-	m_SpriteStorage.push_back(back5);
-
-
-	Decal* d_back1 = new Decal(back1);
-	Decal* d_back2 = new Decal(back2);
-	Decal* d_back3 = new Decal(back3);
-	Decal* d_back4 = new Decal(back4);
-	Decal* d_back5 = new Decal(back5);
-
-
-	m_SpriteResourceMap.insert(std::make_pair("background_city_forest_temperate", d_back1));
-	m_SpriteResourceMap.insert(std::make_pair("background_city_orc_normal", d_back2));
-	m_SpriteResourceMap.insert(std::make_pair("background_city_human_normal", d_back3));
-	m_SpriteResourceMap.insert(std::make_pair("background_city_hills", d_back4));
-	m_SpriteResourceMap.insert(std::make_pair("background_city_human_river", d_back5));
+	AddSpriteToStorage("assets/background/city/city_background_forest_temperate.png", "city_background_forest_temperate");
+	AddSpriteToStorage("assets/background/city/city_background_hills.png", "city_background_hills");
+	AddSpriteToStorage("assets/background/city/city_background_human_no_water.png", "city_background_human_no_water");
+	AddSpriteToStorage("assets/background/city/city_background_human_with_water.png", "city_background_human_with_water");
+	AddSpriteToStorage("assets/background/city/city_background_river_no_water.png", "city_background_river_no_water");
+	AddSpriteToStorage("assets/background/city/city_background_river_with_water.png", "city_background_river_with_water");
+	AddSpriteToStorage("assets/background/city/city_background_wooden_wall_no_water.png", "city_background_wooden_wall_no_water");
+	AddSpriteToStorage("assets/background/city/city_background_wooden_wall_with_water.png", "city_background_wooden_wall_with_water");
 
 
 
@@ -4015,6 +4008,26 @@ void Game::_loadSpriteResources() {
 	AddSpriteToStorage("assets/unit/human/human_swordman_bronze.png", "human_swordman_bronze");
 	AddSpriteToStorage("assets/unit/orc/orc_swordman_bronze.png", "orc_swordman_bronze");
 	AddSpriteToStorage("assets/unit/troll/troll_swordman_bronze.png", "troll_swordman_bronze");
+
+
+	AddSpriteToStorage("assets/unit/darkelf/human_paladin_adamantium.png", "human_paladin_adamantium");
+	AddSpriteToStorage("assets/unit/dwarf/dwarf_paladin_adamantium.png", "dwarf_paladin_adamantium");
+	AddSpriteToStorage("assets/unit/gnome/gnome_paladin_adamantium.png", "gnome_paladin_adamantium");
+	AddSpriteToStorage("assets/unit/goblin/goblin_paladin_adamantium.png", "goblin_paladin_adamantium");
+	AddSpriteToStorage("assets/unit/highelf/highelf_paladin_adamantium.png", "highelf_paladin_adamantium");
+	AddSpriteToStorage("assets/unit/human/human_paladin_adamantium.png", "human_paladin_adamantium");
+	AddSpriteToStorage("assets/unit/orc/orc_paladin_adamantium.png", "orc_paladin_adamantium");
+	AddSpriteToStorage("assets/unit/troll/troll_paladin_adamantium.png", "troll_paladin_adamantium");
+
+
+	AddSpriteToStorage("assets/unit/darkelf/human_paladin_malachite.png", "human_paladin_malachite");
+	AddSpriteToStorage("assets/unit/dwarf/dwarf_paladin_malachite.png", "dwarf_paladin_malachite");
+	AddSpriteToStorage("assets/unit/gnome/gnome_paladin_malachite.png", "gnome_paladin_malachite");
+	AddSpriteToStorage("assets/unit/goblin/goblin_paladin_malachite.png", "goblin_paladin_malachite");
+	AddSpriteToStorage("assets/unit/highelf/highelf_paladin_malachite.png", "highelf_paladin_malachite");
+	AddSpriteToStorage("assets/unit/human/human_paladin_malachite.png", "human_paladin_malachite");
+	AddSpriteToStorage("assets/unit/orc/orc_paladin_malachite.png", "orc_paladin_malachite");
+	AddSpriteToStorage("assets/unit/troll/troll_paladin_malachite.png", "troll_paladin_malachite");
 }
 
 
@@ -4171,6 +4184,13 @@ bool Game::OnUserCreate() {
 	city2->AddBuilding(new BuildingInventorsHut(city2), 7);
 	city2->AddBuilding(new BuildingSmallWorkshop(city2), 8);
 	city2->AddBuilding(new BuildingBigWorkshop(city2), 9);
+
+	city2->AddBuilding(new BuildingShack(city2), 10);
+	city2->AddBuilding(new BuildingShack(city2), 11);
+
+	city2->AddBuilding(new BuildingSmallWorkshop(city2), 12);
+	city2->AddBuilding(new BuildingBigWorkshop(city2), 13);
+
 
 
 	City* city3 = MakeNewCity(true, "Gral", CMPEntityRace::Race::RACE_ORC, player2, 15, 9, 5);
@@ -4662,6 +4682,144 @@ void Renderer::RenderCityLayer4() {
 	m_Game->SetDrawTarget(m_Layer4);
 	m_Game->Clear(olc::BLANK);
 
+	// VERSION 3.0.
+
+	// 1. render panel of left upper side.
+	m_Game->DrawDecal(vi2d(2, 2), m_Game->m_SpriteResourceMap.at("cityview_upper_panel"));
+
+	// 2. Draw a color of underground based on the cities Maptile MapTileType...
+	// TODO:
+	// Make a special decal for this function, as I think, this draws down the FPS in cityview.
+	_drawCityviewGroundBasedOnCityMaptileType(GetMapTileAtWorldPosition(m_CurrentViewedCity->m_TransformCmp->m_GameWorldSpaceCell[0], m_CurrentViewedCity->m_TransformCmp->m_GameWorldSpaceCell[1]));
+
+
+	// 3. Draw cities background based on whether city has access to ocean
+	// and based on race...
+	std::string base = "city_background_";
+	std::string race;
+	std::string sprite;
+	std::string water_access;
+	std::string environment;
+	std::string city_wall;
+
+	switch (m_CurrentViewedCity->m_CoastalCity) {
+	case true: // Water access..
+
+		water_access = "with_water";
+		break;
+	case false: // No Water access..
+
+		water_access = "no_water";
+		break;
+	}
+
+	switch (m_CurrentViewedCity->m_CityRaceCmp->m_EntityRace) { // Based on race..
+	case CMPEntityRace::Race::RACE_DARKELF:
+		race = "darkelf_";
+
+		break;
+	case CMPEntityRace::Race::RACE_HIGHELF:
+		race = "highelf_";
+
+		break;
+	case CMPEntityRace::Race::RACE_GNOME:
+		race = "gnome_";
+
+		break;
+	case CMPEntityRace::Race::RACE_GOBLIN:
+		race = "goblin_";
+
+		break;
+	case CMPEntityRace::Race::RACE_TROLL:
+		race = "troll_";
+
+		break;
+	case CMPEntityRace::Race::RACE_DWARF:
+		race = "dwarf_";
+
+		break;
+	case CMPEntityRace::Race::RACE_HUMAN:
+		race = "human_";
+
+		break;
+	case CMPEntityRace::Race::RACE_ORC:
+		race = "orc_";
+
+		break;
+	}
+
+	// Get whaths in the background of the city...
+	switch (*m_CurrentViewedCity->m_CityLandscapeType) {
+	case City::CityLandscapeType::CITY_LANDSCAPE_FOREST:
+		environment = "forest"; // For now we have only temperate forest.
+		break;
+	case City::CityLandscapeType::CITY_LANDSCAPE_HILLS:
+		environment = "hills";
+		break;
+	case City::CityLandscapeType::CITY_LANDSCAPE_PLAIN:
+		environment = "plains";
+		break;
+	}
+
+
+
+	// 4. Draw things based on input from above...
+	// 4.1. Draw environment background.
+	std::string environment_background;
+	bool env_flag = true;
+	if (COMPARE_STRINGS(environment, "forest") == 0) {
+		environment_background = base + "forest_temperate";
+	}
+	else if (COMPARE_STRINGS(environment, "hills") == 0) {
+		environment_background = base + "hills";
+	}
+	else {
+		env_flag = false; // If city on plains, draw nothing...
+	}
+
+	if (env_flag) {
+		m_Game->DrawDecal(vf2d(2, 2), m_Game->m_SpriteResourceMap.at(environment_background));
+	}
+
+
+	// 4.2. Draw river if present.
+	std::string river_background;
+	if (m_CurrentViewedCity->m_RiverPresentInCity) {
+
+		river_background = base + "river_" + water_access;
+
+		// Draw the river..
+		m_Game->DrawDecal(vf2d(2, 2), m_Game->m_SpriteResourceMap.at(river_background));
+	}
+
+
+
+
+	// 4.3.  Draw cities background.
+	std::string city_background = base + race + water_access; // e.g. "city_background_human_with_water"
+	m_Game->DrawDecal(vf2d(2, 2), m_Game->m_SpriteResourceMap.at(city_background));
+
+
+
+	// 4.4. Draw cities wall overlay..
+	// For now we draw standard wooden wall for all cities...
+	if (m_CurrentViewedCity->m_CoastalCity) {
+		city_wall = base + "wooden_wall_with_water";
+	}
+	else {
+		city_wall = base + "wooden_wall_no_water";
+
+	}
+
+	m_Game->DrawDecal(vf2d(2, 2), m_Game->m_SpriteResourceMap.at(city_wall));
+
+
+	// 4.5. Lastly, draw right sidepanel of the city.
+	m_Game->DrawDecal(vi2d(704, 2), m_Game->m_SpriteResourceMap.at("cityview_sidepanel"));
+
+
+
+
 	/*
 	//m_Game->FillRect(vi2d(2, 2), vi2d(700, 200), olc::DARK_CYAN);
 	m_Game->DrawDecal(vi2d(2, 2), m_Game->m_SpriteResourceMap.at("cityview_upper_panel"));
@@ -4688,11 +4846,14 @@ void Renderer::RenderCityLayer4() {
 	*/
 
 
+	/*
 	// Version 2.0.
 	m_Game->DrawDecal(vi2d(2, 2), m_Game->m_SpriteResourceMap.at("cityview_upper_panel"));
 
 
 	// Here, draw a color of underground based on the cities Maptile MapTileType...
+	// TODO:
+	// Make a special decal for this function, as I think, this draws down the FPS in cityview.
 	_drawCityviewGroundBasedOnCityMaptileType(GetMapTileAtWorldPosition(m_CurrentViewedCity->m_TransformCmp->m_GameWorldSpaceCell[0], m_CurrentViewedCity->m_TransformCmp->m_GameWorldSpaceCell[1]));
 
 
@@ -4752,7 +4913,7 @@ void Renderer::RenderCityLayer4() {
 
 
 	m_Game->DrawDecal(vi2d(704, 2), m_Game->m_SpriteResourceMap.at("cityview_sidepanel"));
-
+	*/
 
 	m_Game->EnableLayer(m_Layer4, true);
 	m_Game->SetDrawTarget(nullptr);

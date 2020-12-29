@@ -715,7 +715,7 @@ public:
 	// 1-9 standard, 10-11 special, 12-13 port.
 	//
 	// Fort:
-	// 1-4 standard, 5-6 special, 7-8 port.
+	// 1-4 standard, 5-8 special.
 	std::vector<BuildingSlot*> m_CityBuildingsSlots;
 
 private:
