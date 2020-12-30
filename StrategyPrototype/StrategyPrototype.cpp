@@ -2884,6 +2884,14 @@ bool CMPCameraInput::_tryGivingUnitAProfession(Unit* unit) {
 					cin >> choosen_number;
 					choosen_number--;
 
+					// Check fir valid number..
+					if ((choosen_number < 0) &&
+						(choosen_number > available_professions_vec.size() - 1)) {
+
+						// Number is in minus range or greater than valid vec size, thus error.
+						return false;
+					}
+
 					unit->ChangeClass(available_professions_vec.at(choosen_number));
 					unit->m_AssociatedPlayer->m_CurrentlyViewedCity->RemoveCitizenFromJoblessVector(unit); // Remove from jobless if he was there.
 
@@ -4153,6 +4161,7 @@ bool IMGUI::AddSprite(std::string path, std::string spritename) {
 	Decal* d = new Decal(s);
 	IMGUI::Get()->m_IMGUIDecalMap.insert(std::make_pair(spritename, d));
 	
+	return (d);
 }
 
 
@@ -4630,6 +4639,7 @@ void Renderer::RenderCityLayer3() {
 	City* city = nullptr;
 
 	// TODO:
+	if (m_CurrentViewedCity == nullptr) return; // Verify for some weird bug where viewed city is nullptr.
 
 	// 1)
 	// Give the right panel center as city center:
@@ -4645,7 +4655,6 @@ void Renderer::RenderCityLayer3() {
 
 
 	// Render the city and surroundings.
-	if (m_CurrentViewedCity == nullptr) return;
 	for (auto it = m_CurrentViewedCity->m_ClaimedRegions.begin(); it != m_CurrentViewedCity->m_ClaimedRegions.end(); ++it) {
 
 		region = reinterpret_cast<MapTileRegion*>(*it);
@@ -4757,31 +4766,58 @@ void Renderer::RenderCityLayer3() {
 
 void Renderer::_drawCityviewGroundBasedOnCityMaptileType(MapTile* maptile) {
 
+	// NOTE:
+	// This function is to be replaced to draw a single decal rect in needed position, and thus will be more efficient.
+
 	using namespace olc;
 
-	Pixel* tundra = new Pixel(60, 81, 72, 255);
-	Pixel* savannah = new Pixel(187, 161, 80, 255);
-	Pixel* jungle = new Pixel(88, 66, 124, 255);
-	Pixel* temperate = new Pixel(107, 142, 78);
+	if (maptile->m_MapTileType == MapTile::MapTileType::MAPTILE_TYPE_TUNDRA) {
 
+		// Define
+		Pixel* tundra = new Pixel(60, 81, 72, 255);
 
-
-	switch (maptile->m_MapTileType) {
-	case MapTile::MapTileType::MAPTILE_TYPE_TUNDRA:
+		// Draw
 		m_Game->FillRect(vi2d(2, 202), vi2d(700, 520), *tundra);
-		break;
-	case MapTile::MapTileType::MAPTILE_TYPE_SAVANNAH:
+
+		// Release
+		delete tundra;
+	}
+	else if (maptile->m_MapTileType == MapTile::MapTileType::MAPTILE_TYPE_SAVANNAH) {
+
+		// Define
+		Pixel* savannah = new Pixel(187, 161, 80, 255);
+
+		// Draw
 		m_Game->FillRect(vi2d(2, 202), vi2d(700, 520), *savannah);
-		break;
-	case MapTile::MapTileType::MAPTILE_TYPE_TEMPERATE:
+
+		// Release
+		delete savannah;
+	}
+	else if (maptile->m_MapTileType == MapTile::MapTileType::MAPTILE_TYPE_TEMPERATE) {
+
+
+		// Define
+		Pixel* temperate = new Pixel(107, 142, 78);
+
+		// Draw
 		m_Game->FillRect(vi2d(2, 202), vi2d(700, 520), *temperate);
-		break;
-	case MapTile::MapTileType::MAPTILE_TYPE_JUNGLE:
+
+		// Release
+		delete temperate;
+	}
+	else if (maptile->m_MapTileType == MapTile::MapTileType::MAPTILE_TYPE_JUNGLE) {
+
+		// Define
+		Pixel* jungle = new Pixel(88, 66, 124, 255);
+
+		// Draw
 		m_Game->FillRect(vi2d(2, 202), vi2d(700, 520), *jungle);
-		break;
-	default:
+
+		// Release
+		delete jungle;
+	}
+	else {
 		m_Game->FillRect(vi2d(2, 202), vi2d(700, 520), olc::RED);
-		break;
 	}
 }
 

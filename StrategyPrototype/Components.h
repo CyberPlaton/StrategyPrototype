@@ -189,6 +189,7 @@ struct CMPArtificialIntelligence {
 		// Try executing the mapped logic.
 		try {
 			m_StateLogicMap.at(state_string)->executeStateLogic();
+			return true;
 		}
 		catch (char* err) {
 			using namespace std;
@@ -197,6 +198,8 @@ struct CMPArtificialIntelligence {
 			cout << APP_ERROR_COLOR;
 			cout << "Error on TryExecuteStateLogic()" << " .\n";
 			cout << "Error code:  " + std::to_string(*err) << white <<endl;
+
+			return false;
 		}
 	}
 

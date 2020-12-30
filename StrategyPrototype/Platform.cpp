@@ -52,6 +52,8 @@ int StringToInt(std::string s) {
 		return 9;
 
 	}
+
+	return -1;
 }
 
 char* _printf_convert(unsigned int num, int base)

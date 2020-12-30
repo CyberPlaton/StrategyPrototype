@@ -52,7 +52,10 @@ std::string UnitNames::m_TrollNames[10] = {
 
 std::string UnitNames::GetRandomTrollName() {
 
-	int r = Random() % m_TrollNames->size();
+	// Get Length of array.
+	int mod = (sizeof(m_TrollNames) / sizeof(*m_TrollNames)); // Does not work with pointers.
+
+	int r = Random() % mod;
 
 	return m_TrollNames[r];
 }
@@ -60,49 +63,56 @@ std::string UnitNames::GetRandomTrollName() {
 
 std::string UnitNames::GetRandomHumanName() {
 
-	int r = Random() % m_HumanNames->size();
+	int mod = (sizeof(m_TrollNames) / sizeof(*m_TrollNames)); // Does not work with pointers.
+	int r = Random() % mod;
 
 	return m_HumanNames[r];
 }
 
 std::string UnitNames::GetRandomHighelfName() {
 
-	int r = Random() % m_HighelfNames->size();
+	int mod = (sizeof(m_TrollNames) / sizeof(*m_TrollNames)); // Does not work with pointers.
+	int r = Random() % mod;
 
 	return m_HighelfNames[r];
 }
 
 std::string UnitNames::GetRandomDarkelfName() {
 
-	int r = Random() % m_DarkelfNames->size();
+	int mod = (sizeof(m_TrollNames) / sizeof(*m_TrollNames)); // Does not work with pointers.
+	int r = Random() % mod;
 
 	return m_DarkelfNames[r];
 }
 
 std::string UnitNames::GetRandomOrcName() {
 
-	int r = Random() % m_OrcNames->size();
+	int mod = (sizeof(m_TrollNames) / sizeof(*m_TrollNames)); // Does not work with pointers.
+	int r = Random() % mod;
 
 	return m_OrcNames[r];
 }
 
 std::string UnitNames::GetRandomGnomeName() {
 
-	int r = Random() % m_GnomeNames->size();
+	int mod = (sizeof(m_TrollNames) / sizeof(*m_TrollNames)); // Does not work with pointers.
+	int r = Random() % mod;
 
 	return m_GnomeNames[r];
 }
 
 std::string UnitNames::GetRandomDwarfName() {
 
-	int r = Random() % m_DwarfNames->size();
+	int mod = (sizeof(m_TrollNames) / sizeof(*m_TrollNames)); // Does not work with pointers.
+	int r = Random() % mod;
 
 	return m_DwarfNames[r];
 }
 
 std::string UnitNames::GetRandomGoblinName() {
 
-	int r = Random() % m_GoblinNames->size();
+	int mod = (sizeof(m_TrollNames) / sizeof(*m_TrollNames)); // Does not work with pointers.
+	int r = Random() % mod;
 
 	return m_GoblinNames[r];
 }

@@ -245,15 +245,23 @@ struct PlayerTurnCounter {
 
 		bool all_had_turn = false;
 		int current_index = m_CurrentPlayerIndex;
-		m_CurrentPlayerIndex = (++m_CurrentPlayerIndex) % m_InGamePlayers.size();
+		int mod = m_InGamePlayers.size();
+		
+		// Go to next players index.
+		// If end was reached go to first player at index 0.
+		int x = (++m_CurrentPlayerIndex) % mod;
+		m_CurrentPlayerIndex = x;
 
-		if (current_index > 0 & m_CurrentPlayerIndex == 0) {
+		if ((current_index > 0) &&
+			(m_CurrentPlayerIndex == 0)) {
+
+			// Register that all player are done.
 			all_had_turn = true;
 		}
 
+		// Set new player.
 		m_CurrentTurnPlayer = m_InGamePlayers[m_CurrentPlayerIndex];
 	
-		
 		return all_had_turn;
 	}
 
@@ -303,8 +311,8 @@ public:
 
 	bool AddSpriteToStorage(std::string path, std::string spritename);
 
-	Renderer* m_Renderer;
-	WorldMap* m_WorldMap;
+	Renderer* m_Renderer = nullptr;
+	WorldMap* m_WorldMap = nullptr;
 
 	// Holds sprite instances of specified names for them.
 	//std::map<std::string, olc::Sprite*> m_SpriteResourceMap; 
@@ -372,8 +380,8 @@ private:
 struct UIState {
 
 	// Mouse handling.
-	float m_MouseX;
-	float m_MouseY;
+	float m_MouseX = 0;
+	float m_MouseY = 0;
 
 	// -1 means no valid mouse button was pressed.
 	// It is the only plausible choise.
@@ -385,12 +393,12 @@ struct UIState {
 
 
 	// Keyboard handling.
-	int m_KeyboardItem;
-	int m_KeyEntered;
-	int m_KeyMode;
+	int m_KeyboardItem = 0;
+	int m_KeyEntered = 0;
+	int m_KeyMode = 0;
 
 	// 
-	int m_LastFocusedWidget;
+	int m_LastFocusedWidget = 0;
 
 };
 
