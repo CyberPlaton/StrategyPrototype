@@ -4295,21 +4295,18 @@ bool Game::OnUserCreate() {
 	City* city2 = MakeNewCity(true, "Stormgrad", CMPEntityRace::Race::RACE_HUMAN, player, 7, 6, 5);
 	storage->AddGameEntitie(city2);
 
-	city2->AddBuilding(new BuildingChampionsHut(city2), 1);
-	city2->AddBuilding(new BuildingWarriorSchool(city2), 2);
-	city2->AddBuilding(new BuildingStoneSchool(city2), 3);
+	city2->AddBuilding(new BuildingShack(city2), 1);
+	city2->AddBuilding(new BuildingShack(city2), 2);
+	city2->AddBuilding(new BuildingShack(city2), 3);
 	city2->AddBuilding(new BuildingShrine(city2), 4);
-	city2->AddBuilding(new BuildingMagickSchool(city2), 5);
-	city2->AddBuilding(new BuildingMagickCollege(city2), 6);
+	city2->AddBuilding(new BuildingShack(city2), 5);
+	city2->AddBuilding(new BuildingShack(city2), 6);
 	city2->AddBuilding(new BuildingInventorsHut(city2), 7);
-	city2->AddBuilding(new BuildingSmallWorkshop(city2), 8);
-	city2->AddBuilding(new BuildingBigWorkshop(city2), 9);
+	city2->AddBuilding(new BuildingShack(city2), 8);
+	city2->AddBuilding(new BuildingShack(city2), 9);
 
-	city2->AddBuilding(new BuildingShack(city2), 10);
-	city2->AddBuilding(new BuildingShack(city2), 11);
-
-	city2->AddBuilding(new BuildingSmallWorkshop(city2), 12);
-	city2->AddBuilding(new BuildingBigWorkshop(city2), 13);
+	city2->AddBuilding(new BuildingChampionsHut(city2), 10);
+	city2->AddBuilding(new BuildingChampionsHut(city2), 11);
 
 
 

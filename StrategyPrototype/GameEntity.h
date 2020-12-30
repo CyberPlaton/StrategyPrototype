@@ -1069,6 +1069,18 @@ private:
 };
 
 
+
+
+
+// BUILDING STUFF
+enum class BuildingTier {
+	BUILDING_TIER_INVALID = -1,
+
+	BUILDING_TIER_1 = 0,
+	BUILDING_TIER_2 = 1,
+	BUILDING_TIER_3 = 2
+};
+
 struct BuildingRequirements {
 	City::CityBuildingSlotType m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_INVALID;
 	std::string m_RaceRequirement;
@@ -1090,7 +1102,7 @@ public:
 	// Buildings can have special requierements, like a technology be researched
 	// or another building already in city present or building be built on special slot type.
 	BuildingRequirements* m_Requirements = nullptr;
-
+	BuildingTier m_BuildingTier = BuildingTier::BUILDING_TIER_INVALID;
 private:
 
 };
@@ -1105,7 +1117,38 @@ std::vector<std::string>* GetAvailableBuildingsForTechnology(Technology* t);
 std::vector<std::string>* GetAvailableBuildingsForTechnology(std::string t);
 
 
+/*
+List of Buildings and according Tiers:
+Tier 1							Tier 2										Tier 3
+council							town hall									mayors palace
+local market					big market									merchants quarter
+brothel							tavern										taverns quarter
+wisemen hut						school										college
+shrine							magic school								magic college
+inventors hut					small workshop								big workshop
+champions hut					military school								military college
+shack							stone house									brick house
+wooden house					big storage house							city storage
+underground storage				masons works.								goldsmiths works.
+storage house					brewery
+sawmill							smelters works.
+tailors works.					armor smiths works.
+picklers works.					weapon smiths works.
+								tool smiths works.
+								ranch
 
+								merchants guild
+								fighters guild
+								mages guild
+								thieves guild
+								assassins guild
+
+								baracks
+								archery range
+								mages tower
+								stables
+
+*/
 
 class BuildingShack : public Building {
 public:
@@ -1132,7 +1175,7 @@ public:
 		m_Requirements = new BuildingRequirements();
 		m_Requirements->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
 		m_Requirements->m_RaceRequirement = "All";
-		
+		m_BuildingTier = BuildingTier::BUILDING_TIER_1;
 	}
 
 
@@ -1169,6 +1212,8 @@ public:
 		m_Requirements = new BuildingRequirements();
 		m_Requirements->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
 		m_Requirements->m_RaceRequirement = "All";
+		m_BuildingTier = BuildingTier::BUILDING_TIER_1;
+
 	}
 
 
@@ -1206,6 +1251,7 @@ public:
 		m_Requirements = new BuildingRequirements();
 		m_Requirements->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
 		m_Requirements->m_RaceRequirement = "All";
+		m_BuildingTier = BuildingTier::BUILDING_TIER_2;
 	}
 
 
@@ -1243,6 +1289,7 @@ public:
 		m_Requirements = new BuildingRequirements();
 		m_Requirements->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
 		m_Requirements->m_RaceRequirement = "All";
+		m_BuildingTier = BuildingTier::BUILDING_TIER_3;
 	}
 
 
@@ -1279,6 +1326,7 @@ public:
 		m_Requirements = new BuildingRequirements();
 		m_Requirements->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
 		m_Requirements->m_RaceRequirement = "All";
+		m_BuildingTier = BuildingTier::BUILDING_TIER_1;
 	}
 
 
@@ -1315,6 +1363,7 @@ public:
 		m_Requirements = new BuildingRequirements();
 		m_Requirements->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
 		m_Requirements->m_RaceRequirement = "All";
+		m_BuildingTier = BuildingTier::BUILDING_TIER_1;
 	}
 
 
@@ -1342,7 +1391,7 @@ public:
 		m_IDCmp->m_DynamicTypeName = "Building";
 
 
-		m_BuildingName = "Stone Warehouse";
+		m_BuildingName = "Big Warehouse";
 
 		m_AssociatedCity = associated_city;
 		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
@@ -1352,6 +1401,7 @@ public:
 		m_Requirements = new BuildingRequirements();
 		m_Requirements->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
 		m_Requirements->m_RaceRequirement = "All";
+		m_BuildingTier = BuildingTier::BUILDING_TIER_2;
 	}
 
 
@@ -1378,7 +1428,7 @@ public:
 		m_IDCmp->m_DynamicTypeName = "Building";
 
 
-		m_BuildingName = "Brick Warehouse";
+		m_BuildingName = "City Storage";
 
 		m_AssociatedCity = associated_city;
 		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
@@ -1388,6 +1438,7 @@ public:
 		m_Requirements = new BuildingRequirements();
 		m_Requirements->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
 		m_Requirements->m_RaceRequirement = "All";
+		m_BuildingTier = BuildingTier::BUILDING_TIER_3;
 	}
 
 
@@ -1424,6 +1475,8 @@ public:
 		m_Requirements = new BuildingRequirements();
 		m_Requirements->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
 		m_Requirements->m_RaceRequirement = "All";
+		m_BuildingTier = BuildingTier::BUILDING_TIER_1;
+
 	}
 
 
@@ -1434,7 +1487,7 @@ private:
 
 };
 
-
+/*
 class BuildingWoodenSchool : public Building {
 public:
 
@@ -1461,6 +1514,8 @@ public:
 		m_Requirements->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
 		m_Requirements->m_RaceRequirement = "All";
 		m_Requirements->m_PopulationCountRequirement = 5;
+		m_BuildingTier = BuildingTier::BUILDING_TIER_1;
+
 	}
 
 
@@ -1470,7 +1525,7 @@ private:
 private:
 
 };
-
+*/
 
 class BuildingStoneSchool : public Building {
 public:
@@ -1498,6 +1553,8 @@ public:
 		m_Requirements->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
 		m_Requirements->m_RaceRequirement = "All";
 		m_Requirements->m_PopulationCountRequirement = 10;
+		m_BuildingTier = BuildingTier::BUILDING_TIER_2;
+
 	}
 
 
@@ -1536,6 +1593,8 @@ public:
 		m_Requirements->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
 		m_Requirements->m_RaceRequirement = "All";
 		m_Requirements->m_PopulationCountRequirement = 20;
+		m_BuildingTier = BuildingTier::BUILDING_TIER_3;
+
 	}
 
 
@@ -1574,6 +1633,8 @@ public:
 		m_Requirements->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
 		m_Requirements->m_RaceRequirement = "All";
 		m_Requirements->m_PopulationCountRequirement = 5;
+		m_BuildingTier = BuildingTier::BUILDING_TIER_1;
+
 	}
 
 
@@ -1611,6 +1672,8 @@ public:
 		m_Requirements->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
 		m_Requirements->m_RaceRequirement = "All";
 		m_Requirements->m_PopulationCountRequirement = 10;
+		m_BuildingTier = BuildingTier::BUILDING_TIER_2;
+
 	}
 
 
@@ -1648,6 +1711,8 @@ public:
 		m_Requirements->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
 		m_Requirements->m_RaceRequirement = "All";
 		m_Requirements->m_PopulationCountRequirement = 20;
+		m_BuildingTier = BuildingTier::BUILDING_TIER_3;
+
 	}
 
 
@@ -1685,6 +1750,8 @@ public:
 		m_Requirements->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
 		m_Requirements->m_RaceRequirement = "All";
 		m_Requirements->m_PopulationCountRequirement = 5;
+		m_BuildingTier = BuildingTier::BUILDING_TIER_1;
+
 	}
 
 
@@ -1722,6 +1789,8 @@ public:
 		m_Requirements->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
 		m_Requirements->m_RaceRequirement = "All";
 		m_Requirements->m_PopulationCountRequirement = 15;
+		m_BuildingTier = BuildingTier::BUILDING_TIER_2;
+
 	}
 
 
@@ -1759,6 +1828,8 @@ public:
 		m_Requirements->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
 		m_Requirements->m_RaceRequirement = "All";
 		m_Requirements->m_PopulationCountRequirement = 20;
+		m_BuildingTier = BuildingTier::BUILDING_TIER_3;
+
 	}
 
 
@@ -1797,6 +1868,8 @@ public:
 		m_Requirements->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
 		m_Requirements->m_RaceRequirement = "All";
 		m_Requirements->m_PopulationCountRequirement = 5;
+		m_BuildingTier = BuildingTier::BUILDING_TIER_1;
+
 	}
 
 
@@ -1834,6 +1907,8 @@ public:
 		m_Requirements->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
 		m_Requirements->m_RaceRequirement = "All";
 		m_Requirements->m_PopulationCountRequirement = 10;
+		m_BuildingTier = BuildingTier::BUILDING_TIER_2;
+
 	}
 
 

@@ -75,7 +75,7 @@ void InitializeBuildingTechnologyRequirements() {
 	vec = new BuildingTechRequirementsVec();
 
 	vec->push_back("Brick Working");
-	g_pBuildingTechRequirementsMap.emplace("Brick Warehouse", vec);
+	g_pBuildingTechRequirementsMap.emplace("City Storage", vec);
 
 
 
