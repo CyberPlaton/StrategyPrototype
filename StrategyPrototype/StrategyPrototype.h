@@ -50,6 +50,7 @@ private:
 
 	bool _tryGivingUnitAProfession(Unit* unit);
 	GameEntity* _hoveringOverEntity(int xpos, int ypos, std::string& entityType);
+	int _hoveringOverBuildingSlot(int xpos, int ypos); // Returns -1 if no slot is hovered upon.
 	Unit* _isUnitPresentOnMaptile(MapTile* maptile);
 	bool _hasPlayerUnitTechRequirements(std::string tech, Player* p);
 	bool _doesPlayerWantToResetProfession();

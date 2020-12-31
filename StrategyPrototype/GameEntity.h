@@ -1124,6 +1124,7 @@ void DeinitializeBuildingRequirementsMap();
 
 // We check here whether player can build a builing.
 bool DoesPlayerCityFulfillRequirementsForBuilding(City* city, std::string building_name, int slot);
+std::vector<std::string> *GetAvailableBuildingsForPlayerOnSlot(City* city, int slot);
 
 bool HasPlayerTech(std::string tech, Player* player);
 bool HasPlayerNeededTier(BuildingTier tier, Player* player);

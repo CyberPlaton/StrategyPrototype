@@ -2245,8 +2245,8 @@ void CMPCameraInput::_handleCityViewMouse(Camera* cam) {
 	int mouse_x = context->GetMouseX();
 	int mouse_y = context->GetMouseY();
 
-	cout << color(colors::DARKMAGENTA);
-	cout << "Mouse ("<< mouse_x << ":" << mouse_y << ")" << white << endl;
+	//cout << color(colors::DARKMAGENTA);
+	//cout << "Mouse ("<< mouse_x << ":" << mouse_y << ")" << white << endl;
 
 
 	// Compute offset of maptile position in cityview for getting right maptile down below..
@@ -2277,6 +2277,7 @@ void CMPCameraInput::_handleCityViewMouse(Camera* cam) {
 
 		entt = _hoveringOverEntity(mouse_x, mouse_y, entt_type);
 
+		// Check for hovering over unit...
 		if (entt != nullptr &&
 			COMPARE_STRINGS(entt_type, "Unit") == 0) { // We are hovering over a unit...
 
@@ -2287,6 +2288,51 @@ void CMPCameraInput::_handleCityViewMouse(Camera* cam) {
 
 			// Save hovered over unit specific for player.
 			PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlyHoveredEntityInCity = entt;
+		}
+
+		/*
+		// LMB Pressed over building or...
+		if (entt != nullptr &&
+			COMPARE_STRINGS(entt_type, "Building") == 0) { // We are hovering over a building...
+
+
+
+			
+			// and we have pressed the left mouse button.
+			// Save prevpos of unit for later.
+			_storePrevPos(entt);
+
+
+			// Save hovered over building specific for player.
+			PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlyHoveredEntityInCity = entt;
+		}
+		*/
+
+		// LMB Pressed over building slot.
+		int slot = _hoveringOverBuildingSlot(mouse_x, mouse_y);
+		if (slot != -1) { // Then we pressed LMB over a building slot.
+
+			// Show building possibilities for player on specific building slot.
+			std::vector<std::string>* buildings_vec = nullptr;
+
+			buildings_vec = GetAvailableBuildingsForPlayerOnSlot(PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlyViewedCity, slot);
+
+
+			if (buildings_vec->size() == 0) {
+
+				cout << color(colors::DARKRED);
+				cout << "You cant build anything on this building slot." << white << endl;
+			}
+			else {
+
+				int index = 0;
+				for (auto it : *buildings_vec) {
+					cout << color(colors::BLUE);
+					cout << "You can build: " << index + 1 << ".) \"" << it << "\"." << white << endl;
+					index++;
+				}
+			}
+
 		}
 	}
 
@@ -2370,6 +2416,27 @@ GameEntity* CMPCameraInput::_hoveringOverEntity(int xpos, int ypos, std::string&
 
 
 	return nullptr;
+}
+
+
+// Returns -1 if no slot is hovered upon.
+int CMPCameraInput::_hoveringOverBuildingSlot(int xpos, int ypos){ 
+
+	for (auto it : PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlyViewedCity->m_CityBuildingsSlots) {
+
+		// Check for collision of mouse position and slot dimensions...
+		if (it->m_XPos <= xpos &&
+			(it->m_XPos + it->m_Width) >= xpos
+			&&
+			it->m_YPos <= ypos &&
+			(it->m_YPos + it->m_Height) >= ypos) {
+
+
+			return it->m_SlotNumber;
+		}
+	}
+
+	return -1;
 }
 
 

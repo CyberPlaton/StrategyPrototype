@@ -860,6 +860,408 @@ void InitializeBuildingTechnologyRequirements() {
 
 	vec->push_back("Warfare Theory");
 	g_pBuildingTechRequirementsMap.emplace("Warrior School", vec);
+
+
+
+
+
+
+	// MILITARY BUILDINGS
+	vec = nullptr;
+	vec = new BuildingTechRequirementsVec();
+
+	vec->push_back("Siege Craft");
+	g_pBuildingTechRequirementsMap.emplace("Siege Workshop", vec);
+
+
+	vec = nullptr;
+	vec = new BuildingTechRequirementsVec();
+
+	vec->push_back("Magical Warfare");
+	g_pBuildingTechRequirementsMap.emplace("Mages Tower", vec);
+
+
+
+
+	vec = nullptr;
+	vec = new BuildingTechRequirementsVec();
+
+	vec->push_back("Mounted Warfare");
+	g_pBuildingTechRequirementsMap.emplace("Stables", vec);
+
+
+
+
+	vec = nullptr;
+	vec = new BuildingTechRequirementsVec();
+
+	vec->push_back("Archery");
+	g_pBuildingTechRequirementsMap.emplace("Archery Range", vec);
+
+
+
+
+	vec = nullptr;
+	vec = new BuildingTechRequirementsVec();
+
+	vec->push_back("Warfare Theory");
+	g_pBuildingTechRequirementsMap.emplace("Baracks", vec);
+
+
+
+
+	vec = nullptr;
+	vec = new BuildingTechRequirementsVec();
+
+	vec->push_back("Salting");
+	g_pBuildingTechRequirementsMap.emplace("Picklers Workshop", vec);
+
+
+
+	vec = nullptr;
+	vec = new BuildingTechRequirementsVec();
+
+	vec->push_back("Animal Husbandry");
+	g_pBuildingTechRequirementsMap.emplace("Ranch", vec);
+
+
+
+
+	vec = nullptr;
+	vec = new BuildingTechRequirementsVec();
+
+	vec->push_back("Tool Making");
+	g_pBuildingTechRequirementsMap.emplace("Toolsmiths Workshop", vec);
+
+
+
+	vec = nullptr;
+	vec = new BuildingTechRequirementsVec();
+
+	vec->push_back("Bronze Working");
+	g_pBuildingTechRequirementsMap.emplace("Smelters Workshop", vec);
+
+
+
+	vec = nullptr;
+	vec = new BuildingTechRequirementsVec();
+
+	vec->push_back("Bronze Working");
+	g_pBuildingTechRequirementsMap.emplace("Weaponsmiths Workshop", vec);
+
+
+
+
+
+	vec = nullptr;
+	vec = new BuildingTechRequirementsVec();
+
+	vec->push_back("Bronze Working");
+	g_pBuildingTechRequirementsMap.emplace("Armorsmiths Workshop", vec);
+
+
+
+
+	vec = nullptr;
+	vec = new BuildingTechRequirementsVec();
+
+	vec->push_back("Jewelry");
+	g_pBuildingTechRequirementsMap.emplace("Goldsmiths Workshop", vec);
+
+
+
+
+	vec = nullptr;
+	vec = new BuildingTechRequirementsVec();
+
+	vec->push_back("Alcohol Making");
+	g_pBuildingTechRequirementsMap.emplace("Brewery", vec);
+
+
+
+
+	vec = nullptr;
+	vec = new BuildingTechRequirementsVec();
+
+	vec->push_back("Clothing");
+	g_pBuildingTechRequirementsMap.emplace("Tailors Workshop", vec);
+
+
+
+
+	vec = nullptr;
+	vec = new BuildingTechRequirementsVec();
+
+	vec->push_back("Stone Working");
+	g_pBuildingTechRequirementsMap.emplace("Masons Workshop", vec);
+
+
+
+
+
+	vec = nullptr;
+	vec = new BuildingTechRequirementsVec();
+
+	vec->push_back("Brick Making");
+	g_pBuildingTechRequirementsMap.emplace("Brickmakers Workshop", vec);
+
+
+
+
+	vec = nullptr;
+	vec = new BuildingTechRequirementsVec();
+
+	vec->push_back("Wood Working");
+	g_pBuildingTechRequirementsMap.emplace("Carpenters Workshop", vec);
+
+
+
+	vec = nullptr;
+	vec = new BuildingTechRequirementsVec();
+
+	vec->push_back("Aggressive Stance");
+	g_pBuildingTechRequirementsMap.emplace("Assassins Guild", vec);
+
+
+
+	vec = nullptr;
+	vec = new BuildingTechRequirementsVec();
+
+	vec->push_back("Aggressive Stance");
+	g_pBuildingTechRequirementsMap.emplace("Thieves Guild", vec);
+
+
+
+
+	vec = nullptr;
+	vec = new BuildingTechRequirementsVec();
+
+	vec->push_back("Knowledge Of Magicka");
+	g_pBuildingTechRequirementsMap.emplace("Mages Guild", vec);
+
+
+
+
+	vec = nullptr;
+	vec = new BuildingTechRequirementsVec();
+
+	vec->push_back("Aggressive Stance");
+	g_pBuildingTechRequirementsMap.emplace("Fighters Guild", vec);
+
+
+
+
+	vec = nullptr;
+	vec = new BuildingTechRequirementsVec();
+
+	vec->push_back("Trade");
+	g_pBuildingTechRequirementsMap.emplace("Merchants Guild", vec);
+
+
+
+
+	vec = nullptr;
+	vec = new BuildingTechRequirementsVec();
+
+	vec->push_back("Alcohol Brewing");
+	g_pBuildingTechRequirementsMap.emplace("Taverns Quarter", vec);
+
+
+
+
+	vec = nullptr;
+	vec = new BuildingTechRequirementsVec();
+
+	vec->push_back("Beverage Making");
+	g_pBuildingTechRequirementsMap.emplace("Tavern", vec);
+
+
+
+
+	vec = nullptr;
+	vec = new BuildingTechRequirementsVec();
+
+	vec->push_back("All"); // Meaning free for all... 
+	g_pBuildingTechRequirementsMap.emplace("Brothel", vec);
+
+
+
+
+	vec = nullptr;
+	vec = new BuildingTechRequirementsVec();
+
+	vec->push_back("Trade");
+	g_pBuildingTechRequirementsMap.emplace("Merchants Quarter", vec);
+
+
+
+
+	vec = nullptr;
+	vec = new BuildingTechRequirementsVec();
+
+	vec->push_back("Currency");
+	g_pBuildingTechRequirementsMap.emplace("Big Market", vec);
+
+
+
+
+	vec = nullptr;
+	vec = new BuildingTechRequirementsVec();
+
+	vec->push_back("Bartering");
+	g_pBuildingTechRequirementsMap.emplace("Local Market", vec);
+
+
+
+
+
+	vec = nullptr;
+	vec = new BuildingTechRequirementsVec();
+
+	vec->push_back("Philosophy");
+	g_pBuildingTechRequirementsMap.emplace("Mayors Palace", vec);
+
+
+
+
+	vec = nullptr;
+	vec = new BuildingTechRequirementsVec();
+
+	vec->push_back("Council");
+	g_pBuildingTechRequirementsMap.emplace("Town Hall", vec);
+
+
+
+
+
+	vec = nullptr;
+	vec = new BuildingTechRequirementsVec();
+
+	vec->push_back("Council");
+	g_pBuildingTechRequirementsMap.emplace("Council", vec);
+
+
+
+
+	vec = nullptr;
+	vec = new BuildingTechRequirementsVec();
+
+	vec->push_back("Aggressive Stance");
+	g_pBuildingTechRequirementsMap.emplace("Military College", vec);
+
+
+
+
+	vec = nullptr;
+	vec = new BuildingTechRequirementsVec();
+
+	vec->push_back("Warfare Theory");
+	g_pBuildingTechRequirementsMap.emplace("Warrior School", vec);
+
+
+
+
+	vec = nullptr;
+	vec = new BuildingTechRequirementsVec();
+
+	vec->push_back("Honor");
+	g_pBuildingTechRequirementsMap.emplace("Champions Hut", vec);
+
+
+
+
+	vec = nullptr;
+	vec = new BuildingTechRequirementsVec();
+
+	vec->push_back("Iron Making");
+	g_pBuildingTechRequirementsMap.emplace("Big Workshop", vec);
+
+
+
+	vec = nullptr;
+	vec = new BuildingTechRequirementsVec();
+
+	vec->push_back("Architecture");
+	g_pBuildingTechRequirementsMap.emplace("Small Workshop", vec);
+
+
+
+	vec = nullptr;
+	vec = new BuildingTechRequirementsVec();
+
+	vec->push_back("Wood Working");
+	g_pBuildingTechRequirementsMap.emplace("Inventors Hut", vec);
+
+
+
+	vec = nullptr;
+	vec = new BuildingTechRequirementsVec();
+
+	vec->push_back("Polytheism");
+	g_pBuildingTechRequirementsMap.emplace("Magick College", vec);
+
+
+
+	vec = nullptr;
+	vec = new BuildingTechRequirementsVec();
+
+	vec->push_back("Mysticism");
+	g_pBuildingTechRequirementsMap.emplace("Magick School", vec);
+
+
+
+
+	vec = nullptr;
+	vec = new BuildingTechRequirementsVec();
+
+	vec->push_back("Ceremony");
+	g_pBuildingTechRequirementsMap.emplace("Shrine", vec);
+
+
+
+	vec = nullptr;
+	vec = new BuildingTechRequirementsVec();
+
+	vec->push_back("Literature");
+	g_pBuildingTechRequirementsMap.emplace("College", vec);
+
+
+
+
+	vec = nullptr;
+	vec = new BuildingTechRequirementsVec();
+
+	vec->push_back("Writing");
+	g_pBuildingTechRequirementsMap.emplace("Big School", vec);
+
+
+
+
+	vec = nullptr;
+	vec = new BuildingTechRequirementsVec();
+
+	vec->push_back("Wisemen Circle");
+	g_pBuildingTechRequirementsMap.emplace("Wisemen Hut", vec);
+
+
+
+
+
+	vec = nullptr;
+	vec = new BuildingTechRequirementsVec();
+
+	vec->push_back("Brick Making");
+	g_pBuildingTechRequirementsMap.emplace("City Storage", vec);
+
+
+
+	vec = nullptr;
+	vec = new BuildingTechRequirementsVec();
+
+	vec->push_back("Stone Working");
+	vec->push_back("Pottery");
+	g_pBuildingTechRequirementsMap.emplace("Big Warehouse", vec);
+
 }
 
 BuildingTechRequirementsVec *GetTechnologyRequirementsForBuilding(std::string building_name) {
@@ -6245,6 +6647,35 @@ bool DoesPlayerCityFulfillRequirementsForBuilding(City* city, std::string buildi
 
 	// Everything checked and player can build building in his city.
 	return true;
+}
+
+
+std::vector<std::string>* GetAvailableBuildingsForPlayerOnSlot(City* city, int slot) {
+
+	using namespace std;
+
+	std::vector<std::string> vec;
+
+
+	// Cycle through all registered buildings...
+	for (auto it : g_pBuildingsRequirementsMap) {
+
+		cout << color(colors::RED);
+		cout << "DoesPlayerCityFulfillRequirementsForBuilding() ::= " << it.first << white << endl;
+
+
+		if (DoesPlayerCityFulfillRequirementsForBuilding(city, it.first, slot)) {
+
+			cout << color(colors::RED);
+			cout << "Storing ::= " << it.first << white << endl;
+
+			vec.push_back(it.first); // Store building we can build.
+		}
+
+	}
+
+
+	return &vec;
 }
 
 
