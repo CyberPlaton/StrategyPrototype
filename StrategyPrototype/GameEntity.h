@@ -1085,6 +1085,7 @@ struct BuildingRequirements {
 	City::CityBuildingSlotType m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_INVALID;
 	std::string m_RaceRequirement;
 	int m_PopulationCountRequirement = 0;
+	BuildingTier m_BuildingTier = BuildingTier::BUILDING_TIER_INVALID;
 };
 
 
@@ -1093,7 +1094,7 @@ class Building : public GameEntity {
 public:
 	virtual ~Building(){}
 
-	BuildingRequirements* GetRequirements() { return m_Requirements; }
+	//BuildingRequirements* GetRequirements() { return m_Requirements; }
 
 	City* m_AssociatedCity = nullptr;
 	Player* m_AssociatedPlayer = nullptr;
@@ -1101,13 +1102,14 @@ public:
 
 	// Buildings can have special requierements, like a technology be researched
 	// or another building already in city present or building be built on special slot type.
-	BuildingRequirements* m_Requirements = nullptr;
-	BuildingTier m_BuildingTier = BuildingTier::BUILDING_TIER_INVALID;
+	//BuildingRequirements* m_Requirements = nullptr;
 private:
 
 };
 
 
+
+// Buildings and Technlogyrelalted functions.
 typedef std::vector<std::string> BuildingTechRequirementsVec; // For static tech. map.
 void InitializeBuildingTechnologyRequirements();
 void DeinitializeBuildingTechnologyRequirements();
@@ -1115,6 +1117,17 @@ BuildingTechRequirementsVec* GetTechnologyRequirementsForBuilding(std::string bu
 BuildingTechRequirementsVec* GetTechnologyRequirementsForBuilding(Building* b);
 std::vector<std::string>* GetAvailableBuildingsForTechnology(Technology* t);
 std::vector<std::string>* GetAvailableBuildingsForTechnology(std::string t);
+
+// Define appropriate requirements for each in game building...
+void InitializeBuildingRequirementsMap();
+void DeinitializeBuildingRequirementsMap();
+
+// We check here whether player can build a builing.
+bool DoesPlayerCityFulfillRequirementsForBuilding(City* city, std::string building_name, int slot);
+
+bool HasPlayerTech(std::string tech, Player* player);
+bool HasPlayerNeededTier(BuildingTier tier, Player* player);
+bool HasPlayerNeededTier(int tier, Player* player);
 
 
 /*
@@ -1169,13 +1182,6 @@ public:
 
 		m_AssociatedCity = associated_city;
 		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
-
-	
-		// Define req.
-		m_Requirements = new BuildingRequirements();
-		m_Requirements->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
-		m_Requirements->m_RaceRequirement = "All";
-		m_BuildingTier = BuildingTier::BUILDING_TIER_1;
 	}
 
 
@@ -1206,14 +1212,6 @@ public:
 
 		m_AssociatedCity = associated_city;
 		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
-
-
-		// Define req.
-		m_Requirements = new BuildingRequirements();
-		m_Requirements->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
-		m_Requirements->m_RaceRequirement = "All";
-		m_BuildingTier = BuildingTier::BUILDING_TIER_1;
-
 	}
 
 
@@ -1245,13 +1243,6 @@ public:
 
 		m_AssociatedCity = associated_city;
 		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
-
-
-		// Define req.
-		m_Requirements = new BuildingRequirements();
-		m_Requirements->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
-		m_Requirements->m_RaceRequirement = "All";
-		m_BuildingTier = BuildingTier::BUILDING_TIER_2;
 	}
 
 
@@ -1283,13 +1274,6 @@ public:
 
 		m_AssociatedCity = associated_city;
 		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
-
-
-		// Define req.
-		m_Requirements = new BuildingRequirements();
-		m_Requirements->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
-		m_Requirements->m_RaceRequirement = "All";
-		m_BuildingTier = BuildingTier::BUILDING_TIER_3;
 	}
 
 
@@ -1320,13 +1304,6 @@ public:
 
 		m_AssociatedCity = associated_city;
 		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
-
-
-		// Define req.
-		m_Requirements = new BuildingRequirements();
-		m_Requirements->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
-		m_Requirements->m_RaceRequirement = "All";
-		m_BuildingTier = BuildingTier::BUILDING_TIER_1;
 	}
 
 
@@ -1357,13 +1334,6 @@ public:
 
 		m_AssociatedCity = associated_city;
 		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
-
-
-		// Define req.
-		m_Requirements = new BuildingRequirements();
-		m_Requirements->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
-		m_Requirements->m_RaceRequirement = "All";
-		m_BuildingTier = BuildingTier::BUILDING_TIER_1;
 	}
 
 
@@ -1395,13 +1365,6 @@ public:
 
 		m_AssociatedCity = associated_city;
 		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
-
-
-		// Define req.
-		m_Requirements = new BuildingRequirements();
-		m_Requirements->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
-		m_Requirements->m_RaceRequirement = "All";
-		m_BuildingTier = BuildingTier::BUILDING_TIER_2;
 	}
 
 
@@ -1432,13 +1395,6 @@ public:
 
 		m_AssociatedCity = associated_city;
 		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
-
-
-		// Define req.
-		m_Requirements = new BuildingRequirements();
-		m_Requirements->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
-		m_Requirements->m_RaceRequirement = "All";
-		m_BuildingTier = BuildingTier::BUILDING_TIER_3;
 	}
 
 
@@ -1469,14 +1425,6 @@ public:
 
 		m_AssociatedCity = associated_city;
 		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
-
-
-		// Define req.
-		m_Requirements = new BuildingRequirements();
-		m_Requirements->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
-		m_Requirements->m_RaceRequirement = "All";
-		m_BuildingTier = BuildingTier::BUILDING_TIER_1;
-
 	}
 
 
@@ -1546,15 +1494,6 @@ public:
 
 		m_AssociatedCity = associated_city;
 		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
-
-
-		// Define req.
-		m_Requirements = new BuildingRequirements();
-		m_Requirements->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
-		m_Requirements->m_RaceRequirement = "All";
-		m_Requirements->m_PopulationCountRequirement = 10;
-		m_BuildingTier = BuildingTier::BUILDING_TIER_2;
-
 	}
 
 
@@ -1586,15 +1525,6 @@ public:
 
 		m_AssociatedCity = associated_city;
 		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
-
-
-		// Define req.
-		m_Requirements = new BuildingRequirements();
-		m_Requirements->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
-		m_Requirements->m_RaceRequirement = "All";
-		m_Requirements->m_PopulationCountRequirement = 20;
-		m_BuildingTier = BuildingTier::BUILDING_TIER_3;
-
 	}
 
 
@@ -1626,15 +1556,6 @@ public:
 
 		m_AssociatedCity = associated_city;
 		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
-
-
-		// Define req.
-		m_Requirements = new BuildingRequirements();
-		m_Requirements->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
-		m_Requirements->m_RaceRequirement = "All";
-		m_Requirements->m_PopulationCountRequirement = 5;
-		m_BuildingTier = BuildingTier::BUILDING_TIER_1;
-
 	}
 
 
@@ -1665,15 +1586,6 @@ public:
 
 		m_AssociatedCity = associated_city;
 		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
-
-
-		// Define req.
-		m_Requirements = new BuildingRequirements();
-		m_Requirements->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
-		m_Requirements->m_RaceRequirement = "All";
-		m_Requirements->m_PopulationCountRequirement = 10;
-		m_BuildingTier = BuildingTier::BUILDING_TIER_2;
-
 	}
 
 
@@ -1704,15 +1616,6 @@ public:
 
 		m_AssociatedCity = associated_city;
 		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
-
-
-		// Define req.
-		m_Requirements = new BuildingRequirements();
-		m_Requirements->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
-		m_Requirements->m_RaceRequirement = "All";
-		m_Requirements->m_PopulationCountRequirement = 20;
-		m_BuildingTier = BuildingTier::BUILDING_TIER_3;
-
 	}
 
 
@@ -1743,15 +1646,6 @@ public:
 
 		m_AssociatedCity = associated_city;
 		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
-
-
-		// Define req.
-		m_Requirements = new BuildingRequirements();
-		m_Requirements->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
-		m_Requirements->m_RaceRequirement = "All";
-		m_Requirements->m_PopulationCountRequirement = 5;
-		m_BuildingTier = BuildingTier::BUILDING_TIER_1;
-
 	}
 
 
@@ -1782,15 +1676,6 @@ public:
 
 		m_AssociatedCity = associated_city;
 		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
-
-
-		// Define req.
-		m_Requirements = new BuildingRequirements();
-		m_Requirements->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
-		m_Requirements->m_RaceRequirement = "All";
-		m_Requirements->m_PopulationCountRequirement = 15;
-		m_BuildingTier = BuildingTier::BUILDING_TIER_2;
-
 	}
 
 
@@ -1821,15 +1706,6 @@ public:
 
 		m_AssociatedCity = associated_city;
 		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
-
-
-		// Define req.
-		m_Requirements = new BuildingRequirements();
-		m_Requirements->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
-		m_Requirements->m_RaceRequirement = "All";
-		m_Requirements->m_PopulationCountRequirement = 20;
-		m_BuildingTier = BuildingTier::BUILDING_TIER_3;
-
 	}
 
 
@@ -1861,15 +1737,6 @@ public:
 
 		m_AssociatedCity = associated_city;
 		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
-
-
-		// Define req.
-		m_Requirements = new BuildingRequirements();
-		m_Requirements->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
-		m_Requirements->m_RaceRequirement = "All";
-		m_Requirements->m_PopulationCountRequirement = 5;
-		m_BuildingTier = BuildingTier::BUILDING_TIER_1;
-
 	}
 
 
@@ -1900,15 +1767,312 @@ public:
 
 		m_AssociatedCity = associated_city;
 		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
+	}
 
 
-		// Define req.
-		m_Requirements = new BuildingRequirements();
-		m_Requirements->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
-		m_Requirements->m_RaceRequirement = "All";
-		m_Requirements->m_PopulationCountRequirement = 10;
-		m_BuildingTier = BuildingTier::BUILDING_TIER_2;
+private:
 
+
+private:
+
+};
+
+
+
+class BuildingMilitaryCollege : public Building {
+public:
+
+	BuildingMilitaryCollege(City* associated_city) {
+
+		m_TransformCmp->m_Height = SPRITES_WIDTH_AND_HEIGHT;
+		m_TransformCmp->m_Width = SPRITES_WIDTH_AND_HEIGHT;
+
+		m_GraphicsCmp = new CMPGraphics();
+		m_GraphicsCmp->m_DrawingLayer = "Layer2";
+		m_GraphicsCmp->m_SpriteName = ""; // TODO:
+
+		m_IDCmp->m_DynamicTypeName = "Building";
+
+
+		m_BuildingName = "Military College";
+
+		m_AssociatedCity = associated_city;
+		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
+	}
+
+
+private:
+
+
+private:
+
+};
+
+
+
+class BuildingCouncil : public Building {
+public:
+
+	BuildingCouncil(City* associated_city) {
+
+		m_TransformCmp->m_Height = SPRITES_WIDTH_AND_HEIGHT;
+		m_TransformCmp->m_Width = SPRITES_WIDTH_AND_HEIGHT;
+
+		m_GraphicsCmp = new CMPGraphics();
+		m_GraphicsCmp->m_DrawingLayer = "Layer2";
+		m_GraphicsCmp->m_SpriteName = ""; // TODO:
+
+		m_IDCmp->m_DynamicTypeName = "Building";
+
+
+		m_BuildingName = "Council";
+
+		m_AssociatedCity = associated_city;
+		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
+	}
+
+
+private:
+
+
+private:
+
+};
+
+
+
+class BuildingTownHall : public Building {
+public:
+
+	BuildingTownHall(City* associated_city) {
+
+		m_TransformCmp->m_Height = SPRITES_WIDTH_AND_HEIGHT;
+		m_TransformCmp->m_Width = SPRITES_WIDTH_AND_HEIGHT;
+
+		m_GraphicsCmp = new CMPGraphics();
+		m_GraphicsCmp->m_DrawingLayer = "Layer2";
+		m_GraphicsCmp->m_SpriteName = ""; // TODO:
+
+		m_IDCmp->m_DynamicTypeName = "Building";
+
+
+		m_BuildingName = "Town Hall";
+
+		m_AssociatedCity = associated_city;
+		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
+	}
+
+
+private:
+
+
+private:
+
+};
+
+
+class BuildingMayorsPalace : public Building {
+public:
+
+	BuildingMayorsPalace(City* associated_city) {
+
+		m_TransformCmp->m_Height = SPRITES_WIDTH_AND_HEIGHT;
+		m_TransformCmp->m_Width = SPRITES_WIDTH_AND_HEIGHT;
+
+		m_GraphicsCmp = new CMPGraphics();
+		m_GraphicsCmp->m_DrawingLayer = "Layer2";
+		m_GraphicsCmp->m_SpriteName = ""; // TODO:
+
+		m_IDCmp->m_DynamicTypeName = "Building";
+
+
+		m_BuildingName = "Mayors Palace";
+
+		m_AssociatedCity = associated_city;
+		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
+	}
+
+
+private:
+
+
+private:
+
+};
+
+
+class BuildingLocalMarket : public Building {
+public:
+
+	BuildingLocalMarket(City* associated_city) {
+
+		m_TransformCmp->m_Height = SPRITES_WIDTH_AND_HEIGHT;
+		m_TransformCmp->m_Width = SPRITES_WIDTH_AND_HEIGHT;
+
+		m_GraphicsCmp = new CMPGraphics();
+		m_GraphicsCmp->m_DrawingLayer = "Layer2";
+		m_GraphicsCmp->m_SpriteName = ""; // TODO:
+
+		m_IDCmp->m_DynamicTypeName = "Building";
+
+
+		m_BuildingName = "Local Market";
+
+		m_AssociatedCity = associated_city;
+		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
+	}
+
+
+private:
+
+
+private:
+
+};
+
+
+class BuildingBigMarket : public Building {
+public:
+
+	BuildingBigMarket(City* associated_city) {
+
+		m_TransformCmp->m_Height = SPRITES_WIDTH_AND_HEIGHT;
+		m_TransformCmp->m_Width = SPRITES_WIDTH_AND_HEIGHT;
+
+		m_GraphicsCmp = new CMPGraphics();
+		m_GraphicsCmp->m_DrawingLayer = "Layer2";
+		m_GraphicsCmp->m_SpriteName = ""; // TODO:
+
+		m_IDCmp->m_DynamicTypeName = "Building";
+
+
+		m_BuildingName = "Big Market";
+
+		m_AssociatedCity = associated_city;
+		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
+	}
+
+
+private:
+
+
+private:
+
+};
+
+
+
+class BuildingMerchantsQuarter : public Building {
+public:
+
+	BuildingMerchantsQuarter(City* associated_city) {
+
+		m_TransformCmp->m_Height = SPRITES_WIDTH_AND_HEIGHT;
+		m_TransformCmp->m_Width = SPRITES_WIDTH_AND_HEIGHT;
+
+		m_GraphicsCmp = new CMPGraphics();
+		m_GraphicsCmp->m_DrawingLayer = "Layer2";
+		m_GraphicsCmp->m_SpriteName = ""; // TODO:
+
+		m_IDCmp->m_DynamicTypeName = "Building";
+
+
+		m_BuildingName = "Merchants Quarter";
+
+		m_AssociatedCity = associated_city;
+		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
+	}
+
+
+private:
+
+
+private:
+
+};
+
+
+
+class BuildingBrothel : public Building {
+public:
+
+	BuildingBrothel(City* associated_city) {
+
+		m_TransformCmp->m_Height = SPRITES_WIDTH_AND_HEIGHT;
+		m_TransformCmp->m_Width = SPRITES_WIDTH_AND_HEIGHT;
+
+		m_GraphicsCmp = new CMPGraphics();
+		m_GraphicsCmp->m_DrawingLayer = "Layer2";
+		m_GraphicsCmp->m_SpriteName = ""; // TODO:
+
+		m_IDCmp->m_DynamicTypeName = "Building";
+
+
+		m_BuildingName = "Brothel";
+
+		m_AssociatedCity = associated_city;
+		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
+	}
+
+
+private:
+
+
+private:
+
+};
+
+
+
+class BuildingTavern : public Building {
+public:
+
+	BuildingTavern(City* associated_city) {
+
+		m_TransformCmp->m_Height = SPRITES_WIDTH_AND_HEIGHT;
+		m_TransformCmp->m_Width = SPRITES_WIDTH_AND_HEIGHT;
+
+		m_GraphicsCmp = new CMPGraphics();
+		m_GraphicsCmp->m_DrawingLayer = "Layer2";
+		m_GraphicsCmp->m_SpriteName = ""; // TODO:
+
+		m_IDCmp->m_DynamicTypeName = "Building";
+
+
+		m_BuildingName = "Tavern";
+
+		m_AssociatedCity = associated_city;
+		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
+	}
+
+
+private:
+
+
+private:
+
+};
+
+
+class BuildingTavernsQuarter : public Building {
+public:
+
+	BuildingTavernsQuarter(City* associated_city) {
+
+		m_TransformCmp->m_Height = SPRITES_WIDTH_AND_HEIGHT;
+		m_TransformCmp->m_Width = SPRITES_WIDTH_AND_HEIGHT;
+
+		m_GraphicsCmp = new CMPGraphics();
+		m_GraphicsCmp->m_DrawingLayer = "Layer2";
+		m_GraphicsCmp->m_SpriteName = ""; // TODO:
+
+		m_IDCmp->m_DynamicTypeName = "Building";
+
+
+		m_BuildingName = "Taverns Quarter";
+
+		m_AssociatedCity = associated_city;
+		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
 	}
 
 
@@ -1922,7 +2086,671 @@ private:
 
 
 
+class BuildingMerchantsGuild : public Building {
+public:
 
+	BuildingMerchantsGuild(City* associated_city) {
+
+		m_TransformCmp->m_Height = SPRITES_WIDTH_AND_HEIGHT;
+		m_TransformCmp->m_Width = SPRITES_WIDTH_AND_HEIGHT;
+
+		m_GraphicsCmp = new CMPGraphics();
+		m_GraphicsCmp->m_DrawingLayer = "Layer2";
+		m_GraphicsCmp->m_SpriteName = ""; // TODO:
+
+		m_IDCmp->m_DynamicTypeName = "Building";
+
+
+		m_BuildingName = "Merchants Guild";
+
+		m_AssociatedCity = associated_city;
+		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
+	}
+
+
+private:
+
+
+private:
+
+};
+
+
+
+class BuildingFightersGuild : public Building {
+public:
+
+	BuildingFightersGuild(City* associated_city) {
+
+		m_TransformCmp->m_Height = SPRITES_WIDTH_AND_HEIGHT;
+		m_TransformCmp->m_Width = SPRITES_WIDTH_AND_HEIGHT;
+
+		m_GraphicsCmp = new CMPGraphics();
+		m_GraphicsCmp->m_DrawingLayer = "Layer2";
+		m_GraphicsCmp->m_SpriteName = ""; // TODO:
+
+		m_IDCmp->m_DynamicTypeName = "Building";
+
+
+		m_BuildingName = "Fighters Guild";
+
+		m_AssociatedCity = associated_city;
+		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
+	}
+
+
+private:
+
+
+private:
+
+};
+
+
+
+class BuildingMagesGuild : public Building {
+public:
+
+	BuildingMagesGuild(City* associated_city) {
+
+		m_TransformCmp->m_Height = SPRITES_WIDTH_AND_HEIGHT;
+		m_TransformCmp->m_Width = SPRITES_WIDTH_AND_HEIGHT;
+
+		m_GraphicsCmp = new CMPGraphics();
+		m_GraphicsCmp->m_DrawingLayer = "Layer2";
+		m_GraphicsCmp->m_SpriteName = ""; // TODO:
+
+		m_IDCmp->m_DynamicTypeName = "Building";
+
+
+		m_BuildingName = "Mages Guild";
+
+		m_AssociatedCity = associated_city;
+		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
+	}
+
+
+private:
+
+
+private:
+
+};
+
+
+class BuildingThievesGuild : public Building {
+public:
+
+	BuildingThievesGuild(City* associated_city) {
+
+		m_TransformCmp->m_Height = SPRITES_WIDTH_AND_HEIGHT;
+		m_TransformCmp->m_Width = SPRITES_WIDTH_AND_HEIGHT;
+
+		m_GraphicsCmp = new CMPGraphics();
+		m_GraphicsCmp->m_DrawingLayer = "Layer2";
+		m_GraphicsCmp->m_SpriteName = ""; // TODO:
+
+		m_IDCmp->m_DynamicTypeName = "Building";
+
+
+		m_BuildingName = "Thieves Guild";
+
+		m_AssociatedCity = associated_city;
+		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
+	}
+
+
+private:
+
+
+private:
+
+};
+
+
+
+class BuildingAssassinsGuild : public Building {
+public:
+
+	BuildingAssassinsGuild(City* associated_city) {
+
+		m_TransformCmp->m_Height = SPRITES_WIDTH_AND_HEIGHT;
+		m_TransformCmp->m_Width = SPRITES_WIDTH_AND_HEIGHT;
+
+		m_GraphicsCmp = new CMPGraphics();
+		m_GraphicsCmp->m_DrawingLayer = "Layer2";
+		m_GraphicsCmp->m_SpriteName = ""; // TODO:
+
+		m_IDCmp->m_DynamicTypeName = "Building";
+
+
+		m_BuildingName = "Assassins Guild";
+
+		m_AssociatedCity = associated_city;
+		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
+	}
+
+
+private:
+
+
+private:
+
+};
+
+
+
+class BuildingCarpentersWorkshop : public Building {
+public:
+
+	BuildingCarpentersWorkshop(City* associated_city) {
+
+		m_TransformCmp->m_Height = SPRITES_WIDTH_AND_HEIGHT;
+		m_TransformCmp->m_Width = SPRITES_WIDTH_AND_HEIGHT;
+
+		m_GraphicsCmp = new CMPGraphics();
+		m_GraphicsCmp->m_DrawingLayer = "Layer2";
+		m_GraphicsCmp->m_SpriteName = ""; // TODO:
+
+		m_IDCmp->m_DynamicTypeName = "Building";
+
+
+		m_BuildingName = "Carpenters Workshop";
+
+		m_AssociatedCity = associated_city;
+		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
+	}
+
+
+private:
+
+
+private:
+
+};
+
+
+class BuildingBrickmakersWorkshop : public Building {
+public:
+
+	BuildingBrickmakersWorkshop(City* associated_city) {
+
+		m_TransformCmp->m_Height = SPRITES_WIDTH_AND_HEIGHT;
+		m_TransformCmp->m_Width = SPRITES_WIDTH_AND_HEIGHT;
+
+		m_GraphicsCmp = new CMPGraphics();
+		m_GraphicsCmp->m_DrawingLayer = "Layer2";
+		m_GraphicsCmp->m_SpriteName = ""; // TODO:
+
+		m_IDCmp->m_DynamicTypeName = "Building";
+
+
+		m_BuildingName = "Brickmakers Workshop";
+
+		m_AssociatedCity = associated_city;
+		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
+	}
+
+
+private:
+
+
+private:
+
+};
+
+
+class BuildingMasonsWorkshop : public Building {
+public:
+
+	BuildingMasonsWorkshop(City* associated_city) {
+
+		m_TransformCmp->m_Height = SPRITES_WIDTH_AND_HEIGHT;
+		m_TransformCmp->m_Width = SPRITES_WIDTH_AND_HEIGHT;
+
+		m_GraphicsCmp = new CMPGraphics();
+		m_GraphicsCmp->m_DrawingLayer = "Layer2";
+		m_GraphicsCmp->m_SpriteName = ""; // TODO:
+
+		m_IDCmp->m_DynamicTypeName = "Building";
+
+
+		m_BuildingName = "Masons Workshop";
+
+		m_AssociatedCity = associated_city;
+		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
+	}
+
+
+private:
+
+
+private:
+
+};
+
+
+
+class BuildingTailorsWorkshop : public Building {
+public:
+
+	BuildingTailorsWorkshop(City* associated_city) {
+
+		m_TransformCmp->m_Height = SPRITES_WIDTH_AND_HEIGHT;
+		m_TransformCmp->m_Width = SPRITES_WIDTH_AND_HEIGHT;
+
+		m_GraphicsCmp = new CMPGraphics();
+		m_GraphicsCmp->m_DrawingLayer = "Layer2";
+		m_GraphicsCmp->m_SpriteName = ""; // TODO:
+
+		m_IDCmp->m_DynamicTypeName = "Building";
+
+
+		m_BuildingName = "Tailors Workshop";
+
+		m_AssociatedCity = associated_city;
+		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
+	}
+
+
+private:
+
+
+private:
+
+};
+
+
+
+class BuildingBrewery : public Building {
+public:
+
+	BuildingBrewery(City* associated_city) {
+
+		m_TransformCmp->m_Height = SPRITES_WIDTH_AND_HEIGHT;
+		m_TransformCmp->m_Width = SPRITES_WIDTH_AND_HEIGHT;
+
+		m_GraphicsCmp = new CMPGraphics();
+		m_GraphicsCmp->m_DrawingLayer = "Layer2";
+		m_GraphicsCmp->m_SpriteName = ""; // TODO:
+
+		m_IDCmp->m_DynamicTypeName = "Building";
+
+
+		m_BuildingName = "Brewery";
+
+		m_AssociatedCity = associated_city;
+		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
+	}
+
+
+private:
+
+
+private:
+
+};
+
+
+class BuildingGoldsmithsWorkshop : public Building {
+public:
+
+	BuildingGoldsmithsWorkshop(City* associated_city) {
+
+		m_TransformCmp->m_Height = SPRITES_WIDTH_AND_HEIGHT;
+		m_TransformCmp->m_Width = SPRITES_WIDTH_AND_HEIGHT;
+
+		m_GraphicsCmp = new CMPGraphics();
+		m_GraphicsCmp->m_DrawingLayer = "Layer2";
+		m_GraphicsCmp->m_SpriteName = ""; // TODO:
+
+		m_IDCmp->m_DynamicTypeName = "Building";
+
+
+		m_BuildingName = "Goldsmiths Workshop";
+
+		m_AssociatedCity = associated_city;
+		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
+	}
+
+
+private:
+
+
+private:
+
+};
+
+
+
+class BuildingArmorSmithsWorkshop : public Building {
+public:
+
+	BuildingArmorSmithsWorkshop(City* associated_city) {
+
+		m_TransformCmp->m_Height = SPRITES_WIDTH_AND_HEIGHT;
+		m_TransformCmp->m_Width = SPRITES_WIDTH_AND_HEIGHT;
+
+		m_GraphicsCmp = new CMPGraphics();
+		m_GraphicsCmp->m_DrawingLayer = "Layer2";
+		m_GraphicsCmp->m_SpriteName = ""; // TODO:
+
+		m_IDCmp->m_DynamicTypeName = "Building";
+
+
+		m_BuildingName = "Armorsmiths Workshop";
+
+		m_AssociatedCity = associated_city;
+		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
+	}
+
+
+private:
+
+
+private:
+
+};
+
+
+
+class BuildingWeaponSmithsWorkshop : public Building {
+public:
+
+	BuildingWeaponSmithsWorkshop(City* associated_city) {
+
+		m_TransformCmp->m_Height = SPRITES_WIDTH_AND_HEIGHT;
+		m_TransformCmp->m_Width = SPRITES_WIDTH_AND_HEIGHT;
+
+		m_GraphicsCmp = new CMPGraphics();
+		m_GraphicsCmp->m_DrawingLayer = "Layer2";
+		m_GraphicsCmp->m_SpriteName = ""; // TODO:
+
+		m_IDCmp->m_DynamicTypeName = "Building";
+
+
+		m_BuildingName = "Weaponsmiths Workshop";
+
+		m_AssociatedCity = associated_city;
+		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
+	}
+
+
+private:
+
+
+private:
+
+};
+
+
+class BuildingSmeltersWorkshop : public Building {
+public:
+
+	BuildingSmeltersWorkshop(City* associated_city) {
+
+		m_TransformCmp->m_Height = SPRITES_WIDTH_AND_HEIGHT;
+		m_TransformCmp->m_Width = SPRITES_WIDTH_AND_HEIGHT;
+
+		m_GraphicsCmp = new CMPGraphics();
+		m_GraphicsCmp->m_DrawingLayer = "Layer2";
+		m_GraphicsCmp->m_SpriteName = ""; // TODO:
+
+		m_IDCmp->m_DynamicTypeName = "Building";
+
+
+		m_BuildingName = "Smelters Workshop";
+
+		m_AssociatedCity = associated_city;
+		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
+	}
+
+
+private:
+
+
+private:
+
+};
+
+
+class BuildingToolSmithsWorkshop : public Building {
+public:
+
+	BuildingToolSmithsWorkshop(City* associated_city) {
+
+		m_TransformCmp->m_Height = SPRITES_WIDTH_AND_HEIGHT;
+		m_TransformCmp->m_Width = SPRITES_WIDTH_AND_HEIGHT;
+
+		m_GraphicsCmp = new CMPGraphics();
+		m_GraphicsCmp->m_DrawingLayer = "Layer2";
+		m_GraphicsCmp->m_SpriteName = ""; // TODO:
+
+		m_IDCmp->m_DynamicTypeName = "Building";
+
+
+		m_BuildingName = "Toolsmiths Workshop";
+
+		m_AssociatedCity = associated_city;
+		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
+	}
+
+
+private:
+
+
+private:
+
+};
+
+
+class BuildingRanch : public Building {
+public:
+
+	BuildingRanch(City* associated_city) {
+
+		m_TransformCmp->m_Height = SPRITES_WIDTH_AND_HEIGHT;
+		m_TransformCmp->m_Width = SPRITES_WIDTH_AND_HEIGHT;
+
+		m_GraphicsCmp = new CMPGraphics();
+		m_GraphicsCmp->m_DrawingLayer = "Layer2";
+		m_GraphicsCmp->m_SpriteName = ""; // TODO:
+
+		m_IDCmp->m_DynamicTypeName = "Building";
+
+
+		m_BuildingName = "Ranch";
+
+		m_AssociatedCity = associated_city;
+		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
+	}
+
+
+private:
+
+
+private:
+
+};
+
+class BuildingPicklersWorkshop : public Building {
+public:
+
+	BuildingPicklersWorkshop(City* associated_city) {
+
+		m_TransformCmp->m_Height = SPRITES_WIDTH_AND_HEIGHT;
+		m_TransformCmp->m_Width = SPRITES_WIDTH_AND_HEIGHT;
+
+		m_GraphicsCmp = new CMPGraphics();
+		m_GraphicsCmp->m_DrawingLayer = "Layer2";
+		m_GraphicsCmp->m_SpriteName = ""; // TODO:
+
+		m_IDCmp->m_DynamicTypeName = "Building";
+
+
+		m_BuildingName = "Picklers Workshop";
+
+		m_AssociatedCity = associated_city;
+		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
+	}
+
+
+private:
+
+
+private:
+
+};
+
+
+class BuildingBaracks : public Building {
+public:
+
+	BuildingBaracks(City* associated_city) {
+
+		m_TransformCmp->m_Height = SPRITES_WIDTH_AND_HEIGHT;
+		m_TransformCmp->m_Width = SPRITES_WIDTH_AND_HEIGHT;
+
+		m_GraphicsCmp = new CMPGraphics();
+		m_GraphicsCmp->m_DrawingLayer = "Layer2";
+		m_GraphicsCmp->m_SpriteName = ""; // TODO:
+
+		m_IDCmp->m_DynamicTypeName = "Building";
+
+
+		m_BuildingName = "Baracks";
+
+		m_AssociatedCity = associated_city;
+		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
+	}
+
+
+private:
+
+
+private:
+
+};
+
+
+class BuildingArcheryRange : public Building {
+public:
+
+	BuildingArcheryRange(City* associated_city) {
+
+		m_TransformCmp->m_Height = SPRITES_WIDTH_AND_HEIGHT;
+		m_TransformCmp->m_Width = SPRITES_WIDTH_AND_HEIGHT;
+
+		m_GraphicsCmp = new CMPGraphics();
+		m_GraphicsCmp->m_DrawingLayer = "Layer2";
+		m_GraphicsCmp->m_SpriteName = ""; // TODO:
+
+		m_IDCmp->m_DynamicTypeName = "Building";
+
+
+		m_BuildingName = "Archery Range";
+
+		m_AssociatedCity = associated_city;
+		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
+	}
+
+
+private:
+
+
+private:
+
+};
+
+class BuildingStables : public Building {
+public:
+
+	BuildingStables(City* associated_city) {
+
+		m_TransformCmp->m_Height = SPRITES_WIDTH_AND_HEIGHT;
+		m_TransformCmp->m_Width = SPRITES_WIDTH_AND_HEIGHT;
+
+		m_GraphicsCmp = new CMPGraphics();
+		m_GraphicsCmp->m_DrawingLayer = "Layer2";
+		m_GraphicsCmp->m_SpriteName = ""; // TODO:
+
+		m_IDCmp->m_DynamicTypeName = "Building";
+
+
+		m_BuildingName = "Stables";
+
+		m_AssociatedCity = associated_city;
+		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
+	}
+
+
+private:
+
+
+private:
+
+};
+
+
+
+class BuildingMagesTower : public Building {
+public:
+
+	BuildingMagesTower(City* associated_city) {
+
+		m_TransformCmp->m_Height = SPRITES_WIDTH_AND_HEIGHT;
+		m_TransformCmp->m_Width = SPRITES_WIDTH_AND_HEIGHT;
+
+		m_GraphicsCmp = new CMPGraphics();
+		m_GraphicsCmp->m_DrawingLayer = "Layer2";
+		m_GraphicsCmp->m_SpriteName = ""; // TODO:
+
+		m_IDCmp->m_DynamicTypeName = "Building";
+
+
+		m_BuildingName = "Mages Tower";
+
+		m_AssociatedCity = associated_city;
+		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
+	}
+
+
+private:
+
+
+private:
+
+};
+
+
+class BuildingSiegeWorkshop : public Building {
+public:
+
+	BuildingSiegeWorkshop(City* associated_city) {
+
+		m_TransformCmp->m_Height = SPRITES_WIDTH_AND_HEIGHT;
+		m_TransformCmp->m_Width = SPRITES_WIDTH_AND_HEIGHT;
+
+		m_GraphicsCmp = new CMPGraphics();
+		m_GraphicsCmp->m_DrawingLayer = "Layer2";
+		m_GraphicsCmp->m_SpriteName = ""; // TODO:
+
+		m_IDCmp->m_DynamicTypeName = "Building";
+
+
+		m_BuildingName = "Siege Workshop";
+
+		m_AssociatedCity = associated_city;
+		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
+	}
+
+
+private:
+
+
+private:
+
+};
 
 
 
@@ -2823,6 +3651,8 @@ public:
 		m_PlayerUnits.push_back(u);
 	}
 
+	std::string GetPlayersRace();
+
 	// Function researches randomly one of the base technologies of tech trees.
 	void RandomlyResearchBaseTechnology();
 
@@ -2849,6 +3679,7 @@ public:
 
 	// Technology
 	std::map<std::string, int> m_PlayersTechnologies; // 1 for researched, 0 for not researched.
+	TechTier m_PlayerTechnologyTier = TechTier::TECH_TIER_INVALID;
 
 private:
 

@@ -10,6 +10,690 @@ WorldMap* WorldMap::m_WorldMapInstance = nullptr;
 // Map stores tech. requirements for a given building.
 static std::map<std::string, BuildingTechRequirementsVec*> g_pBuildingTechRequirementsMap; 
 
+static std::map<std::string, BuildingRequirements*> g_pBuildingsRequirementsMap;
+
+
+void InitializeBuildingRequirementsMap() {
+
+	BuildingRequirements* req = new BuildingRequirements();
+	req->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
+	req->m_RaceRequirement = "All";
+	req->m_BuildingTier = BuildingTier::BUILDING_TIER_1;
+	req->m_PopulationCountRequirement = 1;
+
+	g_pBuildingsRequirementsMap.emplace("Shack", req);
+
+
+	// Reuse pointer-object for other buildings.
+	req = nullptr;
+
+
+
+	req = new BuildingRequirements();
+	req->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
+	req->m_RaceRequirement = "All";
+	req->m_BuildingTier = BuildingTier::BUILDING_TIER_1;
+	req->m_PopulationCountRequirement = 5;
+
+	g_pBuildingsRequirementsMap.emplace("Wooden House", req);
+
+	req = nullptr;
+
+
+
+
+	req = new BuildingRequirements();
+	req->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
+	req->m_RaceRequirement = "All";
+	req->m_BuildingTier = BuildingTier::BUILDING_TIER_2;
+	req->m_PopulationCountRequirement = 10;
+
+	g_pBuildingsRequirementsMap.emplace("Stone House", req);
+
+	req = nullptr;
+
+
+
+
+
+
+	req = new BuildingRequirements();
+	req->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
+	req->m_RaceRequirement = "All";
+	req->m_BuildingTier = BuildingTier::BUILDING_TIER_3;
+	req->m_PopulationCountRequirement = 20;
+
+	g_pBuildingsRequirementsMap.emplace("Brick House", req);
+
+	req = nullptr;
+
+
+
+
+	req = new BuildingRequirements();
+	req->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
+	req->m_RaceRequirement = "All";
+	req->m_BuildingTier = BuildingTier::BUILDING_TIER_1;
+	req->m_PopulationCountRequirement = 5;
+
+	g_pBuildingsRequirementsMap.emplace("Underground Storage", req);
+
+	req = nullptr;
+
+
+
+
+
+	req = new BuildingRequirements();
+	req->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
+	req->m_RaceRequirement = "All";
+	req->m_BuildingTier = BuildingTier::BUILDING_TIER_1;
+	req->m_PopulationCountRequirement = 1;
+
+	g_pBuildingsRequirementsMap.emplace("Underground Storage", req);
+
+	req = nullptr;
+
+
+
+
+
+	req = new BuildingRequirements();
+	req->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
+	req->m_RaceRequirement = "All";
+	req->m_BuildingTier = BuildingTier::BUILDING_TIER_1;
+	req->m_PopulationCountRequirement = 5;
+
+	g_pBuildingsRequirementsMap.emplace("Wooden Warehouse", req);
+
+	req = nullptr;
+
+
+
+
+
+
+	req = new BuildingRequirements();
+	req->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
+	req->m_RaceRequirement = "All";
+	req->m_BuildingTier = BuildingTier::BUILDING_TIER_2;
+	req->m_PopulationCountRequirement = 10;
+
+	g_pBuildingsRequirementsMap.emplace("Big Warehouse", req);
+
+	req = nullptr;
+
+
+
+
+
+	req = new BuildingRequirements();
+	req->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
+	req->m_RaceRequirement = "All";
+	req->m_BuildingTier = BuildingTier::BUILDING_TIER_3;
+	req->m_PopulationCountRequirement = 20;
+
+	g_pBuildingsRequirementsMap.emplace("City Storage", req);
+
+	req = nullptr;
+
+
+
+
+	req = new BuildingRequirements();
+	req->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
+	req->m_RaceRequirement = "All";
+	req->m_BuildingTier = BuildingTier::BUILDING_TIER_1;
+	req->m_PopulationCountRequirement = 1;
+
+	g_pBuildingsRequirementsMap.emplace("Wisemen Hut", req);
+
+	req = nullptr;
+
+
+
+
+
+	req = new BuildingRequirements();
+	req->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
+	req->m_RaceRequirement = "All";
+	req->m_BuildingTier = BuildingTier::BUILDING_TIER_2;
+	req->m_PopulationCountRequirement = 10;
+
+	g_pBuildingsRequirementsMap.emplace("Big School", req);
+
+	req = nullptr;
+
+
+
+
+
+
+	req = new BuildingRequirements();
+	req->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
+	req->m_RaceRequirement = "All";
+	req->m_BuildingTier = BuildingTier::BUILDING_TIER_2;
+	req->m_PopulationCountRequirement = 20;
+
+	g_pBuildingsRequirementsMap.emplace("College", req);
+
+	req = nullptr;
+
+
+
+
+
+	req = new BuildingRequirements();
+	req->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
+	req->m_RaceRequirement = "All";
+	req->m_BuildingTier = BuildingTier::BUILDING_TIER_1;
+	req->m_PopulationCountRequirement = 5;
+
+	g_pBuildingsRequirementsMap.emplace("Shrine", req);
+
+	req = nullptr;
+
+
+
+
+
+	req = new BuildingRequirements();
+	req->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
+	req->m_RaceRequirement = "All";
+	req->m_BuildingTier = BuildingTier::BUILDING_TIER_2;
+	req->m_PopulationCountRequirement = 10;
+
+	g_pBuildingsRequirementsMap.emplace("Magick School", req);
+
+	req = nullptr;
+
+
+
+
+	req = new BuildingRequirements();
+	req->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
+	req->m_RaceRequirement = "All";
+	req->m_BuildingTier = BuildingTier::BUILDING_TIER_3;
+	req->m_PopulationCountRequirement = 20;
+
+	g_pBuildingsRequirementsMap.emplace("Magick College", req);
+
+	req = nullptr;
+
+
+
+
+
+	req = new BuildingRequirements();
+	req->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
+	req->m_RaceRequirement = "All";
+	req->m_BuildingTier = BuildingTier::BUILDING_TIER_1;
+	req->m_PopulationCountRequirement = 5;
+
+	g_pBuildingsRequirementsMap.emplace("Inventors Hut", req);
+
+	req = nullptr;
+
+
+
+
+	req = new BuildingRequirements();
+	req->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
+	req->m_RaceRequirement = "All";
+	req->m_BuildingTier = BuildingTier::BUILDING_TIER_2;
+	req->m_PopulationCountRequirement = 10;
+
+	g_pBuildingsRequirementsMap.emplace("Small Workshop", req);
+
+	req = nullptr;
+
+
+
+
+
+	req = new BuildingRequirements();
+	req->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
+	req->m_RaceRequirement = "All";
+	req->m_BuildingTier = BuildingTier::BUILDING_TIER_3;
+	req->m_PopulationCountRequirement = 20;
+
+	g_pBuildingsRequirementsMap.emplace("Big Workshop", req);
+
+	req = nullptr;
+
+
+
+	req = new BuildingRequirements();
+	req->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
+	req->m_RaceRequirement = "All";
+	req->m_BuildingTier = BuildingTier::BUILDING_TIER_1;
+	req->m_PopulationCountRequirement = 5;
+
+	g_pBuildingsRequirementsMap.emplace("Champions Hut", req);
+
+	req = nullptr;
+
+
+
+
+	req = new BuildingRequirements();
+	req->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
+	req->m_RaceRequirement = "All";
+	req->m_BuildingTier = BuildingTier::BUILDING_TIER_2;
+	req->m_PopulationCountRequirement = 10;
+
+	g_pBuildingsRequirementsMap.emplace("Warrior School", req);
+
+	req = nullptr;
+
+
+
+
+	req = new BuildingRequirements();
+	req->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
+	req->m_RaceRequirement = "All";
+	req->m_BuildingTier = BuildingTier::BUILDING_TIER_1;
+	req->m_PopulationCountRequirement = 5;
+
+	g_pBuildingsRequirementsMap.emplace("Picklers Workshop", req);
+
+	req = nullptr;
+
+
+
+	req = new BuildingRequirements();
+	req->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
+	req->m_RaceRequirement = "All";
+	req->m_BuildingTier = BuildingTier::BUILDING_TIER_2;
+	req->m_PopulationCountRequirement = 10;
+
+	g_pBuildingsRequirementsMap.emplace("Ranch", req);
+
+	req = nullptr;
+
+
+
+	req = new BuildingRequirements();
+	req->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
+	req->m_RaceRequirement = "All";
+	req->m_BuildingTier = BuildingTier::BUILDING_TIER_2;
+	req->m_PopulationCountRequirement = 10;
+
+	g_pBuildingsRequirementsMap.emplace("Toolsmiths Workshop", req);
+
+	req = nullptr;
+
+
+
+	req = new BuildingRequirements();
+	req->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
+	req->m_RaceRequirement = "All";
+	req->m_BuildingTier = BuildingTier::BUILDING_TIER_2;
+	req->m_PopulationCountRequirement = 10;
+
+	g_pBuildingsRequirementsMap.emplace("Smelters Workshop", req);
+
+	req = nullptr;
+
+
+
+	req = new BuildingRequirements();
+	req->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
+	req->m_RaceRequirement = "All";
+	req->m_BuildingTier = BuildingTier::BUILDING_TIER_2;
+	req->m_PopulationCountRequirement = 10;
+
+	g_pBuildingsRequirementsMap.emplace("Weaponsmiths Workshop", req);
+
+	req = nullptr;
+
+
+
+	req = new BuildingRequirements();
+	req->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
+	req->m_RaceRequirement = "All";
+	req->m_BuildingTier = BuildingTier::BUILDING_TIER_2;
+	req->m_PopulationCountRequirement = 10;
+
+	g_pBuildingsRequirementsMap.emplace("Armorsmiths Workshop", req);
+
+	req = nullptr;
+
+
+
+	req = new BuildingRequirements();
+	req->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
+	req->m_RaceRequirement = "All";
+	req->m_BuildingTier = BuildingTier::BUILDING_TIER_3;
+	req->m_PopulationCountRequirement = 20;
+
+	g_pBuildingsRequirementsMap.emplace("Goldsmiths Workshop", req);
+
+	req = nullptr;
+
+
+
+	req = new BuildingRequirements();
+	req->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
+	req->m_RaceRequirement = "All";
+	req->m_BuildingTier = BuildingTier::BUILDING_TIER_2;
+	req->m_PopulationCountRequirement = 10;
+
+	g_pBuildingsRequirementsMap.emplace("Brewery", req);
+
+	req = nullptr;
+
+
+	req = new BuildingRequirements();
+	req->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
+	req->m_RaceRequirement = "All";
+	req->m_BuildingTier = BuildingTier::BUILDING_TIER_2;
+	req->m_PopulationCountRequirement = 10;
+
+	g_pBuildingsRequirementsMap.emplace("Tailors Workshop", req);
+
+	req = nullptr;
+
+
+
+	req = new BuildingRequirements();
+	req->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
+	req->m_RaceRequirement = "All";
+	req->m_BuildingTier = BuildingTier::BUILDING_TIER_2;
+	req->m_PopulationCountRequirement = 10;
+
+	g_pBuildingsRequirementsMap.emplace("Masons Workshop", req);
+
+	req = nullptr;
+
+
+
+	req = new BuildingRequirements();
+	req->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
+	req->m_RaceRequirement = "All";
+	req->m_BuildingTier = BuildingTier::BUILDING_TIER_3;
+	req->m_PopulationCountRequirement = 20;
+
+	g_pBuildingsRequirementsMap.emplace("Brickmakers Workshop", req);
+
+	req = nullptr;
+
+
+
+
+	req = new BuildingRequirements();
+	req->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
+	req->m_RaceRequirement = "All";
+	req->m_BuildingTier = BuildingTier::BUILDING_TIER_1;
+	req->m_PopulationCountRequirement = 5;
+
+	g_pBuildingsRequirementsMap.emplace("Carpenters Workshop", req);
+
+	req = nullptr;
+
+
+
+
+	req = new BuildingRequirements();
+	req->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
+	req->m_RaceRequirement = "All";
+	req->m_BuildingTier = BuildingTier::BUILDING_TIER_3;
+	req->m_PopulationCountRequirement = 20;
+
+	g_pBuildingsRequirementsMap.emplace("Taverns Quarter", req);
+
+	req = nullptr;
+
+
+
+	req = new BuildingRequirements();
+	req->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
+	req->m_RaceRequirement = "All";
+	req->m_BuildingTier = BuildingTier::BUILDING_TIER_2;
+	req->m_PopulationCountRequirement = 10;
+
+	g_pBuildingsRequirementsMap.emplace("Tavern", req);
+
+	req = nullptr;
+
+
+
+
+	req = new BuildingRequirements();
+	req->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
+	req->m_RaceRequirement = "All";
+	req->m_BuildingTier = BuildingTier::BUILDING_TIER_1;
+	req->m_PopulationCountRequirement = 5;
+
+	g_pBuildingsRequirementsMap.emplace("Brothel", req);
+
+	req = nullptr;
+
+
+
+	req = new BuildingRequirements();
+	req->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
+	req->m_RaceRequirement = "All";
+	req->m_BuildingTier = BuildingTier::BUILDING_TIER_3;
+	req->m_PopulationCountRequirement = 20;
+
+	g_pBuildingsRequirementsMap.emplace("Merchants Quarter", req);
+
+	req = nullptr;
+
+
+
+
+	req = new BuildingRequirements();
+	req->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
+	req->m_RaceRequirement = "All";
+	req->m_BuildingTier = BuildingTier::BUILDING_TIER_2;
+	req->m_PopulationCountRequirement = 10;
+
+	g_pBuildingsRequirementsMap.emplace("Big Market", req);
+
+	req = nullptr;
+
+
+
+	req = new BuildingRequirements();
+	req->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
+	req->m_RaceRequirement = "All";
+	req->m_BuildingTier = BuildingTier::BUILDING_TIER_1;
+	req->m_PopulationCountRequirement = 5;
+
+	g_pBuildingsRequirementsMap.emplace("Local Market", req);
+
+	req = nullptr;
+
+
+
+
+	req = new BuildingRequirements();
+	req->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
+	req->m_RaceRequirement = "All";
+	req->m_BuildingTier = BuildingTier::BUILDING_TIER_3;
+	req->m_PopulationCountRequirement = 20;
+
+	g_pBuildingsRequirementsMap.emplace("Mayors Palace", req);
+
+	req = nullptr;
+
+
+
+	req = new BuildingRequirements();
+	req->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
+	req->m_RaceRequirement = "All";
+	req->m_BuildingTier = BuildingTier::BUILDING_TIER_2;
+	req->m_PopulationCountRequirement = 10;
+
+	g_pBuildingsRequirementsMap.emplace("Town Hall", req);
+
+	req = nullptr;
+
+
+
+	req = new BuildingRequirements();
+	req->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
+	req->m_RaceRequirement = "All";
+	req->m_BuildingTier = BuildingTier::BUILDING_TIER_1;
+	req->m_PopulationCountRequirement = 5;
+
+	g_pBuildingsRequirementsMap.emplace("Council", req);
+
+	req = nullptr;
+
+
+
+	req = new BuildingRequirements();
+	req->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
+	req->m_RaceRequirement = "All";
+	req->m_BuildingTier = BuildingTier::BUILDING_TIER_3;
+	req->m_PopulationCountRequirement = 20;
+
+	g_pBuildingsRequirementsMap.emplace("Military College", req);
+
+	req = nullptr;
+
+
+
+
+
+	// GUILDS
+	req = new BuildingRequirements();
+	req->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
+	req->m_RaceRequirement = "All";
+	req->m_BuildingTier = BuildingTier::BUILDING_TIER_2;
+	req->m_PopulationCountRequirement = 30;
+
+	g_pBuildingsRequirementsMap.emplace("Assassins Guild", req);
+
+	req = nullptr;
+
+
+
+
+	req = new BuildingRequirements();
+	req->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
+	req->m_RaceRequirement = "All";
+	req->m_BuildingTier = BuildingTier::BUILDING_TIER_2;
+	req->m_PopulationCountRequirement = 30;
+
+	g_pBuildingsRequirementsMap.emplace("Thieves Guild", req);
+
+	req = nullptr;
+
+
+
+
+	req = new BuildingRequirements();
+	req->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
+	req->m_RaceRequirement = "All";
+	req->m_BuildingTier = BuildingTier::BUILDING_TIER_2;
+	req->m_PopulationCountRequirement = 30;
+
+	g_pBuildingsRequirementsMap.emplace("Mages Guild", req);
+
+	req = nullptr;
+
+
+
+	req = new BuildingRequirements();
+	req->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
+	req->m_RaceRequirement = "All";
+	req->m_BuildingTier = BuildingTier::BUILDING_TIER_2;
+	req->m_PopulationCountRequirement = 30;
+
+	g_pBuildingsRequirementsMap.emplace("Fighters Guild", req);
+
+	req = nullptr;
+
+
+
+	req = new BuildingRequirements();
+	req->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
+	req->m_RaceRequirement = "All";
+	req->m_BuildingTier = BuildingTier::BUILDING_TIER_2;
+	req->m_PopulationCountRequirement = 30;
+
+	g_pBuildingsRequirementsMap.emplace("Merchants Guild", req);
+
+	req = nullptr;
+
+
+
+
+
+	// MILITARY BUILDINGS.
+	req = new BuildingRequirements();
+	req->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
+	req->m_RaceRequirement = "All";
+	req->m_BuildingTier = BuildingTier::BUILDING_TIER_2;
+	req->m_PopulationCountRequirement = 10;
+
+	g_pBuildingsRequirementsMap.emplace("Siege Workshop", req);
+
+	req = nullptr;
+
+
+	req = new BuildingRequirements();
+	req->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
+	req->m_RaceRequirement = "All";
+	req->m_BuildingTier = BuildingTier::BUILDING_TIER_2;
+	req->m_PopulationCountRequirement = 10;
+
+	g_pBuildingsRequirementsMap.emplace("Mages Tower", req);
+
+	req = nullptr;
+
+
+
+	req = new BuildingRequirements();
+	req->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
+	req->m_RaceRequirement = "All";
+	req->m_BuildingTier = BuildingTier::BUILDING_TIER_2;
+	req->m_PopulationCountRequirement = 10;
+
+	g_pBuildingsRequirementsMap.emplace("Stables", req);
+
+	req = nullptr;
+
+
+
+
+	req = new BuildingRequirements();
+	req->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
+	req->m_RaceRequirement = "All";
+	req->m_BuildingTier = BuildingTier::BUILDING_TIER_2;
+	req->m_PopulationCountRequirement = 10;
+
+	g_pBuildingsRequirementsMap.emplace("Archery Range", req);
+
+	req = nullptr;
+
+
+
+
+	req = new BuildingRequirements();
+	req->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
+	req->m_RaceRequirement = "All";
+	req->m_BuildingTier = BuildingTier::BUILDING_TIER_2;
+	req->m_PopulationCountRequirement = 10;
+
+	g_pBuildingsRequirementsMap.emplace("Baracks", req);
+
+	req = nullptr;
+}
+
+
+
+void DeinitializeBuildingRequirementsMap() {
+
+	g_pBuildingsRequirementsMap.clear();
+}
+
+
+
 void DeinitializeBuildingTechnologyRequirements(){
 
 	g_pBuildingTechRequirementsMap.clear();
@@ -442,6 +1126,10 @@ void Player::_initStandardResearchedTech() {
 		cout << "Race for Player \"" << m_PlayerName << "\" was not set." << white << endl;
 		return;
 	}
+
+
+
+	m_PlayerTechnologyTier = TechTier::TECH_TIER_1;
 }
 
 
@@ -5475,4 +6163,198 @@ void City::UpdateVisibility() {
 
 		m_AssociatedPlayer->m_MapVisibility[it->m_TransformCmp->m_GameWorldSpaceCell[0]][it->m_TransformCmp->m_GameWorldSpaceCell[1]] += (m_AssociatedPlayer->m_MapVisibility[it->m_TransformCmp->m_GameWorldSpaceCell[0]][it->m_TransformCmp->m_GameWorldSpaceCell[1]] == 0) ? 2 : 1;
 	}
+}
+
+
+
+bool DoesPlayerCityFulfillRequirementsForBuilding(City* city, std::string building_name, int slot) {
+
+	
+	// First, check for city size.
+	bool race_req = false;
+	int needed_size = g_pBuildingsRequirementsMap.at(building_name)->m_PopulationCountRequirement;
+	
+	if (city->m_CitySize < needed_size) return false;
+
+
+
+	// Check for race req.
+	if (COMPARE_STRINGS(g_pBuildingsRequirementsMap.at(building_name)->m_RaceRequirement, "All") == 0 ||
+		COMPARE_STRINGS_2(g_pBuildingsRequirementsMap.at(building_name)->m_RaceRequirement, city->m_AssociatedPlayer->GetPlayersRace()) == 0) {
+
+		race_req = true;
+	}
+
+	if (!race_req) return false;
+
+
+
+
+
+	// Check for slot.
+	switch (g_pBuildingsRequirementsMap.at(building_name)->m_BuildingSlotType) {
+	case City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD:
+
+		// Check for the right slot number.
+		// Std. slots are 1-9.
+		if (slot > 9) return false;
+
+		break;
+	case City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_PORT:
+
+		// Port slots are 12-13.
+		if (slot < 12) return false;
+
+		break;
+	case City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_SPECIAL:
+
+		// Special slots are 10-11.
+		if (slot < 10 ||
+			slot > 11) return false;
+
+		break;
+
+	default:
+
+		// Something else weird -> in all cases error...
+		// Maybe good to give out debug message.
+		return false;
+		break;
+	}
+
+
+
+	// Check for tech req.
+	std::vector<std::string> needed_tech_vec = *g_pBuildingTechRequirementsMap.at(building_name);
+	for (auto it : needed_tech_vec) {
+
+		// Check whether player has researched needed technologies for the building...
+		if (HasPlayerTech(it, city->m_AssociatedPlayer) == false) {
+			return false;
+		}
+	}
+
+
+
+	// Check for Tier of player..
+	if (HasPlayerNeededTier(g_pBuildingsRequirementsMap.at(building_name)->m_BuildingTier, city->m_AssociatedPlayer) == false) {
+
+		return false;
+	}
+	
+
+	// Everything checked and player can build building in his city.
+	return true;
+}
+
+
+
+bool HasPlayerTech(std::string tech, Player* player) {
+
+	for (auto it : player->m_PlayersTechnologies) {
+
+		if (COMPARE_STRINGS_2(tech, it.first) == 0) {
+
+			return(it.second == 1) ? true : false;
+		}
+	}
+	
+	return false;
+}
+
+
+bool HasPlayerNeededTier(BuildingTier tier, Player* player) {
+
+	int needed_tier = -1, player_tier = -1;
+
+	switch (tier) {
+	case BuildingTier::BUILDING_TIER_1:
+		needed_tier = 1;
+		break;
+	case BuildingTier::BUILDING_TIER_2:
+		needed_tier = 2;
+		break;
+	case BuildingTier::BUILDING_TIER_3:
+		needed_tier = 3;
+		break;
+	default:
+		return false;
+		break;
+	}
+
+	switch (player->m_PlayerTechnologyTier) {
+	case TechTier::TECH_TIER_1:
+		player_tier = 1;
+		break;
+	case TechTier::TECH_TIER_2:
+		player_tier = 2;
+		break;
+	case TechTier::TECH_TIER_3:
+		player_tier = 3;
+		break;
+	default:
+		return false;
+		break;
+	}
+
+	return (player_tier >= needed_tier) ? true : false;
+}
+
+
+
+bool HasPlayerNeededTier(int tier, Player* player) {
+
+	int player_tier = -1;
+	switch (player->m_PlayerTechnologyTier) {
+	case TechTier::TECH_TIER_1:
+		player_tier = 1;
+		break;
+	case TechTier::TECH_TIER_2:
+		player_tier = 2;
+		break;
+	case TechTier::TECH_TIER_3:
+		player_tier = 3;
+		break;
+	default:
+		return false;
+		break;
+	}
+
+
+	return(player_tier >= tier) ? true : false;
+}
+
+
+std::string Player::GetPlayersRace() {
+
+	switch (m_PlayerEmpireRace) {
+	case CMPEntityRace::Race::RACE_HUMAN:
+		return  "Human";
+		break;
+	case CMPEntityRace::Race::RACE_TROLL:
+		return "Troll";
+		break;
+	case CMPEntityRace::Race::RACE_DWARF:
+		return "Dwarf";
+		break;
+	case CMPEntityRace::Race::RACE_ORC:
+		return "Orc";
+		break;
+	case CMPEntityRace::Race::RACE_HIGHELF:
+		return "High Elf";
+		break;
+	case CMPEntityRace::Race::RACE_DARKELF:
+		return "Dark Elf";
+		break;
+	case CMPEntityRace::Race::RACE_GOBLIN:
+		return "Goblin";
+		break;
+	case CMPEntityRace::Race::RACE_GNOME:
+		return "Gnome";
+		break;
+	default:
+		break;
+	}
+
+	return "NULL";
 }

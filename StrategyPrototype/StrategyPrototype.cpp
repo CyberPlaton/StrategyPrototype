@@ -14,6 +14,8 @@ bool Game::OnUserDestroy(){
 
 	DeinitializeUnitTechnologyRequirements();
 	DeinitializeBuildingTechnologyRequirements();
+	DeinitializeBuildingRequirementsMap();
+
 
 	m_SpriteStorage.clear();
 	m_SpriteResourceMap.clear();
@@ -4198,6 +4200,7 @@ void Game::_initialize() {
 
 	InitializeUnitTechnologyRequirements();
 	InitializeBuildingTechnologyRequirements();
+	InitializeBuildingRequirementsMap();
 }
 
 
