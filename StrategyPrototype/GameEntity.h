@@ -687,8 +687,9 @@ public:
 	std::map<std::string, CityRessource*> m_CityRessourcesMap;
 	std::vector<GameEntity*> m_PresentUnitsVector;
 
-	// Special for PresentUnits that dont have a job, say citizens.
-	std::vector<GameEntity*> m_JoblessCitizens; // At a time, only 10 citizens can be without job, after we do not spawn new ones.
+	// Special for PresentUnits that dont have a job, say citizens and
+	// present military units that dont do aniything.
+	std::vector<GameEntity*> m_GarrisonedUnits;
 
 	std::vector<MapTileRegion*> m_ClaimedRegions;
 	std::string m_ClaimedRegionsSpriteName;

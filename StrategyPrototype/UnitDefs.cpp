@@ -25,20 +25,20 @@ void DeinitializeUnitTechnologyRequirements() {
 
 void InitializeUnitTechnologyRequirements() {
 
-	g_TechnologyRequirementsMap.emplace("Citizen", "All");; // Means available for all with no tech.
-	g_TechnologyRequirementsMap.emplace("Woodcutter", "Wood Working");; // Means available for all with no tech.
-	g_TechnologyRequirementsMap.emplace("Farmer", "Farming");; // Means available for all with no tech.
-	g_TechnologyRequirementsMap.emplace("Hunter", "Hunting");; // Means available for all with no tech.
-	g_TechnologyRequirementsMap.emplace("Fisher", "Fishing");; // Means available for all with no tech.
-	g_TechnologyRequirementsMap.emplace("Clayminer", "All");; // Means available for all with no tech.
-	g_TechnologyRequirementsMap.emplace("Bronze Miner", "All");; // Means available for all with no tech.
-	g_TechnologyRequirementsMap.emplace("Iron Miner", "All");; // Means available for all with no tech.
-	g_TechnologyRequirementsMap.emplace("Malachite Miner", "All");; // Means available for all with no tech.
-	g_TechnologyRequirementsMap.emplace("Adamantium Miner", "All");; // Means available for all with no tech.
-	g_TechnologyRequirementsMap.emplace("Salt Miner", "All");; // Means available for all with no tech.
-	g_TechnologyRequirementsMap.emplace("Stone Miner", "All");; // Means available for all with no tech.
-	g_TechnologyRequirementsMap.emplace("Carpenter", "Wood Working");; // Means available for all with no tech.
-	g_TechnologyRequirementsMap.emplace("Brick Burner", "Brick Making");; // Means available for all with no tech.
+	g_TechnologyRequirementsMap.emplace("Citizen", "All");
+	g_TechnologyRequirementsMap.emplace("Woodcutter", "Wood Working");
+	g_TechnologyRequirementsMap.emplace("Farmer", "Farming");
+	g_TechnologyRequirementsMap.emplace("Hunter", "Hunting");
+	g_TechnologyRequirementsMap.emplace("Fisher", "Fishing");
+	g_TechnologyRequirementsMap.emplace("Clayminer", "All");
+	g_TechnologyRequirementsMap.emplace("Bronze Miner", "All");
+	g_TechnologyRequirementsMap.emplace("Iron Miner", "All");
+	g_TechnologyRequirementsMap.emplace("Malachite Miner", "All");
+	g_TechnologyRequirementsMap.emplace("Adamantium Miner", "All");
+	g_TechnologyRequirementsMap.emplace("Salt Miner", "All");
+	g_TechnologyRequirementsMap.emplace("Stone Miner", "All");
+	g_TechnologyRequirementsMap.emplace("Carpenter", "Wood Working");
+	g_TechnologyRequirementsMap.emplace("Brick Burner", "Brick Making");
 	g_TechnologyRequirementsMap.emplace("Gatherer", "All");
 	g_TechnologyRequirementsMap.emplace("Mason", "Stone Working");
 

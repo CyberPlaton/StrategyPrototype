@@ -48,6 +48,7 @@ private:
 	}
 
 
+	bool _tryMakeBuilding(int xpos, int ypos); // Algorithm for building buidlings on slots choosen by user...
 	bool _tryGivingUnitAProfession(Unit* unit);
 	GameEntity* _hoveringOverEntity(int xpos, int ypos, std::string& entityType);
 	int _hoveringOverBuildingSlot(int xpos, int ypos); // Returns -1 if no slot is hovered upon.

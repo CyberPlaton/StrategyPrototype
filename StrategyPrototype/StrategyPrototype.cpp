@@ -3010,6 +3010,19 @@ bool CMPCameraInput::_tryGivingUnitAProfession(Unit* unit) {
 	}
 }
 
+
+bool  CMPCameraInput::_tryMakeBuilding(int xpos, int ypos) {
+
+	City* city = PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlyViewedCity;
+
+	if (!city) return false; // Check for weird bugs...
+
+
+	return true;
+}
+
+
+
 bool CMPCameraInput::_isMaptileAlreadyWorked(MapTile* maptile) {
 
 
@@ -3223,7 +3236,7 @@ void CMPCameraInput::_handleCityViewKeyboard(Camera* cam) {
 	// Spawning new citizen on click.
 	if (context->GetKey(olc::Key::ENTER).bReleased) {
 
-		if (city->m_JoblessCitizens.size() < 10) { // Need to check...
+		if (city->m_GarrisonedUnits.size() < JOBLESS_CITIZENS_COUNT) { // Need to check...
 
 			Unit* u = SpawnCitizenInCity(city, 0, 0);
 			city->AddCitizenToJobless(u);

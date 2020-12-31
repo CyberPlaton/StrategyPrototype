@@ -724,6 +724,14 @@ void InitializeBuildingTechnologyRequirements() {
 	vec = nullptr;
 	vec = new BuildingTechRequirementsVec();
 
+	vec->push_back("Brick Making");
+	g_pBuildingTechRequirementsMap.emplace("Brick House", vec);
+
+
+
+	vec = nullptr;
+	vec = new BuildingTechRequirementsVec();
+
 	g_pBuildingTechRequirementsMap.emplace("Underground Storage", vec);
 
 
@@ -2507,35 +2515,35 @@ void Unit::MoveTo(int x_cell, int y_cell) {
 
 void City::RemoveCitizenFromJoblessVector(GameEntity* unit) {
 
-	std::vector<GameEntity*>::iterator it = std::find(m_JoblessCitizens.begin(), m_JoblessCitizens.end(), unit);
+	std::vector<GameEntity*>::iterator it = std::find(m_GarrisonedUnits.begin(), m_GarrisonedUnits.end(), unit);
 
-	if (it != m_JoblessCitizens.end()) {
+	if (it != m_GarrisonedUnits.end()) {
 
-		m_JoblessCitizens.erase(it);
+		m_GarrisonedUnits.erase(it);
 	}
 }
 
 bool City::AddCitizenToJobless(GameEntity* unit) {
 
-	if (m_JoblessCitizens.size() < 10) {
+	if (m_GarrisonedUnits.size() < JOBLESS_CITIZENS_COUNT) {
 
-		if (m_JoblessCitizens.size() == 0) {
+		if (m_GarrisonedUnits.size() == 0) {
 
 			unit->m_TransformCmp->m_PosX = 702;
 			unit->m_TransformCmp->m_PosY = 650;
-			this->m_JoblessCitizens.push_back(unit);
+			this->m_GarrisonedUnits.push_back(unit);
 		}
 		else {
 
 			int xpos = 0, ypos = 0;
-			for (auto it : this->m_JoblessCitizens) {
+			for (auto it : this->m_GarrisonedUnits) {
 				xpos = it->m_TransformCmp->m_PosX;
 				ypos = it->m_TransformCmp->m_PosY;
 			}
 
 			unit->m_TransformCmp->m_PosX = 32 + xpos;
 			unit->m_TransformCmp->m_PosY = ypos;
-			this->m_JoblessCitizens.push_back(unit);
+			this->m_GarrisonedUnits.push_back(unit);
 		}
 
 
@@ -6654,28 +6662,21 @@ std::vector<std::string>* GetAvailableBuildingsForPlayerOnSlot(City* city, int s
 
 	using namespace std;
 
-	std::vector<std::string> vec;
+	std::vector<std::string> *vec = new std::vector<std::string>();
 
 
 	// Cycle through all registered buildings...
 	for (auto it : g_pBuildingsRequirementsMap) {
 
-		cout << color(colors::RED);
-		cout << "DoesPlayerCityFulfillRequirementsForBuilding() ::= " << it.first << white << endl;
-
-
 		if (DoesPlayerCityFulfillRequirementsForBuilding(city, it.first, slot)) {
 
-			cout << color(colors::RED);
-			cout << "Storing ::= " << it.first << white << endl;
-
-			vec.push_back(it.first); // Store building we can build.
+			vec->push_back(it.first); // Store building we can build.
 		}
 
 	}
 
 
-	return &vec;
+	return vec;
 }
 
 
