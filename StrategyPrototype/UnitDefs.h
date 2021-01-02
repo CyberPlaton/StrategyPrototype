@@ -11,6 +11,10 @@ std::string GetTechnologyRequirementsForUnit(UnitBase* unit);
 std::string GetTechnologyRequirementsForUnit(std::string tech);
 void InitializeUnitTechnologyRequirements();
 void DeinitializeUnitTechnologyRequirements();
+void InitializeUnitClassRessources();
+void DeinitializeUnitClassRessources();
+
+
 
 // NEW
 enum class UnitTier {
@@ -41,8 +45,8 @@ struct UnitStats { // Define maximal health, magicka and fatigue.
 	size_t m_Fatigue = -1;
 };
 
-// NOTE:
-// Tech requirements are stored separetely in "g_TechnologyRequirementsMap".
+
+
 struct UnitBase {
 
 	std::string m_UnitClassName;
@@ -50,6 +54,57 @@ struct UnitBase {
 	UnitTier m_UnitTier = UnitTier::UNIT_TIER_INVALID;
 	UnitLevel m_UnitLevel = UnitLevel::UNIT_LEVEL_INVALID;
 	UnitStats* m_UnitStats = nullptr;
+
+	std::map < std::string, int> m_RessourceToGather;
+	
+	int LevelToInt() {
+
+		int level = -1;
+		switch (m_UnitLevel) {
+		case UnitLevel::UNIT_LEVEL_1:
+			level = 1;
+			break;
+		case UnitLevel::UNIT_LEVEL_2:
+			level = 2;
+
+			break;
+		case UnitLevel::UNIT_LEVEL_3:
+			level = 3;
+
+			break;
+		case UnitLevel::UNIT_LEVEL_4:
+			level = 4;
+
+			break;
+		case UnitLevel::UNIT_LEVEL_5:
+			level = 5;
+
+			break;
+		case UnitLevel::UNIT_LEVEL_6:
+			level = 6;
+
+			break;
+		case UnitLevel::UNIT_LEVEL_7:
+			level = 7;
+
+			break;
+		case UnitLevel::UNIT_LEVEL_8:
+			level = 8;
+
+			break;
+		case UnitLevel::UNIT_LEVEL_9:
+			level = 9;
+
+			break;
+		case UnitLevel::UNIT_LEVEL_10:
+			level = 10;
+
+			break;
+
+		}
+
+		return level;
+	}
 
 	std::string LevelToString() {
 
@@ -378,6 +433,11 @@ struct UnitMason : public UnitBase { // Mason makes stoneblocks from raw stone.
 		m_UnitStats->m_Health = 10;
 	}
 };
+
+
+
+
+
 
 // OLD
 

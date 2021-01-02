@@ -4,6 +4,203 @@
 
 #include"UnitDefs.h"
 
+
+// Map valid ressources for each unit that it produces.
+static std::map<std::string, std::vector<std::string>*> g_pUnitClassRessourceMap;
+
+// Maps each ressource that is made from another, what is made of what.
+static std::map<std::string, std::string> g_pRefinedRessourceRawRessourceDemand;
+
+// Vector holds all defined ressources. If it aint here it aint exist...
+static std::vector<std::string> g_pIngameRessourcesVec;
+
+
+void InitializeUnitClassRessources() {
+
+	// First, define all existent ressources...
+	g_pIngameRessourcesVec.push_back("Grapes");
+	g_pIngameRessourcesVec.push_back("Alcohol");
+
+	g_pIngameRessourcesVec.push_back("Wood");
+	g_pIngameRessourcesVec.push_back("Planks");
+	g_pIngameRessourcesVec.push_back("Clay");
+	g_pIngameRessourcesVec.push_back("Bricks");
+	g_pIngameRessourcesVec.push_back("Food");
+	g_pIngameRessourcesVec.push_back("Leather");
+	g_pIngameRessourcesVec.push_back("Clothing");
+	g_pIngameRessourcesVec.push_back("Raw Stone");
+	g_pIngameRessourcesVec.push_back("Stone Blocks");
+	g_pIngameRessourcesVec.push_back("Bronze Ore");
+	g_pIngameRessourcesVec.push_back("Bronze Bars");
+	g_pIngameRessourcesVec.push_back("Iron Bars");
+	g_pIngameRessourcesVec.push_back("Iron Ore");
+	g_pIngameRessourcesVec.push_back("Steel Bars");
+	g_pIngameRessourcesVec.push_back("Adamantium Ore");
+	g_pIngameRessourcesVec.push_back("Adamantium Bars");
+	g_pIngameRessourcesVec.push_back("Malachite Ore");
+	g_pIngameRessourcesVec.push_back("Malachite Bars");
+	g_pIngameRessourcesVec.push_back("Bronze Armor");
+	g_pIngameRessourcesVec.push_back("Bronze Weapons");
+	g_pIngameRessourcesVec.push_back("Iron Armor");
+	g_pIngameRessourcesVec.push_back("Iron Weapons");
+	g_pIngameRessourcesVec.push_back("Steel Armor");
+	g_pIngameRessourcesVec.push_back("Steel Weapons");
+	g_pIngameRessourcesVec.push_back("Adamantium Armor");
+	g_pIngameRessourcesVec.push_back("Adamantium Weapons");
+	g_pIngameRessourcesVec.push_back("Malachite Armor");
+	g_pIngameRessourcesVec.push_back("Malachite Weapons");
+	g_pIngameRessourcesVec.push_back("Horses");
+	g_pIngameRessourcesVec.push_back("Salt");
+	g_pIngameRessourcesVec.push_back("Silver Ore");
+	g_pIngameRessourcesVec.push_back("Silver Bars");
+	g_pIngameRessourcesVec.push_back("Gold Ore");
+	g_pIngameRessourcesVec.push_back("Gold Bars");
+	g_pIngameRessourcesVec.push_back("Silver Armor");
+	g_pIngameRessourcesVec.push_back("Silver Weapons");
+	g_pIngameRessourcesVec.push_back("Gold Armor");
+	g_pIngameRessourcesVec.push_back("Gold Weapons");
+	g_pIngameRessourcesVec.push_back("Jewelry");
+	g_pIngameRessourcesVec.push_back("Tools");
+
+
+	// Special in game ressources like knowledge or direct mooney.
+	g_pIngameRessourcesVec.push_back("Denars");
+	g_pIngameRessourcesVec.push_back("Civilian Knowledge");
+	g_pIngameRessourcesVec.push_back("Military Knowledge");
+	g_pIngameRessourcesVec.push_back("Magick Knowledge");
+	g_pIngameRessourcesVec.push_back("Technical Knowledge");
+
+
+
+
+	// Second, deifne req. for refined ressources...
+	g_pRefinedRessourceRawRessourceDemand.emplace("Alcohol", "Grapes");
+	g_pRefinedRessourceRawRessourceDemand.emplace("Clothing", "Leather");
+	g_pRefinedRessourceRawRessourceDemand.emplace("Planks", "Wood");
+	g_pRefinedRessourceRawRessourceDemand.emplace("Bricks", "Clay");
+	g_pRefinedRessourceRawRessourceDemand.emplace("Stone Blocks", "Raw Stone");
+	g_pRefinedRessourceRawRessourceDemand.emplace("Bronze Bars", "Bronze Ore");
+	g_pRefinedRessourceRawRessourceDemand.emplace("Iron Bars", "Iron Ore");
+	g_pRefinedRessourceRawRessourceDemand.emplace("Steel Bars", "Iron Ore");
+	g_pRefinedRessourceRawRessourceDemand.emplace("Adamantium Bars", "Adamantium Ore");
+	g_pRefinedRessourceRawRessourceDemand.emplace("Malachite Bars", "Malachite Ore");
+	g_pRefinedRessourceRawRessourceDemand.emplace("Silver Bars", "Silver Ore");
+	g_pRefinedRessourceRawRessourceDemand.emplace("Gold Bars", "Gold Ore");
+	g_pRefinedRessourceRawRessourceDemand.emplace("Jewelry", "Silver Ore");
+	g_pRefinedRessourceRawRessourceDemand.emplace("Bronze Armor", "Bronze Bars");
+	g_pRefinedRessourceRawRessourceDemand.emplace("Bronze Weapons", "Bronze Bars");
+	g_pRefinedRessourceRawRessourceDemand.emplace("Iron Armor", "Iron Bars");
+	g_pRefinedRessourceRawRessourceDemand.emplace("Iron Weapons", "Iron Bars");
+	g_pRefinedRessourceRawRessourceDemand.emplace("Steel Armor", "Steel Bars");
+	g_pRefinedRessourceRawRessourceDemand.emplace("Steel Weapons", "Steel Bars");
+	g_pRefinedRessourceRawRessourceDemand.emplace("Gold Armor", "Gold Bars");
+	g_pRefinedRessourceRawRessourceDemand.emplace("Gold Weapons", "Gold Bars");
+	g_pRefinedRessourceRawRessourceDemand.emplace("Adamantium Armor", "Adamantium Bars");
+	g_pRefinedRessourceRawRessourceDemand.emplace("Adamantium Weapons", "Adamantium Bars");
+	g_pRefinedRessourceRawRessourceDemand.emplace("Malachite Armor", "Malachite Bars");
+	g_pRefinedRessourceRawRessourceDemand.emplace("Malachite Weapons", "Malachite Bars");
+	g_pRefinedRessourceRawRessourceDemand.emplace("Horses", "Food");
+	g_pRefinedRessourceRawRessourceDemand.emplace("Tools", "Bronze Bars");
+	g_pRefinedRessourceRawRessourceDemand.emplace("Denars", "Gold Bars");
+
+
+
+
+
+	// Lastly, define which ressource what profession creates...
+	std::vector<std::string> *vec = new std::vector<std::string>();
+
+	g_pUnitClassRessourceMap.emplace("Citizen", vec);
+
+	vec->push_back("Wood");
+	g_pUnitClassRessourceMap.emplace("Woodcutter", vec);
+	vec->clear();
+
+
+	vec->push_back("Food");
+	g_pUnitClassRessourceMap.emplace("Farmer", vec);
+	vec->clear();
+
+
+	vec->push_back("Food");
+	vec->push_back("Leather");
+	g_pUnitClassRessourceMap.emplace("Hunter", vec);
+	vec->clear();
+
+
+	vec->push_back("Food");
+	g_pUnitClassRessourceMap.emplace("Fisher", vec);
+	vec->clear();
+
+
+	vec->push_back("Clay");
+	g_pUnitClassRessourceMap.emplace("Clayminer", vec);
+	vec->clear();
+
+
+	vec->push_back("Bronze Ore");
+	g_pUnitClassRessourceMap.emplace("Bronze Miner", vec);
+	vec->clear();
+
+
+	vec->push_back("Iron Ore");
+	g_pUnitClassRessourceMap.emplace("Iron Miner", vec);
+	vec->clear();
+
+
+	vec->push_back("Malachite Ore");
+	g_pUnitClassRessourceMap.emplace("Malachite Miner", vec);
+	vec->clear();
+
+
+	vec->push_back("Adamantium Ore");
+	g_pUnitClassRessourceMap.emplace("Adamantium Miner", vec);
+	vec->clear();
+
+
+	vec->push_back("Salt");
+	g_pUnitClassRessourceMap.emplace("Salt Miner", vec);
+	vec->clear();
+
+
+	vec->push_back("Raw Stone");
+	g_pUnitClassRessourceMap.emplace("Stone Miner", vec);
+	vec->clear();
+
+
+	vec->push_back("Planks");
+	g_pUnitClassRessourceMap.emplace("Carpenter", vec);
+	vec->clear();
+
+
+	vec->push_back("Bricks");
+	g_pUnitClassRessourceMap.emplace("Brick Burner", vec);
+	vec->clear();
+
+
+	vec->push_back("Food");
+	g_pUnitClassRessourceMap.emplace("Gatherer", vec);
+	vec->clear();
+
+
+	vec->push_back("Stone Blocks");
+	g_pUnitClassRessourceMap.emplace("Mason", vec);
+	vec->clear();
+}
+
+void DeinitializeUnitClassRessources() {
+
+
+	g_pUnitClassRessourceMap.clear();
+	g_pIngameRessourcesVec.clear();
+	g_pRefinedRessourceRawRessourceDemand.clear();
+}
+
+
+
+
+
+
 static std::map<std::string, std::string> g_TechnologyRequirementsMap;
 
 
@@ -43,6 +240,8 @@ void InitializeUnitTechnologyRequirements() {
 	g_TechnologyRequirementsMap.emplace("Mason", "Stone Working");
 
 }
+
+
 
 
 /*

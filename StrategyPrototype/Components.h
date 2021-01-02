@@ -52,6 +52,27 @@ struct TimeCounter {
 };
 
 
+struct CMPGatherableRessource {
+	CMPGatherableRessource() {
+
+	}
+
+
+	// Furthermore, buildings can produce ressources from raw ressources or produce them directly.
+	// Let each building set what it produces and with which yield.
+	// If nothing is set, then building produces nothing.
+
+	// Vectors are to be set index aligned, means,
+	// m_ProducedRessource[0] <---> m_DemandedRawRessourceForProduction[0] have a welldefined relationship.
+	// Same with m_ProductionYield[0] and m_DemandValue[0]. They are related to m_ProducedRessource[0] and 
+	// m_DemandedRawRessourceForProduction[0] respectively.
+	std::vector<std::string> m_ProducedRessource;
+	std::vector<std::string> m_DemandedRawRessourceForProduction;
+	std::vector<int> m_ProductionYield;
+	std::vector<int> m_DemandValue;
+};
+
+
 struct CMPIdentifier {
 	CMPIdentifier() {
 

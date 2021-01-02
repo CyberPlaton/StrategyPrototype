@@ -23,7 +23,7 @@
 #include<fstream>
 
 
-#define TURN_TIME_MODIFIER 4
+#define TURN_TIME_MODIFIER 1
 #define SPRITES_WIDTH_AND_HEIGHT 64
 #define MAP_SIZE 20 // Defines the size of the map. Would be convenient to set it dynamically.
 #define TECH_TREE_COUNT 4 // civilian, military, magick and technical.

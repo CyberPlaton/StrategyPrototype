@@ -15,6 +15,7 @@ bool Game::OnUserDestroy(){
 	DeinitializeUnitTechnologyRequirements();
 	DeinitializeBuildingTechnologyRequirements();
 	DeinitializeBuildingRequirementsMap();
+	DeinitializeUnitClassRessources();
 
 
 	m_SpriteStorage.clear();
@@ -2331,6 +2332,10 @@ void CMPCameraInput::_handleCityViewMouse(Camera* cam) {
 					cout << "You can build: " << index + 1 << ".) \"" << it << "\"." << white << endl;
 					index++;
 				}
+
+				// Let player choose what he wants to build....
+				_tryMakeBuilding(mouse_x, mouse_y);
+
 			}
 
 		}
@@ -2364,7 +2369,7 @@ void CMPCameraInput::_handleCityViewMouse(Camera* cam) {
 		}
 	}
 
-
+	
 	// Releasing LMB after dragging is done.
 	if (context->GetMouse(0).bReleased && m_DraggedUnit) {
 
@@ -2382,12 +2387,10 @@ void CMPCameraInput::_handleCityViewMouse(Camera* cam) {
 		}
 		else {
 
-			// Giving profession was successful, so let go the dragging and reset for next drag-and-drop.
 			m_DraggedUnit = nullptr;
 			_resetPrevPos();
 		}
 	}
-
 }
 
 
@@ -2787,8 +2790,94 @@ for (auto itr : region->m_MapTileRegionTiles) {
 
 }
 */
+/*
+bool CMPCameraInput::_setUnitRessourceGathering(Unit* unit, std::string ressource, int yield) {
+
+	if (unit->m_UnitClass) {
+
+		unit->m_UnitClass->m_RessourceToGather.emplace(ressource, yield);
+		return true;
+	}
+
+	return false;
+}
+*/
+
+/*
+bool CMPCameraInput::_trySetUnitsRessourceToGather(Unit* unit) {
+
+	using namespace std;
+
+	std::map<std::string, int>* vec = nullptr;
+
+	vec = unit->GetValidGatheringRessources();
+
+	if (vec == nullptr) {
+
+		cout << color(colors::RED);
+		cout << "Nothing to Gather for " << unit->m_Name << white << endl;
+
+		return false;
+	}
+	else {
+
+		// We have in vec some ressources we can set the unit to gather.
+		// Let player choose which one.
+		cout << color(colors::RED);
+		cout << "Unit \"" << unit->m_Name << "\" can gather: " << white << endl;
+
+		std::string units_ressources[16]; // We think here that at once on one tile there are max 16 possible ressources to gather..
+		int units_ressources_yields[16];
+
+		int index = 0;
+		for (auto it : *vec) {
+
+			cout << color(colors::DARKYELLOW);
+			cout << index + 1 << ".) Ressource \"" << it.first << "\" with yield " << it.second << white << endl;
 
 
+			units_ressources[index] = it.first;
+			units_ressources_yields[index] = it.second;
+
+			index++;
+		}
+
+
+		// Now let player explicit choose what to gather..
+		cout << color(colors::RED);
+		cout << "Please type according number to define which ressource to gather for \"" << unit->m_Name << "\"" << white << endl;
+
+		try {
+
+			int choosen_index = 0;
+			cin >> choosen_index;
+
+			if (choosen_index < 1 ||
+				choosen_index > vec->size() - 1) {
+
+				cout << color(colors::RED);
+				cout << "Invalid number... Please retry." << white << endl;
+
+				return false;
+			}
+
+
+
+			cout << color(colors::RED);
+			cout << "Setting ressources to gather for \"" << unit->m_Name << "\" as" << endl;
+			cout << "ressource \"" << units_ressources[choosen_index - 1] << "\" with yield "<< units_ressources_yields[choosen_index - 1] << "." << white << endl;
+			_setUnitRessourceGathering(unit, units_ressources[choosen_index - 1], units_ressources_yields[choosen_index - 1]);
+
+
+
+		}
+		catch (const char* err) {
+
+			return false;
+		}
+	}
+}
+*/
 
 bool CMPCameraInput::_tryGivingUnitAProfession(Unit* unit) {
 
@@ -2884,6 +2973,7 @@ bool CMPCameraInput::_tryGivingUnitAProfession(Unit* unit) {
 					unit->ChangeClass(vec.at(0)); // Only available profession.
 					unit->m_AssociatedPlayer->m_CurrentlyViewedCity->RemoveCitizenFromJoblessVector(unit); // Remove from jobless if he was there.
 					_giveUnitPositionAlignedToMaptile(unit, maptile);
+
 
 					return true;
 				}
@@ -3013,9 +3103,76 @@ bool CMPCameraInput::_tryGivingUnitAProfession(Unit* unit) {
 
 bool  CMPCameraInput::_tryMakeBuilding(int xpos, int ypos) {
 
+	using namespace std;
+
 	City* city = PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlyViewedCity;
 
 	if (!city) return false; // Check for weird bugs...
+
+	// Check whether slot on position is free for building...
+	std::vector<std::string>* vec = new std::vector<std::string>();
+
+	int slot = GetBuildingSlotFromPosition(PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlyViewedCity, xpos, ypos);
+	vec = GetAvailableBuildingsForPlayerOnSlot(PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlyViewedCity,
+		slot);
+
+	if (vec->size() == 0) return false;
+
+
+	// In vec are contained available buildings for building for the player.
+	// Now player shall choose what to build, later we can check whether sufficient ressources are available.
+
+	cout << color(colors::DARKYELLOW);
+	cout << "Available for building: " << white << endl;
+
+	int index = 0;
+	for (auto it : *vec) {
+
+		cout << color(colors::DARKGREEN);
+		cout << index + 1 << ".) " << it << white << endl;
+
+		index++;
+	}
+
+	// Here player can choose what they want to build..
+	int choosen_index = -1;
+	try {
+
+		cout << color(colors::YELLOW);
+		cout << "Choose appropriate number of building you want to build." << white << endl;
+		cin >> choosen_index;
+
+		if (choosen_index < 1 ||
+			choosen_index > vec->size()) { // Check whether choosen number is out of bounds..
+
+			return false;
+		}
+		else {
+
+			// Build new building here..
+			Building* building = MakeNewBuilding(city, vec->at(choosen_index - 1), slot);
+
+
+			if (building) {
+
+				cout << color(colors::BLUE);
+				cout << "Successfully built \"" << building->m_BuildingName << "\"." << white << endl;
+			}
+			else {
+
+				cout << color(colors::RED);
+				cout << "Couldnt build chosen structure." << white << endl;
+			}
+		}
+
+	}
+	catch (const char* err) {
+
+	}
+
+
+
+
 
 
 	return true;
@@ -4281,6 +4438,7 @@ void Game::_initialize() {
 	InitializeUnitTechnologyRequirements();
 	InitializeBuildingTechnologyRequirements();
 	InitializeBuildingRequirementsMap();
+	InitializeUnitClassRessources();
 }
 
 
@@ -6447,6 +6605,16 @@ void Game::AdvanceOneTurn() {
 			it->RandomlyResearchBaseTechnology();
 		}
 
+
+		/*
+		// For each players city, let them gather ressources at end of turn.
+		for (auto it : PlayerTurnCounter::Get()->m_InGamePlayers) {
+			for (auto itr : it->m_PlayerCities) {
+
+				itr->LetUnitsGatherRessources();
+			}
+		}
+		*/
 
 		_updateForestAI2();
 

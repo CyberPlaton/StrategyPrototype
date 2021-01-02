@@ -3871,6 +3871,19 @@ void City::Update() {
 }
 
 
+/*
+void City::LetUnitsGatherRessources() {
+
+	for (auto it : m_PresentUnitsVector) {
+
+		if (COMPARE_STRINGS(it->m_IDCmp->m_DynamicTypeName, "Unit") == 0) {
+			
+			static_cast<Unit*>(it)->DoClassSpecificWork();
+		}
+	}
+}
+*/
+
 
 
 void City::_defineCityBuildingsSlots() {
@@ -6658,6 +6671,160 @@ bool DoesPlayerCityFulfillRequirementsForBuilding(City* city, std::string buildi
 }
 
 
+/*
+bool Unit::DoClassSpecificWork() {
+
+	using namespace std;
+
+	if (m_UnitClass == nullptr) return false;
+	else {
+
+		std::map<std::string, int>* map = nullptr;
+		map = _getValidRessourceForGatheringOrCreating();
+
+		if (!map) return false;
+		else {
+
+			// Gather ressource that unit has to..
+			cout << color(colors::GREEN);
+			cout << "Unit \"" << m_Name << "\" gathered " << map->begin()->second << " \"" << map->begin()->first << "\"." << white << endl;
+		}
+	}
+
+
+	// Else gather ressource and store in city..
+
+
+}
+*/
+
+
+/*
+std::map<std::string, int>* Unit::_getValidRessourceForGatheringOrCreating() {
+
+	std::map<std::string, int>* map = new std::map<std::string, int>();
+
+
+	// Check whether unit stands in cityview map on valid ressource.
+	// 1.) Get Maptile unit is standing on.
+	City* city = nullptr;
+	for (auto it : m_AssociatedPlayer->m_PlayerCities) {
+
+		for (auto itr : it->m_PresentUnitsVector) {
+
+			if (COMPARE_STRINGS_2(itr->m_IDCmp->m_ID, m_IDCmp->m_ID) == 0) {
+				city = it; // Means unit is in this city.
+				break;
+			}
+		}
+	}
+
+	if (!city) return nullptr; // Check weird bug where unit is not in any city...
+
+
+	// Offset computation.
+	int cx = 992 - 32;
+	int cy = 360 - 32;
+
+	// We can get position of maptile in cityview by adding maptile position with this offset.
+	int offsetx = cx - city->m_TransformCmp->m_PosX;
+	int offsety = cy - city->m_TransformCmp->m_PosY;
+
+
+	MapTile* maptile = nullptr;
+
+	// Now get the right maptile.
+	for (auto it : city->m_ClaimedRegions) {
+		for (auto itr : it->m_MapTileRegionTiles) {
+
+			// As unit was already algined to right maptile position,
+			// we can check for equality of position...
+			if (itr->m_TransformCmp->m_PosX + offsetx == m_TransformCmp->m_PosX &&
+				itr->m_TransformCmp->m_PosY + offsety == m_TransformCmp->m_PosY) {
+
+				// Unit stands on this tile.
+				maptile = itr;
+			}
+		}
+	}
+
+
+	if (!maptile) return nullptr; // Check weird bug where unit is not on any maptile...
+
+
+
+	// Checking for available ressources on maptile entiities
+	for (auto it = maptile->m_MapTileEntities->begin(); it != maptile->m_MapTileEntities->end(); ++it) {
+
+		GameEntity* entt = *it;
+
+		if (entt == nullptr) continue;
+
+
+		// Check for ressourceable entities...
+		if (entt->m_GatherableRessourceCmp) {
+
+			// And save all that are gatherable...
+			for (auto itr : entt->m_GatherableRessourceCmp->m_RessourceYieldAmountMap) {
+
+				map->emplace(itr.first, itr.second);
+			}
+		}
+		entt = nullptr;
+	}
+
+	// Checking for available ressources on maptile
+	for (auto it : maptile->m_GatherableRessourceCmp->m_RessourceYieldAmountMap) {
+
+		map->emplace(it.first, it.second);
+	}
+
+	// As a unit can only be on maptile OR on building,
+	// we can stop here...
+	if (map->size() > 0) return map;
+
+
+
+
+
+	// Check whether unit stands on cities building and can create a valid ressource.
+	// 1.) See on which building we are standing on in city.
+	Building* building = nullptr;
+	for (auto it : city->m_PresentUnitsVector) {
+
+		if (COMPARE_STRINGS(it->m_IDCmp->m_DynamicTypeName, "Building") == 0) {
+
+
+			if (it->m_TransformCmp->m_PosX <= m_TransformCmp->m_PosX &&
+				it->m_TransformCmp->m_PosX + it->m_TransformCmp->m_Width >= m_TransformCmp->m_PosX &&
+				it->m_TransformCmp->m_PosY <= m_TransformCmp->m_PosY &&
+				it->m_TransformCmp->m_PosY + it->m_TransformCmp->m_Height >= m_TransformCmp->m_PosY) {
+
+
+				// Unit stands on this building;
+				building = reinterpret_cast<Building*>(it);
+			}
+		}
+	}
+
+	if (!building) return nullptr; // Unit not on building and thus cant create no ressources.
+	else {
+
+		if (building->m_GatherableRessourceCmp) {
+
+			for (auto it : building->m_GatherableRessourceCmp->m_RessourceYieldAmountMap) {
+
+				map->emplace(it.first, it.second);
+			}
+		}
+	}
+
+	if (map->size() > 0) return map;
+
+	else return nullptr; // Nothing found and nothing can be gathered.
+}
+*/
+
 std::vector<std::string>* GetAvailableBuildingsForPlayerOnSlot(City* city, int slot) {
 
 	using namespace std;
@@ -6679,6 +6846,490 @@ std::vector<std::string>* GetAvailableBuildingsForPlayerOnSlot(City* city, int s
 	return vec;
 }
 
+
+int GetBuildingSlotFromPosition(City* city, int xpos, int ypos) {
+
+	for (auto it : city->m_CityBuildingsSlots) {
+
+		if (it->m_XPos <= xpos &&
+			it->m_XPos + it->m_Width >= xpos &&
+
+			it->m_YPos <= ypos &&
+			it->m_YPos + it->m_Height >= ypos) {
+
+
+
+			return it->m_SlotNumber;
+		}
+	}
+
+	return -1;
+}
+
+
+Building *MakeNewBuilding(City* city, std::string building_name, int slot) {
+
+	// We check here for cities ressources..
+	// TODO:
+
+
+	// Try build new building.
+	if (COMPARE_STRINGS(building_name, "Shack") == 0) { 
+
+		BuildingShack* b = new BuildingShack(city);
+
+		city->AddBuilding(b, slot);
+
+		return b;
+	}
+	else if (COMPARE_STRINGS(building_name, "Underground Storage") == 0) {
+
+		BuildingStorage* b = new BuildingStorage(city);
+
+		city->AddBuilding(b, slot);
+
+		return b;
+	}
+	else if (COMPARE_STRINGS(building_name, "Champions Hut") == 0) {
+
+
+		BuildingChampionsHut* b = new BuildingChampionsHut(city);
+
+		city->AddBuilding(b, slot);
+
+		return b;
+	}
+	else if (COMPARE_STRINGS(building_name, "Wooden House") == 0) {
+
+
+		BuildingWoodenHouse* b = new BuildingWoodenHouse(city);
+
+		city->AddBuilding(b, slot);
+
+		return b;
+	}
+	else if (COMPARE_STRINGS(building_name, "Stone House") == 0) {
+
+
+		BuildingStoneHouse* b = new BuildingStoneHouse(city);
+
+		city->AddBuilding(b, slot);
+
+		return b;
+	}
+	else if (COMPARE_STRINGS(building_name, "Brick House") == 0) {
+
+
+		BuildingBrickHouse* b = new BuildingBrickHouse(city);
+
+		city->AddBuilding(b, slot);
+
+		return b;
+	}
+	else if (COMPARE_STRINGS(building_name, "Wooden Warehouse") == 0) {
+
+
+		BuildingWoodenWarehouse* b = new BuildingWoodenWarehouse(city);
+
+		city->AddBuilding(b, slot);
+
+		return b;
+	}
+	else if (COMPARE_STRINGS(building_name, "Big Warehouse") == 0) {
+
+
+		BuildingStoneWarehouse* b = new BuildingStoneWarehouse(city);
+
+		city->AddBuilding(b, slot);
+
+		return b;
+	}
+	else if (COMPARE_STRINGS(building_name, "City Storage") == 0) {
+
+
+		BuildingBrickWarehouse* b = new BuildingBrickWarehouse(city);
+
+		city->AddBuilding(b, slot);
+
+		return b;
+	}
+	else if (COMPARE_STRINGS(building_name, "Wisemen Hut") == 0) {
+
+
+		BuildingWisemenHut* b = new BuildingWisemenHut(city);
+
+		city->AddBuilding(b, slot);
+
+		return b;
+	}
+	else if (COMPARE_STRINGS(building_name, "College") == 0) {
+
+
+		BuildingBrickSchool* b = new BuildingBrickSchool(city);
+
+		city->AddBuilding(b, slot);
+
+		return b;
+	}
+	else if (COMPARE_STRINGS(building_name, "Shrine") == 0) {
+
+
+		BuildingShrine* b = new BuildingShrine(city);
+
+		city->AddBuilding(b, slot);
+
+		return b;
+	}
+	else if (COMPARE_STRINGS(building_name, "Magick School") == 0) {
+
+
+	BuildingMagickSchool* b = new BuildingMagickSchool(city);
+
+	city->AddBuilding(b, slot);
+
+	return b;
+	}
+	else if (COMPARE_STRINGS(building_name, "Magick College") == 0) {
+
+
+	BuildingMagickCollege* b = new BuildingMagickCollege(city);
+
+	city->AddBuilding(b, slot);
+
+	return b;
+	}
+	else if (COMPARE_STRINGS(building_name, "Inventors Hut") == 0) {
+
+
+	BuildingInventorsHut* b = new BuildingInventorsHut(city);
+
+	city->AddBuilding(b, slot);
+
+	return b;
+	}
+	else if (COMPARE_STRINGS(building_name, "Small Workshop") == 0) {
+
+
+	BuildingSmallWorkshop* b = new BuildingSmallWorkshop(city);
+
+	city->AddBuilding(b, slot);
+
+	return b;
+	}
+	else if (COMPARE_STRINGS(building_name, "Big Workshop") == 0) {
+
+
+	BuildingBigWorkshop* b = new BuildingBigWorkshop(city);
+
+	city->AddBuilding(b, slot);
+
+	return b;
+	}
+	else if (COMPARE_STRINGS(building_name, "Warrior School") == 0) {
+
+
+	BuildingWarriorSchool* b = new BuildingWarriorSchool(city);
+
+	city->AddBuilding(b, slot);
+
+	return b;
+	}
+	else if (COMPARE_STRINGS(building_name, "Military College") == 0) {
+
+
+	BuildingMilitaryCollege* b = new BuildingMilitaryCollege(city);
+
+	city->AddBuilding(b, slot);
+
+	return b;
+	}
+	else if (COMPARE_STRINGS(building_name, "Council") == 0) {
+
+
+	BuildingCouncil* b = new BuildingCouncil(city);
+
+	city->AddBuilding(b, slot);
+
+	return b;
+	}
+	else if (COMPARE_STRINGS(building_name, "Town Hall") == 0) {
+
+
+	BuildingTownHall* b = new BuildingTownHall(city);
+
+	city->AddBuilding(b, slot);
+
+	return b;
+	}
+	else if (COMPARE_STRINGS(building_name, "Mayors Palace") == 0) {
+
+
+	BuildingMayorsPalace* b = new BuildingMayorsPalace(city);
+
+	city->AddBuilding(b, slot);
+
+	return b;
+	}
+	else if (COMPARE_STRINGS(building_name, "Local Market") == 0) {
+
+
+	BuildingLocalMarket* b = new BuildingLocalMarket(city);
+
+	city->AddBuilding(b, slot);
+
+	return b;
+	}
+	else if (COMPARE_STRINGS(building_name, "Big Market") == 0) {
+
+
+	BuildingBigMarket* b = new BuildingBigMarket(city);
+
+	city->AddBuilding(b, slot);
+
+	return b;
+	}
+	else if (COMPARE_STRINGS(building_name, "Merchants Quarter") == 0) {
+
+
+	BuildingMerchantsQuarter* b = new BuildingMerchantsQuarter(city);
+
+	city->AddBuilding(b, slot);
+
+	return b;
+	}
+	else if (COMPARE_STRINGS(building_name, "Brothel") == 0) {
+
+
+	BuildingBrothel* b = new BuildingBrothel(city);
+
+	city->AddBuilding(b, slot);
+
+	return b;
+	}
+	else if (COMPARE_STRINGS(building_name, "Tavern") == 0) {
+
+
+	BuildingTavern* b = new BuildingTavern(city);
+
+	city->AddBuilding(b, slot);
+
+	return b;
+	}
+	else if (COMPARE_STRINGS(building_name, "Taverns Quarter") == 0) {
+
+
+	BuildingTavernsQuarter* b = new BuildingTavernsQuarter(city);
+
+	city->AddBuilding(b, slot);
+
+	return b;
+	}
+	else if (COMPARE_STRINGS(building_name, "Merchants Guild") == 0) {
+
+
+	BuildingMerchantsGuild* b = new BuildingMerchantsGuild(city);
+
+	city->AddBuilding(b, slot);
+
+	return b;
+	}
+	else if (COMPARE_STRINGS(building_name, "Fighters Guild") == 0) {
+
+
+	BuildingFightersGuild* b = new BuildingFightersGuild(city);
+
+	city->AddBuilding(b, slot);
+
+	return b;
+	}
+	else if (COMPARE_STRINGS(building_name, "Mages Guild") == 0) {
+
+
+	BuildingMagesGuild* b = new BuildingMagesGuild(city);
+
+	city->AddBuilding(b, slot);
+
+	return b;
+	}
+	else if (COMPARE_STRINGS(building_name, "Thieves Guild") == 0) {
+
+
+	BuildingThievesGuild* b = new BuildingThievesGuild(city);
+
+	city->AddBuilding(b, slot);
+
+	return b;
+	}
+	else if (COMPARE_STRINGS(building_name, "Assassins Guild") == 0) {
+
+
+	BuildingAssassinsGuild* b = new BuildingAssassinsGuild(city);
+
+	city->AddBuilding(b, slot);
+
+	return b;
+	}
+	else if (COMPARE_STRINGS(building_name, "Carpenters Workshop") == 0) {
+
+
+	BuildingCarpentersWorkshop* b = new BuildingCarpentersWorkshop(city);
+
+	city->AddBuilding(b, slot);
+
+	return b;
+	}
+	else if (COMPARE_STRINGS(building_name, "Brickmakers Workshop") == 0) {
+
+
+	BuildingBrickmakersWorkshop* b = new BuildingBrickmakersWorkshop(city);
+
+	city->AddBuilding(b, slot);
+
+	return b;
+	}
+	else if (COMPARE_STRINGS(building_name, "Masons Workshop") == 0) {
+
+
+	BuildingMasonsWorkshop* b = new BuildingMasonsWorkshop(city);
+
+	city->AddBuilding(b, slot);
+
+	return b;
+	}
+	else if (COMPARE_STRINGS(building_name, "Tailors Workshop") == 0) {
+
+
+	BuildingTailorsWorkshop* b = new BuildingTailorsWorkshop(city);
+
+	city->AddBuilding(b, slot);
+
+	return b;
+	}
+	else if (COMPARE_STRINGS(building_name, "Brewery") == 0) {
+
+
+	BuildingBrewery* b = new BuildingBrewery(city);
+
+	city->AddBuilding(b, slot);
+
+	return b;
+	}
+	else if (COMPARE_STRINGS(building_name, "Goldsmiths Workshop") == 0) {
+
+
+	BuildingGoldsmithsWorkshop* b = new BuildingGoldsmithsWorkshop(city);
+
+	city->AddBuilding(b, slot);
+
+	return b;
+	}
+	else if (COMPARE_STRINGS(building_name, "Armorsmiths Workshop") == 0) {
+
+
+	BuildingArmorSmithsWorkshop* b = new BuildingArmorSmithsWorkshop(city);
+
+	city->AddBuilding(b, slot);
+
+	return b;
+	}
+	else if (COMPARE_STRINGS(building_name, "Weaponsmiths Workshop") == 0) {
+
+
+	BuildingWeaponSmithsWorkshop* b = new BuildingWeaponSmithsWorkshop(city);
+
+	city->AddBuilding(b, slot);
+
+	return b;
+	}
+	else if (COMPARE_STRINGS(building_name, "Smelters Workshop") == 0) {
+
+
+	BuildingSmeltersWorkshop* b = new BuildingSmeltersWorkshop(city);
+
+	city->AddBuilding(b, slot);
+
+	return b;
+	}
+	else if (COMPARE_STRINGS(building_name, "Toolsmiths Workshop") == 0) {
+
+
+	BuildingToolSmithsWorkshop* b = new BuildingToolSmithsWorkshop(city);
+
+	city->AddBuilding(b, slot);
+
+	return b;
+	}
+	else if (COMPARE_STRINGS(building_name, "Ranch") == 0) {
+
+
+	BuildingRanch* b = new BuildingRanch(city);
+
+	city->AddBuilding(b, slot);
+
+	return b;
+	}
+	else if (COMPARE_STRINGS(building_name, "Picklers Workshop") == 0) {
+
+
+	BuildingPicklersWorkshop* b = new BuildingPicklersWorkshop(city);
+
+	city->AddBuilding(b, slot);
+
+	return b;
+	}
+	else if (COMPARE_STRINGS(building_name, "Baracks") == 0) {
+
+
+	BuildingBaracks* b = new BuildingBaracks(city);
+
+	city->AddBuilding(b, slot);
+
+	return b;
+	}
+	else if (COMPARE_STRINGS(building_name, "Archery Range") == 0) {
+
+
+	BuildingArcheryRange* b = new BuildingArcheryRange(city);
+
+	city->AddBuilding(b, slot);
+
+	return b;
+	}
+	else if (COMPARE_STRINGS(building_name, "Stables") == 0) {
+
+
+	BuildingStables* b = new BuildingStables(city);
+
+	city->AddBuilding(b, slot);
+
+	return b;
+	}
+	else if (COMPARE_STRINGS(building_name, "Mages Tower") == 0) {
+
+
+	BuildingMagesTower* b = new BuildingMagesTower(city);
+
+	city->AddBuilding(b, slot);
+
+	return b;
+	}
+	else if (COMPARE_STRINGS(building_name, "Siege Workshop") == 0) {
+
+
+	BuildingSiegeWorkshop* b = new BuildingSiegeWorkshop(city);
+
+	city->AddBuilding(b, slot);
+
+	return b;
+	}
+
+
+
+
+
+
+	return nullptr;
+}
 
 
 bool HasPlayerTech(std::string tech, Player* player) {

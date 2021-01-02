@@ -324,6 +324,7 @@ public:
 	FiniteStateMachine* m_FSM = nullptr;
 	CMPMovementCostModifier* m_MovementCostCmp = nullptr;
 	CMPEntityRace* m_EntityRaceCmp = nullptr;
+	CMPGatherableRessource* m_GatherableRessourceCmp = nullptr;
 };
 
 
@@ -365,6 +366,14 @@ public:
 	// Function for calling after every turn.
 	// It updates current age of unit and reset movement points.
 	void Update();
+
+	// Function to be called every turn if unit has civil class.
+	// It gathers ressourcers specific for UnitClass of this unit.
+	//bool DoClassSpecificWork();
+
+	//std::map<std::string, int>* GetValidGatheringRessources() {
+	//	return _getValidRessourceForGatheringOrCreating();
+	//}
 
 	/*
 	void UpdateMovementPoints() {
@@ -427,6 +436,11 @@ private:
 	*/
 
 private:
+
+	// Function gets all valid ressources for gathering for this unit.
+	// If nothing to gather is available we return nullptr.
+	//std::map<std::string, int>* _getValidRessourceForGatheringOrCreating();
+
 	void _determineUnitRibbonColor();
 	void _defineMaxAge();
 
@@ -659,6 +673,9 @@ public:
 
 	// Should be called when city grows or declines in size.
 	void ReclaimRegions();
+
+	// Function lets all units in city try to gather ressourses defined for them.
+	//void LetUnitsGatherRessources();
 
 	void MakeCityBorders() {
 		_determineCityBorderTiles();
@@ -1095,15 +1112,10 @@ class Building : public GameEntity {
 public:
 	virtual ~Building(){}
 
-	//BuildingRequirements* GetRequirements() { return m_Requirements; }
-
 	City* m_AssociatedCity = nullptr;
 	Player* m_AssociatedPlayer = nullptr;
 	std::string m_BuildingName;
 
-	// Buildings can have special requierements, like a technology be researched
-	// or another building already in city present or building be built on special slot type.
-	//BuildingRequirements* m_Requirements = nullptr;
 private:
 
 };
@@ -1130,7 +1142,8 @@ std::vector<std::string> *GetAvailableBuildingsForPlayerOnSlot(City* city, int s
 bool HasPlayerTech(std::string tech, Player* player);
 bool HasPlayerNeededTier(BuildingTier tier, Player* player);
 bool HasPlayerNeededTier(int tier, Player* player);
-
+int GetBuildingSlotFromPosition(City* city, int xpos, int ypos); // Returns -1 if nothing was found...
+Building *MakeNewBuilding(City* city, std::string building_name, int slot);
 
 /*
 List of Buildings and according Tiers:
@@ -1191,7 +1204,7 @@ private:
 
 
 private:
-
+	
 };
 
 
@@ -1427,6 +1440,10 @@ public:
 
 		m_AssociatedCity = associated_city;
 		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
+
+		m_GatherableRessourceCmp = new CMPGatherableRessource();
+		m_GatherableRessourceCmp->m_ProducedRessource.push_back("Civilian Knowledge");
+		m_GatherableRessourceCmp->m_ProductionYield.push_back(1);
 	}
 
 
@@ -1496,6 +1513,10 @@ public:
 
 		m_AssociatedCity = associated_city;
 		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
+
+		m_GatherableRessourceCmp = new CMPGatherableRessource();
+		m_GatherableRessourceCmp->m_ProducedRessource.push_back("Civilian Knowledge");
+		m_GatherableRessourceCmp->m_ProductionYield.push_back(2);
 	}
 
 
@@ -1527,6 +1548,10 @@ public:
 
 		m_AssociatedCity = associated_city;
 		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
+
+		m_GatherableRessourceCmp = new CMPGatherableRessource();
+		m_GatherableRessourceCmp->m_ProducedRessource.push_back("Civilian Knowledge");
+		m_GatherableRessourceCmp->m_ProductionYield.push_back(4);
 	}
 
 
@@ -1558,6 +1583,11 @@ public:
 
 		m_AssociatedCity = associated_city;
 		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
+
+
+		m_GatherableRessourceCmp = new CMPGatherableRessource();
+		m_GatherableRessourceCmp->m_ProducedRessource.push_back("Magick Knowledge");
+		m_GatherableRessourceCmp->m_ProductionYield.push_back(1);
 	}
 
 
@@ -1588,6 +1618,11 @@ public:
 
 		m_AssociatedCity = associated_city;
 		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
+
+
+		m_GatherableRessourceCmp = new CMPGatherableRessource();
+		m_GatherableRessourceCmp->m_ProducedRessource.push_back("Magick Knowledge");
+		m_GatherableRessourceCmp->m_ProductionYield.push_back(2);
 	}
 
 
@@ -1618,6 +1653,10 @@ public:
 
 		m_AssociatedCity = associated_city;
 		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
+
+		m_GatherableRessourceCmp = new CMPGatherableRessource();
+		m_GatherableRessourceCmp->m_ProducedRessource.push_back("Magick Knowledge");
+		m_GatherableRessourceCmp->m_ProductionYield.push_back(4);
 	}
 
 
@@ -1648,6 +1687,11 @@ public:
 
 		m_AssociatedCity = associated_city;
 		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
+
+
+		m_GatherableRessourceCmp = new CMPGatherableRessource();
+		m_GatherableRessourceCmp->m_ProducedRessource.push_back("Technical Knowledge");
+		m_GatherableRessourceCmp->m_ProductionYield.push_back(1);
 	}
 
 
@@ -1678,6 +1722,10 @@ public:
 
 		m_AssociatedCity = associated_city;
 		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
+
+		m_GatherableRessourceCmp = new CMPGatherableRessource();
+		m_GatherableRessourceCmp->m_ProducedRessource.push_back("Technical Knowledge");
+		m_GatherableRessourceCmp->m_ProductionYield.push_back(2);
 	}
 
 
@@ -1708,6 +1756,11 @@ public:
 
 		m_AssociatedCity = associated_city;
 		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
+
+
+		m_GatherableRessourceCmp = new CMPGatherableRessource();
+		m_GatherableRessourceCmp->m_ProducedRessource.push_back("Technical Knowledge");
+		m_GatherableRessourceCmp->m_ProductionYield.push_back(4);
 	}
 
 
@@ -1739,6 +1792,11 @@ public:
 
 		m_AssociatedCity = associated_city;
 		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
+
+
+		m_GatherableRessourceCmp = new CMPGatherableRessource();
+		m_GatherableRessourceCmp->m_ProducedRessource.push_back("Military Knowledge");
+		m_GatherableRessourceCmp->m_ProductionYield.push_back(1);
 	}
 
 
@@ -1769,6 +1827,11 @@ public:
 
 		m_AssociatedCity = associated_city;
 		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
+
+
+		m_GatherableRessourceCmp = new CMPGatherableRessource();
+		m_GatherableRessourceCmp->m_ProducedRessource.push_back("Military Knowledge");
+		m_GatherableRessourceCmp->m_ProductionYield.push_back(2);
 	}
 
 
@@ -1800,6 +1863,12 @@ public:
 
 		m_AssociatedCity = associated_city;
 		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
+
+
+
+		m_GatherableRessourceCmp = new CMPGatherableRessource();
+		m_GatherableRessourceCmp->m_ProducedRessource.push_back("Military Knowledge");
+		m_GatherableRessourceCmp->m_ProductionYield.push_back(4);
 	}
 
 
@@ -1922,6 +1991,11 @@ public:
 
 		m_AssociatedCity = associated_city;
 		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
+
+
+		m_GatherableRessourceCmp = new CMPGatherableRessource();
+		m_GatherableRessourceCmp->m_ProducedRessource.push_back("Denars");
+		m_GatherableRessourceCmp->m_ProductionYield.push_back(10);
 	}
 
 
@@ -1952,6 +2026,11 @@ public:
 
 		m_AssociatedCity = associated_city;
 		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
+
+		m_GatherableRessourceCmp = new CMPGatherableRessource();
+		m_GatherableRessourceCmp->m_ProducedRessource.push_back("Denars");
+		m_GatherableRessourceCmp->m_ProductionYield.push_back(20);
+
 	}
 
 
@@ -1983,6 +2062,12 @@ public:
 
 		m_AssociatedCity = associated_city;
 		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
+
+
+
+		m_GatherableRessourceCmp = new CMPGatherableRessource();
+		m_GatherableRessourceCmp->m_ProducedRessource.push_back("Denars");
+		m_GatherableRessourceCmp->m_ProductionYield.push_back(40);
 	}
 
 
@@ -2261,6 +2346,15 @@ public:
 
 		m_AssociatedCity = associated_city;
 		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
+
+
+		// Below definitions mean:
+		// From 2 wood we make 1 plank. Same for all buildings below...
+		m_GatherableRessourceCmp = new CMPGatherableRessource();
+		m_GatherableRessourceCmp->m_ProducedRessource.push_back("Planks");
+		m_GatherableRessourceCmp->m_DemandedRawRessourceForProduction.push_back("Wood");
+		m_GatherableRessourceCmp->m_DemandValue.push_back(2);
+		m_GatherableRessourceCmp->m_ProductionYield.push_back(1);
 	}
 
 
@@ -2291,6 +2385,13 @@ public:
 
 		m_AssociatedCity = associated_city;
 		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
+
+
+		m_GatherableRessourceCmp = new CMPGatherableRessource();
+		m_GatherableRessourceCmp->m_ProducedRessource.push_back("Bricks");
+		m_GatherableRessourceCmp->m_DemandedRawRessourceForProduction.push_back("Clay");
+		m_GatherableRessourceCmp->m_DemandValue.push_back(2);
+		m_GatherableRessourceCmp->m_ProductionYield.push_back(1);
 	}
 
 
@@ -2321,6 +2422,14 @@ public:
 
 		m_AssociatedCity = associated_city;
 		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
+
+
+
+		m_GatherableRessourceCmp = new CMPGatherableRessource();
+		m_GatherableRessourceCmp->m_ProducedRessource.push_back("Stone Blocks");
+		m_GatherableRessourceCmp->m_DemandedRawRessourceForProduction.push_back("Raw Stone");
+		m_GatherableRessourceCmp->m_DemandValue.push_back(2);
+		m_GatherableRessourceCmp->m_ProductionYield.push_back(1);
 	}
 
 
@@ -2352,6 +2461,12 @@ public:
 
 		m_AssociatedCity = associated_city;
 		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
+
+		m_GatherableRessourceCmp = new CMPGatherableRessource();
+		m_GatherableRessourceCmp->m_ProducedRessource.push_back("Clothing");
+		m_GatherableRessourceCmp->m_DemandedRawRessourceForProduction.push_back("Leather");
+		m_GatherableRessourceCmp->m_DemandValue.push_back(2);
+		m_GatherableRessourceCmp->m_ProductionYield.push_back(1);
 	}
 
 
@@ -2383,6 +2498,13 @@ public:
 
 		m_AssociatedCity = associated_city;
 		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
+
+
+		m_GatherableRessourceCmp = new CMPGatherableRessource();
+		m_GatherableRessourceCmp->m_ProducedRessource.push_back("Alcohol");
+		m_GatherableRessourceCmp->m_DemandedRawRessourceForProduction.push_back("Grapes");
+		m_GatherableRessourceCmp->m_DemandValue.push_back(2);
+		m_GatherableRessourceCmp->m_ProductionYield.push_back(1);
 	}
 
 
@@ -2413,6 +2535,21 @@ public:
 
 		m_AssociatedCity = associated_city;
 		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
+
+
+		m_GatherableRessourceCmp = new CMPGatherableRessource();
+		// Jewelry production
+		m_GatherableRessourceCmp->m_ProducedRessource.push_back("Jewelry");
+		m_GatherableRessourceCmp->m_DemandedRawRessourceForProduction.push_back("Silver Ore");
+		m_GatherableRessourceCmp->m_DemandValue.push_back(1);
+		m_GatherableRessourceCmp->m_ProductionYield.push_back(2);
+
+
+		// Denars production
+		m_GatherableRessourceCmp->m_ProducedRessource.push_back("Denars");
+		m_GatherableRessourceCmp->m_DemandedRawRessourceForProduction.push_back("Gold Bars");
+		m_GatherableRessourceCmp->m_DemandValue.push_back(1);
+		m_GatherableRessourceCmp->m_ProductionYield.push_back(20);
 	}
 
 
@@ -2444,6 +2581,61 @@ public:
 
 		m_AssociatedCity = associated_city;
 		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
+
+
+		// Bronze
+		m_GatherableRessourceCmp->m_ProducedRessource.push_back("Bronze Armor");
+		m_GatherableRessourceCmp->m_DemandedRawRessourceForProduction.push_back("Bronze Bars");
+		m_GatherableRessourceCmp->m_DemandValue.push_back(8);
+		m_GatherableRessourceCmp->m_ProductionYield.push_back(1);
+
+
+
+		// Iron
+		m_GatherableRessourceCmp->m_ProducedRessource.push_back("Iron Armor");
+		m_GatherableRessourceCmp->m_DemandedRawRessourceForProduction.push_back("Iron Bars");
+		m_GatherableRessourceCmp->m_DemandValue.push_back(8);
+		m_GatherableRessourceCmp->m_ProductionYield.push_back(1);
+
+
+
+		// Steel
+		m_GatherableRessourceCmp->m_ProducedRessource.push_back("Steel Armor");
+		m_GatherableRessourceCmp->m_DemandedRawRessourceForProduction.push_back("Iron Bars");
+		m_GatherableRessourceCmp->m_DemandValue.push_back(16);
+		m_GatherableRessourceCmp->m_ProductionYield.push_back(1);
+
+
+
+
+		// Adamantium
+		m_GatherableRessourceCmp->m_ProducedRessource.push_back("Adamantium Armor");
+		m_GatherableRessourceCmp->m_DemandedRawRessourceForProduction.push_back("Adamantium Bars");
+		m_GatherableRessourceCmp->m_DemandValue.push_back(8);
+		m_GatherableRessourceCmp->m_ProductionYield.push_back(1);
+
+
+
+		// Malachite
+		m_GatherableRessourceCmp->m_ProducedRessource.push_back("Malachite Armor");
+		m_GatherableRessourceCmp->m_DemandedRawRessourceForProduction.push_back("Malachite Bars");
+		m_GatherableRessourceCmp->m_DemandValue.push_back(8);
+		m_GatherableRessourceCmp->m_ProductionYield.push_back(1);
+
+
+		// Silver
+		m_GatherableRessourceCmp->m_ProducedRessource.push_back("Silver Armor");
+		m_GatherableRessourceCmp->m_DemandedRawRessourceForProduction.push_back("Silver Bars");
+		m_GatherableRessourceCmp->m_DemandValue.push_back(2);
+		m_GatherableRessourceCmp->m_ProductionYield.push_back(1);
+
+
+
+		// Gold
+		m_GatherableRessourceCmp->m_ProducedRessource.push_back("Gold Armor");
+		m_GatherableRessourceCmp->m_DemandedRawRessourceForProduction.push_back("Gold Bars");
+		m_GatherableRessourceCmp->m_DemandValue.push_back(2);
+		m_GatherableRessourceCmp->m_ProductionYield.push_back(1);
 	}
 
 
@@ -2475,6 +2667,63 @@ public:
 
 		m_AssociatedCity = associated_city;
 		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
+
+
+
+
+		// Bronze
+		m_GatherableRessourceCmp->m_ProducedRessource.push_back("Bronze Weapons");
+		m_GatherableRessourceCmp->m_DemandedRawRessourceForProduction.push_back("Bronze Bars");
+		m_GatherableRessourceCmp->m_DemandValue.push_back(2);
+		m_GatherableRessourceCmp->m_ProductionYield.push_back(1);
+
+
+
+		// Iron
+		m_GatherableRessourceCmp->m_ProducedRessource.push_back("Iron Weapons");
+		m_GatherableRessourceCmp->m_DemandedRawRessourceForProduction.push_back("Iron Bars");
+		m_GatherableRessourceCmp->m_DemandValue.push_back(2);
+		m_GatherableRessourceCmp->m_ProductionYield.push_back(1);
+
+
+
+		// Steel
+		m_GatherableRessourceCmp->m_ProducedRessource.push_back("Steel Weapons");
+		m_GatherableRessourceCmp->m_DemandedRawRessourceForProduction.push_back("Iron Bars");
+		m_GatherableRessourceCmp->m_DemandValue.push_back(4);
+		m_GatherableRessourceCmp->m_ProductionYield.push_back(1);
+
+
+
+
+		// Adamantium
+		m_GatherableRessourceCmp->m_ProducedRessource.push_back("Adamantium Weapons");
+		m_GatherableRessourceCmp->m_DemandedRawRessourceForProduction.push_back("Adamantium Bars");
+		m_GatherableRessourceCmp->m_DemandValue.push_back(2);
+		m_GatherableRessourceCmp->m_ProductionYield.push_back(1);
+
+
+
+		// Malachite
+		m_GatherableRessourceCmp->m_ProducedRessource.push_back("Malachite Weapons");
+		m_GatherableRessourceCmp->m_DemandedRawRessourceForProduction.push_back("Malachite Bars");
+		m_GatherableRessourceCmp->m_DemandValue.push_back(2);
+		m_GatherableRessourceCmp->m_ProductionYield.push_back(1);
+
+
+		// Silver
+		m_GatherableRessourceCmp->m_ProducedRessource.push_back("Silver Weapons");
+		m_GatherableRessourceCmp->m_DemandedRawRessourceForProduction.push_back("Silver Bars");
+		m_GatherableRessourceCmp->m_DemandValue.push_back(2);
+		m_GatherableRessourceCmp->m_ProductionYield.push_back(1);
+
+
+
+		// Gold
+		m_GatherableRessourceCmp->m_ProducedRessource.push_back("Gold Weapons");
+		m_GatherableRessourceCmp->m_DemandedRawRessourceForProduction.push_back("Gold Bars");
+		m_GatherableRessourceCmp->m_DemandValue.push_back(2);
+		m_GatherableRessourceCmp->m_ProductionYield.push_back(1);
 	}
 
 
@@ -2505,6 +2754,62 @@ public:
 
 		m_AssociatedCity = associated_city;
 		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
+
+
+
+		// Bronze
+		m_GatherableRessourceCmp->m_ProducedRessource.push_back("Bronze Bars");
+		m_GatherableRessourceCmp->m_DemandedRawRessourceForProduction.push_back("Bronze Ore");
+		m_GatherableRessourceCmp->m_DemandValue.push_back(4);
+		m_GatherableRessourceCmp->m_ProductionYield.push_back(1);
+
+
+
+		// Iron
+		m_GatherableRessourceCmp->m_ProducedRessource.push_back("Iron Bars");
+		m_GatherableRessourceCmp->m_DemandedRawRessourceForProduction.push_back("Iron Ore");
+		m_GatherableRessourceCmp->m_DemandValue.push_back(4);
+		m_GatherableRessourceCmp->m_ProductionYield.push_back(1);
+
+
+
+		// Steel
+		m_GatherableRessourceCmp->m_ProducedRessource.push_back("Steel Bars");
+		m_GatherableRessourceCmp->m_DemandedRawRessourceForProduction.push_back("Iron Ore");
+		m_GatherableRessourceCmp->m_DemandValue.push_back(8);
+		m_GatherableRessourceCmp->m_ProductionYield.push_back(1);
+
+
+
+
+		// Adamantium
+		m_GatherableRessourceCmp->m_ProducedRessource.push_back("Adamantium Bars");
+		m_GatherableRessourceCmp->m_DemandedRawRessourceForProduction.push_back("Adamantium Ore");
+		m_GatherableRessourceCmp->m_DemandValue.push_back(4);
+		m_GatherableRessourceCmp->m_ProductionYield.push_back(1);
+
+
+
+		// Malachite
+		m_GatherableRessourceCmp->m_ProducedRessource.push_back("Malachite Bars");
+		m_GatherableRessourceCmp->m_DemandedRawRessourceForProduction.push_back("Malachite Ore");
+		m_GatherableRessourceCmp->m_DemandValue.push_back(4);
+		m_GatherableRessourceCmp->m_ProductionYield.push_back(1);
+
+
+		// Silver
+		m_GatherableRessourceCmp->m_ProducedRessource.push_back("Silver Bars");
+		m_GatherableRessourceCmp->m_DemandedRawRessourceForProduction.push_back("Silver Ore");
+		m_GatherableRessourceCmp->m_DemandValue.push_back(4);
+		m_GatherableRessourceCmp->m_ProductionYield.push_back(1);
+
+
+
+		// Gold
+		m_GatherableRessourceCmp->m_ProducedRessource.push_back("Gold Bars");
+		m_GatherableRessourceCmp->m_DemandedRawRessourceForProduction.push_back("Gold Ore");
+		m_GatherableRessourceCmp->m_DemandValue.push_back(4);
+		m_GatherableRessourceCmp->m_ProductionYield.push_back(1);
 	}
 
 
@@ -2535,6 +2840,12 @@ public:
 
 		m_AssociatedCity = associated_city;
 		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
+
+
+		m_GatherableRessourceCmp->m_ProducedRessource.push_back("Tools");
+		m_GatherableRessourceCmp->m_DemandedRawRessourceForProduction.push_back("Bronze Bars");
+		m_GatherableRessourceCmp->m_DemandValue.push_back(1);
+		m_GatherableRessourceCmp->m_ProductionYield.push_back(2);
 	}
 
 
@@ -2565,6 +2876,13 @@ public:
 
 		m_AssociatedCity = associated_city;
 		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
+
+
+
+		m_GatherableRessourceCmp->m_ProducedRessource.push_back("Horses");
+		m_GatherableRessourceCmp->m_DemandedRawRessourceForProduction.push_back("Food");
+		m_GatherableRessourceCmp->m_DemandValue.push_back(10);
+		m_GatherableRessourceCmp->m_ProductionYield.push_back(1);
 	}
 
 
@@ -2594,6 +2912,13 @@ public:
 
 		m_AssociatedCity = associated_city;
 		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
+
+
+
+		m_GatherableRessourceCmp->m_ProducedRessource.push_back("Food");
+		m_GatherableRessourceCmp->m_DemandedRawRessourceForProduction.push_back("Salt");
+		m_GatherableRessourceCmp->m_DemandValue.push_back(1);
+		m_GatherableRessourceCmp->m_ProductionYield.push_back(2);
 	}
 
 
@@ -2779,6 +3104,10 @@ public:
 
 		m_MovementCostCmp = new CMPMovementCostModifier();
 		_setMovementCost();
+
+
+		m_GatherableRessourceCmp = new CMPGatherableRessource();
+		_defineRessourceYield();
 	}
 
 
@@ -2786,6 +3115,13 @@ private:
 
 
 private:
+	// Function defines which ressource in what amount can be gathered.
+	void _defineRessourceYield() {
+
+		m_GatherableRessourceCmp->m_ProducedRessource.push_back("Raw Stone");
+		m_GatherableRessourceCmp->m_ProductionYield.push_back(1);
+	}
+
 	void _setMovementCost() {
 		
 		// Base cost for moving on hills.
@@ -2833,6 +3169,7 @@ public:
 
 
 private:
+
 	void _setMovementCost() {
 		m_MovementCostCmp->SetBaseMovementCost(3);
 		m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_HUMAN, 1);
@@ -2867,6 +3204,9 @@ public:
 
 		m_MovementCostCmp = new CMPMovementCostModifier();
 		_setMovementCost();
+
+		m_GatherableRessourceCmp = new CMPGatherableRessource();
+		_defineRessourceYield();
 	}
 
 
@@ -2874,6 +3214,19 @@ private:
 
 
 private:
+	// Function defines which ressource in what amount can be gathered.
+	void _defineRessourceYield() {
+
+		m_GatherableRessourceCmp->m_ProducedRessource.push_back("Raw Stone");
+		m_GatherableRessourceCmp->m_ProductionYield.push_back(2);
+
+		m_GatherableRessourceCmp->m_ProducedRessource.push_back("Bronze Ore");
+		m_GatherableRessourceCmp->m_ProductionYield.push_back(1);
+
+		m_GatherableRessourceCmp->m_ProducedRessource.push_back("Iron Ore");
+		m_GatherableRessourceCmp->m_ProductionYield.push_back(1);
+	}
+
 	void _setMovementCost() {
 		// Base cost form oving on mountains.
 		m_MovementCostCmp->SetBaseMovementCost(3);
@@ -2967,7 +3320,10 @@ public:
 		// we count on its definition.
 		m_MovementCostCmp = new CMPMovementCostModifier();
 		_setMovementCost();
-		
+
+
+		m_GatherableRessourceCmp = new CMPGatherableRessource();
+		_defineRessourceYield();
 	}
 
 
@@ -2992,6 +3348,41 @@ private:
 
 
 private:
+	// Function defines which ressource in what amount can be gathered.
+	void _defineRessourceYield() {
+		switch (m_ForestType) {
+		case ForestType::FOREST_DEEP:
+			m_GatherableRessourceCmp->m_ProducedRessource.push_back("Food");
+			m_GatherableRessourceCmp->m_ProductionYield.push_back(2);
+
+			m_GatherableRessourceCmp->m_ProducedRessource.push_back("Leather");
+			m_GatherableRessourceCmp->m_ProductionYield.push_back(2);
+
+			m_GatherableRessourceCmp->m_ProducedRessource.push_back("Wood");
+			m_GatherableRessourceCmp->m_ProductionYield.push_back(6);
+			
+			break;
+		case ForestType::FOREST_NORMAL:
+			m_GatherableRessourceCmp->m_ProducedRessource.push_back("Food");
+			m_GatherableRessourceCmp->m_ProductionYield.push_back(1);
+
+			m_GatherableRessourceCmp->m_ProducedRessource.push_back("Leather");
+			m_GatherableRessourceCmp->m_ProductionYield.push_back(1);
+
+			m_GatherableRessourceCmp->m_ProducedRessource.push_back("Wood");
+			m_GatherableRessourceCmp->m_ProductionYield.push_back(4);
+			break;
+		case ForestType::FOREST_SCARCE:
+			m_GatherableRessourceCmp->m_ProducedRessource.push_back("Wood");
+			m_GatherableRessourceCmp->m_ProductionYield.push_back(2);
+			break;
+
+
+		default:
+			break;
+		}
+	}
+
 	void _setMovementCost();
 
 };
@@ -3078,6 +3469,9 @@ public:
 		m_MovementCostCmp = new CMPMovementCostModifier();
 		_setMovementCost();
 
+
+		m_GatherableRessourceCmp = new CMPGatherableRessource();
+		_defineRessourceYield();
 	}
 
 
@@ -3098,6 +3492,51 @@ private:
 
 
 private:
+
+	// Function defines which ressource in what amount can be gathered.
+	void _defineRessourceYield() {
+		switch (m_MapTileType) {
+
+		case MapTileType::MAPTILE_TYPE_JUNGLE:
+			m_GatherableRessourceCmp->m_ProducedRessource.push_back("Food");
+			m_GatherableRessourceCmp->m_ProductionYield.push_back(1);
+
+			m_GatherableRessourceCmp->m_ProducedRessource.push_back("Clay");
+			m_GatherableRessourceCmp->m_ProductionYield.push_back(1);
+
+			break;
+		case MapTileType::MAPTILE_TYPE_SAVANNAH:
+			m_GatherableRessourceCmp->m_ProducedRessource.push_back("Food");
+			m_GatherableRessourceCmp->m_ProductionYield.push_back(1);
+
+			m_GatherableRessourceCmp->m_ProducedRessource.push_back("Clay");
+			m_GatherableRessourceCmp->m_ProductionYield.push_back(2);
+			break;
+		case MapTileType::MAPTILE_TYPE_TEMPERATE:
+			m_GatherableRessourceCmp->m_ProducedRessource.push_back("Food");
+			m_GatherableRessourceCmp->m_ProductionYield.push_back(2);
+
+			m_GatherableRessourceCmp->m_ProducedRessource.push_back("Clay");
+			m_GatherableRessourceCmp->m_ProductionYield.push_back(1);
+			break;
+		case MapTileType::MAPTILE_TYPE_TUNDRA:
+			m_GatherableRessourceCmp->m_ProducedRessource.push_back("Food");
+			m_GatherableRessourceCmp->m_ProductionYield.push_back(1);
+
+			m_GatherableRessourceCmp->m_ProducedRessource.push_back("Clay");
+			m_GatherableRessourceCmp->m_ProductionYield.push_back(1);
+			break;
+		case MapTileType::MAPTILE_TYPE_WATER_SHALLOW:
+			m_GatherableRessourceCmp->m_ProducedRessource.push_back("Food");
+			m_GatherableRessourceCmp->m_ProductionYield.push_back(2);
+
+			break;
+
+
+		default:
+			break;
+		}
+	}
 
 	void _setMovementCost();
 };
