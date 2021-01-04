@@ -6,7 +6,7 @@
 
 
 // Map valid ressources for each unit that it produces.
-static std::map<std::string, std::vector<std::string>*> g_pUnitClassRessourceMap;
+//static std::map<std::string, std::vector<std::string>*> g_pUnitClassRessourceMap;
 
 // Maps each ressource that is made from another, what is made of what.
 static std::map<std::string, std::string> g_pRefinedRessourceRawRessourceDemand;
@@ -14,6 +14,9 @@ static std::map<std::string, std::string> g_pRefinedRessourceRawRessourceDemand;
 // Vector holds all defined ressources. If it aint here it aint exist...
 static std::vector<std::string> g_pIngameRessourcesVec;
 
+std::map<std::string, std::string> GetRefinedRawRessourceDemandMap() {
+	return g_pRefinedRessourceRawRessourceDemand;
+}
 
 void InitializeUnitClassRessources() {
 
@@ -106,7 +109,7 @@ void InitializeUnitClassRessources() {
 
 
 
-
+	/*
 	// Lastly, define which ressource what profession creates...
 	std::vector<std::string> *vec = new std::vector<std::string>();
 
@@ -186,12 +189,13 @@ void InitializeUnitClassRessources() {
 	vec->push_back("Stone Blocks");
 	g_pUnitClassRessourceMap.emplace("Mason", vec);
 	vec->clear();
+	*/
 }
 
 void DeinitializeUnitClassRessources() {
 
 
-	g_pUnitClassRessourceMap.clear();
+	//g_pUnitClassRessourceMap.clear();
 	g_pIngameRessourcesVec.clear();
 	g_pRefinedRessourceRawRessourceDemand.clear();
 }
@@ -238,11 +242,50 @@ void InitializeUnitTechnologyRequirements() {
 	g_TechnologyRequirementsMap.emplace("Brick Burner", "Brick Making");
 	g_TechnologyRequirementsMap.emplace("Gatherer", "All");
 	g_TechnologyRequirementsMap.emplace("Mason", "Stone Working");
-
+	g_TechnologyRequirementsMap.emplace("Aristocrat", "All");
+	g_TechnologyRequirementsMap.emplace("Merchant", "All");
+	g_TechnologyRequirementsMap.emplace("Magick Researcher", "All");
+	g_TechnologyRequirementsMap.emplace("Military Researcher", "All");
+	g_TechnologyRequirementsMap.emplace("Technical Researcher", "All");
+	g_TechnologyRequirementsMap.emplace("Civilian Researcher", "All");
+	g_TechnologyRequirementsMap.emplace("Brewer", "All");
+	g_TechnologyRequirementsMap.emplace("Tool Smith", "All");
+	g_TechnologyRequirementsMap.emplace("Horse Catcher", "All");
+	g_TechnologyRequirementsMap.emplace("Rancher", "All");
+	g_TechnologyRequirementsMap.emplace("Goldsmith", "All");
+	g_TechnologyRequirementsMap.emplace("Weapon Smith", "All");
+	g_TechnologyRequirementsMap.emplace("Armor Smith", "All");
+	g_TechnologyRequirementsMap.emplace("Smelter", "All");
+	g_TechnologyRequirementsMap.emplace("Tailor", "All");
 }
 
 
 
+void UnitBase::SetYieldOfRessource(std::string ressource, int yield, UnitRessourceProduction* cmp) {
+
+	for (int i = 0; i < cmp->m_ProducedRessource.size(); i++) {
+
+		if (COMPARE_STRINGS_2(ressource, cmp->m_ProducedRessource[i]) == 0) {
+
+			// Ressource found..
+			cmp->m_ProductionYield[i] = yield;
+			return;
+		}
+	}
+}
+
+void UnitBase::SetDemandOfRessource(std::string ressource, int demand, UnitRessourceProduction* cmp) {
+
+	for (int i = 0; i < cmp->m_DemandedRawRessourceForProduction.size(); i++) {
+
+		if (COMPARE_STRINGS_2(ressource, cmp->m_DemandedRawRessourceForProduction[i]) == 0) {
+
+			// Ressource found..
+			cmp->m_DemandValue[i] = demand;
+			return;
+		}
+	}
+}
 
 /*
 // OLD

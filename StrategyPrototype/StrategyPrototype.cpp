@@ -356,6 +356,10 @@ Unit* SpawnCitizenInCity(City* city, int xpos, int ypos){
 	cout << "City: " << city->m_CityName << white << endl;
 	
 
+	unit->m_UnitRessourceProductionCmp = new CMPUnitRessourceProduction(unit, city);
+	cout << color(colors::DARKMAGENTA);
+	cout << "Unit production cmp initialized for \"" << unit->m_Name <<"\"." << white << endl;
+
 	return unit;
 }
 
@@ -2369,27 +2373,209 @@ void CMPCameraInput::_handleCityViewMouse(Camera* cam) {
 		}
 	}
 
+
+
+	// RMB Pressedon unit.
+	if (context->GetMouse(1).bPressed && PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlyHoveredEntityInCity != nullptr) {
+
+		cout << "RMB Pressed" << white << endl;
+
+		if (COMPARE_STRINGS(PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlyHoveredEntityInCity->m_IDCmp->m_DynamicTypeName, "Unit") == 0) {
+
+			// Right click on Unit.
+			Unit* unit = nullptr;
+			unit = static_cast<Unit*>(PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlyHoveredEntityInCity);
+
+			if (unit->m_UnitClass) {
+				if (unit->m_UnitClass->m_HasProfession) {
+
+					// Are we on maptile?
+					for (auto it : PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlyViewedCity->m_ClaimedRegions) {
+						for (auto itr : it->m_MapTileRegionTiles) {
+
+							if (itr->m_TransformCmp->m_PosX + m_OffsetX <= unit->m_TransformCmp->m_PosX &&
+								itr->m_TransformCmp->m_PosX + m_OffsetX + itr->m_TransformCmp->m_Width >= unit->m_TransformCmp->m_PosX &&
+
+								itr->m_TransformCmp->m_PosY + m_OffsetY <= unit->m_TransformCmp->m_PosY &&
+								itr->m_TransformCmp->m_PosY + m_OffsetY + itr->m_TransformCmp->m_Height >= unit->m_TransformCmp->m_PosY)
+							{
+								// We are on maptile.
+								unit->m_UnitRessourceProductionCmp->SetWorkedEntity(itr);
+								unit->m_UnitRessourceProductionCmp->SetCurrentProduction();
+								break;
+							}
+						}
+					}
+
+					// Are we on building?
+
+				}
+			}
+
+
+
+
+
+
+		}
+
+
+
+	}
 	
+
 	// Releasing LMB after dragging is done.
 	if (context->GetMouse(0).bReleased && m_DraggedUnit) {
 
 		cout << "LMB Released" << white << endl;
 
 		// Try give unit a class based on position we set him and...
-		if (!_tryGivingUnitAProfession(m_DraggedUnit)) {
+		if (m_DraggedUnit->m_UnitClass && m_DraggedUnit->m_UnitClass->m_HasProfession == false) {
 
-			// ...reset things.
-			m_DraggedUnit->m_TransformCmp->m_PosX = m_EntityPrevXpos;
-			m_DraggedUnit->m_TransformCmp->m_PosY = m_EntityPrevYpos;
-			m_DraggedUnit = nullptr;
+			bool success = _tryGivingUnitAProfession(m_DraggedUnit);
+			if (success) {
 
-			_resetPrevPos();
+				m_DraggedUnit = nullptr;
+				_resetPrevPos();
+			}
+			else {
+
+				// ...reset things.
+				m_DraggedUnit->m_TransformCmp->m_PosX = m_EntityPrevXpos;
+				m_DraggedUnit->m_TransformCmp->m_PosY = m_EntityPrevYpos;
+				m_DraggedUnit = nullptr;
+
+				_resetPrevPos();
+			}
 		}
 		else {
 
-			m_DraggedUnit = nullptr;
-			_resetPrevPos();
 		}
+
+
+		/*
+		if (m_DraggedUnit->m_UnitClass && m_DraggedUnit->m_UnitClass->m_HasProfession) {
+
+			// Are we on maptile?
+			for (auto it : PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlyViewedCity->m_ClaimedRegions) {
+				for (auto itr : it->m_MapTileRegionTiles) {
+
+					if (itr->m_TransformCmp->m_PosX + m_OffsetX <= m_DraggedUnit->m_TransformCmp->m_PosX &&
+						itr->m_TransformCmp->m_PosX + m_OffsetX + itr->m_TransformCmp->m_Width >= m_DraggedUnit->m_TransformCmp->m_PosX &&
+
+						itr->m_TransformCmp->m_PosY + m_OffsetY <= m_DraggedUnit->m_TransformCmp->m_PosY &&
+						itr->m_TransformCmp->m_PosY + m_OffsetY + itr->m_TransformCmp->m_Height >= m_DraggedUnit->m_TransformCmp->m_PosY)
+					{
+						// We are on maptile.
+						m_DraggedUnit->m_UnitRessourceProductionCmp->SetWorkedEntity(itr);
+						m_DraggedUnit->m_UnitRessourceProductionCmp->SetCurrentProduction();
+						break;
+					}
+				}
+			}
+
+			// Are we on building?
+
+
+		}
+		*/
+
+
+		/*
+		if (m_DraggedUnit->m_UnitClass && m_DraggedUnit->m_UnitClass->m_HasProfession) { // Unit already has a profession...
+
+			// Need to check whether maptile/building is appropriate for working
+			// if yes
+					// let him work on maptile/building and set yields and demands accordingly.
+			// else reset his positions.
+
+			// Are we on maptile?
+			for (auto it : PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlyViewedCity->m_ClaimedRegions) {
+				for (auto itr : it->m_MapTileRegionTiles) {
+
+					if (itr->m_TransformCmp->m_PosX + m_OffsetX <= m_DraggedUnit->m_TransformCmp->m_PosX &&
+						itr->m_TransformCmp->m_PosX + m_OffsetX + itr->m_TransformCmp->m_Width >= m_DraggedUnit->m_TransformCmp->m_PosX &&
+
+						itr->m_TransformCmp->m_PosY + m_OffsetY <= m_DraggedUnit->m_TransformCmp->m_PosY &&
+						itr->m_TransformCmp->m_PosY + m_OffsetY + itr->m_TransformCmp->m_Height >= m_DraggedUnit->m_TransformCmp->m_PosY)
+					{
+
+						// Unit on maptile...
+						int index = 0;
+						for (auto iter : itr->m_GatherableRessourceCmp->m_ProducedRessource) {
+							for (auto units_iter : m_DraggedUnit->m_UnitClass->m_UnitRessourceProduction->m_ProducedRessource) {
+
+
+								if (COMPARE_STRINGS_2(iter, units_iter) == 0) {
+
+									// Found ressource which can be produced on maptile, that this unit produces.
+
+									// Set yield and demand.
+									m_DraggedUnit->m_UnitClass->SetYieldOfRessource(units_iter, itr->m_GatherableRessourceCmp->m_ProductionYield[index], m_DraggedUnit->m_UnitClass->m_UnitRessourceProduction);
+									m_DraggedUnit->m_UnitClass->SetDemandOfRessource(itr->m_GatherableRessourceCmp->m_DemandedRawRessourceForProduction[index], itr->m_GatherableRessourceCmp->m_DemandValue[index], m_DraggedUnit->m_UnitClass->m_UnitRessourceProduction);
+
+									cout << color(colors::DARKMAGENTA);
+									cout << "Set Yield and Demand for \"" << m_DraggedUnit->m_Name << "\"." << white << endl;
+									cout << "Ressource: \""<< units_iter << "\"  Yield: \""<< itr->m_GatherableRessourceCmp->m_ProductionYield[index] << "\"." << white << endl;
+									cout << "Ressource: \""<< itr->m_GatherableRessourceCmp->m_DemandedRawRessourceForProduction[index] << "\"  Demand: \"" << itr->m_GatherableRessourceCmp->m_DemandValue[index] << "\"." << white << endl;
+								
+									return;
+								}
+
+								index++;
+							}
+						}
+
+
+					}
+
+
+				}
+			}
+
+			// Are we on building?
+			for (auto it : PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlyViewedCity->m_PresentUnitsVector) {
+
+				if (it->m_TransformCmp->m_PosX <= m_DraggedUnit->m_TransformCmp->m_PosX &&
+					it->m_TransformCmp->m_PosX + it->m_TransformCmp->m_Width >= m_DraggedUnit->m_TransformCmp->m_PosX &&
+
+					it->m_TransformCmp->m_PosY <= m_DraggedUnit->m_TransformCmp->m_PosY &&
+					it->m_TransformCmp->m_PosY + it->m_TransformCmp->m_Height >= m_DraggedUnit->m_TransformCmp->m_PosY)
+				{
+
+					// Unit on building...
+					int index = 0;
+					for (auto iter : it->m_GatherableRessourceCmp->m_ProducedRessource) {
+						for (auto units_iter : m_DraggedUnit->m_UnitClass->m_UnitRessourceProduction->m_ProducedRessource) {
+
+
+							if (COMPARE_STRINGS_2(iter, units_iter) == 0) {
+
+								// Found ressource which can be produced on building, that this unit produces.
+
+
+								// Set yield and demand.
+								m_DraggedUnit->m_UnitClass->SetYieldOfRessource(units_iter, it->m_GatherableRessourceCmp->m_ProductionYield[index], m_DraggedUnit->m_UnitClass->m_UnitRessourceProduction);
+								m_DraggedUnit->m_UnitClass->SetDemandOfRessource(it->m_GatherableRessourceCmp->m_DemandedRawRessourceForProduction[index], it->m_GatherableRessourceCmp->m_DemandValue[index], m_DraggedUnit->m_UnitClass->m_UnitRessourceProduction);
+
+								cout << color(colors::DARKMAGENTA);
+								cout << "Set Yield and Demand for \"" << m_DraggedUnit->m_Name << "\"." << white << endl;
+								cout << "Ressource: \"" << units_iter << "\"  Yield: \"" << it->m_GatherableRessourceCmp->m_ProductionYield[index] << "\"." << white << endl;
+								cout << "Ressource: \"" << it->m_GatherableRessourceCmp->m_DemandedRawRessourceForProduction[index] << "\"  Demand: \"" << it->m_GatherableRessourceCmp->m_DemandValue[index] << "\"." << white << endl;
+							
+								return;
+							}
+
+							index++;
+						}
+					}
+
+
+				}
+			}
+		}
+
+		*/
 	}
 }
 
@@ -2879,40 +3065,45 @@ bool CMPCameraInput::_trySetUnitsRessourceToGather(Unit* unit) {
 }
 */
 
+
+void CMPCameraInput::_setUnitsWorkedEntity(Building* building, Unit* unit) {
+	unit->m_UnitRessourceProductionCmp->SetWorkedEntity(building);
+}
+
+void CMPCameraInput::_setUnitsWorkedEntity(MapTile* maptile, Unit* unit) {
+	unit->m_UnitRessourceProductionCmp->SetWorkedEntity(maptile);
+}
+
 bool CMPCameraInput::_tryGivingUnitAProfession(Unit* unit) {
 
 	int mouse_x = Game::Get()->GetMouseX();
 	int mouse_y = Game::Get()->GetMouseY();
 
+	// TODO: Same with buildings...
+
+
+
+
+
 	// Get maptile in question for information..
 	MapTile* maptile = nullptr;
 	for (auto it : PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlyViewedCity->m_ClaimedRegions) {
-
 		for (auto itr : it->m_MapTileRegionTiles) {
-
-			// We check for collision of maptile and mouseposition and not the unit to get the right maptile..
-			/*
-			if (itr->m_TransformCmp->m_PosX + m_OffsetX == unit->m_TransformCmp->m_PosX &&
-				itr->m_TransformCmp->m_PosY + m_OffsetY == unit->m_TransformCmp->m_PosY) {
-
-				maptile = itr;
-			}
-			*/
-
-			if (maptile) break;
 
 			if (itr->m_TransformCmp->m_PosX + m_OffsetX <= mouse_x &&
 				itr->m_TransformCmp->m_PosX + m_OffsetX + SPRITES_WIDTH_AND_HEIGHT >= mouse_x &&
 
 				itr->m_TransformCmp->m_PosY + m_OffsetY <= mouse_y &&
-				itr->m_TransformCmp->m_PosY + m_OffsetY + SPRITES_WIDTH_AND_HEIGHT >= mouse_y) {
-
+				itr->m_TransformCmp->m_PosY + m_OffsetY + SPRITES_WIDTH_AND_HEIGHT >= mouse_y)
+			{
 				maptile = itr;
+				break;
 			}
 		}
 	}
 
 	if (!maptile) return false;
+
 
 
 	// Check whether there is another unit on maptile present.
@@ -2942,6 +3133,9 @@ bool CMPCameraInput::_tryGivingUnitAProfession(Unit* unit) {
 						unit->ChangeClass(vec.at(0)); // Only available profession.
 						unit->m_AssociatedPlayer->m_CurrentlyViewedCity->RemoveCitizenFromJoblessVector(unit); // Remove from jobless if he was there.
 						_giveUnitPositionAlignedToMaptile(unit, maptile);
+
+						// Set worked entity for unit.
+						_setUnitsWorkedEntity(maptile, unit);
 
 						return true;
 					}
@@ -2974,6 +3168,8 @@ bool CMPCameraInput::_tryGivingUnitAProfession(Unit* unit) {
 					unit->m_AssociatedPlayer->m_CurrentlyViewedCity->RemoveCitizenFromJoblessVector(unit); // Remove from jobless if he was there.
 					_giveUnitPositionAlignedToMaptile(unit, maptile);
 
+					// Set worked entity for unit.
+					_setUnitsWorkedEntity(maptile, unit);
 
 					return true;
 				}
@@ -3056,6 +3252,9 @@ bool CMPCameraInput::_tryGivingUnitAProfession(Unit* unit) {
 
 					// Position unit to be directly over choosen maptile.
 					_giveUnitPositionAlignedToMaptile(unit, maptile);
+
+					// Set worked entity for unit.
+					_setUnitsWorkedEntity(maptile, unit);
 
 					return true;
 
@@ -3197,8 +3396,9 @@ bool CMPCameraInput::_isMaptileAlreadyWorked(MapTile* maptile) {
 
 void CMPCameraInput::_giveUnitPositionAlignedToMaptile(Unit* unit, MapTile* maptile) {
 
-	unit->m_TransformCmp->m_PosX = maptile->m_TransformCmp->m_PosX + m_OffsetX;
-	unit->m_TransformCmp->m_PosY = maptile->m_TransformCmp->m_PosY + m_OffsetY;
+	// We give a small +1 offset to params to make sure that unit will be found on that maptile.
+	unit->m_TransformCmp->m_PosX = maptile->m_TransformCmp->m_PosX + m_OffsetX + 1;
+	unit->m_TransformCmp->m_PosY = maptile->m_TransformCmp->m_PosY + m_OffsetY + 1;
 }
 
 bool CMPCameraInput::_hasUnitAProfessionAlready(Unit* unit) {
@@ -4799,6 +4999,33 @@ void Renderer::RenderCityLayer1() {
 
 
 			std::string out = "Unit: " + unit->m_Name + " Class: " + unit->m_UnitClass->m_UnitClassName + " Level: " + unit->m_UnitClass->LevelToString();
+			std::string production = " Production: ";
+			if (unit->m_UnitClass && unit->m_UnitClass->m_HasProfession) {
+				if (unit->m_UnitRessourceProductionCmp) {
+
+					production += unit->m_UnitRessourceProductionCmp->m_CurrentProducedRessource + "(" + std::to_string(unit->m_UnitRessourceProductionCmp->m_CurrentYield) + ") ";
+				}
+				/*
+				for (auto it : unit->m_UnitClass->m_UnitRessourceProduction->m_ProducedRessource) {
+					production += " " + it + ", ";
+				}
+				*/
+				production += " Demand: ";
+
+				/*
+				for (auto it : unit->m_UnitClass->m_UnitRessourceProduction->m_DemandedRawRessourceForProduction) {
+					production += "" + it + ", ";
+				}
+				*/
+				if (unit->m_UnitRessourceProductionCmp) {
+
+					production += unit->m_UnitRessourceProductionCmp->m_CurrentDemandedRessource + "("+ std::to_string(unit->m_UnitRessourceProductionCmp->m_CurrentDemand) +") ";
+				}
+
+			}
+
+			out += production;
+			
 			m_Game->DrawString(4, 695, out, olc::RED);
 		}
 		else if (COMPARE_STRINGS(entt->m_IDCmp->m_DynamicTypeName, "Building") == 0){
@@ -6606,15 +6833,15 @@ void Game::AdvanceOneTurn() {
 		}
 
 
-		/*
+		
 		// For each players city, let them gather ressources at end of turn.
 		for (auto it : PlayerTurnCounter::Get()->m_InGamePlayers) {
 			for (auto itr : it->m_PlayerCities) {
 
-				itr->LetUnitsGatherRessources();
+				itr->ProduceRessources();
 			}
 		}
-		*/
+		
 
 		_updateForestAI2();
 

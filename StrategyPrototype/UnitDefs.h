@@ -13,7 +13,7 @@ void InitializeUnitTechnologyRequirements();
 void DeinitializeUnitTechnologyRequirements();
 void InitializeUnitClassRessources();
 void DeinitializeUnitClassRessources();
-
+std::map<std::string, std::string> GetRefinedRawRessourceDemandMap();
 
 
 // NEW
@@ -47,6 +47,24 @@ struct UnitStats { // Define maximal health, magicka and fatigue.
 
 
 
+struct UnitRessourceProduction {
+	UnitRessourceProduction() {
+
+	}
+
+
+	// Vectors are to be set index aligned, means,
+	// m_ProducedRessource[0] <---> m_DemandedRawRessourceForProduction[0] have a welldefined relationship.
+	// Same with m_ProductionYield[0] and m_DemandValue[0]. They are related to m_ProducedRessource[0] and 
+	// m_DemandedRawRessourceForProduction[0] respectively.
+	std::vector<std::string> m_ProducedRessource;
+	std::vector<std::string> m_DemandedRawRessourceForProduction;
+	std::vector<int> m_ProductionYield;
+	std::vector<int> m_DemandValue;
+};
+
+
+
 struct UnitBase {
 
 	std::string m_UnitClassName;
@@ -55,8 +73,15 @@ struct UnitBase {
 	UnitLevel m_UnitLevel = UnitLevel::UNIT_LEVEL_INVALID;
 	UnitStats* m_UnitStats = nullptr;
 
-	std::map < std::string, int> m_RessourceToGather;
+	bool m_HasProfession = true;
+
+	// For each unitclass we define a specific set of ressources it does produce
+	// and consume for production. Dynamically we have to set the yield and demand for ressources.
+	UnitRessourceProduction* m_UnitRessourceProduction = nullptr;
 	
+	void SetYieldOfRessource(std::string ressource, int yield, UnitRessourceProduction* cmp);
+	void SetDemandOfRessource(std::string ressource, int demand, UnitRessourceProduction* cmp);
+
 	int LevelToInt() {
 
 		int level = -1;
@@ -170,6 +195,9 @@ struct UnitCitizen : public UnitBase {
 		m_UnitStats->m_Fatigue = 6;
 		m_UnitStats->m_Magicka = 0;
 		m_UnitStats->m_Health = 10;
+
+
+		m_HasProfession = false;
 	}
 };
 
@@ -188,6 +216,10 @@ struct UnitWoodCutter : public UnitBase {
 		m_UnitStats->m_Fatigue = 6;
 		m_UnitStats->m_Magicka = 0;
 		m_UnitStats->m_Health = 10;
+
+		m_UnitRessourceProduction = new UnitRessourceProduction();
+		m_UnitRessourceProduction->m_ProducedRessource.push_back("Wood");
+		m_UnitRessourceProduction->m_ProductionYield.push_back(0);
 	}
 };
 
@@ -207,6 +239,9 @@ struct UnitFarmer : public UnitBase {
 		m_UnitStats->m_Magicka = 0;
 		m_UnitStats->m_Health = 10;
 
+		m_UnitRessourceProduction = new UnitRessourceProduction();
+		m_UnitRessourceProduction->m_ProducedRessource.push_back("Food");
+		m_UnitRessourceProduction->m_ProductionYield.push_back(0);
 	}
 };
 
@@ -225,6 +260,12 @@ struct UnitHunter : public UnitBase {
 		m_UnitStats->m_Magicka = 0;
 		m_UnitStats->m_Health = 10;
 
+		m_UnitRessourceProduction = new UnitRessourceProduction();
+		m_UnitRessourceProduction->m_ProducedRessource.push_back("Food");
+		m_UnitRessourceProduction->m_ProducedRessource.push_back("Leather");
+
+		m_UnitRessourceProduction->m_ProductionYield.push_back(0);
+		m_UnitRessourceProduction->m_ProductionYield.push_back(0);
 	}
 };
 
@@ -242,6 +283,11 @@ struct UnitFisher : public UnitBase {
 		m_UnitStats->m_Fatigue = 6;
 		m_UnitStats->m_Magicka = 0;
 		m_UnitStats->m_Health = 10;
+
+		m_UnitRessourceProduction = new UnitRessourceProduction();
+		m_UnitRessourceProduction->m_ProducedRessource.push_back("Food");
+		m_UnitRessourceProduction->m_ProductionYield.push_back(0);
+
 	}
 };
 
@@ -261,7 +307,9 @@ struct UnitClayMiner : public UnitBase {
 		m_UnitStats->m_Magicka = 0;
 		m_UnitStats->m_Health = 10;
 
-
+		m_UnitRessourceProduction = new UnitRessourceProduction();
+		m_UnitRessourceProduction->m_ProducedRessource.push_back("Clay");
+		m_UnitRessourceProduction->m_ProductionYield.push_back(0);
 	}
 };
 
@@ -280,6 +328,9 @@ struct UnitBronzeMiner : public UnitBase {
 		m_UnitStats->m_Magicka = 0;
 		m_UnitStats->m_Health = 10;
 
+		m_UnitRessourceProduction = new UnitRessourceProduction();
+		m_UnitRessourceProduction->m_ProducedRessource.push_back("Bronze Ore");
+		m_UnitRessourceProduction->m_ProductionYield.push_back(0);
 	}
 };
 
@@ -299,6 +350,9 @@ struct UnitIronMiner : public UnitBase {
 		m_UnitStats->m_Magicka = 0;
 		m_UnitStats->m_Health = 10;
 
+		m_UnitRessourceProduction = new UnitRessourceProduction();
+		m_UnitRessourceProduction->m_ProducedRessource.push_back("Iron Ore");
+		m_UnitRessourceProduction->m_ProductionYield.push_back(0);
 	}
 };
 
@@ -316,6 +370,10 @@ struct UnitMalachiteMiner : public UnitBase {
 		m_UnitStats->m_Fatigue = 6;
 		m_UnitStats->m_Magicka = 0;
 		m_UnitStats->m_Health = 10;
+
+		m_UnitRessourceProduction = new UnitRessourceProduction();
+		m_UnitRessourceProduction->m_ProducedRessource.push_back("Malachite Ore");
+		m_UnitRessourceProduction->m_ProductionYield.push_back(0);
 	}
 };
 
@@ -333,6 +391,10 @@ struct UnitAdamantiumMiner : public UnitBase {
 		m_UnitStats->m_Fatigue = 6;
 		m_UnitStats->m_Magicka = 0;
 		m_UnitStats->m_Health = 10;
+
+		m_UnitRessourceProduction = new UnitRessourceProduction();
+		m_UnitRessourceProduction->m_ProducedRessource.push_back("Adamantium Ore");
+		m_UnitRessourceProduction->m_ProductionYield.push_back(0);
 	}
 };
 
@@ -349,6 +411,10 @@ struct UnitSaltMiner : public UnitBase { // Mines salt from salt deposits...
 		m_UnitStats->m_Fatigue = 6;
 		m_UnitStats->m_Magicka = 0;
 		m_UnitStats->m_Health = 10;
+
+		m_UnitRessourceProduction = new UnitRessourceProduction();
+		m_UnitRessourceProduction->m_ProducedRessource.push_back("Salt");
+		m_UnitRessourceProduction->m_ProductionYield.push_back(0);
 	}
 };
 
@@ -366,8 +432,54 @@ struct UnitStoneMiner : public UnitBase { // Unit Mines raw stone from stone dep
 		m_UnitStats->m_Magicka = 0;
 		m_UnitStats->m_Health = 10;
 
+		m_UnitRessourceProduction = new UnitRessourceProduction();
+		m_UnitRessourceProduction->m_ProducedRessource.push_back("Raw Stone");
+		m_UnitRessourceProduction->m_ProductionYield.push_back(0);
 	}
 };
+
+
+struct UnitSilverMiner : public UnitBase { // Unit Mines raw stone from stone deposits..
+	UnitSilverMiner() {
+
+		m_UnitClassName = "Silver Miner";
+
+		m_UnitTier = UnitTier::UNIT_TIER_1;
+		m_UnitLevel = UnitLevel::UNIT_LEVEL_1;
+
+
+		m_UnitStats = new UnitStats();
+		m_UnitStats->m_Fatigue = 6;
+		m_UnitStats->m_Magicka = 0;
+		m_UnitStats->m_Health = 10;
+
+		m_UnitRessourceProduction = new UnitRessourceProduction();
+		m_UnitRessourceProduction->m_ProducedRessource.push_back("Silver Ore");
+		m_UnitRessourceProduction->m_ProductionYield.push_back(0);
+	}
+};
+
+
+struct UnitGoldMiner : public UnitBase { // Unit Mines raw stone from stone deposits..
+	UnitGoldMiner() {
+
+		m_UnitClassName = "Gold Miner";
+
+		m_UnitTier = UnitTier::UNIT_TIER_1;
+		m_UnitLevel = UnitLevel::UNIT_LEVEL_1;
+
+
+		m_UnitStats = new UnitStats();
+		m_UnitStats->m_Fatigue = 6;
+		m_UnitStats->m_Magicka = 0;
+		m_UnitStats->m_Health = 10;
+
+		m_UnitRessourceProduction = new UnitRessourceProduction();
+		m_UnitRessourceProduction->m_ProducedRessource.push_back("Gold Ore");
+		m_UnitRessourceProduction->m_ProductionYield.push_back(0);
+	}
+};
+
 
 struct UnitCarpenter : public UnitBase {
 	UnitCarpenter() {
@@ -382,6 +494,13 @@ struct UnitCarpenter : public UnitBase {
 		m_UnitStats->m_Fatigue = 6;
 		m_UnitStats->m_Magicka = 0;
 		m_UnitStats->m_Health = 10;
+
+		m_UnitRessourceProduction = new UnitRessourceProduction();
+		m_UnitRessourceProduction->m_ProducedRessource.push_back("Plank");
+		m_UnitRessourceProduction->m_DemandedRawRessourceForProduction.push_back("Wood");
+
+		m_UnitRessourceProduction->m_ProductionYield.push_back(0);
+		m_UnitRessourceProduction->m_DemandValue.push_back(0);
 	}
 };
 
@@ -398,6 +517,14 @@ struct UnitBrickBurner : public UnitBase {
 		m_UnitStats->m_Fatigue = 6;
 		m_UnitStats->m_Magicka = 0;
 		m_UnitStats->m_Health = 10;
+
+		m_UnitRessourceProduction = new UnitRessourceProduction();
+		m_UnitRessourceProduction->m_ProducedRessource.push_back("Bricks");
+		m_UnitRessourceProduction->m_DemandedRawRessourceForProduction.push_back("Clay");
+
+
+		m_UnitRessourceProduction->m_ProductionYield.push_back(0);
+		m_UnitRessourceProduction->m_DemandValue.push_back(0);
 	}
 };
 
@@ -415,6 +542,14 @@ struct UnitGatherer : public UnitBase { // This unit type gathers all types of f
 		m_UnitStats->m_Fatigue = 6;
 		m_UnitStats->m_Magicka = 0;
 		m_UnitStats->m_Health = 10;
+
+
+		m_UnitRessourceProduction = new UnitRessourceProduction();
+		m_UnitRessourceProduction->m_ProducedRessource.push_back("Food");
+		m_UnitRessourceProduction->m_ProducedRessource.push_back("Grapes");
+
+		m_UnitRessourceProduction->m_ProductionYield.push_back(0);
+		m_UnitRessourceProduction->m_ProductionYield.push_back(0);
 	}
 };
 
@@ -431,13 +566,508 @@ struct UnitMason : public UnitBase { // Mason makes stoneblocks from raw stone.
 		m_UnitStats->m_Fatigue = 6;
 		m_UnitStats->m_Magicka = 0;
 		m_UnitStats->m_Health = 10;
+
+
+		m_UnitRessourceProduction = new UnitRessourceProduction();
+		m_UnitRessourceProduction->m_ProducedRessource.push_back("Stone Blocks");
+		m_UnitRessourceProduction->m_DemandedRawRessourceForProduction.push_back("Raw Stone");
+
+
+		m_UnitRessourceProduction->m_ProductionYield.push_back(0);
+		m_UnitRessourceProduction->m_DemandValue.push_back(0);
+	}
+};
+
+
+struct UnitTailor : public UnitBase { // Mason makes stoneblocks from raw stone.
+	UnitTailor() {
+
+		m_UnitClassName = "Tailor";
+
+		m_UnitTier = UnitTier::UNIT_TIER_1;
+		m_UnitLevel = UnitLevel::UNIT_LEVEL_1;
+
+
+		m_UnitStats = new UnitStats();
+		m_UnitStats->m_Fatigue = 6;
+		m_UnitStats->m_Magicka = 0;
+		m_UnitStats->m_Health = 10;
+
+
+		m_UnitRessourceProduction = new UnitRessourceProduction();
+		m_UnitRessourceProduction->m_ProducedRessource.push_back("Clothing");
+		m_UnitRessourceProduction->m_DemandedRawRessourceForProduction.push_back("Leather");
+
+
+		m_UnitRessourceProduction->m_ProductionYield.push_back(0);
+		m_UnitRessourceProduction->m_DemandValue.push_back(0);
+	}
+};
+
+
+struct UnitSmelter : public UnitBase { // Mason makes stoneblocks from raw stone.
+	UnitSmelter(){
+
+		m_UnitClassName = "Smelter";
+
+		m_UnitTier = UnitTier::UNIT_TIER_1;
+		m_UnitLevel = UnitLevel::UNIT_LEVEL_1;
+
+
+		m_UnitStats = new UnitStats();
+		m_UnitStats->m_Fatigue = 6;
+		m_UnitStats->m_Magicka = 0;
+		m_UnitStats->m_Health = 10;
+
+
+		m_UnitRessourceProduction = new UnitRessourceProduction();
+		m_UnitRessourceProduction->m_ProducedRessource.push_back("Bronze Bars");
+		m_UnitRessourceProduction->m_DemandedRawRessourceForProduction.push_back("Bronze Ore");
+		m_UnitRessourceProduction->m_ProductionYield.push_back(0);
+		m_UnitRessourceProduction->m_DemandValue.push_back(0);
+
+
+		m_UnitRessourceProduction->m_ProducedRessource.push_back("Iron Bars");
+		m_UnitRessourceProduction->m_DemandedRawRessourceForProduction.push_back("Iron Ore");
+		m_UnitRessourceProduction->m_ProductionYield.push_back(0);
+		m_UnitRessourceProduction->m_DemandValue.push_back(0);
+
+
+
+		m_UnitRessourceProduction->m_ProducedRessource.push_back("Steel Bars");
+		m_UnitRessourceProduction->m_DemandedRawRessourceForProduction.push_back("Iron Ore");
+		m_UnitRessourceProduction->m_ProductionYield.push_back(0);
+		m_UnitRessourceProduction->m_DemandValue.push_back(0);
+
+
+
+		m_UnitRessourceProduction->m_ProducedRessource.push_back("Malachite Bars");
+		m_UnitRessourceProduction->m_DemandedRawRessourceForProduction.push_back("Malachite Ore");
+		m_UnitRessourceProduction->m_ProductionYield.push_back(0);
+		m_UnitRessourceProduction->m_DemandValue.push_back(0);
+
+
+
+		m_UnitRessourceProduction->m_ProducedRessource.push_back("Adamantium Bars");
+		m_UnitRessourceProduction->m_DemandedRawRessourceForProduction.push_back("Adamantium Ore");
+		m_UnitRessourceProduction->m_ProductionYield.push_back(0);
+		m_UnitRessourceProduction->m_DemandValue.push_back(0);
+
+
+		m_UnitRessourceProduction->m_ProducedRessource.push_back("Silver Bars");
+		m_UnitRessourceProduction->m_DemandedRawRessourceForProduction.push_back("Silver Ore");
+		m_UnitRessourceProduction->m_ProductionYield.push_back(0);
+		m_UnitRessourceProduction->m_DemandValue.push_back(0);
+
+
+		m_UnitRessourceProduction->m_ProducedRessource.push_back("Gold Bars");
+		m_UnitRessourceProduction->m_DemandedRawRessourceForProduction.push_back("Gold Ore");
+		m_UnitRessourceProduction->m_ProductionYield.push_back(0);
+		m_UnitRessourceProduction->m_DemandValue.push_back(0);
+	}
+};
+
+
+struct UnitArmorSmith : public UnitBase { // Mason makes stoneblocks from raw stone.
+	UnitArmorSmith() {
+
+		m_UnitClassName = "Armor Smith";
+
+		m_UnitTier = UnitTier::UNIT_TIER_1;
+		m_UnitLevel = UnitLevel::UNIT_LEVEL_1;
+
+
+		m_UnitStats = new UnitStats();
+		m_UnitStats->m_Fatigue = 6;
+		m_UnitStats->m_Magicka = 0;
+		m_UnitStats->m_Health = 10;
+
+
+		m_UnitRessourceProduction = new UnitRessourceProduction();
+		m_UnitRessourceProduction->m_ProducedRessource.push_back("Bronze Armor");
+		m_UnitRessourceProduction->m_DemandedRawRessourceForProduction.push_back("Bronze Bars");
+		m_UnitRessourceProduction->m_ProductionYield.push_back(0);
+		m_UnitRessourceProduction->m_DemandValue.push_back(0);
+
+
+
+		m_UnitRessourceProduction->m_ProducedRessource.push_back("Iron Armor");
+		m_UnitRessourceProduction->m_DemandedRawRessourceForProduction.push_back("Iron Bars");
+		m_UnitRessourceProduction->m_ProductionYield.push_back(0);
+		m_UnitRessourceProduction->m_DemandValue.push_back(0);
+
+
+
+		m_UnitRessourceProduction->m_ProducedRessource.push_back("Steel Armor");
+		m_UnitRessourceProduction->m_DemandedRawRessourceForProduction.push_back("Iron Bars");
+		m_UnitRessourceProduction->m_ProductionYield.push_back(0);
+		m_UnitRessourceProduction->m_DemandValue.push_back(0);
+
+
+
+
+		m_UnitRessourceProduction->m_ProducedRessource.push_back("Malachite Armor");
+		m_UnitRessourceProduction->m_DemandedRawRessourceForProduction.push_back("Malachite Bars");
+		m_UnitRessourceProduction->m_ProductionYield.push_back(0);
+		m_UnitRessourceProduction->m_DemandValue.push_back(0);
+
+
+
+
+		m_UnitRessourceProduction->m_ProducedRessource.push_back("Adamantium Armor");
+		m_UnitRessourceProduction->m_DemandedRawRessourceForProduction.push_back("Adamantium Bars");
+		m_UnitRessourceProduction->m_ProductionYield.push_back(0);
+		m_UnitRessourceProduction->m_DemandValue.push_back(0);
+
+
+
+
+		m_UnitRessourceProduction->m_ProducedRessource.push_back("Silver Armor");
+		m_UnitRessourceProduction->m_DemandedRawRessourceForProduction.push_back("Silver Bars");
+		m_UnitRessourceProduction->m_ProductionYield.push_back(0);
+		m_UnitRessourceProduction->m_DemandValue.push_back(0);
+
+
+
+
+		m_UnitRessourceProduction->m_ProducedRessource.push_back("Gold Armor");
+		m_UnitRessourceProduction->m_DemandedRawRessourceForProduction.push_back("Gold Bars");
+		m_UnitRessourceProduction->m_ProductionYield.push_back(0);
+		m_UnitRessourceProduction->m_DemandValue.push_back(0);
+	}
+};
+
+
+struct UnitWeaponSmith : public UnitBase { // Mason makes stoneblocks from raw stone.
+	UnitWeaponSmith() {
+
+		m_UnitClassName = "Weapon Smith";
+
+		m_UnitTier = UnitTier::UNIT_TIER_1;
+		m_UnitLevel = UnitLevel::UNIT_LEVEL_1;
+
+
+		m_UnitStats = new UnitStats();
+		m_UnitStats->m_Fatigue = 6;
+		m_UnitStats->m_Magicka = 0;
+		m_UnitStats->m_Health = 10;
+
+
+		m_UnitRessourceProduction = new UnitRessourceProduction();
+		m_UnitRessourceProduction->m_ProducedRessource.push_back("Bronze Weapons");
+		m_UnitRessourceProduction->m_DemandedRawRessourceForProduction.push_back("Bronze Bars");
+		m_UnitRessourceProduction->m_ProductionYield.push_back(0);
+		m_UnitRessourceProduction->m_DemandValue.push_back(0);
+
+
+
+
+		m_UnitRessourceProduction->m_ProducedRessource.push_back("Iron Weapons");
+		m_UnitRessourceProduction->m_DemandedRawRessourceForProduction.push_back("Iron Bars");
+		m_UnitRessourceProduction->m_ProductionYield.push_back(0);
+		m_UnitRessourceProduction->m_DemandValue.push_back(0);
+
+
+
+
+		m_UnitRessourceProduction->m_ProducedRessource.push_back("Steel Weapons");
+		m_UnitRessourceProduction->m_DemandedRawRessourceForProduction.push_back("Iron Bars");
+		m_UnitRessourceProduction->m_ProductionYield.push_back(0);
+		m_UnitRessourceProduction->m_DemandValue.push_back(0);
+
+
+
+
+		m_UnitRessourceProduction->m_ProducedRessource.push_back("Malachite Weapons");
+		m_UnitRessourceProduction->m_DemandedRawRessourceForProduction.push_back("Malachite Bars");
+		m_UnitRessourceProduction->m_ProductionYield.push_back(0);
+		m_UnitRessourceProduction->m_DemandValue.push_back(0);
+
+
+
+
+		m_UnitRessourceProduction->m_ProducedRessource.push_back("Adamantium Weapons");
+		m_UnitRessourceProduction->m_DemandedRawRessourceForProduction.push_back("Adamantium Bars");
+		m_UnitRessourceProduction->m_ProductionYield.push_back(0);
+		m_UnitRessourceProduction->m_DemandValue.push_back(0);
+
+
+
+
+		m_UnitRessourceProduction->m_ProducedRessource.push_back("Silver Weapons");
+		m_UnitRessourceProduction->m_DemandedRawRessourceForProduction.push_back("Silver Bars");
+		m_UnitRessourceProduction->m_ProductionYield.push_back(0);
+		m_UnitRessourceProduction->m_DemandValue.push_back(0);
+
+
+
+
+
+		m_UnitRessourceProduction->m_ProducedRessource.push_back("Gold Weapons");
+		m_UnitRessourceProduction->m_DemandedRawRessourceForProduction.push_back("Gold Bars");
+		m_UnitRessourceProduction->m_ProductionYield.push_back(0);
+		m_UnitRessourceProduction->m_DemandValue.push_back(0);
+	}
+};
+
+
+struct UnitGoldSmith : public UnitBase { // Makes Jewelry and denars...
+	UnitGoldSmith() {
+
+		m_UnitClassName = "Goldsmith";
+
+		m_UnitTier = UnitTier::UNIT_TIER_1;
+		m_UnitLevel = UnitLevel::UNIT_LEVEL_1;
+
+
+		m_UnitStats = new UnitStats();
+		m_UnitStats->m_Fatigue = 6;
+		m_UnitStats->m_Magicka = 0;
+		m_UnitStats->m_Health = 10;
+
+
+		m_UnitRessourceProduction = new UnitRessourceProduction();
+		m_UnitRessourceProduction->m_ProducedRessource.push_back("Jewelry");
+		m_UnitRessourceProduction->m_DemandedRawRessourceForProduction.push_back("Silver Ore");
+		m_UnitRessourceProduction->m_ProductionYield.push_back(0);
+		m_UnitRessourceProduction->m_DemandValue.push_back(0);
+
+
+
+
+		m_UnitRessourceProduction->m_ProducedRessource.push_back("Denars");
+		m_UnitRessourceProduction->m_DemandedRawRessourceForProduction.push_back("Gold Bars");
+		m_UnitRessourceProduction->m_ProductionYield.push_back(0);
+		m_UnitRessourceProduction->m_DemandValue.push_back(0);
+	}
+};
+
+
+struct UnitRancher : public UnitBase { // Makes horses in city from food...
+	UnitRancher() {
+
+		m_UnitClassName = "Rancher";
+
+		m_UnitTier = UnitTier::UNIT_TIER_1;
+		m_UnitLevel = UnitLevel::UNIT_LEVEL_1;
+
+
+		m_UnitStats = new UnitStats();
+		m_UnitStats->m_Fatigue = 6;
+		m_UnitStats->m_Magicka = 0;
+		m_UnitStats->m_Health = 10;
+
+
+		m_UnitRessourceProduction = new UnitRessourceProduction();
+		m_UnitRessourceProduction->m_ProducedRessource.push_back("Horses");
+		m_UnitRessourceProduction->m_DemandedRawRessourceForProduction.push_back("Food");
+		m_UnitRessourceProduction->m_ProductionYield.push_back(0);
+		m_UnitRessourceProduction->m_DemandValue.push_back(0);
+	}
+};
+
+
+struct UnitHorseCatcher : public UnitBase { // Catches horses without ranch...
+	UnitHorseCatcher() {
+
+		m_UnitClassName = "Horse Catcher";
+
+		m_UnitTier = UnitTier::UNIT_TIER_1;
+		m_UnitLevel = UnitLevel::UNIT_LEVEL_1;
+
+
+		m_UnitStats = new UnitStats();
+		m_UnitStats->m_Fatigue = 6;
+		m_UnitStats->m_Magicka = 0;
+		m_UnitStats->m_Health = 10;
+
+
+		m_UnitRessourceProduction = new UnitRessourceProduction();
+		m_UnitRessourceProduction->m_ProducedRessource.push_back("Horses");
+		m_UnitRessourceProduction->m_DemandedRawRessourceForProduction.push_back("Food");
+		m_UnitRessourceProduction->m_ProductionYield.push_back(0);
+		m_UnitRessourceProduction->m_DemandValue.push_back(0);
+	}
+};
+
+
+struct UnitToolSmith : public UnitBase { // Makes Jewelry and denars...
+	UnitToolSmith() {
+
+		m_UnitClassName = "Tool Smith";
+
+		m_UnitTier = UnitTier::UNIT_TIER_1;
+		m_UnitLevel = UnitLevel::UNIT_LEVEL_1;
+
+
+		m_UnitStats = new UnitStats();
+		m_UnitStats->m_Fatigue = 6;
+		m_UnitStats->m_Magicka = 0;
+		m_UnitStats->m_Health = 10;
+
+
+		m_UnitRessourceProduction = new UnitRessourceProduction();
+		m_UnitRessourceProduction->m_ProducedRessource.push_back("Tools");
+		m_UnitRessourceProduction->m_DemandedRawRessourceForProduction.push_back("Bronze Bars");
+		m_UnitRessourceProduction->m_ProductionYield.push_back(0);
+		m_UnitRessourceProduction->m_DemandValue.push_back(0);
+	}
+};
+
+
+struct UnitBrewer : public UnitBase { // Makes Jewelry and denars...
+	UnitBrewer() {
+
+		m_UnitClassName = "Brewer";
+
+		m_UnitTier = UnitTier::UNIT_TIER_1;
+		m_UnitLevel = UnitLevel::UNIT_LEVEL_1;
+
+
+		m_UnitStats = new UnitStats();
+		m_UnitStats->m_Fatigue = 6;
+		m_UnitStats->m_Magicka = 0;
+		m_UnitStats->m_Health = 10;
+
+
+		m_UnitRessourceProduction = new UnitRessourceProduction();
+		m_UnitRessourceProduction->m_ProducedRessource.push_back("Alcohol");
+		m_UnitRessourceProduction->m_DemandedRawRessourceForProduction.push_back("Grapes");
+		m_UnitRessourceProduction->m_ProductionYield.push_back(0);
+		m_UnitRessourceProduction->m_DemandValue.push_back(0);
 	}
 };
 
 
 
+struct UnitCivilianResearcher : public UnitBase { // Makes Jewelry and denars...
+	UnitCivilianResearcher() {
+
+		m_UnitClassName = "Civilian Researcher";
+
+		m_UnitTier = UnitTier::UNIT_TIER_1;
+		m_UnitLevel = UnitLevel::UNIT_LEVEL_1;
 
 
+		m_UnitStats = new UnitStats();
+		m_UnitStats->m_Fatigue = 6;
+		m_UnitStats->m_Magicka = 0;
+		m_UnitStats->m_Health = 10;
+
+
+		m_UnitRessourceProduction = new UnitRessourceProduction();
+		m_UnitRessourceProduction->m_ProducedRessource.push_back("Civilian Knowledge");
+		m_UnitRessourceProduction->m_ProductionYield.push_back(0);
+	}
+};
+
+
+struct UnitTechnicalResearcher : public UnitBase { // Makes Jewelry and denars...
+	UnitTechnicalResearcher() {
+
+		m_UnitClassName = "Technical Researcher";
+
+		m_UnitTier = UnitTier::UNIT_TIER_1;
+		m_UnitLevel = UnitLevel::UNIT_LEVEL_1;
+
+
+		m_UnitStats = new UnitStats();
+		m_UnitStats->m_Fatigue = 6;
+		m_UnitStats->m_Magicka = 0;
+		m_UnitStats->m_Health = 10;
+
+
+		m_UnitRessourceProduction = new UnitRessourceProduction();
+		m_UnitRessourceProduction->m_ProducedRessource.push_back("Technical Knowledge");
+		m_UnitRessourceProduction->m_ProductionYield.push_back(0);
+	}
+};
+
+
+struct UnitMilitaryResearcher : public UnitBase { // Makes Jewelry and denars...
+	UnitMilitaryResearcher() {
+
+		m_UnitClassName = "Military Researcher";
+
+		m_UnitTier = UnitTier::UNIT_TIER_1;
+		m_UnitLevel = UnitLevel::UNIT_LEVEL_1;
+
+
+		m_UnitStats = new UnitStats();
+		m_UnitStats->m_Fatigue = 6;
+		m_UnitStats->m_Magicka = 0;
+		m_UnitStats->m_Health = 10;
+
+
+		m_UnitRessourceProduction = new UnitRessourceProduction();
+		m_UnitRessourceProduction->m_ProducedRessource.push_back("Military Knowledge");
+		m_UnitRessourceProduction->m_ProductionYield.push_back(0);
+	}
+};
+
+
+struct UnitMagickResearcher : public UnitBase { // Makes Jewelry and denars...
+	UnitMagickResearcher() {
+
+		m_UnitClassName = "Magick Researcher";
+
+		m_UnitTier = UnitTier::UNIT_TIER_1;
+		m_UnitLevel = UnitLevel::UNIT_LEVEL_1;
+
+
+		m_UnitStats = new UnitStats();
+		m_UnitStats->m_Fatigue = 6;
+		m_UnitStats->m_Magicka = 0;
+		m_UnitStats->m_Health = 10;
+
+
+		m_UnitRessourceProduction = new UnitRessourceProduction();
+		m_UnitRessourceProduction->m_ProducedRessource.push_back("Magick Knowledge");
+		m_UnitRessourceProduction->m_ProductionYield.push_back(0);
+	}
+};
+
+struct UnitMercant : public UnitBase { // Makes Jewelry and denars...
+	UnitMercant() {
+
+		m_UnitClassName = "Merchant";
+
+		m_UnitTier = UnitTier::UNIT_TIER_1;
+		m_UnitLevel = UnitLevel::UNIT_LEVEL_1;
+
+
+		m_UnitStats = new UnitStats();
+		m_UnitStats->m_Fatigue = 6;
+		m_UnitStats->m_Magicka = 0;
+		m_UnitStats->m_Health = 10;
+
+
+		m_UnitRessourceProduction = new UnitRessourceProduction();
+		m_UnitRessourceProduction->m_ProducedRessource.push_back("Denars");
+		m_UnitRessourceProduction->m_ProductionYield.push_back(0);
+	}
+};
+
+struct UnitAristocrat : public UnitBase { // Makes Jewelry and denars...
+	UnitAristocrat() {
+
+		m_UnitClassName = "Aristocrat";
+
+		m_UnitTier = UnitTier::UNIT_TIER_1;
+		m_UnitLevel = UnitLevel::UNIT_LEVEL_1;
+
+
+		m_UnitStats = new UnitStats();
+		m_UnitStats->m_Fatigue = 6;
+		m_UnitStats->m_Magicka = 0;
+		m_UnitStats->m_Health = 10;
+
+
+		m_UnitRessourceProduction = new UnitRessourceProduction();
+		m_UnitRessourceProduction->m_ProducedRessource.push_back("Denars");
+		m_UnitRessourceProduction->m_ProductionYield.push_back(0);
+	}
+};
 
 // OLD
 

@@ -2668,6 +2668,7 @@ bool Unit::SetClass(std::string classname) {
 }
 
 
+
 bool Unit::ChangeClass(std::string classname) {
 
 	// First, delete previous class.
@@ -3846,6 +3847,16 @@ void City::ReclaimRegions() {
 	ClaimRegions();
 }
 
+void City::ProduceRessources() {
+
+	for (auto it : m_PresentUnitsVector) {
+		if (COMPARE_STRINGS(it->m_IDCmp->m_DynamicTypeName, "Unit") == 0) {
+
+			Unit* unit = static_cast<Unit*>(it);
+			unit->m_UnitRessourceProductionCmp->Produce();
+		}
+	}
+}
 
 void City::Update() {
 
@@ -7440,4 +7451,183 @@ std::string Player::GetPlayersRace() {
 	}
 
 	return "NULL";
+}
+
+
+
+bool CMPUnitRessourceProduction::Produce() {
+
+	return true;
+}
+
+bool CMPUnitRessourceProduction::SetWorkedEntity(MapTile* entt) {
+
+	if (m_WorkedBuilding != nullptr) {
+		m_WorkedBuilding = nullptr;
+	}
+
+	m_WorkedMaptile = entt;
+	return m_WorkedMaptile;
+}
+
+
+bool CMPUnitRessourceProduction::SetWorkedEntity(Building* entt) {
+
+	if (m_WorkedMaptile != nullptr) {
+		m_WorkedMaptile = nullptr;
+	}
+
+	m_WorkedBuilding = entt;
+	return m_WorkedBuilding;
+}
+
+
+void CMPUnitRessourceProduction::SetCurrentProduction() {
+
+	using namespace std;
+
+	// Derive possible production;
+	std::vector<std::string> production_vec;
+	for (auto it : m_ManagedUnit->m_UnitClass->m_UnitRessourceProduction->m_ProducedRessource) {
+		production_vec.push_back(it);
+	}
+
+	std::string production;
+	int yield = 0;
+	if (production_vec.size() > 1) {
+		// Let user choose what to produce.
+	
+		cout << "Choose production." << endl;
+
+		int index = 0;
+		int value = 0;
+		for (auto it : production_vec) {
+
+			cout << index + 1 << ".) \""<< it << "\"." << endl;
+			index++;
+		}
+		std::cin >> value;
+		if (value < 1 || value > production_vec.size()) {
+			value = 0;
+		}
+		else {
+			production = production_vec[--value];
+		}
+	}
+	else {
+		production = production_vec[0];
+	}
+
+
+	// Check whether we can get needed ressource from maptile.
+
+	// Check whether resource needs other ressource to be produced.
+	std::map<std::string, std::string> map = GetRefinedRawRessourceDemandMap();
+
+	std::string demand;
+	int demand_value = 0;
+
+	if (m_WorkedMaptile) {
+		GameEntity* entt = nullptr;
+		entt = _hasWorkeableEntity(m_WorkedMaptile);
+		if (entt) {
+
+			// Unit working on forest etc.
+
+			int index = 0;
+			for (auto it : entt->m_GatherableRessourceCmp->m_ProducedRessource) {
+				if (COMPARE_STRINGS_2(it, production) == 0) {
+
+					// Get the yield for needed ressource.
+					yield = entt->m_GatherableRessourceCmp->m_ProductionYield[index];
+
+
+					// Get demand
+					if (map.find(production) != map.end()) {
+
+						demand = map.at(production);
+						demand_value = entt->m_GatherableRessourceCmp->m_DemandValue[index];
+					}
+				}
+
+				index++;
+			}
+
+		}
+		else {
+
+			// Unit working directly on maptile.
+
+			int index = 0;
+			for (auto it : m_WorkedMaptile->m_GatherableRessourceCmp->m_ProducedRessource) {
+				if (COMPARE_STRINGS_2(it, production) == 0) {
+
+					// Get the yield for needed ressource.
+					yield = m_WorkedMaptile->m_GatherableRessourceCmp->m_ProductionYield[index];
+
+
+					// Get demand
+					if (map.find(production) != map.end()) {
+
+						demand = map.at(production);
+						demand_value = m_WorkedMaptile->m_GatherableRessourceCmp->m_DemandValue[index];
+					}
+				}
+
+				index++;
+			}
+		}
+
+	}
+	else if(m_WorkedBuilding){
+		int index = 0;
+		for (auto it : m_WorkedBuilding->m_GatherableRessourceCmp->m_ProducedRessource) {
+			if (COMPARE_STRINGS_2(it, production) == 0) {
+
+				// Get the yield for needed ressource.
+				yield = m_WorkedBuilding->m_GatherableRessourceCmp->m_ProductionYield[index];
+
+
+				// Get demand
+				if (map.find(production) != map.end()) {
+
+					demand = map.at(production);
+					demand_value = m_WorkedBuilding->m_GatherableRessourceCmp->m_DemandValue[index];
+				}
+			}
+
+			index++;
+		}
+	}
+
+
+	// Set production and demand.
+	m_CurrentProducedRessource = production;
+	m_CurrentDemandedRessource = demand;
+	m_CurrentYield = yield;
+	m_CurrentDemand = demand_value;
+}
+
+
+GameEntity* CMPUnitRessourceProduction::_hasWorkeableEntity(MapTile* maptile) {
+
+	GameEntity* entt = nullptr;
+	for (auto it : *maptile->m_MapTileEntities) {
+
+		entt = it;
+
+		if (COMPARE_STRINGS(entt->m_IDCmp->m_DynamicTypeName, "Forest") == 0) {
+			return entt;
+		}
+		else if (COMPARE_STRINGS(entt->m_IDCmp->m_DynamicTypeName, "Hills") == 0) {
+			return entt;
+
+		}
+		else if (COMPARE_STRINGS(entt->m_IDCmp->m_DynamicTypeName, "Mountains") == 0) {
+			return entt;
+
+		}
+	}
+
+	return nullptr;
 }

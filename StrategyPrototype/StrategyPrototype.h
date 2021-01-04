@@ -63,6 +63,9 @@ private:
 	// Functions for checking appropriate "ressources" on maptile for selecting profession.
 	std::vector<std::string> _getPossibleProfessionsOnMaptile(MapTile* maptile);
 	bool _isMaptileAlreadyWorked(MapTile* maptile);
+
+	void _setUnitsWorkedEntity(Building* building, Unit* unit);
+	void _setUnitsWorkedEntity(MapTile* maptile, Unit* unit);
 };
 
 

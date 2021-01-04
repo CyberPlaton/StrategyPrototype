@@ -24,6 +24,7 @@ class City;
 class Player;
 class River;
 class Unit;
+class Building;
 typedef std::array<std::array<MapTile*, 20>, 20> MapTileArray;
 
 
@@ -246,7 +247,41 @@ private:
 };
 
 
+struct CMPUnitRessourceProduction {
+	CMPUnitRessourceProduction(Unit* unit, City* city) {
 
+		m_ManagedUnit = unit;
+		m_AssociatedCity = city;
+	}
+
+	// Let unit produce ressource it is set for and store in city.
+	bool Produce();
+
+	bool SetWorkedEntity(MapTile* entt);
+	bool SetWorkedEntity(Building* entt);
+
+
+	void SetCurrentProduction();
+
+
+	Unit* m_ManagedUnit = nullptr;
+	City* m_AssociatedCity = nullptr;
+
+	// Entities the unit derive the yield for ressource and other information.
+	MapTile* m_WorkedMaptile = nullptr;
+	Building* m_WorkedBuilding = nullptr;
+
+	// Current production and demand can be set dynamically by getting
+	// m_UnitClass->m_UnitRessourceProduction->m_ProducedRessource...
+	std::string m_CurrentProducedRessource;
+	int m_CurrentYield = 0;
+	std::string m_CurrentDemandedRessource;
+	int m_CurrentDemand = 0;
+
+private:
+	
+	GameEntity* _hasWorkeableEntity(MapTile* maptile);
+};
 
 
 // Helpers.
@@ -423,6 +458,7 @@ public:
 
 	// UnitRelated structs for more functionality.
 	UnitBase* m_UnitClass = nullptr;
+	CMPUnitRessourceProduction* m_UnitRessourceProductionCmp = nullptr;
 
 private:
 	int m_AgeInternal = -1;
@@ -671,6 +707,8 @@ public:
 	// Checks whether city size has changed and borders must be reclaimed.
 	void Update();
 
+	void ProduceRessources();
+
 	// Should be called when city grows or declines in size.
 	void ReclaimRegions();
 
@@ -701,7 +739,8 @@ public:
 	bool m_RiverPresentInCity = false; // Defines the cityview, is set on initialization.
 	bool m_CoastalCity = false; // Defines the layout in cityview, and is set at initialization.
 
-	std::map<std::string, CityRessource*> m_CityRessourcesMap;
+	//std::map<std::string, CityRessource*> m_CityRessourcesMap;
+	std::map<std::string, int> m_CityRessourcesMap; // e.g. {"Horses", 13};
 	std::vector<GameEntity*> m_PresentUnitsVector;
 
 	// Special for PresentUnits that dont have a job, say citizens and
