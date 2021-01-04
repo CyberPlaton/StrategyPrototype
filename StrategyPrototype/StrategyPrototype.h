@@ -59,10 +59,16 @@ private:
 	bool _doesPlayerWantToResetProfession();
 	bool _hasUnitAProfessionAlready(Unit* unit);
 	void _giveUnitPositionAlignedToMaptile(Unit* unit, MapTile* maptile);
+	void _giveUnitPositionAlignedToBuilding(Unit* unit, Building* building);
+
 
 	// Functions for checking appropriate "ressources" on maptile for selecting profession.
 	std::vector<std::string> _getPossibleProfessionsOnMaptile(MapTile* maptile);
+	std::vector<std::string> _getPossibleProfessionsOnBuilding(Building* building);
+
 	bool _isMaptileAlreadyWorked(MapTile* maptile);
+	bool _isBuildingAlreadyWorked(Building* building);
+
 
 	void _setUnitsWorkedEntity(Building* building, Unit* unit);
 	void _setUnitsWorkedEntity(MapTile* maptile, Unit* unit);
@@ -334,7 +340,7 @@ public:
 	bool m_DebugDrawUnitPositions = false;
 	bool m_DebugDrawPlayersTech = false;
 	bool m_DebugDrawPlayersBuildings = false;
-
+	bool m_DebugResearchAllTech = false; // Is a cheat, once used it works. To reset you must restart program.
 
 	bool m_TimeModeTurnBased = true;
 
@@ -358,12 +364,11 @@ public:
 	//std::vector<MapTile*>* m_SelectedUnitsMovementTiles = nullptr;
 	std::map<MapTile*, int>* m_SelectedUnitsMovementTiles = nullptr;
 	void DrawSelectedUnitsMovementTiles();
-
+	bool UnlockAllTech(Player* player);
 private:
 	static Game* m_Game;
 
 private:
-
 	void _initialize();
 	void _initializeMap();
 	void _loadSpriteResources();

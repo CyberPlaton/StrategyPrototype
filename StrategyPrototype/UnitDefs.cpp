@@ -89,7 +89,7 @@ void InitializeUnitClassRessources() {
 	g_pRefinedRessourceRawRessourceDemand.emplace("Malachite Bars", "Malachite Ore");
 	g_pRefinedRessourceRawRessourceDemand.emplace("Silver Bars", "Silver Ore");
 	g_pRefinedRessourceRawRessourceDemand.emplace("Gold Bars", "Gold Ore");
-	g_pRefinedRessourceRawRessourceDemand.emplace("Jewelry", "Silver Ore");
+	g_pRefinedRessourceRawRessourceDemand.emplace("Jewelry", "Silver Bars");
 	g_pRefinedRessourceRawRessourceDemand.emplace("Bronze Armor", "Bronze Bars");
 	g_pRefinedRessourceRawRessourceDemand.emplace("Bronze Weapons", "Bronze Bars");
 	g_pRefinedRessourceRawRessourceDemand.emplace("Iron Armor", "Iron Bars");

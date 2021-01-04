@@ -54,9 +54,20 @@ struct TimeCounter {
 
 struct CMPGatherableRessource {
 	CMPGatherableRessource() {
+		m_ProducedRessource = std::vector<std::string>();
+		m_DemandedRawRessourceForProduction = std::vector<std::string>();
+		m_ProductionYield = std::vector<int>();
+		m_DemandValue = std::vector<int>();
 
 	}
 
+	~CMPGatherableRessource() {
+		m_ProducedRessource.clear();
+		m_DemandedRawRessourceForProduction.clear();
+		m_ProductionYield.clear();
+		m_DemandValue.clear();
+
+	}
 
 	// Furthermore, buildings can produce ressources from raw ressources or produce them directly.
 	// Let each building set what it produces and with which yield.

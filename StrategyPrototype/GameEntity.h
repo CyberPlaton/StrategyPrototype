@@ -1155,6 +1155,7 @@ public:
 	Player* m_AssociatedPlayer = nullptr;
 	std::string m_BuildingName;
 
+	std::vector<std::string> m_BuildingsProfession;
 private:
 
 };
@@ -1476,6 +1477,7 @@ public:
 
 
 		m_BuildingName = "Wisemen Hut";
+		m_BuildingsProfession.push_back("Researcher");
 
 		m_AssociatedCity = associated_city;
 		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
@@ -1546,6 +1548,7 @@ public:
 		m_GraphicsCmp->m_SpriteName = "stone_school";
 
 		m_IDCmp->m_DynamicTypeName = "Building";
+		m_BuildingsProfession.push_back("Researcher");
 
 
 		m_BuildingName = "Big School";
@@ -1581,6 +1584,7 @@ public:
 		m_GraphicsCmp->m_SpriteName = "brick_school";
 
 		m_IDCmp->m_DynamicTypeName = "Building";
+		m_BuildingsProfession.push_back("Researcher");
 
 
 		m_BuildingName = "College";
@@ -1616,6 +1620,7 @@ public:
 		m_GraphicsCmp->m_SpriteName = "shrine";
 
 		m_IDCmp->m_DynamicTypeName = "Building";
+		m_BuildingsProfession.push_back("Mage Researcher");
 
 
 		m_BuildingName = "Shrine";
@@ -1651,6 +1656,7 @@ public:
 		m_GraphicsCmp->m_SpriteName = "magick_school";
 
 		m_IDCmp->m_DynamicTypeName = "Building";
+		m_BuildingsProfession.push_back("Mage Researcher");
 
 
 		m_BuildingName = "Magick School";
@@ -1686,6 +1692,7 @@ public:
 		m_GraphicsCmp->m_SpriteName = "magick_college";
 
 		m_IDCmp->m_DynamicTypeName = "Building";
+		m_BuildingsProfession.push_back("Mage Researcher");
 
 
 		m_BuildingName = "Magick College";
@@ -1720,6 +1727,7 @@ public:
 		m_GraphicsCmp->m_SpriteName = "inventors_hut";
 
 		m_IDCmp->m_DynamicTypeName = "Building";
+		m_BuildingsProfession.push_back("Technical Researcher");
 
 
 		m_BuildingName = "Inventors Hut";
@@ -1755,6 +1763,7 @@ public:
 		m_GraphicsCmp->m_SpriteName = "small_workshop";
 
 		m_IDCmp->m_DynamicTypeName = "Building";
+		m_BuildingsProfession.push_back("Technical Researcher");
 
 
 		m_BuildingName = "Small Workshop";
@@ -1789,6 +1798,7 @@ public:
 		m_GraphicsCmp->m_SpriteName = "big_workshop";
 
 		m_IDCmp->m_DynamicTypeName = "Building";
+		m_BuildingsProfession.push_back("Technical Researcher");
 
 
 		m_BuildingName = "Big Workshop";
@@ -1825,6 +1835,7 @@ public:
 		m_GraphicsCmp->m_SpriteName = "champions_hut";
 
 		m_IDCmp->m_DynamicTypeName = "Building";
+		m_BuildingsProfession.push_back("Military Researcher");
 
 
 		m_BuildingName = "Champions Hut";
@@ -1863,6 +1874,7 @@ public:
 
 
 		m_BuildingName = "Warrior School";
+		m_BuildingsProfession.push_back("Military Researcher");
 
 		m_AssociatedCity = associated_city;
 		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
@@ -1899,6 +1911,7 @@ public:
 
 
 		m_BuildingName = "Military College";
+		m_BuildingsProfession.push_back("Military Researcher");
 
 		m_AssociatedCity = associated_city;
 		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
@@ -1936,6 +1949,7 @@ public:
 
 
 		m_BuildingName = "Council";
+		m_BuildingsProfession.push_back("Aristocrat");
 
 		m_AssociatedCity = associated_city;
 		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
@@ -1967,6 +1981,7 @@ public:
 
 
 		m_BuildingName = "Town Hall";
+		m_BuildingsProfession.push_back("Aristocrat");
 
 		m_AssociatedCity = associated_city;
 		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
@@ -1997,6 +2012,7 @@ public:
 
 
 		m_BuildingName = "Mayors Palace";
+		m_BuildingsProfession.push_back("Aristocrat");
 
 		m_AssociatedCity = associated_city;
 		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
@@ -2027,6 +2043,7 @@ public:
 
 
 		m_BuildingName = "Local Market";
+		m_BuildingsProfession.push_back("Merchant");
 
 		m_AssociatedCity = associated_city;
 		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
@@ -2062,6 +2079,7 @@ public:
 
 
 		m_BuildingName = "Big Market";
+		m_BuildingsProfession.push_back("Merchant");
 
 		m_AssociatedCity = associated_city;
 		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
@@ -2098,6 +2116,7 @@ public:
 
 
 		m_BuildingName = "Merchants Quarter";
+		m_BuildingsProfession.push_back("Merchant");
 
 		m_AssociatedCity = associated_city;
 		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
@@ -2376,12 +2395,14 @@ public:
 
 		m_GraphicsCmp = new CMPGraphics();
 		m_GraphicsCmp->m_DrawingLayer = "Layer2";
-		m_GraphicsCmp->m_SpriteName = ""; // TODO:
+		m_GraphicsCmp->m_SpriteName = "carpenters_workshop";
 
 		m_IDCmp->m_DynamicTypeName = "Building";
 
 
 		m_BuildingName = "Carpenters Workshop";
+		m_BuildingsProfession.push_back("Carpenter");
+
 
 		m_AssociatedCity = associated_city;
 		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
@@ -2415,12 +2436,13 @@ public:
 
 		m_GraphicsCmp = new CMPGraphics();
 		m_GraphicsCmp->m_DrawingLayer = "Layer2";
-		m_GraphicsCmp->m_SpriteName = ""; // TODO:
+		m_GraphicsCmp->m_SpriteName = "brickmakers_workshop";
 
 		m_IDCmp->m_DynamicTypeName = "Building";
 
 
 		m_BuildingName = "Brickmakers Workshop";
+		m_BuildingsProfession.push_back("Brickmaker");
 
 		m_AssociatedCity = associated_city;
 		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
@@ -2452,12 +2474,13 @@ public:
 
 		m_GraphicsCmp = new CMPGraphics();
 		m_GraphicsCmp->m_DrawingLayer = "Layer2";
-		m_GraphicsCmp->m_SpriteName = ""; // TODO:
+		m_GraphicsCmp->m_SpriteName = "masons_workshop";
 
 		m_IDCmp->m_DynamicTypeName = "Building";
 
 
 		m_BuildingName = "Masons Workshop";
+		m_BuildingsProfession.push_back("Mason");
 
 		m_AssociatedCity = associated_city;
 		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
@@ -2491,12 +2514,13 @@ public:
 
 		m_GraphicsCmp = new CMPGraphics();
 		m_GraphicsCmp->m_DrawingLayer = "Layer2";
-		m_GraphicsCmp->m_SpriteName = ""; // TODO:
+		m_GraphicsCmp->m_SpriteName = "tailors_workshop";
 
 		m_IDCmp->m_DynamicTypeName = "Building";
 
 
 		m_BuildingName = "Tailors Workshop";
+		m_BuildingsProfession.push_back("Tailor");
 
 		m_AssociatedCity = associated_city;
 		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
@@ -2528,12 +2552,13 @@ public:
 
 		m_GraphicsCmp = new CMPGraphics();
 		m_GraphicsCmp->m_DrawingLayer = "Layer2";
-		m_GraphicsCmp->m_SpriteName = ""; // TODO:
+		m_GraphicsCmp->m_SpriteName = "brewery";
 
 		m_IDCmp->m_DynamicTypeName = "Building";
 
 
 		m_BuildingName = "Brewery";
+		m_BuildingsProfession.push_back("Brewer");
 
 		m_AssociatedCity = associated_city;
 		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
@@ -2565,18 +2590,20 @@ public:
 
 		m_GraphicsCmp = new CMPGraphics();
 		m_GraphicsCmp->m_DrawingLayer = "Layer2";
-		m_GraphicsCmp->m_SpriteName = ""; // TODO:
+		m_GraphicsCmp->m_SpriteName = "goldsmiths_workshop";
 
 		m_IDCmp->m_DynamicTypeName = "Building";
 
 
 		m_BuildingName = "Goldsmiths Workshop";
+		m_BuildingsProfession.push_back("Goldsmith");
 
 		m_AssociatedCity = associated_city;
 		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
 
 
 		m_GatherableRessourceCmp = new CMPGatherableRessource();
+
 		// Jewelry production
 		m_GatherableRessourceCmp->m_ProducedRessource.push_back("Jewelry");
 		m_GatherableRessourceCmp->m_DemandedRawRessourceForProduction.push_back("Silver Ore");
@@ -2611,15 +2638,19 @@ public:
 
 		m_GraphicsCmp = new CMPGraphics();
 		m_GraphicsCmp->m_DrawingLayer = "Layer2";
-		m_GraphicsCmp->m_SpriteName = ""; // TODO:
+		m_GraphicsCmp->m_SpriteName = "armorsmiths_workshop";
 
 		m_IDCmp->m_DynamicTypeName = "Building";
 
 
 		m_BuildingName = "Armorsmiths Workshop";
+		m_BuildingsProfession.push_back("Armorsmith");
 
 		m_AssociatedCity = associated_city;
 		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
+
+
+		m_GatherableRessourceCmp = new CMPGatherableRessource();
 
 
 		// Bronze
@@ -2697,17 +2728,19 @@ public:
 
 		m_GraphicsCmp = new CMPGraphics();
 		m_GraphicsCmp->m_DrawingLayer = "Layer2";
-		m_GraphicsCmp->m_SpriteName = ""; // TODO:
+		m_GraphicsCmp->m_SpriteName = "weaponsmiths_workshop";
 
 		m_IDCmp->m_DynamicTypeName = "Building";
 
 
 		m_BuildingName = "Weaponsmiths Workshop";
+		m_BuildingsProfession.push_back("Weaponsmith");
 
 		m_AssociatedCity = associated_city;
 		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
 
 
+		m_GatherableRessourceCmp = new CMPGatherableRessource();
 
 
 		// Bronze
@@ -2784,16 +2817,18 @@ public:
 
 		m_GraphicsCmp = new CMPGraphics();
 		m_GraphicsCmp->m_DrawingLayer = "Layer2";
-		m_GraphicsCmp->m_SpriteName = ""; // TODO:
+		m_GraphicsCmp->m_SpriteName = "smelters_workshop";
 
 		m_IDCmp->m_DynamicTypeName = "Building";
 
 
 		m_BuildingName = "Smelters Workshop";
+		m_BuildingsProfession.push_back("Smelter");
 
 		m_AssociatedCity = associated_city;
 		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
 
+		m_GatherableRessourceCmp = new CMPGatherableRessource();
 
 
 		// Bronze
@@ -2870,15 +2905,18 @@ public:
 
 		m_GraphicsCmp = new CMPGraphics();
 		m_GraphicsCmp->m_DrawingLayer = "Layer2";
-		m_GraphicsCmp->m_SpriteName = ""; // TODO:
+		m_GraphicsCmp->m_SpriteName = "toolsmiths_workshop";
 
 		m_IDCmp->m_DynamicTypeName = "Building";
 
 
 		m_BuildingName = "Toolsmiths Workshop";
+		m_BuildingsProfession.push_back("Toolsmith");
 
 		m_AssociatedCity = associated_city;
 		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
+
+		m_GatherableRessourceCmp = new CMPGatherableRessource();
 
 
 		m_GatherableRessourceCmp->m_ProducedRessource.push_back("Tools");
@@ -2906,16 +2944,19 @@ public:
 
 		m_GraphicsCmp = new CMPGraphics();
 		m_GraphicsCmp->m_DrawingLayer = "Layer2";
-		m_GraphicsCmp->m_SpriteName = ""; // TODO:
+		m_GraphicsCmp->m_SpriteName = "ranch";
 
 		m_IDCmp->m_DynamicTypeName = "Building";
 
 
 		m_BuildingName = "Ranch";
+		m_BuildingsProfession.push_back("Rancher");
 
 		m_AssociatedCity = associated_city;
 		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
 
+
+		m_GatherableRessourceCmp = new CMPGatherableRessource();
 
 
 		m_GatherableRessourceCmp->m_ProducedRessource.push_back("Horses");
@@ -2942,16 +2983,19 @@ public:
 
 		m_GraphicsCmp = new CMPGraphics();
 		m_GraphicsCmp->m_DrawingLayer = "Layer2";
-		m_GraphicsCmp->m_SpriteName = ""; // TODO:
+		m_GraphicsCmp->m_SpriteName = "picklers_workshop";
 
 		m_IDCmp->m_DynamicTypeName = "Building";
 
 
 		m_BuildingName = "Picklers Workshop";
+		m_BuildingsProfession.push_back("Pickler");
 
 		m_AssociatedCity = associated_city;
 		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
 
+
+		m_GatherableRessourceCmp = new CMPGatherableRessource();
 
 
 		m_GatherableRessourceCmp->m_ProducedRessource.push_back("Food");
@@ -3105,6 +3149,7 @@ public:
 
 
 		m_BuildingName = "Siege Workshop";
+		m_BuildingsProfession.push_back("Engineer");
 
 		m_AssociatedCity = associated_city;
 		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;

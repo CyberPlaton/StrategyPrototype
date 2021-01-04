@@ -1791,7 +1791,7 @@ void CMPCameraInput::_handleMapViewKeyBoard(Camera* cam) {
 		}
 
 		if (context->GetKey(olc::Key::T).bPressed) {
-			context->m_TimeModeTurnBased = (context->m_TimeModeTurnBased == true) ? false : true;
+			context->UnlockAllTech(PlayerTurnCounter::Get()->m_CurrentTurnPlayer);
 		}
 
 		if (context->GetKey(olc::Key::U).bPressed) {
@@ -3080,9 +3080,197 @@ bool CMPCameraInput::_tryGivingUnitAProfession(Unit* unit) {
 	int mouse_y = Game::Get()->GetMouseY();
 
 	// TODO: Same with buildings...
+	Building* building = nullptr;
+	for (auto it : PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlyViewedCity->m_PresentUnitsVector) {
+
+		if (COMPARE_STRINGS(it->m_IDCmp->m_DynamicTypeName, "Building") == 0) {
+
+			if (it->m_TransformCmp->m_PosX <= mouse_x &&
+				it->m_TransformCmp->m_PosX + SPRITES_WIDTH_AND_HEIGHT >= mouse_x &&
+
+				it->m_TransformCmp->m_PosY <= mouse_y &&
+				it->m_TransformCmp->m_PosY + SPRITES_WIDTH_AND_HEIGHT >= mouse_y)
+			{
+				building = static_cast<Building*>(it);
+				break;
+			}
+		}
+	}
+
+	if (building) {
+
+		if (_isBuildingAlreadyWorked(building) == false) {
+
+			std::vector<std::string> vec = _getPossibleProfessionsOnBuilding(building);
+
+			// Iterate through possible professions and let user choose one or give directly a profession.
+			if (vec.size() == 0) { // No possible professions found.
+				m_DraggedUnit->m_TransformCmp->m_PosX = m_EntityPrevXpos;
+
+				m_DraggedUnit->m_TransformCmp->m_PosY = m_EntityPrevYpos;
+
+				// Reset dragged unit for reiteration in mousehandler.
+				m_DraggedUnit = nullptr;
+				return false;
+			}
+			else if (vec.size() == 1) { // Give profession directly.
+
+				if (_hasUnitAProfessionAlready(unit)) {
+					if (_doesPlayerWantToResetProfession()) {
+
+
+						if (_hasPlayerUnitTechRequirements(vec.at(0), PlayerTurnCounter::Get()->m_CurrentTurnPlayer)) {
+
+							// User wants to reset profession, so give unit a new profession and let him work..
+							unit->ChangeClass(vec.at(0)); // Only available profession.
+							unit->m_AssociatedPlayer->m_CurrentlyViewedCity->RemoveCitizenFromJoblessVector(unit); // Remove from jobless if he was there.
+							_giveUnitPositionAlignedToBuilding(unit, building);
+
+							// Set worked entity for unit.
+							_setUnitsWorkedEntity(building, unit);
+
+							return true;
+						}
+						else {
+
+							// Player has not researched needed technoology yet..
+							m_DraggedUnit->m_TransformCmp->m_PosX = m_EntityPrevXpos;
+							m_DraggedUnit->m_TransformCmp->m_PosY = m_EntityPrevYpos;
+
+							// dragged unit is reseted in returned to function...
+							return false;
+						}
+					}
+				}
+				else { // Giving profession to citizen...
+					if (_hasPlayerUnitTechRequirements(vec.at(0), PlayerTurnCounter::Get()->m_CurrentTurnPlayer)) {
+
+						// User wants to reset profession, so give unit a new profession and let him work..
+						unit->ChangeClass(vec.at(0)); // Only available profession.
+						unit->m_AssociatedPlayer->m_CurrentlyViewedCity->RemoveCitizenFromJoblessVector(unit); // Remove from jobless if he was there.
+						_giveUnitPositionAlignedToBuilding(unit, building);
+
+						// Set worked entity for unit.
+						_setUnitsWorkedEntity(building, unit);
+
+						return true;
+					}
+					else {
+
+						// Player has not researched needed technoology yet..
+						m_DraggedUnit->m_TransformCmp->m_PosX = m_EntityPrevXpos;
+						m_DraggedUnit->m_TransformCmp->m_PosY = m_EntityPrevYpos;
+
+						// dragged unit is reseted in returned to function...
+						return false;
+					}
+				}
+
+			}
+			else { // More than one profession possible, so let user choose which one...
+
+
+				bool change_profession = false;
+				bool has_profession = false;
+				if (_hasUnitAProfessionAlready(unit)) {
+					change_profession = _doesPlayerWantToResetProfession();
+				}
+
+				if (has_profession == false || change_profession == true) { // ..If he wants to.
+
+					using namespace std;
+					int index = 0;
+
+					std::vector<std::string> available_professions_vec;
+
+					// Determine professions which are tech. available for player.
+					for (auto it : vec) {
+						if (_hasPlayerUnitTechRequirements(it, PlayerTurnCounter::Get()->m_CurrentTurnPlayer)) {
+
+							available_professions_vec.push_back(it);
+						}
+					}
+
+					// Display only those which are available...
+					for (auto it : available_professions_vec) {
+
+						cout << color(colors::DARKYELLOW);
+						cout << index + 1 << ".) Profession: \"" << it << "\"." << white << endl;
+
+						index++;
+					}
+
+					// Check whether there are any available jobs for players current tech stage, else break.
+					if (available_professions_vec.size() == 0) {
+
+						// Reset...
+						m_DraggedUnit->m_TransformCmp->m_PosX = m_EntityPrevXpos;
+						m_DraggedUnit->m_TransformCmp->m_PosY = m_EntityPrevYpos;
+
+						// dragged unit is reset in returned function...
+						return false;
+					}
 
 
 
+					cout << color(colors::DARKRED);
+					cout << "Please type number of profession to choose it for your unit." << white << endl;
+
+					try { // Safety check for invalid input.
+
+						int choosen_number = -1;
+						cin >> choosen_number;
+						choosen_number--;
+
+						// Check fir valid number..
+						if ((choosen_number < 0) &&
+							(choosen_number > available_professions_vec.size() - 1)) {
+
+							// Number is in minus range or greater than valid vec size, thus error.
+							return false;
+						}
+
+						unit->ChangeClass(available_professions_vec.at(choosen_number));
+						unit->m_AssociatedPlayer->m_CurrentlyViewedCity->RemoveCitizenFromJoblessVector(unit); // Remove from jobless if he was there.
+
+						// Position unit to be directly over choosen maptile.
+						_giveUnitPositionAlignedToBuilding(unit, building);
+
+						// Set worked entity for unit.
+						_setUnitsWorkedEntity(building, unit);
+
+						return true;
+
+					}
+					catch (const char* err) {
+
+						cout << color(colors::RED);
+						cout << err << white << endl;
+
+						// Reset...
+						m_DraggedUnit->m_TransformCmp->m_PosX = m_EntityPrevXpos;
+						m_DraggedUnit->m_TransformCmp->m_PosY = m_EntityPrevYpos;
+
+						// Reset dragged unit for reiteration in mousehandler.
+						//m_DraggedUnit = nullptr;
+						// dragged unit is reset in returned function...
+						return false;
+					}
+				}
+				else {
+
+					// Player reconsidered giving unit new profession and does not want to proceed.
+
+					// Thus, reset position of dragged unit back.
+					m_DraggedUnit->m_TransformCmp->m_PosX = m_EntityPrevXpos;
+					m_DraggedUnit->m_TransformCmp->m_PosY = m_EntityPrevYpos;
+					return false;
+				}
+			}
+		}
+
+		return true;
+	}
 
 
 	// Get maptile in question for information..
@@ -3378,6 +3566,22 @@ bool  CMPCameraInput::_tryMakeBuilding(int xpos, int ypos) {
 }
 
 
+bool CMPCameraInput::_isBuildingAlreadyWorked(Building* building) {
+
+	for (auto it : PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlyViewedCity->m_PresentUnitsVector) {
+
+		if (COMPARE_STRINGS(it->m_IDCmp->m_DynamicTypeName, "Unit") == 0) {
+
+			if ((building->m_TransformCmp->m_PosX) == it->m_TransformCmp->m_PosX &&
+				(building->m_TransformCmp->m_PosY) == it->m_TransformCmp->m_PosY) {
+
+				return true;
+			}
+		}
+	}
+
+	return false;
+}
 
 bool CMPCameraInput::_isMaptileAlreadyWorked(MapTile* maptile) {
 
@@ -3400,6 +3604,14 @@ void CMPCameraInput::_giveUnitPositionAlignedToMaptile(Unit* unit, MapTile* mapt
 	unit->m_TransformCmp->m_PosX = maptile->m_TransformCmp->m_PosX + m_OffsetX + 1;
 	unit->m_TransformCmp->m_PosY = maptile->m_TransformCmp->m_PosY + m_OffsetY + 1;
 }
+
+void CMPCameraInput::_giveUnitPositionAlignedToBuilding(Unit* unit, Building* building) {
+
+	// We give a small +1 offset to params to make sure that unit will be found on that maptile.
+	unit->m_TransformCmp->m_PosX = building->m_TransformCmp->m_PosX + 1;
+	unit->m_TransformCmp->m_PosY = building->m_TransformCmp->m_PosY + 1;
+}
+
 
 bool CMPCameraInput::_hasUnitAProfessionAlready(Unit* unit) {
 
@@ -3432,6 +3644,17 @@ bool CMPCameraInput::_doesPlayerWantToResetProfession() {
 		return false;
 	}
 
+}
+
+std::vector<std::string> CMPCameraInput::_getPossibleProfessionsOnBuilding(Building* building) {
+
+	std::vector<std::string> vec;
+
+	for (auto it : building->m_BuildingsProfession) {
+		vec.push_back(it);
+	}
+
+	return vec;
 }
 
 std::vector<std::string> CMPCameraInput::_getPossibleProfessionsOnMaptile(MapTile* maptile) {
@@ -4155,6 +4378,19 @@ void Game::_loadSpriteResources() {
 	m_SpriteResourceMap.insert(std::make_pair("champions_hut", db19));
 	m_SpriteResourceMap.insert(std::make_pair("warrior_school", db20));
 
+	AddSpriteToStorage("assets/buildings/armorsmiths_workshop.png", "armorsmiths_workshop");
+	AddSpriteToStorage("assets/buildings/weaponsmiths_workshop.png", "weaponsmiths_workshop");
+	AddSpriteToStorage("assets/buildings/toolsmiths_workshop.png", "toolsmiths_workshop");
+	AddSpriteToStorage("assets/buildings/brewery.png", "brewery");
+	AddSpriteToStorage("assets/buildings/brickmakers_workshop.png", "brickmakers_workshop");
+	AddSpriteToStorage("assets/buildings/goldsmiths_workshop.png", "goldsmiths_workshop");
+	AddSpriteToStorage("assets/buildings/masons_workshop.png", "masons_workshop");
+	AddSpriteToStorage("assets/buildings/picklers_workshop.png", "picklers_workshop");
+	AddSpriteToStorage("assets/buildings/ranch.png", "ranch");
+	AddSpriteToStorage("assets/buildings/smelters_workshop.png", "smelters_workshop");
+	AddSpriteToStorage("assets/buildings/tailors_workshop.png", "tailors_workshop");
+	AddSpriteToStorage("assets/buildings/carpenters_workshop.png", "carpenters_workshop");
+
 
 
 
@@ -4736,15 +4972,15 @@ bool Game::OnUserCreate() {
 	City* city2 = MakeNewCity(true, "Stormgrad", CMPEntityRace::Race::RACE_HUMAN, player, 7, 6, 5);
 	storage->AddGameEntitie(city2);
 
-	city2->AddBuilding(new BuildingShack(city2), 1);
-	city2->AddBuilding(new BuildingShack(city2), 2);
-	city2->AddBuilding(new BuildingShack(city2), 3);
-	city2->AddBuilding(new BuildingShrine(city2), 4);
-	city2->AddBuilding(new BuildingShack(city2), 5);
-	city2->AddBuilding(new BuildingShack(city2), 6);
-	city2->AddBuilding(new BuildingInventorsHut(city2), 7);
-	city2->AddBuilding(new BuildingShack(city2), 8);
-	city2->AddBuilding(new BuildingShack(city2), 9);
+	city2->AddBuilding(new BuildingArmorSmithsWorkshop(city2), 1);
+	city2->AddBuilding(new BuildingWeaponSmithsWorkshop(city2), 2);
+	city2->AddBuilding(new BuildingSmeltersWorkshop(city2), 3);
+	city2->AddBuilding(new BuildingRanch(city2), 4);
+	city2->AddBuilding(new BuildingTailorsWorkshop(city2), 5);
+	city2->AddBuilding(new BuildingPicklersWorkshop(city2), 6);
+	city2->AddBuilding(new BuildingGoldsmithsWorkshop(city2), 7);
+	city2->AddBuilding(new BuildingBrewery(city2), 8);
+	city2->AddBuilding(new BuildingCarpentersWorkshop(city2), 9);
 
 	city2->AddBuilding(new BuildingChampionsHut(city2), 10);
 	city2->AddBuilding(new BuildingChampionsHut(city2), 11);
@@ -6577,6 +6813,20 @@ void Renderer::DrawUnitPanels() {
 }
 */
 
+
+bool Game::UnlockAllTech(Player* player) {
+
+	using namespace std;
+
+	for (auto it = player->m_PlayersTechnologies.begin(); it != player->m_PlayersTechnologies.end(); ++it) {
+
+		player->m_PlayersTechnologies.at(it->first) = 1;
+	}
+
+	cout << color(colors::DARKGREEN);
+	cout << "Player \""<< player->m_PlayerName << "\" unlocked all Technologies." << white << endl;
+	return true;
+}
 
 void Game::_updateForestAI2() {
 

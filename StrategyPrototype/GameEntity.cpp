@@ -2766,11 +2766,11 @@ void Unit::_setSpriteBasedOnClassAndRace() {
 		sprite += "hunter";
 
 	}
-	else if (COMPARE_STRINGS(m_UnitClass->m_UnitClassName, "Brick Burner") == 0) {
+	else if (COMPARE_STRINGS(m_UnitClass->m_UnitClassName, "Brickburner") == 0) {
 		sprite += "brickburner";
 	}
 	else if (COMPARE_STRINGS(m_UnitClass->m_UnitClassName, "Carpenter") == 0) {
-		sprite += "crapenter";
+		sprite += "carpenter";
 	}
 	else if (COMPARE_STRINGS(m_UnitClass->m_UnitClassName, "Gatherer") == 0) {
 		sprite += "gatherer";
@@ -2800,6 +2800,20 @@ void Unit::_setSpriteBasedOnClassAndRace() {
 	else if (COMPARE_STRINGS(m_UnitClass->m_UnitClassName, "Mason") == 0) {
 		sprite += "mason";
 	}
+	else if (COMPARE_STRINGS(m_UnitClass->m_UnitClassName, "Aristocrat") == 0) {
+		sprite += "aristocrat";
+	}
+	else if (COMPARE_STRINGS(m_UnitClass->m_UnitClassName, "Merchant") == 0) {
+		sprite += "merchant";
+	}
+	else if (COMPARE_STRINGS(m_UnitClass->m_UnitClassName, "Mage Researcher") == 0) {
+		sprite += "mage_researcher";
+	}
+	else if (COMPARE_STRINGS(m_UnitClass->m_UnitClassName, "Researcher") == 0) {
+		sprite += "researcher";
+	}
+
+
 
 	m_GraphicsCmp->m_SpriteName = sprite;
 }
