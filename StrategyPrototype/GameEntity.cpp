@@ -46,7 +46,7 @@ void InitializeBuildingRequirementsMap() {
 	req->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
 	req->m_RaceRequirement = "All";
 	req->m_BuildingTier = BuildingTier::BUILDING_TIER_2;
-	req->m_PopulationCountRequirement = 10;
+	req->m_PopulationCountRequirement = 15;
 
 	g_pBuildingsRequirementsMap.emplace("Stone House", req);
 
@@ -67,18 +67,6 @@ void InitializeBuildingRequirementsMap() {
 
 	req = nullptr;
 
-
-
-
-	req = new BuildingRequirements();
-	req->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
-	req->m_RaceRequirement = "All";
-	req->m_BuildingTier = BuildingTier::BUILDING_TIER_1;
-	req->m_PopulationCountRequirement = 5;
-
-	g_pBuildingsRequirementsMap.emplace("Underground Storage", req);
-
-	req = nullptr;
 
 
 
@@ -187,7 +175,7 @@ void InitializeBuildingRequirementsMap() {
 	req->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
 	req->m_RaceRequirement = "All";
 	req->m_BuildingTier = BuildingTier::BUILDING_TIER_1;
-	req->m_PopulationCountRequirement = 5;
+	req->m_PopulationCountRequirement = 1;
 
 	g_pBuildingsRequirementsMap.emplace("Shrine", req);
 
@@ -228,7 +216,7 @@ void InitializeBuildingRequirementsMap() {
 	req->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
 	req->m_RaceRequirement = "All";
 	req->m_BuildingTier = BuildingTier::BUILDING_TIER_1;
-	req->m_PopulationCountRequirement = 5;
+	req->m_PopulationCountRequirement = 1;
 
 	g_pBuildingsRequirementsMap.emplace("Inventors Hut", req);
 
@@ -267,7 +255,7 @@ void InitializeBuildingRequirementsMap() {
 	req->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
 	req->m_RaceRequirement = "All";
 	req->m_BuildingTier = BuildingTier::BUILDING_TIER_1;
-	req->m_PopulationCountRequirement = 5;
+	req->m_PopulationCountRequirement = 1;
 
 	g_pBuildingsRequirementsMap.emplace("Champions Hut", req);
 
@@ -293,7 +281,7 @@ void InitializeBuildingRequirementsMap() {
 	req->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
 	req->m_RaceRequirement = "All";
 	req->m_BuildingTier = BuildingTier::BUILDING_TIER_1;
-	req->m_PopulationCountRequirement = 5;
+	req->m_PopulationCountRequirement = 1;
 
 	g_pBuildingsRequirementsMap.emplace("Picklers Workshop", req);
 
@@ -365,7 +353,7 @@ void InitializeBuildingRequirementsMap() {
 	req->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
 	req->m_RaceRequirement = "All";
 	req->m_BuildingTier = BuildingTier::BUILDING_TIER_3;
-	req->m_PopulationCountRequirement = 20;
+	req->m_PopulationCountRequirement = 10;
 
 	g_pBuildingsRequirementsMap.emplace("Goldsmiths Workshop", req);
 
@@ -411,8 +399,8 @@ void InitializeBuildingRequirementsMap() {
 	req = new BuildingRequirements();
 	req->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
 	req->m_RaceRequirement = "All";
-	req->m_BuildingTier = BuildingTier::BUILDING_TIER_3;
-	req->m_PopulationCountRequirement = 20;
+	req->m_BuildingTier = BuildingTier::BUILDING_TIER_2;
+	req->m_PopulationCountRequirement = 10;
 
 	g_pBuildingsRequirementsMap.emplace("Brickmakers Workshop", req);
 
@@ -438,7 +426,7 @@ void InitializeBuildingRequirementsMap() {
 	req->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
 	req->m_RaceRequirement = "All";
 	req->m_BuildingTier = BuildingTier::BUILDING_TIER_3;
-	req->m_PopulationCountRequirement = 20;
+	req->m_PopulationCountRequirement = 30;
 
 	g_pBuildingsRequirementsMap.emplace("Taverns Quarter", req);
 
@@ -450,7 +438,7 @@ void InitializeBuildingRequirementsMap() {
 	req->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
 	req->m_RaceRequirement = "All";
 	req->m_BuildingTier = BuildingTier::BUILDING_TIER_2;
-	req->m_PopulationCountRequirement = 10;
+	req->m_PopulationCountRequirement = 15;
 
 	g_pBuildingsRequirementsMap.emplace("Tavern", req);
 
@@ -475,7 +463,7 @@ void InitializeBuildingRequirementsMap() {
 	req->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
 	req->m_RaceRequirement = "All";
 	req->m_BuildingTier = BuildingTier::BUILDING_TIER_3;
-	req->m_PopulationCountRequirement = 20;
+	req->m_PopulationCountRequirement = 30;
 
 	g_pBuildingsRequirementsMap.emplace("Merchants Quarter", req);
 
@@ -488,7 +476,7 @@ void InitializeBuildingRequirementsMap() {
 	req->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
 	req->m_RaceRequirement = "All";
 	req->m_BuildingTier = BuildingTier::BUILDING_TIER_2;
-	req->m_PopulationCountRequirement = 10;
+	req->m_PopulationCountRequirement = 15;
 
 	g_pBuildingsRequirementsMap.emplace("Big Market", req);
 
@@ -513,7 +501,7 @@ void InitializeBuildingRequirementsMap() {
 	req->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
 	req->m_RaceRequirement = "All";
 	req->m_BuildingTier = BuildingTier::BUILDING_TIER_3;
-	req->m_PopulationCountRequirement = 20;
+	req->m_PopulationCountRequirement = 30;
 
 	g_pBuildingsRequirementsMap.emplace("Mayors Palace", req);
 
@@ -525,7 +513,7 @@ void InitializeBuildingRequirementsMap() {
 	req->m_BuildingSlotType = City::CityBuildingSlotType::CITY_BUILDING_SLOT_TYPE_STANDARD;
 	req->m_RaceRequirement = "All";
 	req->m_BuildingTier = BuildingTier::BUILDING_TIER_2;
-	req->m_PopulationCountRequirement = 10;
+	req->m_PopulationCountRequirement = 15;
 
 	g_pBuildingsRequirementsMap.emplace("Town Hall", req);
 

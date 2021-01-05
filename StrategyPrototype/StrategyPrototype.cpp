@@ -2388,9 +2388,9 @@ void CMPCameraInput::_handleCityViewMouse(Camera* cam) {
 
 
 	// RMB Pressedon unit.
-	if (context->GetMouse(1).bPressed && PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlyHoveredEntityInCity != nullptr) {
+	if (context->GetMouse(1).bReleased && PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlyHoveredEntityInCity != nullptr) {
 
-		cout << "RMB Pressed" << white << endl;
+		cout << "RMB Released (On Unit)" << white << endl;
 
 		if (COMPARE_STRINGS(PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlyHoveredEntityInCity->m_IDCmp->m_DynamicTypeName, "Unit") == 0) {
 
@@ -2452,8 +2452,7 @@ void CMPCameraInput::_handleCityViewMouse(Camera* cam) {
 
 		}
 
-
-
+		
 	}
 	
 
@@ -2826,6 +2825,42 @@ void CMPCameraInput::_handleCityViewMouse(Camera* cam) {
 
 		*/
 	}
+
+
+
+	// RMB Pressed
+	if (context->GetMouse(1).bReleased) {
+
+		cout << "RMB Released (Building Slot)" << white << endl;
+
+		int hovering_slot = _hoveringOverBuildingSlot(mouse_x, mouse_y);
+		if (hovering_slot != -1) { // We are hovering over building slot and...
+
+			// We have right clicked over building slot.
+			if (_isBuildingOnSlot(hovering_slot) == false) {
+
+				// Ask user what kind of building he wants to build.
+				if (_tryMakeBuilding(mouse_x, mouse_y)) {
+
+					cout << color(colors::GREEN);
+					cout << "Building successfully built." << white << endl;
+				}
+
+			}
+		}
+		else {
+			return;
+		}
+	}
+
+
+
+
+
+
+
+
+
 }
 
 
@@ -2924,6 +2959,18 @@ int CMPCameraInput::_hoveringOverBuildingSlot(int xpos, int ypos){
 	}
 
 	return -1;
+}
+
+bool CMPCameraInput::_isBuildingOnSlot(int slot) {
+
+	for (auto it : PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlyViewedCity->m_CityBuildingsSlots) {
+
+		if (it->m_SlotNumber == slot) {
+			return it->m_UsedByBuilding;
+		}
+	}
+
+	return false;
 }
 
 
@@ -3403,12 +3450,17 @@ bool CMPCameraInput::_tryGivingUnitAProfession(Unit* unit) {
 
 			// Iterate through possible professions and let user choose one or give directly a profession.
 			if (vec.size() == 0) { // No possible professions found.
+
+				/*
+				
 				m_DraggedUnit->m_TransformCmp->m_PosX = m_EntityPrevXpos;
 
 				m_DraggedUnit->m_TransformCmp->m_PosY = m_EntityPrevYpos;
 
 				// Reset dragged unit for reiteration in mousehandler.
 				m_DraggedUnit = nullptr;
+				*/
+
 				return false;
 			}
 			else if (vec.size() == 1) { // Give profession directly.
@@ -3431,10 +3483,12 @@ bool CMPCameraInput::_tryGivingUnitAProfession(Unit* unit) {
 						}
 						else {
 
+							/*
 							// Player has not researched needed technoology yet..
 							m_DraggedUnit->m_TransformCmp->m_PosX = m_EntityPrevXpos;
 							m_DraggedUnit->m_TransformCmp->m_PosY = m_EntityPrevYpos;
-
+							*/
+							
 							// dragged unit is reseted in returned to function...
 							return false;
 						}
@@ -3455,9 +3509,11 @@ bool CMPCameraInput::_tryGivingUnitAProfession(Unit* unit) {
 					}
 					else {
 
+						/*
 						// Player has not researched needed technoology yet..
 						m_DraggedUnit->m_TransformCmp->m_PosX = m_EntityPrevXpos;
 						m_DraggedUnit->m_TransformCmp->m_PosY = m_EntityPrevYpos;
+						*/
 
 						// dragged unit is reseted in returned to function...
 						return false;
@@ -3501,9 +3557,11 @@ bool CMPCameraInput::_tryGivingUnitAProfession(Unit* unit) {
 					// Check whether there are any available jobs for players current tech stage, else break.
 					if (available_professions_vec.size() == 0) {
 
+						/*
 						// Reset...
 						m_DraggedUnit->m_TransformCmp->m_PosX = m_EntityPrevXpos;
 						m_DraggedUnit->m_TransformCmp->m_PosY = m_EntityPrevYpos;
+						*/
 
 						// dragged unit is reset in returned function...
 						return false;
@@ -3545,9 +3603,12 @@ bool CMPCameraInput::_tryGivingUnitAProfession(Unit* unit) {
 						cout << color(colors::RED);
 						cout << err << white << endl;
 
+						/*
 						// Reset...
 						m_DraggedUnit->m_TransformCmp->m_PosX = m_EntityPrevXpos;
 						m_DraggedUnit->m_TransformCmp->m_PosY = m_EntityPrevYpos;
+						*/
+
 
 						// Reset dragged unit for reiteration in mousehandler.
 						//m_DraggedUnit = nullptr;
@@ -3559,9 +3620,12 @@ bool CMPCameraInput::_tryGivingUnitAProfession(Unit* unit) {
 
 					// Player reconsidered giving unit new profession and does not want to proceed.
 
+					/*
 					// Thus, reset position of dragged unit back.
 					m_DraggedUnit->m_TransformCmp->m_PosX = m_EntityPrevXpos;
 					m_DraggedUnit->m_TransformCmp->m_PosY = m_EntityPrevYpos;
+					*/
+
 					return false;
 				}
 			}
@@ -3599,12 +3663,17 @@ bool CMPCameraInput::_tryGivingUnitAProfession(Unit* unit) {
 
 		// Iterate through possible professions and let user choose one or give directly a profession.
 		if (vec.size() == 0) { // No possible professions found.
+
+			/*
 			m_DraggedUnit->m_TransformCmp->m_PosX = m_EntityPrevXpos;
 
 			m_DraggedUnit->m_TransformCmp->m_PosY = m_EntityPrevYpos;
 
 			// Reset dragged unit for reiteration in mousehandler.
 			m_DraggedUnit = nullptr;
+			*/
+
+
 			return false;
 		}
 		else if (vec.size() == 1) { // Give profession directly.
@@ -3627,9 +3696,11 @@ bool CMPCameraInput::_tryGivingUnitAProfession(Unit* unit) {
 					}
 					else {
 
+						/*
 						// Player has not researched needed technoology yet..
 						m_DraggedUnit->m_TransformCmp->m_PosX = m_EntityPrevXpos;
 						m_DraggedUnit->m_TransformCmp->m_PosY = m_EntityPrevYpos;
+						*/
 
 						// dragged unit is reseted in returned to function...
 						return false;
@@ -3637,8 +3708,10 @@ bool CMPCameraInput::_tryGivingUnitAProfession(Unit* unit) {
 				}
 				else { // User does not want to reset profession, so abort dragging.
 
+					/*
 					m_DraggedUnit->m_TransformCmp->m_PosX = m_EntityPrevXpos;
 					m_DraggedUnit->m_TransformCmp->m_PosY = m_EntityPrevYpos;
+					*/
 
 					// dragged unit is reseted in returned to function...
 					return false;
@@ -3661,9 +3734,12 @@ bool CMPCameraInput::_tryGivingUnitAProfession(Unit* unit) {
 				}
 				else {
 
+					/*
 					// Player has not researched needed technoology yet..
 					m_DraggedUnit->m_TransformCmp->m_PosX = m_EntityPrevXpos;
 					m_DraggedUnit->m_TransformCmp->m_PosY = m_EntityPrevYpos;
+					*/
+
 
 					// dragged unit is reseted in returned to function...
 					return false;
@@ -3706,9 +3782,11 @@ bool CMPCameraInput::_tryGivingUnitAProfession(Unit* unit) {
 				// Check whether there are any available jobs for players current tech stage, else break.
 				if (available_professions_vec.size() == 0) {
 
+					/*
 					// Reset...
 					m_DraggedUnit->m_TransformCmp->m_PosX = m_EntityPrevXpos;
 					m_DraggedUnit->m_TransformCmp->m_PosY = m_EntityPrevYpos;
+					*/
 
 					// dragged unit is reset in returned function...
 					return false;
@@ -3750,9 +3828,11 @@ bool CMPCameraInput::_tryGivingUnitAProfession(Unit* unit) {
 					cout << color(colors::RED);
 					cout << err << white << endl;
 
+					/*
 					// Reset...
 					m_DraggedUnit->m_TransformCmp->m_PosX = m_EntityPrevXpos;
 					m_DraggedUnit->m_TransformCmp->m_PosY = m_EntityPrevYpos;
+					*/
 
 					// Reset dragged unit for reiteration in mousehandler.
 					//m_DraggedUnit = nullptr;
@@ -3763,10 +3843,13 @@ bool CMPCameraInput::_tryGivingUnitAProfession(Unit* unit) {
 			else {
 
 				// Player reconsidered giving unit new profession and does not want to proceed.
-
+				/*
 				// Thus, reset position of dragged unit back.
 				m_DraggedUnit->m_TransformCmp->m_PosX = m_EntityPrevXpos;
 				m_DraggedUnit->m_TransformCmp->m_PosY = m_EntityPrevYpos;
+				*/
+
+
 				return false;
 			}
 
@@ -3776,9 +3859,10 @@ bool CMPCameraInput::_tryGivingUnitAProfession(Unit* unit) {
 	}
 	else { // Maptile is not free, so send unit back to first position.
 
+		/*
 		m_DraggedUnit->m_TransformCmp->m_PosX = m_EntityPrevXpos;
 		m_DraggedUnit->m_TransformCmp->m_PosY = m_EntityPrevYpos;
-
+		*/
 
 		// reseting dragged unit is done in returned function...
 		return false;
@@ -4712,8 +4796,13 @@ void Game::_loadSpriteResources() {
 	AddSpriteToStorage("assets/buildings/smelters_workshop.png", "smelters_workshop");
 	AddSpriteToStorage("assets/buildings/tailors_workshop.png", "tailors_workshop");
 	AddSpriteToStorage("assets/buildings/carpenters_workshop.png", "carpenters_workshop");
+	AddSpriteToStorage("assets/buildings/assassins_guild.png", "assassins_guild");
+	AddSpriteToStorage("assets/buildings/thieves_guild.png", "thieves_guild");
+	AddSpriteToStorage("assets/buildings/merchants_guild.png", "merchants_guild");
+	AddSpriteToStorage("assets/buildings/fighters_guild.png", "fighters_guild");
+	AddSpriteToStorage("assets/buildings/mages_guild.png", "mages_guild");
 
-
+	
 
 
 
@@ -5312,6 +5401,13 @@ bool Game::OnUserCreate() {
 
 	City* city3 = MakeNewCity(true, "Gral", CMPEntityRace::Race::RACE_ORC, player2, 16, 7, 5);
 	storage->AddGameEntitie(city3);
+
+	city3->AddBuilding(new BuildingMagesGuild(city3), 1);
+	city3->AddBuilding(new BuildingFightersGuild(city3), 2);
+	city3->AddBuilding(new BuildingThievesGuild(city3), 3);
+	city3->AddBuilding(new BuildingAssassinsGuild(city3), 4);
+	city3->AddBuilding(new BuildingMerchantsGuild(city3), 5);
+
 
 	// TimeCounter
 	m_TimeCounter->SetTimerForSeconds(1);
@@ -7141,13 +7237,18 @@ bool Game::UnlockAllTech(Player* player) {
 
 	using namespace std;
 
+	// Unlock all technologies.
 	for (auto it = player->m_PlayersTechnologies.begin(); it != player->m_PlayersTechnologies.end(); ++it) {
 
 		player->m_PlayersTechnologies.at(it->first) = 1;
 	}
 
+	// Set techtier to max.
+	player->m_PlayerTechnologyTier = TechTier::TECH_TIER_3;
+
+
 	cout << color(colors::DARKGREEN);
-	cout << "Player \""<< player->m_PlayerName << "\" unlocked all Technologies." << white << endl;
+	cout << "Player \""<< player->m_PlayerName << "\" unlocked all Technologies and has TechTier 3." << white << endl;
 	return true;
 }
 

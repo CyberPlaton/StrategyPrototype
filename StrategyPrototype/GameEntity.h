@@ -1486,7 +1486,7 @@ public:
 
 
 		m_BuildingName = "Wisemen Hut";
-		m_BuildingsProfession.push_back("Researcher");
+		m_BuildingsProfession.push_back("Civilian Researcher");
 
 		m_AssociatedCity = associated_city;
 		m_AssociatedPlayer = m_AssociatedCity->m_AssociatedPlayer;
@@ -2250,7 +2250,7 @@ public:
 
 		m_GraphicsCmp = new CMPGraphics();
 		m_GraphicsCmp->m_DrawingLayer = "Layer2";
-		m_GraphicsCmp->m_SpriteName = ""; // TODO:
+		m_GraphicsCmp->m_SpriteName = "merchants_guild";
 
 		m_IDCmp->m_DynamicTypeName = "Building";
 
@@ -2281,7 +2281,7 @@ public:
 
 		m_GraphicsCmp = new CMPGraphics();
 		m_GraphicsCmp->m_DrawingLayer = "Layer2";
-		m_GraphicsCmp->m_SpriteName = ""; // TODO:
+		m_GraphicsCmp->m_SpriteName = "fighters_guild";
 
 		m_IDCmp->m_DynamicTypeName = "Building";
 
@@ -2312,7 +2312,7 @@ public:
 
 		m_GraphicsCmp = new CMPGraphics();
 		m_GraphicsCmp->m_DrawingLayer = "Layer2";
-		m_GraphicsCmp->m_SpriteName = ""; // TODO:
+		m_GraphicsCmp->m_SpriteName = "mages_guild";
 
 		m_IDCmp->m_DynamicTypeName = "Building";
 
@@ -2342,7 +2342,7 @@ public:
 
 		m_GraphicsCmp = new CMPGraphics();
 		m_GraphicsCmp->m_DrawingLayer = "Layer2";
-		m_GraphicsCmp->m_SpriteName = ""; // TODO:
+		m_GraphicsCmp->m_SpriteName = "thieves_guild";
 
 		m_IDCmp->m_DynamicTypeName = "Building";
 
@@ -2373,7 +2373,7 @@ public:
 
 		m_GraphicsCmp = new CMPGraphics();
 		m_GraphicsCmp->m_DrawingLayer = "Layer2";
-		m_GraphicsCmp->m_SpriteName = ""; // TODO:
+		m_GraphicsCmp->m_SpriteName = "assassins_guild";
 
 		m_IDCmp->m_DynamicTypeName = "Building";
 

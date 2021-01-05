@@ -55,6 +55,7 @@ private:
 	GameEntity* _hoveringOverEntity(int xpos, int ypos, std::string& entityType);
 	GameEntity* _hoveringOverEntityWithoutDraggedUnit(int xpos, int ypos, std::string& entityType, Unit* dragged_unit);
 	int _hoveringOverBuildingSlot(int xpos, int ypos); // Returns -1 if no slot is hovered upon.
+	bool _isBuildingOnSlot(int slot);
 	Unit* _isUnitPresentOnMaptile(MapTile* maptile);
 	bool _hasPlayerUnitTechRequirements(std::string tech, Player* p);
 	bool _doesPlayerWantToResetProfession();
