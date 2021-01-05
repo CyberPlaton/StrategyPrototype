@@ -3869,6 +3869,20 @@ bool CMPCameraInput::_tryGivingUnitAProfession(Unit* unit) {
 	}
 }
 
+bool CMPCameraInput::_removeBuilding(int xpos, int ypos) {
+
+	City* city = PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlyViewedCity;
+	int slot = GetBuildingSlotFromPosition(city, xpos, ypos);
+
+	for (auto it : city->m_CityBuildingsSlots) {
+		if (it->m_SlotNumber == slot) {
+
+			DeleteBuilding(city, it->m_AssociatedBuilding->m_BuildingName, slot);
+			return true;
+		}
+	}
+	return false;
+}
 
 bool  CMPCameraInput::_tryMakeBuilding(int xpos, int ypos) {
 
@@ -3919,8 +3933,7 @@ bool  CMPCameraInput::_tryMakeBuilding(int xpos, int ypos) {
 		else {
 
 			// Build new building here..
-			Building* building = MakeNewBuilding(city, vec->at(choosen_index - 1), slot);
-
+			Building* building = MakeNewBuilding(city, vec->at(--choosen_index), slot);
 
 			if (building) {
 

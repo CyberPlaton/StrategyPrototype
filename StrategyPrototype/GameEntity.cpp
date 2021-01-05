@@ -6991,12 +6991,45 @@ int GetBuildingSlotFromPosition(City* city, int xpos, int ypos) {
 	return -1;
 }
 
+// Use this function to delete a building from a city.
+// Do not use the cities function for it, as it lacks important aspects.
+void DeleteBuilding(City* city, std::string building_name, int slot) {
+
+	for (auto it : city->m_PresentUnitsVector) {
+
+		if (COMPARE_STRINGS(it->m_IDCmp->m_DynamicTypeName, "Building") == 0) {
+
+			Building* building = static_cast<Building*>(it);
+
+			if (COMPARE_STRINGS_2(building->m_BuildingName, building_name) == 0) {
+
+
+				city->RemoveBuilding(building); // Remove from city.
+
+				// Free Slot.
+				for (auto itr : city->m_CityBuildingsSlots) {
+
+					if (itr->m_SlotNumber == slot) {
+
+						itr->m_AssociatedBuilding = nullptr;
+						itr->m_UsedByBuilding = false;
+					}
+				}
+
+				// Remove from entities storage.
+				EntitiesStorage::Get()->DeleteGameEntitie(building);
+
+			}
+		}
+	}
+}
 
 Building *MakeNewBuilding(City* city, std::string building_name, int slot) {
 
 	// We check here for cities ressources..
 	// TODO:
 
+	EntitiesStorage* storage = EntitiesStorage::Get();
 
 	// Try build new building.
 	if (COMPARE_STRINGS(building_name, "Shack") == 0) { 
@@ -7005,6 +7038,8 @@ Building *MakeNewBuilding(City* city, std::string building_name, int slot) {
 
 		city->AddBuilding(b, slot);
 
+		storage->AddGameEntitie(b);
+
 		return b;
 	}
 	else if (COMPARE_STRINGS(building_name, "Underground Storage") == 0) {
@@ -7012,6 +7047,8 @@ Building *MakeNewBuilding(City* city, std::string building_name, int slot) {
 		BuildingStorage* b = new BuildingStorage(city);
 
 		city->AddBuilding(b, slot);
+
+		storage->AddGameEntitie(b);
 
 		return b;
 	}
@@ -7022,6 +7059,8 @@ Building *MakeNewBuilding(City* city, std::string building_name, int slot) {
 
 		city->AddBuilding(b, slot);
 
+		storage->AddGameEntitie(b);
+
 		return b;
 	}
 	else if (COMPARE_STRINGS(building_name, "Wooden House") == 0) {
@@ -7030,6 +7069,8 @@ Building *MakeNewBuilding(City* city, std::string building_name, int slot) {
 		BuildingWoodenHouse* b = new BuildingWoodenHouse(city);
 
 		city->AddBuilding(b, slot);
+
+		storage->AddGameEntitie(b);
 
 		return b;
 	}
@@ -7040,6 +7081,8 @@ Building *MakeNewBuilding(City* city, std::string building_name, int slot) {
 
 		city->AddBuilding(b, slot);
 
+		storage->AddGameEntitie(b);
+
 		return b;
 	}
 	else if (COMPARE_STRINGS(building_name, "Brick House") == 0) {
@@ -7048,6 +7091,8 @@ Building *MakeNewBuilding(City* city, std::string building_name, int slot) {
 		BuildingBrickHouse* b = new BuildingBrickHouse(city);
 
 		city->AddBuilding(b, slot);
+
+		storage->AddGameEntitie(b);
 
 		return b;
 	}
@@ -7058,6 +7103,8 @@ Building *MakeNewBuilding(City* city, std::string building_name, int slot) {
 
 		city->AddBuilding(b, slot);
 
+		storage->AddGameEntitie(b);
+
 		return b;
 	}
 	else if (COMPARE_STRINGS(building_name, "Big Warehouse") == 0) {
@@ -7066,6 +7113,8 @@ Building *MakeNewBuilding(City* city, std::string building_name, int slot) {
 		BuildingStoneWarehouse* b = new BuildingStoneWarehouse(city);
 
 		city->AddBuilding(b, slot);
+
+		storage->AddGameEntitie(b);
 
 		return b;
 	}
@@ -7076,6 +7125,8 @@ Building *MakeNewBuilding(City* city, std::string building_name, int slot) {
 
 		city->AddBuilding(b, slot);
 
+		storage->AddGameEntitie(b);
+
 		return b;
 	}
 	else if (COMPARE_STRINGS(building_name, "Wisemen Hut") == 0) {
@@ -7084,6 +7135,8 @@ Building *MakeNewBuilding(City* city, std::string building_name, int slot) {
 		BuildingWisemenHut* b = new BuildingWisemenHut(city);
 
 		city->AddBuilding(b, slot);
+
+		storage->AddGameEntitie(b);
 
 		return b;
 	}
@@ -7094,6 +7147,8 @@ Building *MakeNewBuilding(City* city, std::string building_name, int slot) {
 
 		city->AddBuilding(b, slot);
 
+		storage->AddGameEntitie(b);
+
 		return b;
 	}
 	else if (COMPARE_STRINGS(building_name, "Shrine") == 0) {
@@ -7102,6 +7157,8 @@ Building *MakeNewBuilding(City* city, std::string building_name, int slot) {
 		BuildingShrine* b = new BuildingShrine(city);
 
 		city->AddBuilding(b, slot);
+
+		storage->AddGameEntitie(b);
 
 		return b;
 	}
@@ -7112,6 +7169,8 @@ Building *MakeNewBuilding(City* city, std::string building_name, int slot) {
 
 	city->AddBuilding(b, slot);
 
+	storage->AddGameEntitie(b);
+
 	return b;
 	}
 	else if (COMPARE_STRINGS(building_name, "Magick College") == 0) {
@@ -7120,6 +7179,8 @@ Building *MakeNewBuilding(City* city, std::string building_name, int slot) {
 	BuildingMagickCollege* b = new BuildingMagickCollege(city);
 
 	city->AddBuilding(b, slot);
+
+	storage->AddGameEntitie(b);
 
 	return b;
 	}
@@ -7130,6 +7191,8 @@ Building *MakeNewBuilding(City* city, std::string building_name, int slot) {
 
 	city->AddBuilding(b, slot);
 
+	storage->AddGameEntitie(b);
+
 	return b;
 	}
 	else if (COMPARE_STRINGS(building_name, "Small Workshop") == 0) {
@@ -7138,6 +7201,8 @@ Building *MakeNewBuilding(City* city, std::string building_name, int slot) {
 	BuildingSmallWorkshop* b = new BuildingSmallWorkshop(city);
 
 	city->AddBuilding(b, slot);
+
+	storage->AddGameEntitie(b);
 
 	return b;
 	}
@@ -7148,6 +7213,8 @@ Building *MakeNewBuilding(City* city, std::string building_name, int slot) {
 
 	city->AddBuilding(b, slot);
 
+	storage->AddGameEntitie(b);
+
 	return b;
 	}
 	else if (COMPARE_STRINGS(building_name, "Warrior School") == 0) {
@@ -7156,6 +7223,8 @@ Building *MakeNewBuilding(City* city, std::string building_name, int slot) {
 	BuildingWarriorSchool* b = new BuildingWarriorSchool(city);
 
 	city->AddBuilding(b, slot);
+
+	storage->AddGameEntitie(b);
 
 	return b;
 	}
@@ -7166,6 +7235,8 @@ Building *MakeNewBuilding(City* city, std::string building_name, int slot) {
 
 	city->AddBuilding(b, slot);
 
+	storage->AddGameEntitie(b);
+
 	return b;
 	}
 	else if (COMPARE_STRINGS(building_name, "Council") == 0) {
@@ -7174,6 +7245,8 @@ Building *MakeNewBuilding(City* city, std::string building_name, int slot) {
 	BuildingCouncil* b = new BuildingCouncil(city);
 
 	city->AddBuilding(b, slot);
+
+	storage->AddGameEntitie(b);
 
 	return b;
 	}
@@ -7184,6 +7257,8 @@ Building *MakeNewBuilding(City* city, std::string building_name, int slot) {
 
 	city->AddBuilding(b, slot);
 
+	storage->AddGameEntitie(b);
+
 	return b;
 	}
 	else if (COMPARE_STRINGS(building_name, "Mayors Palace") == 0) {
@@ -7192,6 +7267,8 @@ Building *MakeNewBuilding(City* city, std::string building_name, int slot) {
 	BuildingMayorsPalace* b = new BuildingMayorsPalace(city);
 
 	city->AddBuilding(b, slot);
+
+	storage->AddGameEntitie(b);
 
 	return b;
 	}
@@ -7202,6 +7279,8 @@ Building *MakeNewBuilding(City* city, std::string building_name, int slot) {
 
 	city->AddBuilding(b, slot);
 
+	storage->AddGameEntitie(b);
+
 	return b;
 	}
 	else if (COMPARE_STRINGS(building_name, "Big Market") == 0) {
@@ -7210,6 +7289,8 @@ Building *MakeNewBuilding(City* city, std::string building_name, int slot) {
 	BuildingBigMarket* b = new BuildingBigMarket(city);
 
 	city->AddBuilding(b, slot);
+
+	storage->AddGameEntitie(b);
 
 	return b;
 	}
@@ -7220,6 +7301,8 @@ Building *MakeNewBuilding(City* city, std::string building_name, int slot) {
 
 	city->AddBuilding(b, slot);
 
+	storage->AddGameEntitie(b);
+
 	return b;
 	}
 	else if (COMPARE_STRINGS(building_name, "Brothel") == 0) {
@@ -7228,6 +7311,8 @@ Building *MakeNewBuilding(City* city, std::string building_name, int slot) {
 	BuildingBrothel* b = new BuildingBrothel(city);
 
 	city->AddBuilding(b, slot);
+
+	storage->AddGameEntitie(b);
 
 	return b;
 	}
@@ -7238,6 +7323,8 @@ Building *MakeNewBuilding(City* city, std::string building_name, int slot) {
 
 	city->AddBuilding(b, slot);
 
+	storage->AddGameEntitie(b);
+
 	return b;
 	}
 	else if (COMPARE_STRINGS(building_name, "Taverns Quarter") == 0) {
@@ -7246,6 +7333,8 @@ Building *MakeNewBuilding(City* city, std::string building_name, int slot) {
 	BuildingTavernsQuarter* b = new BuildingTavernsQuarter(city);
 
 	city->AddBuilding(b, slot);
+
+	storage->AddGameEntitie(b);
 
 	return b;
 	}
@@ -7256,6 +7345,8 @@ Building *MakeNewBuilding(City* city, std::string building_name, int slot) {
 
 	city->AddBuilding(b, slot);
 
+	storage->AddGameEntitie(b);
+
 	return b;
 	}
 	else if (COMPARE_STRINGS(building_name, "Fighters Guild") == 0) {
@@ -7264,6 +7355,8 @@ Building *MakeNewBuilding(City* city, std::string building_name, int slot) {
 	BuildingFightersGuild* b = new BuildingFightersGuild(city);
 
 	city->AddBuilding(b, slot);
+
+	storage->AddGameEntitie(b);
 
 	return b;
 	}
@@ -7274,6 +7367,8 @@ Building *MakeNewBuilding(City* city, std::string building_name, int slot) {
 
 	city->AddBuilding(b, slot);
 
+	storage->AddGameEntitie(b);
+
 	return b;
 	}
 	else if (COMPARE_STRINGS(building_name, "Thieves Guild") == 0) {
@@ -7282,6 +7377,8 @@ Building *MakeNewBuilding(City* city, std::string building_name, int slot) {
 	BuildingThievesGuild* b = new BuildingThievesGuild(city);
 
 	city->AddBuilding(b, slot);
+
+	storage->AddGameEntitie(b);
 
 	return b;
 	}
@@ -7292,6 +7389,8 @@ Building *MakeNewBuilding(City* city, std::string building_name, int slot) {
 
 	city->AddBuilding(b, slot);
 
+	storage->AddGameEntitie(b);
+
 	return b;
 	}
 	else if (COMPARE_STRINGS(building_name, "Carpenters Workshop") == 0) {
@@ -7300,6 +7399,8 @@ Building *MakeNewBuilding(City* city, std::string building_name, int slot) {
 	BuildingCarpentersWorkshop* b = new BuildingCarpentersWorkshop(city);
 
 	city->AddBuilding(b, slot);
+
+	storage->AddGameEntitie(b);
 
 	return b;
 	}
@@ -7310,6 +7411,8 @@ Building *MakeNewBuilding(City* city, std::string building_name, int slot) {
 
 	city->AddBuilding(b, slot);
 
+	storage->AddGameEntitie(b);
+
 	return b;
 	}
 	else if (COMPARE_STRINGS(building_name, "Masons Workshop") == 0) {
@@ -7318,6 +7421,8 @@ Building *MakeNewBuilding(City* city, std::string building_name, int slot) {
 	BuildingMasonsWorkshop* b = new BuildingMasonsWorkshop(city);
 
 	city->AddBuilding(b, slot);
+
+	storage->AddGameEntitie(b);
 
 	return b;
 	}
@@ -7328,6 +7433,8 @@ Building *MakeNewBuilding(City* city, std::string building_name, int slot) {
 
 	city->AddBuilding(b, slot);
 
+	storage->AddGameEntitie(b);
+
 	return b;
 	}
 	else if (COMPARE_STRINGS(building_name, "Brewery") == 0) {
@@ -7336,6 +7443,7 @@ Building *MakeNewBuilding(City* city, std::string building_name, int slot) {
 	BuildingBrewery* b = new BuildingBrewery(city);
 
 	city->AddBuilding(b, slot);
+	storage->AddGameEntitie(b);
 
 	return b;
 	}
@@ -7345,6 +7453,7 @@ Building *MakeNewBuilding(City* city, std::string building_name, int slot) {
 	BuildingGoldsmithsWorkshop* b = new BuildingGoldsmithsWorkshop(city);
 
 	city->AddBuilding(b, slot);
+	storage->AddGameEntitie(b);
 
 	return b;
 	}
@@ -7354,6 +7463,7 @@ Building *MakeNewBuilding(City* city, std::string building_name, int slot) {
 	BuildingArmorSmithsWorkshop* b = new BuildingArmorSmithsWorkshop(city);
 
 	city->AddBuilding(b, slot);
+	storage->AddGameEntitie(b);
 
 	return b;
 	}
@@ -7363,6 +7473,7 @@ Building *MakeNewBuilding(City* city, std::string building_name, int slot) {
 	BuildingWeaponSmithsWorkshop* b = new BuildingWeaponSmithsWorkshop(city);
 
 	city->AddBuilding(b, slot);
+	storage->AddGameEntitie(b);
 
 	return b;
 	}
@@ -7372,6 +7483,7 @@ Building *MakeNewBuilding(City* city, std::string building_name, int slot) {
 	BuildingSmeltersWorkshop* b = new BuildingSmeltersWorkshop(city);
 
 	city->AddBuilding(b, slot);
+	storage->AddGameEntitie(b);
 
 	return b;
 	}
@@ -7381,6 +7493,7 @@ Building *MakeNewBuilding(City* city, std::string building_name, int slot) {
 	BuildingToolSmithsWorkshop* b = new BuildingToolSmithsWorkshop(city);
 
 	city->AddBuilding(b, slot);
+	storage->AddGameEntitie(b);
 
 	return b;
 	}
@@ -7390,6 +7503,7 @@ Building *MakeNewBuilding(City* city, std::string building_name, int slot) {
 	BuildingRanch* b = new BuildingRanch(city);
 
 	city->AddBuilding(b, slot);
+	storage->AddGameEntitie(b);
 
 	return b;
 	}
@@ -7399,6 +7513,7 @@ Building *MakeNewBuilding(City* city, std::string building_name, int slot) {
 	BuildingPicklersWorkshop* b = new BuildingPicklersWorkshop(city);
 
 	city->AddBuilding(b, slot);
+	storage->AddGameEntitie(b);
 
 	return b;
 	}
@@ -7408,6 +7523,7 @@ Building *MakeNewBuilding(City* city, std::string building_name, int slot) {
 	BuildingBaracks* b = new BuildingBaracks(city);
 
 	city->AddBuilding(b, slot);
+	storage->AddGameEntitie(b);
 
 	return b;
 	}
@@ -7417,6 +7533,7 @@ Building *MakeNewBuilding(City* city, std::string building_name, int slot) {
 	BuildingArcheryRange* b = new BuildingArcheryRange(city);
 
 	city->AddBuilding(b, slot);
+	storage->AddGameEntitie(b);
 
 	return b;
 	}
@@ -7426,6 +7543,7 @@ Building *MakeNewBuilding(City* city, std::string building_name, int slot) {
 	BuildingStables* b = new BuildingStables(city);
 
 	city->AddBuilding(b, slot);
+	storage->AddGameEntitie(b);
 
 	return b;
 	}
@@ -7435,6 +7553,7 @@ Building *MakeNewBuilding(City* city, std::string building_name, int slot) {
 	BuildingMagesTower* b = new BuildingMagesTower(city);
 
 	city->AddBuilding(b, slot);
+	storage->AddGameEntitie(b);
 
 	return b;
 	}
@@ -7444,6 +7563,7 @@ Building *MakeNewBuilding(City* city, std::string building_name, int slot) {
 	BuildingSiegeWorkshop* b = new BuildingSiegeWorkshop(city);
 
 	city->AddBuilding(b, slot);
+	storage->AddGameEntitie(b);
 
 	return b;
 	}

@@ -49,6 +49,7 @@ private:
 
 
 	bool _tryMakeBuilding(int xpos, int ypos); // Algorithm for building buidlings on slots choosen by user...
+	bool _removeBuilding(int xpos, int ypos);
 	bool _tryGivingUnitAProfession(Unit* unit);
 	//bool _trySetUnitsRessourceToGather(Unit* unit); // Function lets user choose from possible ressources what to gather, we set then how much..
 	//bool _setUnitRessourceGathering(Unit* unit, std::string ressource, int yield);

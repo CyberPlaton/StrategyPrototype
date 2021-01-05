@@ -1193,6 +1193,7 @@ bool HasPlayerNeededTier(BuildingTier tier, Player* player);
 bool HasPlayerNeededTier(int tier, Player* player);
 int GetBuildingSlotFromPosition(City* city, int xpos, int ypos); // Returns -1 if nothing was found...
 Building *MakeNewBuilding(City* city, std::string building_name, int slot);
+void DeleteBuilding(City* city, std::string building_name, int slot);
 
 /*
 List of Buildings and according Tiers:
@@ -3781,6 +3782,11 @@ struct EntitiesStorage {
 			if (_isForest(e)) {
 				_addForest(e);
 			}
+
+			// Is Buildin?
+			if (_isBuilding(e)) {
+				_addBuilding(e);
+			}
 		}
 			
 	}
@@ -3918,6 +3924,16 @@ struct EntitiesStorage {
 				m_ForestsVec->erase(it);
 			}
 		}
+
+		// Delete Buildings
+		if (_isBuilding(e)) {
+
+			std::vector< GameEntity* >::iterator it = std::find(m_BuildingsVec->begin(), m_BuildingsVec->end(), e);
+
+			if (it != m_BuildingsVec->end()) {
+				m_BuildingsVec->erase(it);
+			}
+		}
 		
 	}
 
@@ -3966,6 +3982,7 @@ private:
 	std::vector<GameEntity*>* m_MountainsHillsVec; // Holds all hills and mountains in game.
 	std::vector<Player*>* m_PlayersVec; // Holds all player of the game.
 	std::vector<GameEntity*>* m_UnitsVec; // Holds all units ingame.
+	std::vector<GameEntity*>* m_BuildingsVec; // Holds all buildings ingame.
 
 
 private:
@@ -3986,6 +4003,7 @@ private:
 		m_Riversvec = new std::vector<GameEntity*>();
 		m_UnitsVec = new std::vector<GameEntity*>();
 		m_ForestsVec = new std::vector<GameEntity*>();
+		m_BuildingsVec = new std::vector<GameEntity*>();
 
 		m_PlayersVec = new std::vector<Player*>();
 	}
@@ -4008,6 +4026,10 @@ private:
 		}
 	}
 
+	bool _isBuilding(GameEntity* e) {
+		return(COMPARE_STRINGS(e->m_IDCmp->m_DynamicTypeName, "Building") == 0);
+	}
+
 	void _addUnitToPlayer(GameEntity* e, Player* p);
 
 	void _deleteUnitFromPlayer(GameEntity* e, Player* p);
@@ -4018,6 +4040,10 @@ private:
 
 	void _addUnit(GameEntity* e) {
 		m_UnitsVec->push_back(e);
+	}
+
+	void _addBuilding(GameEntity* e) {
+		m_BuildingsVec->push_back(e);
 	}
 
 	void _addRiver(GameEntity* e) {
