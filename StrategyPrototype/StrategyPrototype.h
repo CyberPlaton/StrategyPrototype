@@ -53,10 +53,12 @@ private:
 	//bool _trySetUnitsRessourceToGather(Unit* unit); // Function lets user choose from possible ressources what to gather, we set then how much..
 	//bool _setUnitRessourceGathering(Unit* unit, std::string ressource, int yield);
 	GameEntity* _hoveringOverEntity(int xpos, int ypos, std::string& entityType);
+	GameEntity* _hoveringOverEntityWithoutDraggedUnit(int xpos, int ypos, std::string& entityType, Unit* dragged_unit);
 	int _hoveringOverBuildingSlot(int xpos, int ypos); // Returns -1 if no slot is hovered upon.
 	Unit* _isUnitPresentOnMaptile(MapTile* maptile);
 	bool _hasPlayerUnitTechRequirements(std::string tech, Player* p);
 	bool _doesPlayerWantToResetProfession();
+	bool _doesPlayerWantToGiveOtherProfession();
 	bool _hasUnitAProfessionAlready(Unit* unit);
 	void _giveUnitPositionAlignedToMaptile(Unit* unit, MapTile* maptile);
 	void _giveUnitPositionAlignedToBuilding(Unit* unit, Building* building);

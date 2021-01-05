@@ -2321,6 +2321,7 @@ void CMPCameraInput::_handleCityViewMouse(Camera* cam) {
 		}
 		*/
 
+		/*
 		// LMB Pressed over building slot.
 		int slot = _hoveringOverBuildingSlot(mouse_x, mouse_y);
 		if (slot != -1) { // Then we pressed LMB over a building slot.
@@ -2347,10 +2348,13 @@ void CMPCameraInput::_handleCityViewMouse(Camera* cam) {
 
 				// Let player choose what he wants to build....
 				_tryMakeBuilding(mouse_x, mouse_y);
+			
 
 			}
-
+			
 		}
+
+		*/
 	}
 
 
@@ -2479,6 +2483,222 @@ void CMPCameraInput::_handleCityViewMouse(Camera* cam) {
 		}
 		else {
 
+			// Unit with profession.
+
+			// Check whether dragged unit can work new maptile or building.
+			// If not ask user whether he wants to give unit new profession
+			// If no reset back to prev. position.
+			// If unit can work maptile/building, let it work there and get new production.
+			if (m_DraggedUnit->m_UnitClass && m_DraggedUnit->m_UnitClass->m_HasProfession) {
+
+				// Are we on maptile or building?
+				std::string entt_type;
+				GameEntity* entt = _hoveringOverEntityWithoutDraggedUnit(mouse_x, mouse_y, entt_type, m_DraggedUnit);
+
+				if (COMPARE_STRINGS(entt->m_IDCmp->m_DynamicTypeName, "Building") == 0) {
+
+					// Can unit work this building?
+					bool can_work_building = false;
+					Building* building = static_cast<Building*>(entt);
+					
+
+					for (auto it : building->m_BuildingsProfession) {
+						if (COMPARE_STRINGS_2(it, m_DraggedUnit->m_UnitClass->m_UnitClassName) == 0) {
+							can_work_building = true;
+						}
+					}
+
+
+					// Check whether uesr wants to give unit another profession associated with same maptile/building...
+					// For this there must be more than one profession for building available.
+					if (building->m_BuildingsProfession.size() > 1) {
+
+						if (_doesPlayerWantToGiveOtherProfession()) {
+
+							bool success = _tryGivingUnitAProfession(m_DraggedUnit);
+							if (success) {
+
+								m_DraggedUnit = nullptr;
+								_resetPrevPos();
+								return;
+
+							}
+							else {
+
+								// ...reset things.
+								m_DraggedUnit->m_TransformCmp->m_PosX = m_EntityPrevXpos;
+								m_DraggedUnit->m_TransformCmp->m_PosY = m_EntityPrevYpos;
+								m_DraggedUnit = nullptr;
+
+								_resetPrevPos();
+								return;
+
+							}
+						}
+					}
+
+
+
+					if (!can_work_building) { // Unit cant work building.
+
+						// Ask whether to change profession.
+						if (_doesPlayerWantToResetProfession()) {
+							bool success = _tryGivingUnitAProfession(m_DraggedUnit);
+							if (success) {
+
+								m_DraggedUnit = nullptr;
+								_resetPrevPos();
+							}
+							else {
+
+								// ...reset things.
+								m_DraggedUnit->m_TransformCmp->m_PosX = m_EntityPrevXpos;
+								m_DraggedUnit->m_TransformCmp->m_PosY = m_EntityPrevYpos;
+								m_DraggedUnit = nullptr;
+
+								_resetPrevPos();
+							}
+						}
+						else {
+							// User dont want to change units profession.
+							// ...reset things.
+							m_DraggedUnit->m_TransformCmp->m_PosX = m_EntityPrevXpos;
+							m_DraggedUnit->m_TransformCmp->m_PosY = m_EntityPrevYpos;
+							m_DraggedUnit = nullptr;
+
+							_resetPrevPos();
+						
+						}
+
+					}
+					else { // Unit can work building..
+
+						// Set unit to work this building.
+						m_DraggedUnit->m_AssociatedPlayer->m_CurrentlyViewedCity->RemoveCitizenFromJoblessVector(m_DraggedUnit); // Remove from jobless if he was there.
+						m_DraggedUnit->m_UnitRessourceProductionCmp->SetWorkedEntity(building);
+						m_DraggedUnit->m_UnitRessourceProductionCmp->SetCurrentProduction();
+						_giveUnitPositionAlignedToBuilding(m_DraggedUnit, building);
+
+						// End of algorithm.
+						m_DraggedUnit = nullptr;
+						_resetPrevPos();
+						return;
+					}
+
+
+				}
+				else if (COMPARE_STRINGS(entt->m_IDCmp->m_DynamicTypeName, "MapTile") == 0) {
+
+					
+					// Can unit work this maptile or its entities?
+					bool can_work_maptile = false;
+					MapTile* maptile = static_cast<MapTile*>(entt);
+
+					std::vector<std::string> vec = _getPossibleProfessionsOnMaptile(maptile);
+					
+					for (auto it : vec) {
+						if (COMPARE_STRINGS_2(it, m_DraggedUnit->m_UnitClass->m_UnitClassName) == 0) {
+							can_work_maptile = true;
+						}
+					}
+
+
+					// Check whether uesr wants to give unit another profession associated with same maptile/building...
+					// For this there must be more than one profession for building available.
+					if (vec.size() > 1) {
+
+						if (_doesPlayerWantToGiveOtherProfession()) {
+
+							bool success = _tryGivingUnitAProfession(m_DraggedUnit);
+							if (success) {
+
+								m_DraggedUnit = nullptr;
+								_resetPrevPos();
+								return;
+							}
+							else {
+
+								// ...reset things.
+								m_DraggedUnit->m_TransformCmp->m_PosX = m_EntityPrevXpos;
+								m_DraggedUnit->m_TransformCmp->m_PosY = m_EntityPrevYpos;
+								m_DraggedUnit = nullptr;
+
+								_resetPrevPos();
+								return;
+							}
+						}
+					}
+
+
+
+
+
+
+
+
+					if (!can_work_maptile) { // Unit can NOT work maptile or its entities.
+
+												// Ask whether to change profession.
+						if (_doesPlayerWantToResetProfession()) {
+							bool success = _tryGivingUnitAProfession(m_DraggedUnit);
+							if (success) {
+
+								m_DraggedUnit = nullptr;
+								_resetPrevPos();
+							}
+							else {
+
+								// ...reset things.
+								m_DraggedUnit->m_TransformCmp->m_PosX = m_EntityPrevXpos;
+								m_DraggedUnit->m_TransformCmp->m_PosY = m_EntityPrevYpos;
+								m_DraggedUnit = nullptr;
+
+								_resetPrevPos();
+							}
+						}
+						else {
+							// User dont want to change units profession.
+							// ...reset things.
+							m_DraggedUnit->m_TransformCmp->m_PosX = m_EntityPrevXpos;
+							m_DraggedUnit->m_TransformCmp->m_PosY = m_EntityPrevYpos;
+							m_DraggedUnit = nullptr;
+
+							_resetPrevPos();
+
+						}
+					}
+					else { // Unit can work maptile or its entities.
+
+						// Set unit to work this maptile.
+						m_DraggedUnit->m_AssociatedPlayer->m_CurrentlyViewedCity->RemoveCitizenFromJoblessVector(m_DraggedUnit); // Remove from jobless if he was there.
+						m_DraggedUnit->m_UnitRessourceProductionCmp->SetWorkedEntity(maptile);
+						m_DraggedUnit->m_UnitRessourceProductionCmp->SetCurrentProduction();
+						_giveUnitPositionAlignedToMaptile(m_DraggedUnit, maptile);
+
+
+						// End of algorithm.
+						m_DraggedUnit = nullptr;
+						_resetPrevPos();
+						return;
+					}
+
+
+				}
+			}
+
+			// Check whether we dragged unit into garrison.
+			// If not reset back to prev. position
+			// Else store unit in garrison and reset production and workspecific information.
+			
+
+			/*
+			// ...reset things.
+			m_DraggedUnit->m_TransformCmp->m_PosX = m_EntityPrevXpos;
+			m_DraggedUnit->m_TransformCmp->m_PosY = m_EntityPrevYpos;
+			m_DraggedUnit = nullptr;
+
+			_resetPrevPos();
+			*/
 		}
 
 
@@ -2631,6 +2851,55 @@ GameEntity* CMPCameraInput::_hoveringOverEntity(int xpos, int ypos, std::string&
 
 	}
 
+
+
+	return nullptr;
+}
+
+
+GameEntity* CMPCameraInput::_hoveringOverEntityWithoutDraggedUnit(int xpos, int ypos, std::string& entityType, Unit* dragged_unit) {
+
+	// If we hover over an Entity, we give back a referece and save in "entityType"
+	// the dynamictypename of this Entity.
+
+	// Go through all buildings...
+	for (auto it : PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlyViewedCity->m_PresentUnitsVector) {
+
+
+		if (COMPARE_STRINGS(it->m_IDCmp->m_DynamicTypeName, "Building") == 0) {
+
+			// Check for collision of mouse position and tile dimensions...
+			if (it->m_TransformCmp->m_PosX <= xpos &&
+				(it->m_TransformCmp->m_PosX + it->m_TransformCmp->m_Width) >= xpos
+				&&
+				it->m_TransformCmp->m_PosY <= ypos &&
+				(it->m_TransformCmp->m_PosY + it->m_TransformCmp->m_Height) >= ypos) {
+
+				// True.
+				entityType = it->m_IDCmp->m_DynamicTypeName;
+				return it;
+			}
+		}
+	}
+
+
+	// Go through all maptiles...
+	for (auto it : PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlyViewedCity->m_ClaimedRegions) {
+		for (auto itr : it->m_MapTileRegionTiles) {
+
+			// Check for collision of mouse position and tile dimensions...
+			if (itr->m_TransformCmp->m_PosX + m_OffsetX <= xpos &&
+				(itr->m_TransformCmp->m_PosX + m_OffsetX + itr->m_TransformCmp->m_Width) >= xpos
+				&&
+				itr->m_TransformCmp->m_PosY + m_OffsetY <= ypos &&
+				(itr->m_TransformCmp->m_PosY + m_OffsetY + itr->m_TransformCmp->m_Height) >= ypos) {
+
+				// True.
+				entityType = itr->m_IDCmp->m_DynamicTypeName;
+				return itr;
+			}
+		}
+	}
 
 
 	return nullptr;
@@ -3673,6 +3942,30 @@ bool CMPCameraInput::_doesPlayerWantToResetProfession() {
 		return false;
 	}
 
+}
+
+bool CMPCameraInput::_doesPlayerWantToGiveOtherProfession() {
+
+	using namespace std;
+
+	cout << color(colors::DARKRED);
+	cout << "On this maptile/building are several professions possible." << endl;
+	cout << "Do you want to give unit another profession?" << endl;
+	cout << "[Y]es or [N]o" << white << endl;
+
+	std::string answer;
+	cin >> answer;
+
+	if (COMPARE_STRINGS(answer, "Yes") == 0 ||
+		COMPARE_STRINGS(answer, "Y") == 0 ||
+		COMPARE_STRINGS(answer, "yes") == 0 ||
+		COMPARE_STRINGS(answer, "y") == 0) {
+		return true;
+
+	}
+	else {
+		return false;
+	}
 }
 
 std::vector<std::string> CMPCameraInput::_getPossibleProfessionsOnBuilding(Building* building) {
