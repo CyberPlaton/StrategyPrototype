@@ -17,7 +17,7 @@ void InitializeUnitLevelXPThreshold();
 void DeinitializeUnitLevelXPThreshold();
 
 std::map<std::string, std::string> GetRefinedRawRessourceDemandMap();
-
+std::vector<std::string> GetInGameRessourcesvec();
 
 // NEW
 enum class UnitTier {

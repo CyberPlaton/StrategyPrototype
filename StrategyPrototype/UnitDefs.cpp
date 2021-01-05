@@ -18,6 +18,11 @@ std::map<std::string, std::string> GetRefinedRawRessourceDemandMap() {
 	return g_pRefinedRessourceRawRessourceDemand;
 }
 
+
+std::vector<std::string> GetInGameRessourcesvec() {
+	return g_pIngameRessourcesVec;
+}
+
 void InitializeUnitClassRessources() {
 
 	// First, define all existent ressources...

@@ -4009,7 +4009,19 @@ void City::LetUnitsGatherRessources() {
 }
 */
 
+void City::_initializeCityRessourceMap() {
 
+	std::vector<std::string> vec = GetInGameRessourcesvec();
+
+	for (auto it : vec) {
+		m_CityRessourcesMap.emplace(it, 0);
+	}
+}
+
+void City::_deinitializeCityRessourceMap() {
+
+	m_CityRessourcesMap.clear();
+}
 
 void City::_defineCityBuildingsSlots() {
 
@@ -7573,32 +7585,110 @@ bool CMPUnitRessourceProduction::Produce() {
 
 	using namespace std;
 
+	// Make sure the unit is working and properly initialized.
+	bool initialized = false;
+	if (m_ManagedUnit->m_UnitClass) {
+		if (m_ManagedUnit->m_UnitClass->m_HasProfession) {
+			if (m_ManagedUnit->m_UnitRessourceProductionCmp->m_WorkedBuilding ||
+				m_ManagedUnit->m_UnitRessourceProductionCmp->m_WorkedMaptile) {
+				initialized = true;
+			}
+		}
+	}
+
+
+	if (!initialized) {
+		cout << color(colors::RED);
+		cout << "Unit \"" << m_ManagedUnit->m_Name << "\" is not working." << endl;
+		return false;
+	}
+
 	// First, check whether yield has increased due to increased level.
 	// Multiply yield by the level of current worker.
 	//m_ManagedUnit->m_UnitRessourceProductionCmp->m_CurrentYield *= m_ManagedUnit->m_UnitClass->LevelToInt();
 
 
-	// First, check whether yield has increased due to increased level.
-	if (m_ManagedUnit->m_UnitClass->LevelUp()) {
-
-		cout << color(colors::RED);
-		cout << "Unit \"" << m_ManagedUnit->m_Name << "\" Leveled Up." << endl;
-		cout << "New Level: "<<m_ManagedUnit->m_UnitClass->LevelToInt() << " Current XP: "<< m_ManagedUnit->m_UnitClass->m_CurrentXP << "." << white << endl;
-		cout << "Current Production: " << m_ManagedUnit->m_UnitRessourceProductionCmp->m_CurrentProducedRessource << " Current Yield: " << m_ManagedUnit->m_UnitRessourceProductionCmp->m_CurrentYield << "." << white << endl;
-
-
-		// If so, reset yield according to level.
-		// For now we calculate yield as:
-		// Baseyield*Level.
-		m_ManagedUnit->m_UnitRessourceProductionCmp->m_CurrentYield = m_ManagedUnit->m_UnitClass->LevelToInt() * m_ManagedUnit->m_UnitRessourceProductionCmp->m_BaseYieldForWorkedEntity;
+	// Production.
+	// TODO: 
+	// For now we do not check whether  city has enough storage, we do it later.
+	//
+	// Check whther production needs ressources.
+	bool demand_flag = true;
+	if (COMPARE_STRINGS(m_ManagedUnit->m_UnitRessourceProductionCmp->m_CurrentDemandedRessource, "") == 0) {
+		demand_flag = false;
 	}
 
+	if (demand_flag) {
 
-	cout << color(colors::MAGENTA);
-	cout << "Unit \"" << m_ManagedUnit->m_Name << "\" NOT Leveled Up." << endl;
-	cout << "Level: " << m_ManagedUnit->m_UnitClass->LevelToInt() << " Current XP: " << m_ManagedUnit->m_UnitClass->m_CurrentXP << "." << white << endl;
-	cout << "Current Production: " << m_ManagedUnit->m_UnitRessourceProductionCmp->m_CurrentProducedRessource << " Current Yield: " << m_ManagedUnit->m_UnitRessourceProductionCmp->m_CurrentYield << "." << white << endl;
+		// Check whether city has enough of demanded ressource...
+		if (m_AssociatedCity->m_CityRessourcesMap.at(m_ManagedUnit->m_UnitRessourceProductionCmp->m_CurrentDemandedRessource) >= m_ManagedUnit->m_UnitRessourceProductionCmp->m_CurrentDemand) {
 
+			// City has enough to produce ressource...
+
+			// From raw ressource..
+			m_AssociatedCity->m_CityRessourcesMap.at(m_ManagedUnit->m_UnitRessourceProductionCmp->m_CurrentDemandedRessource) -= m_ManagedUnit->m_UnitRessourceProductionCmp->m_CurrentDemand;
+		
+		
+			// Create refined ressource...
+			m_AssociatedCity->m_CityRessourcesMap.at(m_ManagedUnit->m_UnitRessourceProductionCmp->m_CurrentProducedRessource) += m_ManagedUnit->m_UnitRessourceProductionCmp->m_CurrentYield;
+
+
+
+			cout << color(colors::YELLOW);
+			cout << "City Production: \"" << m_AssociatedCity->m_CityName << "\" ";
+			cout << color(colors::GREEN);
+			cout << "+ \"" << m_ManagedUnit->m_UnitRessourceProductionCmp->m_CurrentProducedRessource << "\"("<< m_ManagedUnit->m_UnitRessourceProductionCmp->m_CurrentYield << ")" << white << endl;
+			cout << color(colors::RED);
+			cout << "- \"" << m_ManagedUnit->m_UnitRessourceProductionCmp->m_CurrentDemandedRessource << "\"(" << m_ManagedUnit->m_UnitRessourceProductionCmp->m_CurrentDemand << ")" << white << endl;
+
+
+
+			// After unit has worked, give him XP.
+			if (m_ManagedUnit->m_UnitClass->LevelUp()) {
+
+				cout << color(colors::RED);
+				cout << "Unit \"" << m_ManagedUnit->m_Name << "\" Leveled Up." << endl;
+				cout << "New Level: " << m_ManagedUnit->m_UnitClass->LevelToInt() << " Current XP: " << m_ManagedUnit->m_UnitClass->m_CurrentXP << "." << white << endl;
+				cout << "Current Production: " << m_ManagedUnit->m_UnitRessourceProductionCmp->m_CurrentProducedRessource << " Current Yield: " << m_ManagedUnit->m_UnitRessourceProductionCmp->m_CurrentYield << "." << white << endl;
+
+
+				// If so, reset yield according to level.
+				// For now we calculate yield as:
+				// Baseyield*Level.
+				m_ManagedUnit->m_UnitRessourceProductionCmp->m_CurrentYield = m_ManagedUnit->m_UnitClass->LevelToInt() * m_ManagedUnit->m_UnitRessourceProductionCmp->m_BaseYieldForWorkedEntity;
+			
+			}
+		}
+
+	}
+	else {
+		// Ressource has no demand, so make it directly.
+		m_AssociatedCity->m_CityRessourcesMap.at(m_ManagedUnit->m_UnitRessourceProductionCmp->m_CurrentProducedRessource) += m_ManagedUnit->m_UnitRessourceProductionCmp->m_CurrentYield;
+
+
+
+		cout << color(colors::YELLOW);
+		cout << "City Production: \"" << m_AssociatedCity->m_CityName << "\" ";
+		cout << color(colors::GREEN);
+		cout << "+ \"" << m_ManagedUnit->m_UnitRessourceProductionCmp->m_CurrentProducedRessource << "\"(" << m_ManagedUnit->m_UnitRessourceProductionCmp->m_CurrentYield << ")" << white << endl;
+
+
+		// After unit has worked, give him XP.
+		if (m_ManagedUnit->m_UnitClass->LevelUp()) {
+
+			cout << color(colors::RED);
+			cout << "Unit \"" << m_ManagedUnit->m_Name << "\" Leveled Up." << endl;
+			cout << "New Level: " << m_ManagedUnit->m_UnitClass->LevelToInt() << " Current XP: " << m_ManagedUnit->m_UnitClass->m_CurrentXP << "." << white << endl;
+			cout << "Current Production: " << m_ManagedUnit->m_UnitRessourceProductionCmp->m_CurrentProducedRessource << " Current Yield: " << m_ManagedUnit->m_UnitRessourceProductionCmp->m_CurrentYield << "." << white << endl;
+
+
+			// If so, reset yield according to level.
+			// For now we calculate yield as:
+			// Baseyield*Level.
+			m_ManagedUnit->m_UnitRessourceProductionCmp->m_CurrentYield = m_ManagedUnit->m_UnitClass->LevelToInt() * m_ManagedUnit->m_UnitRessourceProductionCmp->m_BaseYieldForWorkedEntity;
+
+		}
+	}
 
 
 	return true;

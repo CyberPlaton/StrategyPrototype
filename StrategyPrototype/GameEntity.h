@@ -689,6 +689,9 @@ public:
 
 
 		_defineCityBuildingsSlots(); // Must be after landscape definition.
+
+
+		_initializeCityRessourceMap();
 	}
 
 	// Function updates visibility of maptiles around self.
@@ -781,6 +784,10 @@ public:
 	std::vector<BuildingSlot*> m_CityBuildingsSlots;
 
 private:
+
+	void _initializeCityRessourceMap();
+	void _deinitializeCityRessourceMap();
+
 
 	// Functions for buildings.
 	void _defineCityBuildingsSlots();
