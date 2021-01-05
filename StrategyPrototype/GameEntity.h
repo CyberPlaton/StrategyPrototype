@@ -278,6 +278,8 @@ struct CMPUnitRessourceProduction {
 	std::string m_CurrentDemandedRessource;
 	int m_CurrentDemand = 0;
 
+	int m_BaseYieldForWorkedEntity = 0; // Needed for computing current yield with Level.
+
 private:
 	
 	GameEntity* _hasWorkeableEntity(MapTile* maptile);
@@ -3761,6 +3763,11 @@ struct EntitiesStorage {
 			// Is it a unit?
 			if (_isUnit(e)) {
 				_addUnit(e);
+
+				// Workaround. Store units in players vec too.
+				// They are deleted from here too.
+				Unit* unit = reinterpret_cast<Unit*>(e);
+				_addUnitToPlayer(e, unit->m_AssociatedPlayer);
 			}
 
 			// Is Forest?
@@ -3887,6 +3894,11 @@ struct EntitiesStorage {
 			if (it != m_UnitsVec->end()) {
 				m_UnitsVec->erase(it);
 			}
+
+
+			// Workaround. Delete units from players vec too.
+			Unit* unit = reinterpret_cast<Unit*>(e);
+			_deleteUnitFromPlayer(e, unit->m_AssociatedPlayer);
 		}
 
 
@@ -3988,6 +4000,10 @@ private:
 			return false;
 		}
 	}
+
+	void _addUnitToPlayer(GameEntity* e, Player* p);
+
+	void _deleteUnitFromPlayer(GameEntity* e, Player* p);
 
 	void _addForest(GameEntity* e) {
 		m_ForestsVec->push_back(e);

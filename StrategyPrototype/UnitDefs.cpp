@@ -237,6 +237,8 @@ void InitializeUnitTechnologyRequirements() {
 	g_TechnologyRequirementsMap.emplace("Malachite Miner", "All");
 	g_TechnologyRequirementsMap.emplace("Adamantium Miner", "All");
 	g_TechnologyRequirementsMap.emplace("Salt Miner", "All");
+	g_TechnologyRequirementsMap.emplace("Gold Miner", "All");
+	g_TechnologyRequirementsMap.emplace("Silver Miner", "All");
 	g_TechnologyRequirementsMap.emplace("Stone Miner", "All");
 	g_TechnologyRequirementsMap.emplace("Carpenter", "Wood Working");
 	g_TechnologyRequirementsMap.emplace("Brick Burner", "Brick Making");
@@ -249,14 +251,16 @@ void InitializeUnitTechnologyRequirements() {
 	g_TechnologyRequirementsMap.emplace("Technical Researcher", "All");
 	g_TechnologyRequirementsMap.emplace("Civilian Researcher", "All");
 	g_TechnologyRequirementsMap.emplace("Brewer", "All");
-	g_TechnologyRequirementsMap.emplace("Tool Smith", "All");
+	g_TechnologyRequirementsMap.emplace("Toolsmith", "All");
 	g_TechnologyRequirementsMap.emplace("Horse Catcher", "All");
 	g_TechnologyRequirementsMap.emplace("Rancher", "All");
 	g_TechnologyRequirementsMap.emplace("Goldsmith", "All");
-	g_TechnologyRequirementsMap.emplace("Weapon Smith", "All");
-	g_TechnologyRequirementsMap.emplace("Armor Smith", "All");
+	g_TechnologyRequirementsMap.emplace("Weaponsmith", "All");
+	g_TechnologyRequirementsMap.emplace("Armorsmith", "All");
 	g_TechnologyRequirementsMap.emplace("Smelter", "All");
 	g_TechnologyRequirementsMap.emplace("Tailor", "All");
+	g_TechnologyRequirementsMap.emplace("Pickler", "All");
+
 }
 
 
@@ -285,6 +289,169 @@ void UnitBase::SetDemandOfRessource(std::string ressource, int demand, UnitResso
 			return;
 		}
 	}
+}
+
+
+
+static std::map< UnitLevel, int> m_UnitLevelXPThreshold;
+
+void InitializeUnitLevelXPThreshold() {
+
+	m_UnitLevelXPThreshold = std::map< UnitLevel, int>();
+	/*
+	m_UnitLevelXPThreshold.emplace(UnitLevel::UNIT_LEVEL_2, 10);
+	m_UnitLevelXPThreshold.emplace(UnitLevel::UNIT_LEVEL_3, 30);
+	m_UnitLevelXPThreshold.emplace(UnitLevel::UNIT_LEVEL_4, 70);
+	m_UnitLevelXPThreshold.emplace(UnitLevel::UNIT_LEVEL_5, 150);
+	m_UnitLevelXPThreshold.emplace(UnitLevel::UNIT_LEVEL_6, 310);
+	m_UnitLevelXPThreshold.emplace(UnitLevel::UNIT_LEVEL_7, 630);
+	m_UnitLevelXPThreshold.emplace(UnitLevel::UNIT_LEVEL_8, 1270);
+	m_UnitLevelXPThreshold.emplace(UnitLevel::UNIT_LEVEL_9, 2550);
+	m_UnitLevelXPThreshold.emplace(UnitLevel::UNIT_LEVEL_10, 3110);
+	*/
+	m_UnitLevelXPThreshold.emplace(UnitLevel::UNIT_LEVEL_2, 20);
+	m_UnitLevelXPThreshold.emplace(UnitLevel::UNIT_LEVEL_3, 50);
+	m_UnitLevelXPThreshold.emplace(UnitLevel::UNIT_LEVEL_4, 110);
+	m_UnitLevelXPThreshold.emplace(UnitLevel::UNIT_LEVEL_5, 230);
+	m_UnitLevelXPThreshold.emplace(UnitLevel::UNIT_LEVEL_6, 470);
+	m_UnitLevelXPThreshold.emplace(UnitLevel::UNIT_LEVEL_7, 950);
+	m_UnitLevelXPThreshold.emplace(UnitLevel::UNIT_LEVEL_8, 1910);
+	m_UnitLevelXPThreshold.emplace(UnitLevel::UNIT_LEVEL_9, 3840);
+	m_UnitLevelXPThreshold.emplace(UnitLevel::UNIT_LEVEL_10, 7680);
+}
+
+void DeinitializeUnitLevelXPThreshold() {
+
+	m_UnitLevelXPThreshold.clear();
+}
+
+bool UnitBase::LevelUp() {
+
+	// Give xp to unit.
+	m_CurrentXP += LevelToInt()* 2;
+
+
+	if (m_UnitLevel == UnitLevel::UNIT_LEVEL_10) return false; // Level cap after level 10.
+
+	// Check whether new level was reached.
+	int to_reach_threshold = 0;
+
+	for (auto it : m_UnitLevelXPThreshold) {
+
+		if (FirstUnitLevelHigher(m_UnitLevel, it.first) == false) {
+
+
+			// it is Next to reach level.
+			to_reach_threshold = it.second;
+
+			if (m_CurrentXP > to_reach_threshold) {
+
+				m_UnitLevel = it.first;
+				return true;
+			}
+
+
+			// Next level not reached.
+			return false;
+		}
+	}
+}
+
+
+bool UnitBase::FirstUnitLevelHigher(UnitLevel first, UnitLevel second) {
+
+	int level = -1;
+	switch (first) {
+	case UnitLevel::UNIT_LEVEL_1:
+		level = 1;
+		break;
+	case UnitLevel::UNIT_LEVEL_2:
+		level = 2;
+
+		break;
+	case UnitLevel::UNIT_LEVEL_3:
+		level = 3;
+
+		break;
+	case UnitLevel::UNIT_LEVEL_4:
+		level = 4;
+
+		break;
+	case UnitLevel::UNIT_LEVEL_5:
+		level = 5;
+
+		break;
+	case UnitLevel::UNIT_LEVEL_6:
+		level = 6;
+
+		break;
+	case UnitLevel::UNIT_LEVEL_7:
+		level = 7;
+
+		break;
+	case UnitLevel::UNIT_LEVEL_8:
+		level = 8;
+
+		break;
+	case UnitLevel::UNIT_LEVEL_9:
+		level = 9;
+
+		break;
+	case UnitLevel::UNIT_LEVEL_10:
+		level = 10;
+
+		break;
+
+	}
+
+
+	int level2 = -1;
+	switch (second) {
+	case UnitLevel::UNIT_LEVEL_1:
+		level2 = 1;
+		break;
+	case UnitLevel::UNIT_LEVEL_2:
+		level2 = 2;
+
+		break;
+	case UnitLevel::UNIT_LEVEL_3:
+		level2 = 3;
+
+		break;
+	case UnitLevel::UNIT_LEVEL_4:
+		level2 = 4;
+
+		break;
+	case UnitLevel::UNIT_LEVEL_5:
+		level2 = 5;
+
+		break;
+	case UnitLevel::UNIT_LEVEL_6:
+		level2 = 6;
+
+		break;
+	case UnitLevel::UNIT_LEVEL_7:
+		level2 = 7;
+
+		break;
+	case UnitLevel::UNIT_LEVEL_8:
+		level2 = 8;
+
+		break;
+	case UnitLevel::UNIT_LEVEL_9:
+		level2 = 9;
+
+		break;
+	case UnitLevel::UNIT_LEVEL_10:
+		level2 = 10;
+
+		break;
+
+	}
+
+
+
+	return first >= second;
 }
 
 /*

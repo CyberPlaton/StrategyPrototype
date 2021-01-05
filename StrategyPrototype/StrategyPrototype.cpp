@@ -16,6 +16,7 @@ bool Game::OnUserDestroy(){
 	DeinitializeBuildingTechnologyRequirements();
 	DeinitializeBuildingRequirementsMap();
 	DeinitializeUnitClassRessources();
+	DeinitializeUnitLevelXPThreshold();
 
 
 	m_SpriteStorage.clear();
@@ -358,7 +359,10 @@ Unit* SpawnCitizenInCity(City* city, int xpos, int ypos){
 
 	unit->m_UnitRessourceProductionCmp = new CMPUnitRessourceProduction(unit, city);
 	cout << color(colors::DARKMAGENTA);
-	cout << "Unit production cmp initialized for \"" << unit->m_Name <<"\"." << white << endl;
+	cout << "\"CMPUnitProduction\" initialized for \"" << unit->m_Name <<"\"." << white << endl;
+
+
+	EntitiesStorage::Get()->AddGameEntitie(unit); // Store self. TODO: Make this automated for all entities on construction.
 
 	return unit;
 }
@@ -1806,6 +1810,10 @@ void CMPCameraInput::_handleMapViewKeyBoard(Camera* cam) {
 			context->m_DebugDrawPlayersBuildings = (context->m_DebugDrawPlayersBuildings == true) ? false : true;
 		}
 
+		if (context->GetKey(olc::Key::L).bPressed) {
+			context->MaxLevelForAllCurrentUnits(PlayerTurnCounter::Get()->m_CurrentTurnPlayer);
+		}
+
 
 
 		if (context->GetKey(olc::Key::SPACE).bPressed) {
@@ -2408,6 +2416,27 @@ void CMPCameraInput::_handleCityViewMouse(Camera* cam) {
 					}
 
 					// Are we on building?
+					for (auto it : PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_CurrentlyViewedCity->m_PresentUnitsVector) {
+						if (COMPARE_STRINGS(it->m_IDCmp->m_DynamicTypeName, "Building") == 0) {
+
+							if (it->m_TransformCmp->m_PosX <= unit->m_TransformCmp->m_PosX &&
+								it->m_TransformCmp->m_PosX + it->m_TransformCmp->m_Width >= unit->m_TransformCmp->m_PosX &&
+
+								it->m_TransformCmp->m_PosY <= unit->m_TransformCmp->m_PosY &&
+								it->m_TransformCmp->m_PosY + it->m_TransformCmp->m_Height >= unit->m_TransformCmp->m_PosY)
+							{
+								// We are on building.
+								Building* b = static_cast<Building*>(it);
+								unit->m_UnitRessourceProductionCmp->SetWorkedEntity(b);
+								unit->m_UnitRessourceProductionCmp->SetCurrentProduction();
+								break;
+							}
+						}
+					}
+
+
+
+
 
 				}
 			}
@@ -3608,8 +3637,8 @@ void CMPCameraInput::_giveUnitPositionAlignedToMaptile(Unit* unit, MapTile* mapt
 void CMPCameraInput::_giveUnitPositionAlignedToBuilding(Unit* unit, Building* building) {
 
 	// We give a small +1 offset to params to make sure that unit will be found on that maptile.
-	unit->m_TransformCmp->m_PosX = building->m_TransformCmp->m_PosX + 1;
-	unit->m_TransformCmp->m_PosY = building->m_TransformCmp->m_PosY + 1;
+	unit->m_TransformCmp->m_PosX = building->m_TransformCmp->m_PosX + 1 + 16;
+	unit->m_TransformCmp->m_PosY = building->m_TransformCmp->m_PosY + 1 + 16;
 }
 
 
@@ -4875,6 +4904,7 @@ void Game::_initialize() {
 	InitializeBuildingTechnologyRequirements();
 	InitializeBuildingRequirementsMap();
 	InitializeUnitClassRessources();
+	InitializeUnitLevelXPThreshold();
 }
 
 
@@ -5234,7 +5264,7 @@ void Renderer::RenderCityLayer1() {
 			unit = static_cast<Unit*>(entt);
 
 
-			std::string out = "Unit: " + unit->m_Name + " Class: " + unit->m_UnitClass->m_UnitClassName + " Level: " + unit->m_UnitClass->LevelToString();
+			std::string out = "Unit: " + unit->m_Name + " Class: " + unit->m_UnitClass->m_UnitClassName + " Level: " + unit->m_UnitClass->LevelToString() + "("+ std::to_string(unit->m_UnitClass->m_CurrentXP) +")";
 			std::string production = " Production: ";
 			if (unit->m_UnitClass && unit->m_UnitClass->m_HasProfession) {
 				if (unit->m_UnitRessourceProductionCmp) {
@@ -6825,6 +6855,20 @@ bool Game::UnlockAllTech(Player* player) {
 
 	cout << color(colors::DARKGREEN);
 	cout << "Player \""<< player->m_PlayerName << "\" unlocked all Technologies." << white << endl;
+	return true;
+}
+
+
+bool Game::MaxLevelForAllCurrentUnits(Player* player) {
+
+	using namespace std;
+
+	for (auto it : player->m_PlayerUnits) {
+		it->m_UnitClass->m_UnitLevel = UnitLevel::UNIT_LEVEL_10;
+	}
+
+	cout << color(colors::DARKGREEN);
+	cout << "Players \"" << player->m_PlayerName << "\" Units have max Level." << white << endl;
 	return true;
 }
 

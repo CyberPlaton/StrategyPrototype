@@ -365,6 +365,8 @@ public:
 	std::map<MapTile*, int>* m_SelectedUnitsMovementTiles = nullptr;
 	void DrawSelectedUnitsMovementTiles();
 	bool UnlockAllTech(Player* player);
+	bool MaxLevelForAllCurrentUnits(Player* player);
+
 private:
 	static Game* m_Game;
 

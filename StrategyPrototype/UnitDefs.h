@@ -13,6 +13,9 @@ void InitializeUnitTechnologyRequirements();
 void DeinitializeUnitTechnologyRequirements();
 void InitializeUnitClassRessources();
 void DeinitializeUnitClassRessources();
+void InitializeUnitLevelXPThreshold();
+void DeinitializeUnitLevelXPThreshold();
+
 std::map<std::string, std::string> GetRefinedRawRessourceDemandMap();
 
 
@@ -37,6 +40,7 @@ enum class UnitLevel {
 	UNIT_LEVEL_9 = 9,
 	UNIT_LEVEL_10 = 10
 };
+
 
 struct UnitStats { // Define maximal health, magicka and fatigue.
 	
@@ -71,6 +75,7 @@ struct UnitBase {
 
 	UnitTier m_UnitTier = UnitTier::UNIT_TIER_INVALID;
 	UnitLevel m_UnitLevel = UnitLevel::UNIT_LEVEL_INVALID;
+	int m_CurrentXP = 0;
 	UnitStats* m_UnitStats = nullptr;
 
 	bool m_HasProfession = true;
@@ -81,6 +86,11 @@ struct UnitBase {
 	
 	void SetYieldOfRessource(std::string ressource, int yield, UnitRessourceProduction* cmp);
 	void SetDemandOfRessource(std::string ressource, int demand, UnitRessourceProduction* cmp);
+
+	// Function adds XP to unit. And if he reaches a defined threshold, he reaches next level and function returns true.
+	bool LevelUp();
+	bool FirstUnitLevelHigher(UnitLevel first, UnitLevel second);
+
 
 	int LevelToInt() {
 
@@ -496,7 +506,7 @@ struct UnitCarpenter : public UnitBase {
 		m_UnitStats->m_Health = 10;
 
 		m_UnitRessourceProduction = new UnitRessourceProduction();
-		m_UnitRessourceProduction->m_ProducedRessource.push_back("Plank");
+		m_UnitRessourceProduction->m_ProducedRessource.push_back("Planks");
 		m_UnitRessourceProduction->m_DemandedRawRessourceForProduction.push_back("Wood");
 
 		m_UnitRessourceProduction->m_ProductionYield.push_back(0);
@@ -507,7 +517,7 @@ struct UnitCarpenter : public UnitBase {
 struct UnitBrickBurner : public UnitBase {
 	UnitBrickBurner() {
 
-		m_UnitClassName = "Brick Burner";
+		m_UnitClassName = "Brickburner";
 
 		m_UnitTier = UnitTier::UNIT_TIER_1;
 		m_UnitLevel = UnitLevel::UNIT_LEVEL_1;
@@ -671,7 +681,7 @@ struct UnitSmelter : public UnitBase { // Mason makes stoneblocks from raw stone
 struct UnitArmorSmith : public UnitBase { // Mason makes stoneblocks from raw stone.
 	UnitArmorSmith() {
 
-		m_UnitClassName = "Armor Smith";
+		m_UnitClassName = "Armorsmith";
 
 		m_UnitTier = UnitTier::UNIT_TIER_1;
 		m_UnitLevel = UnitLevel::UNIT_LEVEL_1;
@@ -741,7 +751,7 @@ struct UnitArmorSmith : public UnitBase { // Mason makes stoneblocks from raw st
 struct UnitWeaponSmith : public UnitBase { // Mason makes stoneblocks from raw stone.
 	UnitWeaponSmith() {
 
-		m_UnitClassName = "Weapon Smith";
+		m_UnitClassName = "Weaponsmith";
 
 		m_UnitTier = UnitTier::UNIT_TIER_1;
 		m_UnitLevel = UnitLevel::UNIT_LEVEL_1;
@@ -894,7 +904,7 @@ struct UnitHorseCatcher : public UnitBase { // Catches horses without ranch...
 struct UnitToolSmith : public UnitBase { // Makes Jewelry and denars...
 	UnitToolSmith() {
 
-		m_UnitClassName = "Tool Smith";
+		m_UnitClassName = "Toolsmith";
 
 		m_UnitTier = UnitTier::UNIT_TIER_1;
 		m_UnitLevel = UnitLevel::UNIT_LEVEL_1;
@@ -1027,8 +1037,8 @@ struct UnitMagickResearcher : public UnitBase { // Makes Jewelry and denars...
 	}
 };
 
-struct UnitMercant : public UnitBase { // Makes Jewelry and denars...
-	UnitMercant() {
+struct UnitMerchant : public UnitBase { // Makes Jewelry and denars...
+	UnitMerchant() {
 
 		m_UnitClassName = "Merchant";
 
@@ -1066,6 +1076,30 @@ struct UnitAristocrat : public UnitBase { // Makes Jewelry and denars...
 		m_UnitRessourceProduction = new UnitRessourceProduction();
 		m_UnitRessourceProduction->m_ProducedRessource.push_back("Denars");
 		m_UnitRessourceProduction->m_ProductionYield.push_back(0);
+	}
+};
+
+
+struct UnitPickler : public UnitBase { // Makes Jewelry and denars...
+	UnitPickler() {
+
+		m_UnitClassName = "Pickler";
+
+		m_UnitTier = UnitTier::UNIT_TIER_1;
+		m_UnitLevel = UnitLevel::UNIT_LEVEL_1;
+
+
+		m_UnitStats = new UnitStats();
+		m_UnitStats->m_Fatigue = 6;
+		m_UnitStats->m_Magicka = 0;
+		m_UnitStats->m_Health = 10;
+
+
+		m_UnitRessourceProduction = new UnitRessourceProduction();
+		m_UnitRessourceProduction->m_ProducedRessource.push_back("Food");
+		m_UnitRessourceProduction->m_DemandedRawRessourceForProduction.push_back("Salt");
+		m_UnitRessourceProduction->m_ProductionYield.push_back(0);
+		m_UnitRessourceProduction->m_DemandValue.push_back(0);
 	}
 };
 

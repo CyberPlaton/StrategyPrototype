@@ -2620,7 +2620,7 @@ bool Unit::SetClass(std::string classname) {
 	else if (COMPARE_STRINGS(classname, "Fisher") == 0) {
 		m_UnitClass = new UnitFisher();
 	}
-	else if (COMPARE_STRINGS(classname, "Brick Burner") == 0) {
+	else if (COMPARE_STRINGS(classname, "Brickburner") == 0) {
 		m_UnitClass = new UnitBrickBurner();
 	}
 	else if (COMPARE_STRINGS(classname, "Carpenter") == 0) {
@@ -2648,15 +2648,66 @@ bool Unit::SetClass(std::string classname) {
 	else if (COMPARE_STRINGS(classname, "Salt Miner") == 0) {
 		m_UnitClass = new UnitSaltMiner();
 	}
+	else if (COMPARE_STRINGS(classname, "Gold Miner") == 0) {
+		m_UnitClass = new UnitGoldMiner();
+	}
+	else if (COMPARE_STRINGS(classname, "Silver Miner") == 0) {
+		m_UnitClass = new UnitSilverMiner();
+	}
 	else if (COMPARE_STRINGS(classname, "Clayminer") == 0) {
 		m_UnitClass = new UnitClayMiner();
 	}
-
 	else if (COMPARE_STRINGS(classname, "Mason") == 0) {
 		m_UnitClass = new UnitMason();
 	}
-
-
+	else if (COMPARE_STRINGS(classname, "Aristocrat") == 0) {
+		m_UnitClass = new UnitAristocrat();
+	}
+	else if (COMPARE_STRINGS(classname, "Merchant") == 0) {
+		m_UnitClass = new UnitMerchant();
+	}
+	else if (COMPARE_STRINGS(classname, "Magick Researcher") == 0) {
+		m_UnitClass = new UnitMagickResearcher();
+	}
+	else if (COMPARE_STRINGS(classname, "Military Researcher") == 0) {
+		m_UnitClass = new UnitMilitaryResearcher();
+	}
+	else if (COMPARE_STRINGS(classname, "Technical Researcher") == 0) {
+		m_UnitClass = new UnitTechnicalResearcher();
+	}
+	else if (COMPARE_STRINGS(classname, "Civilian Researcher") == 0) {
+		m_UnitClass = new UnitCivilianResearcher();
+	}
+	else if (COMPARE_STRINGS(classname, "Brewer") == 0) {
+		m_UnitClass = new UnitBrewer();
+	}
+	else if (COMPARE_STRINGS(classname, "Toolsmith") == 0) {
+		m_UnitClass = new UnitToolSmith();
+	}
+	else if (COMPARE_STRINGS(classname, "Horse Catcher") == 0) {
+		m_UnitClass = new UnitHorseCatcher();
+	}
+	else if (COMPARE_STRINGS(classname, "Rancher") == 0) {
+		m_UnitClass = new UnitRancher();
+	}
+	else if (COMPARE_STRINGS(classname, "Goldsmith") == 0) {
+		m_UnitClass = new UnitGoldSmith();
+	}
+	else if (COMPARE_STRINGS(classname, "Weaponsmith") == 0) {
+		m_UnitClass = new UnitWeaponSmith();
+	}
+	else if (COMPARE_STRINGS(classname, "Armorsmith") == 0) {
+		m_UnitClass = new UnitArmorSmith();
+	}
+	else if (COMPARE_STRINGS(classname, "Smelter") == 0) {
+		m_UnitClass = new UnitSmelter();
+	}
+	else if (COMPARE_STRINGS(classname, "Tailor") == 0) {
+		m_UnitClass = new UnitTailor();
+	}
+	else if (COMPARE_STRINGS(classname, "Pickler") == 0) {
+	m_UnitClass = new UnitPickler();
+	}
 
 	else {
 		return false;
@@ -2775,7 +2826,12 @@ void Unit::_setSpriteBasedOnClassAndRace() {
 	else if (COMPARE_STRINGS(m_UnitClass->m_UnitClassName, "Gatherer") == 0) {
 		sprite += "gatherer";
 	}
-
+	else if (COMPARE_STRINGS(m_UnitClass->m_UnitClassName, "Gold Miner") == 0) {
+		sprite += "miner";
+	}
+	else if (COMPARE_STRINGS(m_UnitClass->m_UnitClassName, "Silver Miner") == 0) {
+		sprite += "miner";
+	}
 	else if (COMPARE_STRINGS(m_UnitClass->m_UnitClassName, "Bronze Miner") == 0) {
 		sprite += "miner";
 	}
@@ -2806,12 +2862,56 @@ void Unit::_setSpriteBasedOnClassAndRace() {
 	else if (COMPARE_STRINGS(m_UnitClass->m_UnitClassName, "Merchant") == 0) {
 		sprite += "merchant";
 	}
-	else if (COMPARE_STRINGS(m_UnitClass->m_UnitClassName, "Mage Researcher") == 0) {
+	else if (COMPARE_STRINGS(m_UnitClass->m_UnitClassName, "Magick Researcher") == 0) {
 		sprite += "mage_researcher";
 	}
-	else if (COMPARE_STRINGS(m_UnitClass->m_UnitClassName, "Researcher") == 0) {
+	else if (COMPARE_STRINGS(m_UnitClass->m_UnitClassName, "Military Researcher") == 0) {
 		sprite += "researcher";
 	}
+	else if (COMPARE_STRINGS(m_UnitClass->m_UnitClassName, "Technical Researcher") == 0) {
+		sprite += "researcher";
+	}
+	else if (COMPARE_STRINGS(m_UnitClass->m_UnitClassName, "Civilian Researcher") == 0) {
+		sprite += "researcher";
+	}
+	else if (COMPARE_STRINGS(m_UnitClass->m_UnitClassName, "Brewer") == 0) {
+		sprite += "citizen";
+	}
+	else if (COMPARE_STRINGS(m_UnitClass->m_UnitClassName, "Toolsmith") == 0) {
+		sprite += "citizen";
+	}
+	else if (COMPARE_STRINGS(m_UnitClass->m_UnitClassName, "Horse Catcher") == 0) {
+		sprite += "citizen";
+	}
+	else if (COMPARE_STRINGS(m_UnitClass->m_UnitClassName, "Rancher") == 0) {
+		sprite += "citizen";
+	}
+	else if (COMPARE_STRINGS(m_UnitClass->m_UnitClassName, "Goldsmith") == 0) {
+		sprite += "citizen";
+	}
+	else if (COMPARE_STRINGS(m_UnitClass->m_UnitClassName, "Weaponsmith") == 0) {
+		sprite += "citizen";
+	}
+	else if (COMPARE_STRINGS(m_UnitClass->m_UnitClassName, "Armorsmith") == 0) {
+		sprite += "citizen";
+	}
+	else if (COMPARE_STRINGS(m_UnitClass->m_UnitClassName, "Smelter") == 0) {
+		sprite += "citizen";
+	}
+	else if (COMPARE_STRINGS(m_UnitClass->m_UnitClassName, "Tailor") == 0) {
+		sprite += "citizen";
+	}
+	else if (COMPARE_STRINGS(m_UnitClass->m_UnitClassName, "Pickler") == 0) {
+	sprite += "citizen";
+	}
+
+
+
+
+
+
+
+
 
 
 
@@ -7471,6 +7571,36 @@ std::string Player::GetPlayersRace() {
 
 bool CMPUnitRessourceProduction::Produce() {
 
+	using namespace std;
+
+	// First, check whether yield has increased due to increased level.
+	// Multiply yield by the level of current worker.
+	//m_ManagedUnit->m_UnitRessourceProductionCmp->m_CurrentYield *= m_ManagedUnit->m_UnitClass->LevelToInt();
+
+
+	// First, check whether yield has increased due to increased level.
+	if (m_ManagedUnit->m_UnitClass->LevelUp()) {
+
+		cout << color(colors::RED);
+		cout << "Unit \"" << m_ManagedUnit->m_Name << "\" Leveled Up." << endl;
+		cout << "New Level: "<<m_ManagedUnit->m_UnitClass->LevelToInt() << " Current XP: "<< m_ManagedUnit->m_UnitClass->m_CurrentXP << "." << white << endl;
+		cout << "Current Production: " << m_ManagedUnit->m_UnitRessourceProductionCmp->m_CurrentProducedRessource << " Current Yield: " << m_ManagedUnit->m_UnitRessourceProductionCmp->m_CurrentYield << "." << white << endl;
+
+
+		// If so, reset yield according to level.
+		// For now we calculate yield as:
+		// Baseyield*Level.
+		m_ManagedUnit->m_UnitRessourceProductionCmp->m_CurrentYield = m_ManagedUnit->m_UnitClass->LevelToInt() * m_ManagedUnit->m_UnitRessourceProductionCmp->m_BaseYieldForWorkedEntity;
+	}
+
+
+	cout << color(colors::MAGENTA);
+	cout << "Unit \"" << m_ManagedUnit->m_Name << "\" NOT Leveled Up." << endl;
+	cout << "Level: " << m_ManagedUnit->m_UnitClass->LevelToInt() << " Current XP: " << m_ManagedUnit->m_UnitClass->m_CurrentXP << "." << white << endl;
+	cout << "Current Production: " << m_ManagedUnit->m_UnitRessourceProductionCmp->m_CurrentProducedRessource << " Current Yield: " << m_ManagedUnit->m_UnitRessourceProductionCmp->m_CurrentYield << "." << white << endl;
+
+
+
 	return true;
 }
 
@@ -7499,6 +7629,21 @@ bool CMPUnitRessourceProduction::SetWorkedEntity(Building* entt) {
 void CMPUnitRessourceProduction::SetCurrentProduction() {
 
 	using namespace std;
+
+	// Before we start standard algorithm, handle special cases like pickler.
+	if (COMPARE_STRINGS(m_ManagedUnit->m_UnitClass->m_UnitClassName, "Pickler") == 0) {
+
+		// Set production and demand.
+		m_CurrentProducedRessource = "Food";
+		m_CurrentDemandedRessource = "Salt";
+		m_CurrentYield = 2;
+		m_CurrentDemand = 1;
+
+		m_BaseYieldForWorkedEntity = 2;
+
+		return;
+	}
+
 
 	// Derive possible production;
 	std::vector<std::string> production_vec;
@@ -7554,8 +7699,8 @@ void CMPUnitRessourceProduction::SetCurrentProduction() {
 
 					// Get the yield for needed ressource.
 					yield = entt->m_GatherableRessourceCmp->m_ProductionYield[index];
-
-
+					m_BaseYieldForWorkedEntity = yield;
+		
 					// Get demand
 					if (map.find(production) != map.end()) {
 
@@ -7578,6 +7723,7 @@ void CMPUnitRessourceProduction::SetCurrentProduction() {
 
 					// Get the yield for needed ressource.
 					yield = m_WorkedMaptile->m_GatherableRessourceCmp->m_ProductionYield[index];
+					m_BaseYieldForWorkedEntity = yield;
 
 
 					// Get demand
@@ -7600,6 +7746,7 @@ void CMPUnitRessourceProduction::SetCurrentProduction() {
 
 				// Get the yield for needed ressource.
 				yield = m_WorkedBuilding->m_GatherableRessourceCmp->m_ProductionYield[index];
+				m_BaseYieldForWorkedEntity = yield;
 
 
 				// Get demand
@@ -7644,4 +7791,19 @@ GameEntity* CMPUnitRessourceProduction::_hasWorkeableEntity(MapTile* maptile) {
 	}
 
 	return nullptr;
+}
+
+
+void EntitiesStorage::_addUnitToPlayer(GameEntity* e, Player* p) {
+	p->m_PlayerUnits.push_back(reinterpret_cast<Unit*>(e));
+}
+
+
+void EntitiesStorage::_deleteUnitFromPlayer(GameEntity* e, Player* p) {
+
+	std::vector< Unit* >::iterator it = std::find(p->m_PlayerUnits.begin(), p->m_PlayerUnits.end(), reinterpret_cast<Unit*>(e));
+
+	if (it != p->m_PlayerUnits.end()) {
+		p->m_PlayerUnits.erase(it);
+	}
 }
