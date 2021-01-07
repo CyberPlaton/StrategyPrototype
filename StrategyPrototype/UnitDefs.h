@@ -47,6 +47,10 @@ struct UnitStats { // Define maximal health, magicka and fatigue.
 	size_t m_Health = -1;
 	size_t m_Magicka = -1;
 	size_t m_Fatigue = -1;
+
+
+	size_t m_AttackValue = -1;
+	size_t m_DefenseValue = -1;
 };
 
 
@@ -1099,6 +1103,760 @@ struct UnitPickler : public UnitBase { // Makes Jewelry and denars...
 		m_UnitRessourceProduction->m_ProducedRessource.push_back("Food");
 		m_UnitRessourceProduction->m_DemandedRawRessourceForProduction.push_back("Salt");
 		m_UnitRessourceProduction->m_ProductionYield.push_back(0);
+		m_UnitRessourceProduction->m_DemandValue.push_back(0);
+	}
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// MILITARY UNITS
+struct UnitScout : public UnitBase { // Makes Jewelry and denars...
+	UnitScout() {
+
+		m_UnitClassName = "Scout";
+
+		m_UnitTier = UnitTier::UNIT_TIER_1;
+		m_UnitLevel = UnitLevel::UNIT_LEVEL_1;
+
+
+		m_UnitStats = new UnitStats();
+		m_UnitStats->m_Fatigue = 20;
+		m_UnitStats->m_Magicka = 0;
+		m_UnitStats->m_Health = 10;
+
+		m_UnitStats->m_AttackValue = 0;
+		m_UnitStats->m_DefenseValue = 1;
+
+
+		m_UnitRessourceProduction = new UnitRessourceProduction();
+		m_UnitRessourceProduction->m_DemandedRawRessourceForProduction.push_back("Food");
+		m_UnitRessourceProduction->m_DemandValue.push_back(0);
+	}
+};
+
+struct UnitWarrior : public UnitBase { // Makes Jewelry and denars...
+	UnitWarrior() {
+
+		m_UnitClassName = "Warrior";
+
+		m_UnitTier = UnitTier::UNIT_TIER_1;
+		m_UnitLevel = UnitLevel::UNIT_LEVEL_1;
+
+
+		m_UnitStats = new UnitStats();
+		m_UnitStats->m_Fatigue = 10;
+		m_UnitStats->m_Magicka = 0;
+		m_UnitStats->m_Health = 20;
+
+		m_UnitStats->m_AttackValue = 5;
+		m_UnitStats->m_DefenseValue = 1;
+
+
+		// We test whether we can simulate unit upkeep like this.
+		// Each turn this unit will consume some ressource from associated city.
+		// This basically warrior needs food as upkeep.
+		m_UnitRessourceProduction = new UnitRessourceProduction();
+		m_UnitRessourceProduction->m_DemandedRawRessourceForProduction.push_back("Food");
+		m_UnitRessourceProduction->m_DemandValue.push_back(0);
+	}
+};
+
+struct UnitSlinger : public UnitBase {
+	UnitSlinger() {
+
+		m_UnitClassName = "Slinger";
+
+		m_UnitTier = UnitTier::UNIT_TIER_1;
+		m_UnitLevel = UnitLevel::UNIT_LEVEL_1;
+
+
+		m_UnitStats = new UnitStats();
+		m_UnitStats->m_Fatigue = 15;
+		m_UnitStats->m_Magicka = 0;
+		m_UnitStats->m_Health = 10;
+
+		m_UnitStats->m_AttackValue = 15;
+		m_UnitStats->m_DefenseValue = 1;
+
+		m_UnitRessourceProduction = new UnitRessourceProduction();
+		m_UnitRessourceProduction->m_DemandedRawRessourceForProduction.push_back("Food");
+		m_UnitRessourceProduction->m_DemandValue.push_back(0);
+	}
+};
+
+
+struct UnitArcher : public UnitBase {
+	UnitArcher() {
+
+		m_UnitClassName = "Archer";
+
+		m_UnitTier = UnitTier::UNIT_TIER_1;
+		m_UnitLevel = UnitLevel::UNIT_LEVEL_1;
+
+
+		m_UnitStats = new UnitStats();
+		m_UnitStats->m_Fatigue = 20;
+		m_UnitStats->m_Magicka = 0;
+		m_UnitStats->m_Health = 20;
+
+		m_UnitStats->m_AttackValue = 25;
+		m_UnitStats->m_DefenseValue = 1;
+
+		m_UnitRessourceProduction = new UnitRessourceProduction();
+		m_UnitRessourceProduction->m_DemandedRawRessourceForProduction.push_back("Food");
+		m_UnitRessourceProduction->m_DemandValue.push_back(0);
+	}
+};
+
+struct UnitSpearman : public UnitBase {
+	UnitSpearman() {
+
+		m_UnitClassName = "Spearman";
+
+		m_UnitTier = UnitTier::UNIT_TIER_1;
+		m_UnitLevel = UnitLevel::UNIT_LEVEL_1;
+
+
+		m_UnitStats = new UnitStats();
+		m_UnitStats->m_Fatigue = 10;
+		m_UnitStats->m_Magicka = 0;
+		m_UnitStats->m_Health = 25;
+
+		m_UnitStats->m_AttackValue = 10;
+		m_UnitStats->m_DefenseValue = 5;
+
+		m_UnitRessourceProduction = new UnitRessourceProduction();
+		m_UnitRessourceProduction->m_DemandedRawRessourceForProduction.push_back("Food");
+		m_UnitRessourceProduction->m_DemandValue.push_back(0);
+	}
+};
+
+struct UnitHeavySpearmanBronze : public UnitBase {
+	UnitHeavySpearmanBronze() {
+
+		m_UnitClassName = "Heavy Bronze Spearman";
+
+		m_UnitTier = UnitTier::UNIT_TIER_1;
+		m_UnitLevel = UnitLevel::UNIT_LEVEL_1;
+
+
+		m_UnitStats = new UnitStats();
+		m_UnitStats->m_Fatigue = 5;
+		m_UnitStats->m_Magicka = 0;
+		m_UnitStats->m_Health = 50;
+
+		m_UnitStats->m_AttackValue = 15;
+		m_UnitStats->m_DefenseValue = 15;
+
+		m_UnitRessourceProduction = new UnitRessourceProduction();
+		m_UnitRessourceProduction->m_DemandedRawRessourceForProduction.push_back("Food");
+		m_UnitRessourceProduction->m_DemandValue.push_back(0);
+	}
+};
+
+struct UnitHeavySpearmanIron : public UnitBase {
+	UnitHeavySpearmanIron() {
+
+		m_UnitClassName = "Heavy Iron Spearman";
+
+		m_UnitTier = UnitTier::UNIT_TIER_1;
+		m_UnitLevel = UnitLevel::UNIT_LEVEL_1;
+
+
+		m_UnitStats = new UnitStats();
+		m_UnitStats->m_Fatigue = 5;
+		m_UnitStats->m_Magicka = 0;
+		m_UnitStats->m_Health = 75;
+
+		m_UnitStats->m_AttackValue = 15;
+		m_UnitStats->m_DefenseValue = 25;
+
+		m_UnitRessourceProduction = new UnitRessourceProduction();
+		m_UnitRessourceProduction->m_DemandedRawRessourceForProduction.push_back("Food");
+		m_UnitRessourceProduction->m_DemandValue.push_back(0);
+	}
+};
+
+
+struct UnitSwordmanBronze : public UnitBase {
+	UnitSwordmanBronze() {
+
+		m_UnitClassName = "Bronze Swordman";
+
+		m_UnitTier = UnitTier::UNIT_TIER_1;
+		m_UnitLevel = UnitLevel::UNIT_LEVEL_1;
+
+
+		m_UnitStats = new UnitStats();
+		m_UnitStats->m_Fatigue = 7;
+		m_UnitStats->m_Magicka = 0;
+		m_UnitStats->m_Health = 25;
+
+		m_UnitStats->m_AttackValue = 25;
+		m_UnitStats->m_DefenseValue = 20;
+
+		m_UnitRessourceProduction = new UnitRessourceProduction();
+		m_UnitRessourceProduction->m_DemandedRawRessourceForProduction.push_back("Food");
+		m_UnitRessourceProduction->m_DemandValue.push_back(0);
+	}
+};
+
+struct UnitSwordmanIron : public UnitBase {
+	UnitSwordmanIron() {
+
+		m_UnitClassName = "Iron Swordman";
+
+		m_UnitTier = UnitTier::UNIT_TIER_1;
+		m_UnitLevel = UnitLevel::UNIT_LEVEL_1;
+
+
+		m_UnitStats = new UnitStats();
+		m_UnitStats->m_Fatigue = 7;
+		m_UnitStats->m_Magicka = 0;
+		m_UnitStats->m_Health = 30;
+
+		m_UnitStats->m_AttackValue = 25;
+		m_UnitStats->m_DefenseValue = 30;
+
+		m_UnitRessourceProduction = new UnitRessourceProduction();
+		m_UnitRessourceProduction->m_DemandedRawRessourceForProduction.push_back("Food");
+		m_UnitRessourceProduction->m_DemandValue.push_back(0);
+	}
+};
+
+struct UnitPaladinAdamantium : public UnitBase {
+	UnitPaladinAdamantium() {
+
+		m_UnitClassName = "Adamantium Paladin";
+
+		m_UnitTier = UnitTier::UNIT_TIER_1;
+		m_UnitLevel = UnitLevel::UNIT_LEVEL_1;
+
+
+		m_UnitStats = new UnitStats();
+		m_UnitStats->m_Fatigue = 4;
+		m_UnitStats->m_Magicka = 0;
+		m_UnitStats->m_Health = 100;
+
+		m_UnitStats->m_AttackValue = 45;
+		m_UnitStats->m_DefenseValue = 100;
+
+		m_UnitRessourceProduction = new UnitRessourceProduction();
+		m_UnitRessourceProduction->m_DemandedRawRessourceForProduction.push_back("Food");
+		m_UnitRessourceProduction->m_DemandValue.push_back(0);
+	}
+};
+
+struct UnitPaladinMalachite : public UnitBase {
+	UnitPaladinMalachite() {
+
+		m_UnitClassName = "Malachite Paladin";
+
+		m_UnitTier = UnitTier::UNIT_TIER_1;
+		m_UnitLevel = UnitLevel::UNIT_LEVEL_1;
+
+
+		m_UnitStats = new UnitStats();
+		m_UnitStats->m_Fatigue = 4;
+		m_UnitStats->m_Magicka = 0;
+		m_UnitStats->m_Health = 100;
+
+		m_UnitStats->m_AttackValue = 35;
+		m_UnitStats->m_DefenseValue = 125;
+
+		m_UnitRessourceProduction = new UnitRessourceProduction();
+		m_UnitRessourceProduction->m_DemandedRawRessourceForProduction.push_back("Food");
+		m_UnitRessourceProduction->m_DemandValue.push_back(0);
+	}
+};
+
+
+struct UnitBattlemage : public UnitBase {
+	UnitBattlemage() {
+
+		m_UnitClassName = "Battlemage";
+
+		m_UnitTier = UnitTier::UNIT_TIER_1;
+		m_UnitLevel = UnitLevel::UNIT_LEVEL_1;
+
+
+		m_UnitStats = new UnitStats();
+		m_UnitStats->m_Fatigue = 15;
+		m_UnitStats->m_Magicka = 20;
+		m_UnitStats->m_Health = 40;
+
+		m_UnitStats->m_AttackValue = 20;
+		m_UnitStats->m_DefenseValue = 45;
+
+		m_UnitRessourceProduction = new UnitRessourceProduction();
+		m_UnitRessourceProduction->m_DemandedRawRessourceForProduction.push_back("Food");
+		m_UnitRessourceProduction->m_DemandValue.push_back(0);
+	}
+};
+
+struct UnitMage : public UnitBase {
+	UnitMage() {
+
+		m_UnitClassName = "Mage";
+
+		m_UnitTier = UnitTier::UNIT_TIER_1;
+		m_UnitLevel = UnitLevel::UNIT_LEVEL_1;
+
+
+		m_UnitStats = new UnitStats();
+		m_UnitStats->m_Fatigue = 10;
+		m_UnitStats->m_Magicka = 40;
+		m_UnitStats->m_Health = 20;
+
+		m_UnitStats->m_AttackValue = 5;
+		m_UnitStats->m_DefenseValue = 5;
+
+		m_UnitRessourceProduction = new UnitRessourceProduction();
+		m_UnitRessourceProduction->m_DemandedRawRessourceForProduction.push_back("Food");
+		m_UnitRessourceProduction->m_DemandValue.push_back(0);
+	}
+};
+
+
+struct UnitSorcerer : public UnitBase {
+	UnitSorcerer() {
+
+		m_UnitClassName = "Sorcerer";
+
+		m_UnitTier = UnitTier::UNIT_TIER_1;
+		m_UnitLevel = UnitLevel::UNIT_LEVEL_1;
+
+
+		m_UnitStats = new UnitStats();
+		m_UnitStats->m_Fatigue = 10;
+		m_UnitStats->m_Magicka = 40;
+		m_UnitStats->m_Health = 20;
+
+		m_UnitStats->m_AttackValue = 5;
+		m_UnitStats->m_DefenseValue = 5;
+
+		m_UnitRessourceProduction = new UnitRessourceProduction();
+		m_UnitRessourceProduction->m_DemandedRawRessourceForProduction.push_back("Food");
+		m_UnitRessourceProduction->m_DemandValue.push_back(0);
+	}
+};
+
+struct UnitCrossbowmanIron : public UnitBase {
+	UnitCrossbowmanIron() {
+
+		m_UnitClassName = "Iron Crossbowman";
+
+		m_UnitTier = UnitTier::UNIT_TIER_1;
+		m_UnitLevel = UnitLevel::UNIT_LEVEL_1;
+
+
+		m_UnitStats = new UnitStats();
+		m_UnitStats->m_Fatigue = 5;
+		m_UnitStats->m_Magicka = 0;
+		m_UnitStats->m_Health = 30;
+
+		m_UnitStats->m_AttackValue = 50;
+		m_UnitStats->m_DefenseValue = 50;
+
+		m_UnitRessourceProduction = new UnitRessourceProduction();
+		m_UnitRessourceProduction->m_DemandedRawRessourceForProduction.push_back("Food");
+		m_UnitRessourceProduction->m_DemandValue.push_back(0);
+	}
+};
+
+// MILITARY CAVALRY UNITS
+struct UnitMountedScout : public UnitBase {
+	UnitMountedScout() {
+
+		m_UnitClassName = "Mounted Scout";
+
+		m_UnitTier = UnitTier::UNIT_TIER_1;
+		m_UnitLevel = UnitLevel::UNIT_LEVEL_1;
+
+
+		m_UnitStats = new UnitStats();
+		m_UnitStats->m_Fatigue = 30;
+		m_UnitStats->m_Magicka = 0;
+		m_UnitStats->m_Health = 20;
+
+		m_UnitStats->m_AttackValue = 0;
+		m_UnitStats->m_DefenseValue = 1;
+
+		m_UnitRessourceProduction = new UnitRessourceProduction();
+		m_UnitRessourceProduction->m_DemandedRawRessourceForProduction.push_back("Food");
+		m_UnitRessourceProduction->m_DemandValue.push_back(0);
+	}
+};
+
+struct UnitLightCavalry : public UnitBase {
+	UnitLightCavalry() {
+
+		m_UnitClassName = "Light Cavalry";
+
+		m_UnitTier = UnitTier::UNIT_TIER_1;
+		m_UnitLevel = UnitLevel::UNIT_LEVEL_1;
+
+
+		m_UnitStats = new UnitStats();
+		m_UnitStats->m_Fatigue = 30;
+		m_UnitStats->m_Magicka = 0;
+		m_UnitStats->m_Health = 50;
+
+		m_UnitStats->m_AttackValue = 25;
+		m_UnitStats->m_DefenseValue = 10;
+
+		m_UnitRessourceProduction = new UnitRessourceProduction();
+		m_UnitRessourceProduction->m_DemandedRawRessourceForProduction.push_back("Food");
+		m_UnitRessourceProduction->m_DemandValue.push_back(0);
+	}
+};
+
+struct UnitKnight : public UnitBase {
+	UnitKnight() {
+
+		m_UnitClassName = "Knight";
+
+		m_UnitTier = UnitTier::UNIT_TIER_1;
+		m_UnitLevel = UnitLevel::UNIT_LEVEL_1;
+
+
+		m_UnitStats = new UnitStats();
+		m_UnitStats->m_Fatigue = 20;
+		m_UnitStats->m_Magicka = 0;
+		m_UnitStats->m_Health = 75;
+
+		m_UnitStats->m_AttackValue = 50;
+		m_UnitStats->m_DefenseValue = 75;
+
+		m_UnitRessourceProduction = new UnitRessourceProduction();
+		m_UnitRessourceProduction->m_DemandedRawRessourceForProduction.push_back("Food");
+		m_UnitRessourceProduction->m_DemandValue.push_back(0);
+	}
+};
+
+
+// MILITARY SIEGE UNITS
+struct UnitBallista : public UnitBase {
+	UnitBallista() {
+
+		m_UnitClassName = "Ballista";
+
+		m_UnitTier = UnitTier::UNIT_TIER_1;
+		m_UnitLevel = UnitLevel::UNIT_LEVEL_1;
+
+
+		m_UnitStats = new UnitStats();
+		m_UnitStats->m_Fatigue = 2;
+		m_UnitStats->m_Magicka = 0;
+		m_UnitStats->m_Health = 10;
+
+		m_UnitStats->m_AttackValue = 100;
+		m_UnitStats->m_DefenseValue = 20;
+
+		m_UnitRessourceProduction = new UnitRessourceProduction();
+		m_UnitRessourceProduction->m_DemandedRawRessourceForProduction.push_back("Food");
+		m_UnitRessourceProduction->m_DemandValue.push_back(0);
+	}
+};
+
+
+
+// NAVAL UNITS
+struct UnitSmallTradeBoat : public UnitBase {
+	UnitSmallTradeBoat() {
+
+		m_UnitClassName = "Small Trade Boat";
+
+		m_UnitTier = UnitTier::UNIT_TIER_1;
+		m_UnitLevel = UnitLevel::UNIT_LEVEL_1;
+
+
+		m_UnitStats = new UnitStats();
+		m_UnitStats->m_Fatigue = 5;
+		m_UnitStats->m_Magicka = 0;
+		m_UnitStats->m_Health = 10;
+
+		m_UnitStats->m_AttackValue = 0;
+		m_UnitStats->m_DefenseValue = 1;
+
+		m_UnitRessourceProduction = new UnitRessourceProduction();
+		m_UnitRessourceProduction->m_DemandedRawRessourceForProduction.push_back("Food");
+		m_UnitRessourceProduction->m_DemandValue.push_back(0);
+	}
+};
+
+struct UnitSmallTransportShip : public UnitBase {
+	UnitSmallTransportShip() {
+
+		m_UnitClassName = "Small Transport Ship";
+
+		m_UnitTier = UnitTier::UNIT_TIER_1;
+		m_UnitLevel = UnitLevel::UNIT_LEVEL_1;
+
+
+		m_UnitStats = new UnitStats();
+		m_UnitStats->m_Fatigue = 5;
+		m_UnitStats->m_Magicka = 0;
+		m_UnitStats->m_Health = 10;
+
+		m_UnitStats->m_AttackValue = 0;
+		m_UnitStats->m_DefenseValue = 1;
+
+		m_UnitRessourceProduction = new UnitRessourceProduction();
+		m_UnitRessourceProduction->m_DemandedRawRessourceForProduction.push_back("Food");
+		m_UnitRessourceProduction->m_DemandValue.push_back(0);
+	}
+};
+
+struct UnitArchersGalley : public UnitBase {
+	UnitArchersGalley() {
+
+		m_UnitClassName = "Archers Galley";
+
+		m_UnitTier = UnitTier::UNIT_TIER_1;
+		m_UnitLevel = UnitLevel::UNIT_LEVEL_1;
+
+
+		m_UnitStats = new UnitStats();
+		m_UnitStats->m_Fatigue = 15;
+		m_UnitStats->m_Magicka = 0;
+		m_UnitStats->m_Health = 25;
+
+		m_UnitStats->m_AttackValue = 20;
+		m_UnitStats->m_DefenseValue = 20;
+
+		m_UnitRessourceProduction = new UnitRessourceProduction();
+		m_UnitRessourceProduction->m_DemandedRawRessourceForProduction.push_back("Food");
+		m_UnitRessourceProduction->m_DemandValue.push_back(0);
+	}
+};
+
+struct UnitRamGalley : public UnitBase {
+	UnitRamGalley() {
+
+		m_UnitClassName = "Ram Galley";
+
+		m_UnitTier = UnitTier::UNIT_TIER_1;
+		m_UnitLevel = UnitLevel::UNIT_LEVEL_1;
+
+
+		m_UnitStats = new UnitStats();
+		m_UnitStats->m_Fatigue = 10;
+		m_UnitStats->m_Magicka = 0;
+		m_UnitStats->m_Health = 50;
+
+		m_UnitStats->m_AttackValue = 50;
+		m_UnitStats->m_DefenseValue = 1;
+
+		m_UnitRessourceProduction = new UnitRessourceProduction();
+		m_UnitRessourceProduction->m_DemandedRawRessourceForProduction.push_back("Food");
+		m_UnitRessourceProduction->m_DemandValue.push_back(0);
+	}
+};
+
+struct UnitArmoredRamGalley : public UnitBase {
+	UnitArmoredRamGalley() {
+
+		m_UnitClassName = "Armored Ram Galley";
+
+		m_UnitTier = UnitTier::UNIT_TIER_1;
+		m_UnitLevel = UnitLevel::UNIT_LEVEL_1;
+
+
+		m_UnitStats = new UnitStats();
+		m_UnitStats->m_Fatigue = 7;
+		m_UnitStats->m_Magicka = 0;
+		m_UnitStats->m_Health = 50;
+
+		m_UnitStats->m_AttackValue = 50;
+		m_UnitStats->m_DefenseValue = 50;
+
+		m_UnitRessourceProduction = new UnitRessourceProduction();
+		m_UnitRessourceProduction->m_DemandedRawRessourceForProduction.push_back("Food");
+		m_UnitRessourceProduction->m_DemandValue.push_back(0);
+	}
+};
+
+struct UnitBallistaGalley : public UnitBase {
+	UnitBallistaGalley() {
+
+		m_UnitClassName = "Ballista Galley";
+
+		m_UnitTier = UnitTier::UNIT_TIER_1;
+		m_UnitLevel = UnitLevel::UNIT_LEVEL_1;
+
+
+		m_UnitStats = new UnitStats();
+		m_UnitStats->m_Fatigue = 10;
+		m_UnitStats->m_Magicka = 0;
+		m_UnitStats->m_Health = 50;
+
+		m_UnitStats->m_AttackValue = 75;
+		m_UnitStats->m_DefenseValue = 45;
+
+		m_UnitRessourceProduction = new UnitRessourceProduction();
+		m_UnitRessourceProduction->m_DemandedRawRessourceForProduction.push_back("Food");
+		m_UnitRessourceProduction->m_DemandValue.push_back(0);
+	}
+};
+
+
+struct UnitFortressVessel : public UnitBase {
+	UnitFortressVessel() {
+
+		m_UnitClassName = "Fortress Vessel";
+
+		m_UnitTier = UnitTier::UNIT_TIER_1;
+		m_UnitLevel = UnitLevel::UNIT_LEVEL_1;
+
+
+		m_UnitStats = new UnitStats();
+		m_UnitStats->m_Fatigue = 2;
+		m_UnitStats->m_Magicka = 0;
+		m_UnitStats->m_Health = 100;
+
+		m_UnitStats->m_AttackValue = 25;
+		m_UnitStats->m_DefenseValue = 100;
+
+		m_UnitRessourceProduction = new UnitRessourceProduction();
+		m_UnitRessourceProduction->m_DemandedRawRessourceForProduction.push_back("Food");
+		m_UnitRessourceProduction->m_DemandValue.push_back(0);
+	}
+};
+
+
+struct UnitTransportCog : public UnitBase {
+	UnitTransportCog() {
+
+		m_UnitClassName = "Transport Cog";
+
+		m_UnitTier = UnitTier::UNIT_TIER_1;
+		m_UnitLevel = UnitLevel::UNIT_LEVEL_1;
+
+
+		m_UnitStats = new UnitStats();
+		m_UnitStats->m_Fatigue = 10;
+		m_UnitStats->m_Magicka = 0;
+		m_UnitStats->m_Health = 30;
+
+		m_UnitStats->m_AttackValue = 0;
+		m_UnitStats->m_DefenseValue = 25;
+
+		m_UnitRessourceProduction = new UnitRessourceProduction();
+		m_UnitRessourceProduction->m_DemandedRawRessourceForProduction.push_back("Food");
+		m_UnitRessourceProduction->m_DemandValue.push_back(0);
+	}
+};
+
+struct UnitTransportCogBig : public UnitBase {
+	UnitTransportCogBig() {
+
+		m_UnitClassName = "Big Transport Cog";
+
+		m_UnitTier = UnitTier::UNIT_TIER_1;
+		m_UnitLevel = UnitLevel::UNIT_LEVEL_1;
+
+
+		m_UnitStats = new UnitStats();
+		m_UnitStats->m_Fatigue = 7;
+		m_UnitStats->m_Magicka = 0;
+		m_UnitStats->m_Health = 50;
+
+		m_UnitStats->m_AttackValue = 0;
+		m_UnitStats->m_DefenseValue = 45;
+
+		m_UnitRessourceProduction = new UnitRessourceProduction();
+		m_UnitRessourceProduction->m_DemandedRawRessourceForProduction.push_back("Food");
+		m_UnitRessourceProduction->m_DemandValue.push_back(0);
+	}
+};
+
+struct UnitTradeCog : public UnitBase {
+	UnitTradeCog() {
+
+		m_UnitClassName = "Trade Cog";
+
+		m_UnitTier = UnitTier::UNIT_TIER_1;
+		m_UnitLevel = UnitLevel::UNIT_LEVEL_1;
+
+
+		m_UnitStats = new UnitStats();
+		m_UnitStats->m_Fatigue = 15;
+		m_UnitStats->m_Magicka = 0;
+		m_UnitStats->m_Health = 20;
+
+		m_UnitStats->m_AttackValue = 0;
+		m_UnitStats->m_DefenseValue = 10;
+
+		m_UnitRessourceProduction = new UnitRessourceProduction();
+		m_UnitRessourceProduction->m_DemandedRawRessourceForProduction.push_back("Food");
+		m_UnitRessourceProduction->m_DemandValue.push_back(0);
+	}
+};
+
+struct UnitTradeCogArmored : public UnitBase {
+	UnitTradeCogArmored() {
+
+		m_UnitClassName = "Armored Trade Cog";
+
+		m_UnitTier = UnitTier::UNIT_TIER_1;
+		m_UnitLevel = UnitLevel::UNIT_LEVEL_1;
+
+
+		m_UnitStats = new UnitStats();
+		m_UnitStats->m_Fatigue = 10;
+		m_UnitStats->m_Magicka = 0;
+		m_UnitStats->m_Health = 20;
+
+		m_UnitStats->m_AttackValue = 0;
+		m_UnitStats->m_DefenseValue = 75;
+
+		m_UnitRessourceProduction = new UnitRessourceProduction();
+		m_UnitRessourceProduction->m_DemandedRawRessourceForProduction.push_back("Food");
+		m_UnitRessourceProduction->m_DemandValue.push_back(0);
+	}
+};
+
+struct UnitMerchantsVessel : public UnitBase {
+	UnitMerchantsVessel() {
+
+		m_UnitClassName = "Merchants Vessel";
+
+		m_UnitTier = UnitTier::UNIT_TIER_1;
+		m_UnitLevel = UnitLevel::UNIT_LEVEL_1;
+
+
+		m_UnitStats = new UnitStats();
+		m_UnitStats->m_Fatigue = 20;
+		m_UnitStats->m_Magicka = 0;
+		m_UnitStats->m_Health = 50;
+
+		m_UnitStats->m_AttackValue = 0;
+		m_UnitStats->m_DefenseValue = 100;
+
+		m_UnitRessourceProduction = new UnitRessourceProduction();
+		m_UnitRessourceProduction->m_DemandedRawRessourceForProduction.push_back("Food");
 		m_UnitRessourceProduction->m_DemandValue.push_back(0);
 	}
 };

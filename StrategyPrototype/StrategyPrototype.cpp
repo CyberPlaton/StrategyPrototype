@@ -331,6 +331,9 @@ Unit* MakeNewUnitAtPos(CMPEntityRace::Race race, UnitMovementType movement_type,
 
 	UpdateMapVisionForEntity(u, p);
 
+	EntitiesStorage::Get()->AddGameEntitie(u);
+	p->AddUnit(u);
+
 	return u;
 }
 
@@ -2196,20 +2199,6 @@ void CMPCameraInput::_handleMapViewMouse(Camera* cam) {
 
 		if (context->GetMouse(0).bPressed) {
 
-			// TESTING PURPOSES:
-			tile = GetMaptileAtMousePosition(context->GetMouseX(), context->GetMouseY());
-
-
-			// Creating walking unit.
-			Unit* unit = MakeNewUnitAtPos(PlayerTurnCounter::Get()->m_CurrentTurnPlayer->m_PlayerEmpireRace, UnitMovementType::UNIT_MOVEMENT_TYPE_WALKING, PlayerTurnCounter::Get()->m_CurrentTurnPlayer,
-				"Citizen",
-				tile->m_TransformCmp->m_PosX, tile->m_TransformCmp->m_PosY,
-				tile->m_TransformCmp->m_GameWorldSpaceCell[0], tile->m_TransformCmp->m_GameWorldSpaceCell[1]);
-
-
-
-			EntitiesStorage::Get()->AddGameEntitie(unit);
-			PlayerTurnCounter::Get()->m_CurrentTurnPlayer->AddUnit(unit); // Add unit to players vector.
 		}
 	}
 	
@@ -5245,6 +5234,170 @@ void Game::_loadSpriteResources() {
 	AddSpriteToStorage("assets/unit/human/human_warrior_2.png", "human_warrior_2");
 	AddSpriteToStorage("assets/unit/orc/orc_warrior_2.png", "orc_warrior_2");
 	AddSpriteToStorage("assets/unit/troll/troll_warrior_2.png", "troll_warrior_2");
+
+
+
+	AddSpriteToStorage("assets/unit/darkelf/darkelf_archers_galley.png", "darkelf_archers_galley");
+	AddSpriteToStorage("assets/unit/dwarf/dwarf_archers_galley.png", "dwarf_archers_galley");
+	AddSpriteToStorage("assets/unit/gnome/gnome_archers_galley.png", "gnome_archers_galley");
+	AddSpriteToStorage("assets/unit/goblin/goblin_archers_galley.png", "goblin_archers_galley");
+	AddSpriteToStorage("assets/unit/highelf/highelf_archers_galley.png", "highelf_archers_galley");
+	AddSpriteToStorage("assets/unit/human/human_archers_galley.png", "human_archers_galley");
+	AddSpriteToStorage("assets/unit/orc/orc_archers_galley.png", "orc_archers_galley");
+	AddSpriteToStorage("assets/unit/troll/troll_archers_galley.png", "troll_archers_galley");
+
+	AddSpriteToStorage("assets/unit/darkelf/darkelf_armored_ram_galley.png", "darkelf_armored_ram_galley");
+	AddSpriteToStorage("assets/unit/dwarf/dwarf_armored_ram_galley.png", "dwarf_armored_ram_galley");
+	AddSpriteToStorage("assets/unit/gnome/gnome_armored_ram_galley.png", "gnome_archers_galley");
+	AddSpriteToStorage("assets/unit/goblin/goblin_armored_ram_galley.png", "goblin_armored_ram_galley");
+	AddSpriteToStorage("assets/unit/highelf/highelf_armored_ram_galley.png", "highelf_armored_ram_galley");
+	AddSpriteToStorage("assets/unit/human/human_armored_ram_galley.png", "human_armored_ram_galley");
+	AddSpriteToStorage("assets/unit/orc/orc_armored_ram_galley.png", "orc_armored_ram_galley");
+	AddSpriteToStorage("assets/unit/troll/troll_armored_ram_galley.png", "troll_armored_ram_galley");
+
+	AddSpriteToStorage("assets/unit/darkelf/darkelf_ballista_galley.png", "darkelf_ballista_galley");
+	AddSpriteToStorage("assets/unit/dwarf/dwarf_ballista_galley.png", "dwarf_ballista_galley");
+	AddSpriteToStorage("assets/unit/gnome/gnome_ballista_galley.png", "gnome_ballista_galley");
+	AddSpriteToStorage("assets/unit/goblin/goblin_ballista_galley.png", "goblin_ballista_galley");
+	AddSpriteToStorage("assets/unit/highelf/highelf_ballista_galley.png", "highelf_ballista_galley");
+	AddSpriteToStorage("assets/unit/human/human_ballista_galley.png", "human_ballista_galley");
+	AddSpriteToStorage("assets/unit/orc/orc_ballista_galley.png", "orc_ballista_galley");
+	AddSpriteToStorage("assets/unit/troll/troll_ballista_galley.png", "troll_ballista_galley");
+
+	AddSpriteToStorage("assets/unit/darkelf/darkelf_fortress_vessel.png", "darkelf_fortress_vessel");
+	AddSpriteToStorage("assets/unit/dwarf/dwarf_fortress_vessel.png", "dwarf_fortress_vessel");
+	AddSpriteToStorage("assets/unit/gnome/gnome_fortress_vessel.png", "gnome_fortress_vessel");
+	AddSpriteToStorage("assets/unit/goblin/goblin_fortress_vessel.png", "goblin_fortress_vessel");
+	AddSpriteToStorage("assets/unit/highelf/highelf_fortress_vessel.png", "highelf_fortress_vessel");
+	AddSpriteToStorage("assets/unit/human/human_fortress_vessel.png", "human_fortress_vessel");
+	AddSpriteToStorage("assets/unit/orc/orc_fortress_vessel.png", "orc_fortress_vessel");
+	AddSpriteToStorage("assets/unit/troll/troll_fortress_vessel.png", "troll_fortress_vessel");
+
+
+	AddSpriteToStorage("assets/unit/darkelf/darkelf_battlemage.png", "darkelf_battlemage");
+	AddSpriteToStorage("assets/unit/dwarf/dwarf_battlemage.png", "dwarf_battlemage");
+	AddSpriteToStorage("assets/unit/gnome/gnome_battlemage.png", "gnome_battlemage");
+	AddSpriteToStorage("assets/unit/goblin/goblin_battlemage.png", "goblin_battlemage");
+	AddSpriteToStorage("assets/unit/highelf/highelf_battlemage.png", "highelf_battlemage");
+	AddSpriteToStorage("assets/unit/human/human_battlemage.png", "human_battlemage");
+	AddSpriteToStorage("assets/unit/orc/orc_battlemage.png", "orc_battlemage");
+	AddSpriteToStorage("assets/unit/troll/troll_battlemage.png", "troll_battlemage");
+
+
+	AddSpriteToStorage("assets/unit/darkelf/darkelf_mage.png", "darkelf_mage");
+	AddSpriteToStorage("assets/unit/dwarf/dwarf_mage.png", "dwarf_mage");
+	AddSpriteToStorage("assets/unit/gnome/gnome_mage.png", "gnome_mage");
+	AddSpriteToStorage("assets/unit/goblin/goblin_mage.png", "goblin_mage");
+	AddSpriteToStorage("assets/unit/highelf/highelf_mage.png", "highelf_mage");
+	AddSpriteToStorage("assets/unit/human/human_mage.png", "human_mage");
+	AddSpriteToStorage("assets/unit/orc/orc_mage.png", "orc_mage");
+	AddSpriteToStorage("assets/unit/troll/troll_mage.png", "troll_mage");
+
+
+	AddSpriteToStorage("assets/unit/darkelf/darkelf_mage.png", "darkelf_mage");
+	AddSpriteToStorage("assets/unit/dwarf/dwarf_mage.png", "dwarf_mage");
+	AddSpriteToStorage("assets/unit/gnome/gnome_mage.png", "gnome_mage");
+	AddSpriteToStorage("assets/unit/goblin/goblin_mage.png", "goblin_mage");
+	AddSpriteToStorage("assets/unit/highelf/highelf_mage.png", "highelf_mage");
+	AddSpriteToStorage("assets/unit/human/human_mage.png", "human_mage");
+	AddSpriteToStorage("assets/unit/orc/orc_mage.png", "orc_mage");
+	AddSpriteToStorage("assets/unit/troll/troll_mage.png", "troll_mage");
+
+
+
+
+	AddSpriteToStorage("assets/unit/darkelf/darkelf_merchants_vessel.png", "darkelf_merchants_vessel");
+	AddSpriteToStorage("assets/unit/dwarf/dwarf_merchants_vessel.png", "dwarf_merchants_vessel");
+	AddSpriteToStorage("assets/unit/gnome/gnome_merchants_vessel.png", "gnome_merchants_vessel");
+	AddSpriteToStorage("assets/unit/goblin/goblin_merchants_vessel.png", "goblin_merchants_vessel");
+	AddSpriteToStorage("assets/unit/highelf/highelf_merchants_vessel.png", "highelf_merchants_vessel");
+	AddSpriteToStorage("assets/unit/human/human_merchants_vessel.png", "human_merchants_vessel");
+	AddSpriteToStorage("assets/unit/orc/orc_merchants_vessel.png", "orc_merchants_vessel");
+	AddSpriteToStorage("assets/unit/troll/troll_merchants_vessel.png", "troll_merchants_vessel");
+
+
+	AddSpriteToStorage("assets/unit/darkelf/darkelf_ram_galley.png", "darkelf_ram_galley");
+	AddSpriteToStorage("assets/unit/dwarf/dwarf_ram_galley.png", "dwarf_ram_galley");
+	AddSpriteToStorage("assets/unit/gnome/gnome_ram_galley.png", "gnome_ram_galley");
+	AddSpriteToStorage("assets/unit/goblin/goblin_ram_galley.png", "goblin_ram_galley");
+	AddSpriteToStorage("assets/unit/highelf/highelf_ram_galley.png", "highelf_ram_galley");
+	AddSpriteToStorage("assets/unit/human/human_ram_galley.png", "human_ram_galley");
+	AddSpriteToStorage("assets/unit/orc/orc_ram_galley.png", "orc_ram_galley");
+	AddSpriteToStorage("assets/unit/troll/troll_ram_galley.png", "troll_ram_galley");
+
+
+	AddSpriteToStorage("assets/unit/darkelf/darkelf_small_transport_boat.png", "darkelf_small_transport_boat");
+	AddSpriteToStorage("assets/unit/dwarf/dwarf_small_transport_boat.png", "dwarf_small_transport_boat");
+	AddSpriteToStorage("assets/unit/gnome/gnome_small_transport_boat.png", "gnome_small_transport_boat");
+	AddSpriteToStorage("assets/unit/goblin/goblin_small_transport_boat.png", "goblin_small_transport_boat");
+	AddSpriteToStorage("assets/unit/highelf/highelf_small_transport_boat.png", "highelf_small_transport_boat");
+	AddSpriteToStorage("assets/unit/human/human_small_transport_boat.png", "human_small_transport_boat");
+	AddSpriteToStorage("assets/unit/orc/orc_small_transport_boat.png", "orc_small_transport_boat");
+	AddSpriteToStorage("assets/unit/troll/troll_small_transport_boat.png", "troll_small_transport_boat");
+
+
+	AddSpriteToStorage("assets/unit/darkelf/darkelf_small_transport_ship.png", "darkelf_small_transport_ship");
+	AddSpriteToStorage("assets/unit/dwarf/dwarf_small_transport_ship.png", "dwarf_small_transport_ship");
+	AddSpriteToStorage("assets/unit/gnome/gnome_small_transport_ship.png", "gnome_small_transport_ship");
+	AddSpriteToStorage("assets/unit/goblin/goblin_small_transport_ship.png", "goblin_small_transport_ship");
+	AddSpriteToStorage("assets/unit/highelf/highelf_small_transport_ship.png", "highelf_small_transport_ship");
+	AddSpriteToStorage("assets/unit/human/human_small_transport_ship.png", "human_small_transport_ship");
+	AddSpriteToStorage("assets/unit/orc/orc_small_transport_ship.png", "orc_small_transport_ship");
+	AddSpriteToStorage("assets/unit/troll/troll_small_transport_ship.png", "troll_small_transport_ship");
+
+
+	AddSpriteToStorage("assets/unit/darkelf/darkelf_sorcerer.png", "darkelf_sorcerer");
+	AddSpriteToStorage("assets/unit/dwarf/dwarf_sorcerer.png", "dwarf_sorcerer");
+	AddSpriteToStorage("assets/unit/gnome/gnome_sorcerer.png", "gnome_sorcerer");
+	AddSpriteToStorage("assets/unit/goblin/goblin_sorcerer.png", "goblin_sorcerer");
+	AddSpriteToStorage("assets/unit/highelf/highelf_sorcerer.png", "highelf_sorcerer");
+	AddSpriteToStorage("assets/unit/human/human_sorcerer.png", "human_sorcerer");
+	AddSpriteToStorage("assets/unit/orc/orc_sorcerer.png", "orc_sorcerer");
+	AddSpriteToStorage("assets/unit/troll/troll_sorcerer.png", "troll_sorcerer");
+
+
+
+	AddSpriteToStorage("assets/unit/darkelf/darkelf_trade_cog.png", "darkelf_trade_cog");
+	AddSpriteToStorage("assets/unit/dwarf/dwarf_trade_cog.png", "dwarf_trade_cog");
+	AddSpriteToStorage("assets/unit/gnome/gnome_trade_cog.png", "gnome_trade_cog");
+	AddSpriteToStorage("assets/unit/goblin/goblin_trade_cog.png", "goblin_trade_cog");
+	AddSpriteToStorage("assets/unit/highelf/highelf_trade_cog.png", "highelf_trade_cog");
+	AddSpriteToStorage("assets/unit/human/human_trade_cog.png", "human_trade_cog");
+	AddSpriteToStorage("assets/unit/orc/orc_trade_cog.png", "orc_trade_cog");
+	AddSpriteToStorage("assets/unit/troll/troll_trade_cog.png", "troll_trade_cog");
+
+
+	AddSpriteToStorage("assets/unit/darkelf/darkelf_trade_cog_armored.png", "darkelf_trade_cog_armored");
+	AddSpriteToStorage("assets/unit/dwarf/dwarf_trade_cog_armored.png", "dwarf_trade_cog_armored");
+	AddSpriteToStorage("assets/unit/gnome/gnome_trade_cog_armored.png", "gnome_trade_cog_armored");
+	AddSpriteToStorage("assets/unit/goblin/goblin_trade_cog_armored.png", "goblin_trade_cog_armored");
+	AddSpriteToStorage("assets/unit/highelf/highelf_trade_cog_armored.png", "highelf_trade_cog_armored");
+	AddSpriteToStorage("assets/unit/human/human_trade_cog_armored.png", "human_trade_cog_armored");
+	AddSpriteToStorage("assets/unit/orc/orc_trade_cog_armored.png", "orc_trade_cog_armored");
+	AddSpriteToStorage("assets/unit/troll/troll_trade_cog_armored.png", "troll_trade_cog_armored");
+
+
+
+	AddSpriteToStorage("assets/unit/darkelf/darkelf_transport_cog.png", "darkelf_transport_cog");
+	AddSpriteToStorage("assets/unit/dwarf/dwarf_transport_cog.png", "dwarf_transport_cog");
+	AddSpriteToStorage("assets/unit/gnome/gnome_transport_cog.png", "gnome_transport_cog");
+	AddSpriteToStorage("assets/unit/goblin/goblin_transport_cog.png", "goblin_transport_cog");
+	AddSpriteToStorage("assets/unit/highelf/highelf_transport_cog.png", "highelf_transport_cog");
+	AddSpriteToStorage("assets/unit/human/human_transport_cog.png", "human_transport_cog");
+	AddSpriteToStorage("assets/unit/orc/orc_transport_cog.png", "orc_transport_cog");
+	AddSpriteToStorage("assets/unit/troll/troll_transport_cog.png", "troll_transport_cog");
+
+
+	AddSpriteToStorage("assets/unit/darkelf/darkelf_transport_cog_big.png", "darkelf_transport_cog_big");
+	AddSpriteToStorage("assets/unit/dwarf/dwarf_transport_cog_big.png", "dwarf_transport_cog_big");
+	AddSpriteToStorage("assets/unit/gnome/gnome_transport_cog_big.png", "gnome_transport_cog_big");
+	AddSpriteToStorage("assets/unit/goblin/goblin_transport_cog_big.png", "goblin_transport_cog_big");
+	AddSpriteToStorage("assets/unit/highelf/highelf_transport_cog_big.png", "highelf_transport_cog_big");
+	AddSpriteToStorage("assets/unit/human/human_transport_cog_big.png", "human_transport_cog_big");
+	AddSpriteToStorage("assets/unit/orc/orc_transport_cog_big.png", "orc_transport_cog_big");
+	AddSpriteToStorage("assets/unit/troll/troll_transport_cog_big.png", "troll_transport_cog_big");
+
+
 }
 
 
@@ -5420,6 +5573,10 @@ bool Game::OnUserCreate() {
 	city3->AddBuilding(new BuildingThievesGuild(city3), 3);
 	city3->AddBuilding(new BuildingAssassinsGuild(city3), 4);
 	city3->AddBuilding(new BuildingMerchantsGuild(city3), 5);
+
+
+
+
 
 
 	// TimeCounter

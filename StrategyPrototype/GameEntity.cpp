@@ -2594,7 +2594,7 @@ bool Unit::SetClass(std::string classname) {
 		m_UnitClass = new UnitCitizen();
 	}
 	else if (COMPARE_STRINGS(classname, "Scout") == 0) {
-		//m_UnitClass = new UnitScout();
+		m_UnitClass = new UnitScout();
 	}
 	else if (COMPARE_STRINGS(classname, "Woodcutter") == 0) {
 		m_UnitClass = new UnitWoodCutter();
@@ -2892,14 +2892,89 @@ void Unit::_setSpriteBasedOnClassAndRace() {
 	else if (COMPARE_STRINGS(m_UnitClass->m_UnitClassName, "Pickler") == 0) {
 	sprite += "citizen";
 	}
+	else if (COMPARE_STRINGS(m_UnitClass->m_UnitClassName, "Warrior") == 0) {
 
-
-
-
-
-
-
-
+	int r = Random() % 2;
+	sprite += (r == 0) ? "warrior_1" : "warrior_2";
+	}
+	else if (COMPARE_STRINGS(m_UnitClass->m_UnitClassName, "Big Transport Cog") == 0) {
+	sprite += "transport_cog_big";
+	}
+	else if (COMPARE_STRINGS(m_UnitClass->m_UnitClassName, "Transport Cog") == 0) {
+	sprite += "transport_cog";
+	}
+	else if (COMPARE_STRINGS(m_UnitClass->m_UnitClassName, "Armored Trade Cog") == 0) {
+	sprite += "trade_cog_armored";
+	}
+	else if (COMPARE_STRINGS(m_UnitClass->m_UnitClassName, "Trade Cog") == 0) {
+	sprite += "trade_cog";
+	}
+	else if (COMPARE_STRINGS(m_UnitClass->m_UnitClassName, "Iron Swordman") == 0) {
+	sprite += "swordman_iron";
+	}
+	else if (COMPARE_STRINGS(m_UnitClass->m_UnitClassName, "Bronze Swordman") == 0) {
+	sprite += "swordman_bronze";
+	}
+	else if (COMPARE_STRINGS(m_UnitClass->m_UnitClassName, "Spearman") == 0) {
+	sprite += "spearman_leather";
+	}
+	else if (COMPARE_STRINGS(m_UnitClass->m_UnitClassName, "Sorcerer") == 0) {
+	sprite += "sorcerer";
+	}
+	else if (COMPARE_STRINGS(m_UnitClass->m_UnitClassName, "Small Transport Ship") == 0) {
+	sprite += "small_transport_ship";
+	}
+	else if (COMPARE_STRINGS(m_UnitClass->m_UnitClassName, "Small Trade Boat") == 0) {
+	sprite += "small_trade_boat";
+	}
+	else if (COMPARE_STRINGS(m_UnitClass->m_UnitClassName, "Slinger") == 0) {
+	sprite += "slinger";
+	}
+	else if (COMPARE_STRINGS(m_UnitClass->m_UnitClassName, "Ram Galley") == 0) {
+	sprite += "ram_galley";
+	}
+	else if (COMPARE_STRINGS(m_UnitClass->m_UnitClassName, "Adamantium Paladin") == 0) {
+	sprite += "paladin_adamantium";
+	}
+	else if (COMPARE_STRINGS(m_UnitClass->m_UnitClassName, "Malachite Paladin") == 0) {
+	sprite += "paladin_malachite";
+	}
+	else if (COMPARE_STRINGS(m_UnitClass->m_UnitClassName, "Merchants Vessel") == 0) {
+	sprite += "merchants_vessel";
+	}
+	else if (COMPARE_STRINGS(m_UnitClass->m_UnitClassName, "Mage") == 0) {
+	sprite += "mage";
+	}
+	else if (COMPARE_STRINGS(m_UnitClass->m_UnitClassName, "Heavy Bronze Spearman") == 0) {
+	sprite += "heavy_spearman_bronze";
+	}
+	else if (COMPARE_STRINGS(m_UnitClass->m_UnitClassName, "Heavy Iron Spearman") == 0) {
+	sprite += "heavy_spearman_iron";
+	}
+	else if (COMPARE_STRINGS(m_UnitClass->m_UnitClassName, "Fortress Vessel") == 0) {
+	sprite += "fortress_vessel";
+	}
+	else if (COMPARE_STRINGS(m_UnitClass->m_UnitClassName, "Battlemage") == 0) {
+	sprite += "battlemage";
+	}
+	else if (COMPARE_STRINGS(m_UnitClass->m_UnitClassName, "Ballista Galley") == 0) {
+	sprite += "ballista_galley";
+	}
+	else if (COMPARE_STRINGS(m_UnitClass->m_UnitClassName, "Ballista") == 0) {
+	sprite += "ballista";
+	}
+	else if (COMPARE_STRINGS(m_UnitClass->m_UnitClassName, "Armored Ram Galley") == 0) {
+	sprite += "armored_ram_galley";
+	}
+	else if (COMPARE_STRINGS(m_UnitClass->m_UnitClassName, "Archers Galley") == 0) {
+	sprite += "archers_galley";
+	}
+	else if (COMPARE_STRINGS(m_UnitClass->m_UnitClassName, "Archer") == 0) {
+	sprite += "archer";
+	}
+	else if (COMPARE_STRINGS(m_UnitClass->m_UnitClassName, "Scout") == 0) {
+	sprite += "citizen";
+	}
 
 
 

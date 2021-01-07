@@ -4212,6 +4212,9 @@ public:
 		m_PlayerName = playername;
 		m_PlayerColor = playercolor;
 		m_PlayerEmpireRace = race;
+		m_PlayerUnits = std::vector<Unit*>();
+		m_PlayerCities = std::vector<City*>();
+
 
 
 		_initStandardResearchedTech();
