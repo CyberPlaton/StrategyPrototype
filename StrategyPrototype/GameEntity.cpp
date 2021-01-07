@@ -2696,6 +2696,112 @@ bool Unit::SetClass(std::string classname) {
 	else if (COMPARE_STRINGS(classname, "Pickler") == 0) {
 	m_UnitClass = new UnitPickler();
 	}
+	else if (COMPARE_STRINGS(classname, "Catapult") == 0) {
+	m_UnitClass = new UnitCatapult();
+	}
+	else if (COMPARE_STRINGS(classname, "Ballista") == 0) {
+	m_UnitClass = new UnitBallista();
+	}
+	else if (COMPARE_STRINGS(classname, "Trebuchet") == 0) {
+	m_UnitClass = new UnitTrebuchet();
+	}
+	else if (COMPARE_STRINGS(classname, "Knight") == 0) {
+	m_UnitClass = new UnitKnight();
+	}
+	else if (COMPARE_STRINGS(classname, "Light Cavalry") == 0) {
+	m_UnitClass = new UnitLightCavalry();
+	}
+	else if (COMPARE_STRINGS(classname, "Mounted Scout") == 0) {
+	m_UnitClass = new UnitMountedScout();
+	}
+	else if (COMPARE_STRINGS(classname, "Iron Crossbowman") == 0) {
+	m_UnitClass = new UnitCrossbowmanIron();
+	}
+	else if (COMPARE_STRINGS(classname, "Sorcerer") == 0) {
+	m_UnitClass = new UnitSorcerer();
+	}
+	else if (COMPARE_STRINGS(classname, "Mage") == 0) {
+	m_UnitClass = new UnitMage();
+	}
+	else if (COMPARE_STRINGS(classname, "Battlemage") == 0) {
+	m_UnitClass = new UnitBattlemage();
+	}
+	else if (COMPARE_STRINGS(classname, "Malachite Paladin") == 0) {
+	m_UnitClass = new UnitPaladinMalachite();
+	}
+	else if (COMPARE_STRINGS(classname, "Adamantium Paladin") == 0) {
+	m_UnitClass = new UnitPaladinAdamantium();
+	}
+	else if (COMPARE_STRINGS(classname, "Iron Swordman") == 0) {
+	m_UnitClass = new UnitSwordmanIron();
+	}
+	else if (COMPARE_STRINGS(classname, "Bronze Swordman") == 0) {
+	m_UnitClass = new UnitSwordmanBronze();
+	}
+	else if (COMPARE_STRINGS(classname, "Heavy Iron Spearman") == 0) {
+	m_UnitClass = new UnitHeavySpearmanIron();
+	}
+	else if (COMPARE_STRINGS(classname, "Heavy Bronze Spearman") == 0) {
+	m_UnitClass = new UnitHeavySpearmanBronze();
+	}
+	else if (COMPARE_STRINGS(classname, "Spearman") == 0) {
+	m_UnitClass = new UnitSpearman();
+	}
+	else if (COMPARE_STRINGS(classname, "Archer") == 0) {
+	m_UnitClass = new UnitArcher();
+	}
+	else if (COMPARE_STRINGS(classname, "Slinger") == 0) {
+	m_UnitClass = new UnitSlinger();
+	}
+	else if (COMPARE_STRINGS(classname, "Warrior") == 0) {
+	m_UnitClass = new UnitWarrior();
+	}
+	else if (COMPARE_STRINGS(classname, "Scout") == 0) {
+	m_UnitClass = new UnitScout();
+	}
+
+
+	else if (COMPARE_STRINGS(classname, "Small Trade Boat") == 0) {
+	m_UnitClass = new UnitSmallTradeBoat();
+	}
+	else if (COMPARE_STRINGS(classname, "Small Transport Ship") == 0) {
+	m_UnitClass = new UnitSmallTransportShip();
+	}
+	else if (COMPARE_STRINGS(classname, "Archers Galley") == 0) {
+	m_UnitClass = new UnitArchersGalley();
+	}
+	else if (COMPARE_STRINGS(classname, "Ram Galley") == 0) {
+	m_UnitClass = new UnitRamGalley();
+	}
+	else if (COMPARE_STRINGS(classname, "Armored Ram Galley") == 0) {
+	m_UnitClass = new UnitArmoredRamGalley();
+	}
+	else if (COMPARE_STRINGS(classname, "Ballista Galley") == 0) {
+	m_UnitClass = new UnitBallistaGalley();
+	}
+	else if (COMPARE_STRINGS(classname, "Fortress Vessel") == 0) {
+	m_UnitClass = new UnitFortressVessel();
+	}
+	else if (COMPARE_STRINGS(classname, "Transport Cog") == 0) {
+	m_UnitClass = new UnitTransportCog();
+	}
+	else if (COMPARE_STRINGS(classname, "Big Transport Cog") == 0) {
+	m_UnitClass = new UnitTransportCogBig();
+	}
+	else if (COMPARE_STRINGS(classname, "Trade Cog") == 0) {
+	m_UnitClass = new UnitTradeCog();
+	}
+	else if (COMPARE_STRINGS(classname, "Armored Trade Cog") == 0) {
+	m_UnitClass = new UnitTradeCogArmored();
+	}
+	else if (COMPARE_STRINGS(classname, "Merchants Vessel") == 0) {
+	m_UnitClass = new UnitMerchantsVessel();
+	}
+
+
+
+
+
 
 	else {
 		return false;
@@ -2962,6 +3068,12 @@ void Unit::_setSpriteBasedOnClassAndRace() {
 	}
 	else if (COMPARE_STRINGS(m_UnitClass->m_UnitClassName, "Ballista") == 0) {
 	sprite += "ballista";
+	}
+	else if (COMPARE_STRINGS(m_UnitClass->m_UnitClassName, "Catapult") == 0) {
+	sprite += "catapult";
+	}
+	else if (COMPARE_STRINGS(m_UnitClass->m_UnitClassName, "Trebuchet") == 0) {
+	sprite += "trebuchets";
 	}
 	else if (COMPARE_STRINGS(m_UnitClass->m_UnitClassName, "Armored Ram Galley") == 0) {
 	sprite += "armored_ram_galley";

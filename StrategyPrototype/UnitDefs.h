@@ -1567,7 +1567,7 @@ struct UnitBallista : public UnitBase {
 
 
 		m_UnitStats = new UnitStats();
-		m_UnitStats->m_Fatigue = 2;
+		m_UnitStats->m_Fatigue = 3;
 		m_UnitStats->m_Magicka = 0;
 		m_UnitStats->m_Health = 10;
 
@@ -1580,7 +1580,51 @@ struct UnitBallista : public UnitBase {
 	}
 };
 
+struct UnitCatapult : public UnitBase {
+	UnitCatapult() {
 
+		m_UnitClassName = "Catapult";
+
+		m_UnitTier = UnitTier::UNIT_TIER_1;
+		m_UnitLevel = UnitLevel::UNIT_LEVEL_1;
+
+
+		m_UnitStats = new UnitStats();
+		m_UnitStats->m_Fatigue = 3;
+		m_UnitStats->m_Magicka = 0;
+		m_UnitStats->m_Health = 10;
+
+		m_UnitStats->m_AttackValue = 120;
+		m_UnitStats->m_DefenseValue = 20;
+
+		m_UnitRessourceProduction = new UnitRessourceProduction();
+		m_UnitRessourceProduction->m_DemandedRawRessourceForProduction.push_back("Food");
+		m_UnitRessourceProduction->m_DemandValue.push_back(0);
+	}
+};
+
+struct UnitTrebuchet : public UnitBase {
+	UnitTrebuchet() {
+
+		m_UnitClassName = "Trebuchet";
+
+		m_UnitTier = UnitTier::UNIT_TIER_1;
+		m_UnitLevel = UnitLevel::UNIT_LEVEL_1;
+
+
+		m_UnitStats = new UnitStats();
+		m_UnitStats->m_Fatigue = 2;
+		m_UnitStats->m_Magicka = 0;
+		m_UnitStats->m_Health = 10;
+
+		m_UnitStats->m_AttackValue = 150;
+		m_UnitStats->m_DefenseValue = 20;
+
+		m_UnitRessourceProduction = new UnitRessourceProduction();
+		m_UnitRessourceProduction->m_DemandedRawRessourceForProduction.push_back("Food");
+		m_UnitRessourceProduction->m_DemandValue.push_back(0);
+	}
+};
 
 // NAVAL UNITS
 struct UnitSmallTradeBoat : public UnitBase {
