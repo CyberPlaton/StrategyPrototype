@@ -472,6 +472,7 @@ private:
 	int m_RaceModifierDwarf = 0;
 
 
+
 private:
 
 	int _getRaceModifierValue(CMPEntityRace::Race race) {

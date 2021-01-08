@@ -494,8 +494,8 @@ private:
 
 	void _defineUnitName();
 
-	//unsigned int _determineMovementPoints();
-	//void _resetMovementPoints();
+	unsigned int _determineMovementPoints();
+	void _resetMovementPoints();
 
 
 	// Based on given position returns a vector of neighboring maptiles.
@@ -3265,7 +3265,7 @@ public:
 private:
 
 	void _setMovementCost() {
-		m_MovementCostCmp->SetBaseMovementCost(3);
+		m_MovementCostCmp->SetBaseMovementCost(1);
 		m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_HUMAN, 1);
 		m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_ORC, 1);
 		m_MovementCostCmp->SetRaceSpecificMovementCostModifier(CMPEntityRace::Race::RACE_HIGHELF, 1);

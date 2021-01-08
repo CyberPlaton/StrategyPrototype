@@ -84,6 +84,8 @@ struct UnitBase {
 
 	bool m_HasProfession = true;
 
+	bool m_CanMoveOnRiver = false; // Flag for units that can move on rivers.
+
 	// For each unitclass we define a specific set of ressources it does produce
 	// and consume for production. Dynamically we have to set the yield and demand for ressources.
 	UnitRessourceProduction* m_UnitRessourceProduction = nullptr;
@@ -1637,9 +1639,11 @@ struct UnitSmallTradeBoat : public UnitBase {
 
 
 		m_UnitStats = new UnitStats();
-		m_UnitStats->m_Fatigue = 5;
+		m_UnitStats->m_Fatigue = 2;
 		m_UnitStats->m_Magicka = 0;
 		m_UnitStats->m_Health = 10;
+
+		m_CanMoveOnRiver = true;
 
 		m_UnitStats->m_AttackValue = 0;
 		m_UnitStats->m_DefenseValue = 1;
@@ -1663,6 +1667,8 @@ struct UnitSmallTransportShip : public UnitBase {
 		m_UnitStats->m_Fatigue = 5;
 		m_UnitStats->m_Magicka = 0;
 		m_UnitStats->m_Health = 10;
+
+		m_CanMoveOnRiver = true;
 
 		m_UnitStats->m_AttackValue = 0;
 		m_UnitStats->m_DefenseValue = 1;

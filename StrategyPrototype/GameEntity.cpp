@@ -2464,7 +2464,7 @@ void Unit::_defineMaxAge() {
 void Unit::Update() {
 
 	// Reset Movement Points.
-	m_MovementPoints = 6;
+	_resetMovementPoints();
 
 	int x = m_AgeInternal; // Flag.
 	m_AgeInternal = (m_AgeInternal + 1) % 4;
@@ -5709,6 +5709,26 @@ bool City::_isMapTileClaimedByCity(MapTile* maptile) {
 	}
 	
 	return false;
+}
+
+unsigned int  Unit::_determineMovementPoints() {
+
+	using namespace std;
+
+	if (m_UnitClass) {
+		 return m_UnitClass->m_UnitStats->m_Fatigue;
+	}
+	else {
+
+		cout << color(colors::RED);
+		cout << "Unit \"" <<m_Name << "\" has no class!" << white << endl;
+
+		return 0;
+	}
+}
+
+void  Unit::_resetMovementPoints() {
+	m_MovementPoints = _determineMovementPoints();
 }
 
 /*

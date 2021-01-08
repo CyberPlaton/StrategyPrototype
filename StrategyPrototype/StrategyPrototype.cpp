@@ -235,7 +235,16 @@ int MovementCostHelper::GetFinalMovementCost(std::string race, MapTile* maptile,
 
 			if (COMPARE_STRINGS(it->m_IDCmp->m_DynamicTypeName, "River") == 0) { // Get cost for moving on river.
 
-				cost = it->m_MovementCostCmp->GetRaceModifiedMovementCost(race);
+
+				// Check whether unit can move on river.
+				if (unit->m_UnitClass->m_CanMoveOnRiver) {
+					cost = it->m_MovementCostCmp->GetRaceModifiedMovementCost(race);
+				}
+				else {
+					cost = 999; // Unit cant move on river...
+				}
+
+
 			}
 		}
 
@@ -5335,6 +5344,14 @@ void Game::_loadSpriteResources() {
 	AddSpriteToStorage("assets/unit/orc/orc_small_transport_boat.png", "orc_small_transport_boat");
 	AddSpriteToStorage("assets/unit/troll/troll_small_transport_boat.png", "troll_small_transport_boat");
 
+	AddSpriteToStorage("assets/unit/darkelf/darkelf_small_trade_boat.png", "darkelf_small_trade_boat");
+	AddSpriteToStorage("assets/unit/dwarf/dwarf_small_trade_boat.png", "dwarf_small_trade_boat");
+	AddSpriteToStorage("assets/unit/gnome/gnome_small_trade_boat.png", "gnome_small_trade_boat");
+	AddSpriteToStorage("assets/unit/goblin/goblin_small_trade_boat.png", "goblin_small_trade_boat");
+	AddSpriteToStorage("assets/unit/highelf/highelf_small_trade_boat.png", "highelf_small_trade_boat");
+	AddSpriteToStorage("assets/unit/human/human_small_trade_boat.png", "human_small_trade_boat");
+	AddSpriteToStorage("assets/unit/orc/orc_small_trade_boat.png", "orc_small_trade_boat");
+	AddSpriteToStorage("assets/unit/troll/troll_small_trade_boat.png", "troll_small_trade_boat");
 
 	AddSpriteToStorage("assets/unit/darkelf/darkelf_small_transport_ship.png", "darkelf_small_transport_ship");
 	AddSpriteToStorage("assets/unit/dwarf/dwarf_small_transport_ship.png", "dwarf_small_transport_ship");
@@ -5576,6 +5593,17 @@ bool Game::OnUserCreate() {
 
 
 
+	Unit* vessel = MakeNewUnitAtPos(CMPEntityRace::Race::RACE_HUMAN, UnitMovementType::UNIT_MOVEMENT_TYPE_SWIMMING,
+		player, "Merchants Vessel", 2 * SPRITES_WIDTH_AND_HEIGHT, 4 * SPRITES_WIDTH_AND_HEIGHT, 2, 4);
+
+	Unit* vessel2 = MakeNewUnitAtPos(CMPEntityRace::Race::RACE_HUMAN, UnitMovementType::UNIT_MOVEMENT_TYPE_SWIMMING,
+		player, "Trade Cog", 3 * SPRITES_WIDTH_AND_HEIGHT, 4 * SPRITES_WIDTH_AND_HEIGHT, 3, 4);
+
+	Unit* vessel3 = MakeNewUnitAtPos(CMPEntityRace::Race::RACE_HUMAN, UnitMovementType::UNIT_MOVEMENT_TYPE_SWIMMING,
+		player, "Armored Trade Cog", 2 * SPRITES_WIDTH_AND_HEIGHT, 5 * SPRITES_WIDTH_AND_HEIGHT, 2, 5);
+
+	Unit* vessel4 = MakeNewUnitAtPos(CMPEntityRace::Race::RACE_HUMAN, UnitMovementType::UNIT_MOVEMENT_TYPE_SWIMMING,
+		player, "Small Trade Boat", 1 * SPRITES_WIDTH_AND_HEIGHT, 4 * SPRITES_WIDTH_AND_HEIGHT, 1, 4);
 
 
 
