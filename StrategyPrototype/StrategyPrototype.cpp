@@ -362,7 +362,8 @@ Unit* SpawnCitizenInCity(City* city, int xpos, int ypos){
 	unit->SetPlayer(city->m_AssociatedPlayer);
 	UpdateMapVisionForEntity(unit, city->m_AssociatedPlayer);
 
-	city->AddUnit(unit);
+	//city->AddUnit(unit);
+	unit->JoinCity(city);
 
 	cout << color(colors::DARKMAGENTA);
 	cout << "Unit Spawned: " << unit->m_Name << endl;
@@ -374,7 +375,11 @@ Unit* SpawnCitizenInCity(City* city, int xpos, int ypos){
 	cout << "\"CMPUnitProduction\" initialized for \"" << unit->m_Name <<"\"." << white << endl;
 
 
+	// This function stores the entitiy and adds unit to players vector.
+	// Deletion works likewise.
 	EntitiesStorage::Get()->AddGameEntitie(unit); // Store self. TODO: Make this automated for all entities on construction.
+
+
 
 	return unit;
 }
@@ -1892,6 +1897,14 @@ void CMPCameraInput::_handleMapViewKeyBoard(Camera* cam) {
 
 					for (auto iter : *static_cast<MapTile*>(it)->m_MapTileEntities) {
 
+						if (COMPARE_STRINGS(iter->m_IDCmp->m_DynamicTypeName, "Building") == 0) continue; // Do not move buildings in cities.
+
+						if (COMPARE_STRINGS(iter->m_IDCmp->m_DynamicTypeName, "Unit") == 0) {// Do not move units in cities.
+
+							Unit* unit = static_cast<Unit*>(iter);
+							if (unit->m_IsInCity) continue;
+						}
+
 						iter->m_TransformCmp->m_PosY += 1 * speed;
 					}
 				}
@@ -1918,6 +1931,14 @@ void CMPCameraInput::_handleMapViewKeyBoard(Camera* cam) {
 
 
 					for (auto iter : *static_cast<MapTile*>(it)->m_MapTileEntities) {
+
+						if (COMPARE_STRINGS(iter->m_IDCmp->m_DynamicTypeName, "Building") == 0) continue; // Do not move buildings in cities.
+
+						if (COMPARE_STRINGS(iter->m_IDCmp->m_DynamicTypeName, "Unit") == 0) {// Do not move units in cities.
+
+							Unit* unit = static_cast<Unit*>(iter);
+							if (unit->m_IsInCity) continue;
+						}
 
 						iter->m_TransformCmp->m_PosX += 1 * speed;
 					}
@@ -1946,6 +1967,14 @@ void CMPCameraInput::_handleMapViewKeyBoard(Camera* cam) {
 
 					for (auto iter : *static_cast<MapTile*>(it)->m_MapTileEntities) {
 
+						if (COMPARE_STRINGS(iter->m_IDCmp->m_DynamicTypeName, "Building") == 0) continue; // Do not move buildings in cities.
+
+						if (COMPARE_STRINGS(iter->m_IDCmp->m_DynamicTypeName, "Unit") == 0) {// Do not move units in cities.
+
+							Unit* unit = static_cast<Unit*>(iter);
+							if (unit->m_IsInCity) continue;
+						}
+
 						iter->m_TransformCmp->m_PosY -= 1 * speed;
 					}
 				}
@@ -1971,6 +2000,14 @@ void CMPCameraInput::_handleMapViewKeyBoard(Camera* cam) {
 
 
 					for (auto iter : *static_cast<MapTile*>(it)->m_MapTileEntities) {
+
+						if (COMPARE_STRINGS(iter->m_IDCmp->m_DynamicTypeName, "Building") == 0) continue; // Do not move buildings in cities.
+						
+						if (COMPARE_STRINGS(iter->m_IDCmp->m_DynamicTypeName, "Unit") == 0) {// Do not move units in cities.
+
+							Unit* unit = static_cast<Unit*>(iter);
+							if (unit->m_IsInCity) continue;
+						}
 
 						iter->m_TransformCmp->m_PosX -= 1 * speed;
 					}

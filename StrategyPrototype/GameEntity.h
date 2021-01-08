@@ -380,6 +380,8 @@ public:
 	bool CanMoveOnMapTile(MapTile* tile);
 	bool SetClass(std::string classname);
 	bool ChangeClass(std::string classname);
+	bool JoinCity(City* city);
+	bool LeaveCity();
 
 	// Move unit to a location.
 	// Storage has the movement cost definitions for this particular unit.
@@ -445,6 +447,9 @@ public:
 	//UnitClass* m_UnitClass = nullptr;
 	Player* m_AssociatedPlayer = nullptr;
 	std::string m_UnitPlayerColor = "NULL";
+
+	bool m_IsInCity = false;
+	City* m_AssociatedCity = nullptr;
 
 	UnitMovementType m_UnitMovementType = UnitMovementType::UNIT_MOVEMENT_TYPE_INVALID;
 
@@ -1630,7 +1635,7 @@ public:
 		m_GraphicsCmp->m_SpriteName = "shrine";
 
 		m_IDCmp->m_DynamicTypeName = "Building";
-		m_BuildingsProfession.push_back("Mage Researcher");
+		m_BuildingsProfession.push_back("Magick Researcher");
 
 
 		m_BuildingName = "Shrine";

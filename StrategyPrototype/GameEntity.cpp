@@ -2812,6 +2812,41 @@ bool Unit::SetClass(std::string classname) {
 	return true;
 }
 
+bool Unit::JoinCity(City* city) {
+
+	// Add self to city, but without duplicates.
+	std::vector<GameEntity*>::iterator it = std::find(city->m_PresentUnitsVector.begin(),
+		city->m_PresentUnitsVector.end(), this);
+
+	if (it == city->m_PresentUnitsVector.end()) {
+		city->AddUnit(this);
+	}
+
+	m_IsInCity = true;
+	m_AssociatedCity = city;
+
+
+	return true;
+}
+
+bool Unit::LeaveCity() {
+
+	if (m_AssociatedCity) {
+		std::vector<GameEntity*>::iterator it = std::find(m_AssociatedCity->m_PresentUnitsVector.begin(),
+			m_AssociatedCity->m_PresentUnitsVector.end(), this);
+
+		if (it != m_AssociatedCity->m_PresentUnitsVector.end()) {
+			m_AssociatedCity->m_PresentUnitsVector.erase(it);
+		}
+
+		m_IsInCity = false;
+		m_AssociatedCity = nullptr;
+
+		return true;
+	}
+
+	return false;
+}
 
 
 bool Unit::ChangeClass(std::string classname) {
