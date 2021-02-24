@@ -319,7 +319,7 @@ public:
 	bool OnUserUpdate(float fElapsedTime) override;
 	bool OnUserDestroy() override;
 
-	olc::Pixel* RandomColor();
+	olc::Pixel RandomColor();
 	olc::Pixel MakeOlcColorFromCityBorderColor(City::CityBorderColor color);
 
 	void DebugDrawStats();

@@ -1507,28 +1507,28 @@ bool IsMapTilePartOfRegion(MapTile* tile) {
 }
 
 
-olc::Pixel* Game::RandomColor(){
+olc::Pixel Game::RandomColor(){
 
 	int r = Random() % 6;
 
 	switch (r){
 	case 0:
-		return &olc::Pixel(olc::BLUE);
+		return olc::Pixel(olc::BLUE);
 		break;
 	case 1:
-		return &olc::Pixel(olc::GREEN);
+		return olc::Pixel(olc::GREEN);
 		break;
 	case 2:
-		return &olc::Pixel(olc::RED);
+		return olc::Pixel(olc::RED);
 		break;
 	case 3:
-		return &olc::Pixel(olc::MAGENTA);
+		return olc::Pixel(olc::MAGENTA);
 		break;
 	case 4:
-		return &olc::Pixel(olc::YELLOW);
+		return olc::Pixel(olc::YELLOW);
 		break;
 	case 5:
-		return &olc::Pixel(olc::CYAN);
+		return olc::Pixel(olc::CYAN);
 		break;
 	default:
 		break;

@@ -143,10 +143,4 @@ C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPr
 C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(7537,16): warning C4101: 'err': unreferenced local variable
 C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(1351): warning C4715: 'GetPlayer': not all control paths return a value
 C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(1536): warning C4715: 'Game::RandomColor': not all control paths return a value
-C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(1516): warning C4172: returning address of local variable or temporary
-C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(1519): warning C4172: returning address of local variable or temporary
-C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(1522): warning C4172: returning address of local variable or temporary
-C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(1525): warning C4172: returning address of local variable or temporary
-C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(1528): warning C4172: returning address of local variable or temporary
-C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\StrategyPrototype.cpp(1531): warning C4172: returning address of local variable or temporary
-  StrategyPrototype.vcxproj -> C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\\StrategyPrototype\bin\Debug-x64\StrategyPrototype\StrategyPrototype.exe
+  StrategyPrototype.vcxproj -> C:\Users\Bogdan Strohonov\Desktop\StrategyPrototype\StrategyPrototype\bin\Debug-x64\StrategyPrototype\StrategyPrototype.exe

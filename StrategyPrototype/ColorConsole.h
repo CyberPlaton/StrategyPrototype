@@ -4,6 +4,9 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 #include <iostream>
+
+#define NOMINMAX
+#define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
 
